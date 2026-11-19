@@ -2,7 +2,7 @@
 
 ## Current scalable-layout refinement
 
-**Implemented; combined source-level verification passed.** The final combined suite passed **207 tests with zero failures, cancellations, or skips**; the crown check passed **84 view/size combinations** plus canonical digest/aperture/bounds/stable-node checks; and the static source checker passed. Combined clean-extraction, rebuilding, and archive verification passed; the extracted copy repeated the full suite and crown/source checks successfully. The earlier layout branch's 182-test/package pass and incoming replay branch's 71-test/57-audit pass remain historical checkpoints in [current state and evidence](01-current-state-and-evidence.md). Commands:
+**Implemented; combined source-level verification passed.** `node scripts/verify-all.mjs` runs the suite, crown, and static source checks, then clean-extraction, rebuilding, and archive verification, repeating the suite and crown/source checks in the extracted copy. Current counts are in [`tests/evidence/current.json`](../../tests/evidence/current.json). The earlier layout branch's package pass and the incoming replay branch's Node/Chrome pass remain historical checkpoints in [current state and evidence](01-current-state-and-evidence.md). Commands:
 
 ```sh
 node scripts/check-source.mjs
@@ -32,7 +32,7 @@ The source ledger records a generated static preview for the saved v3 Site versi
 
 ## Historical pre-layout mobile verification
 
-Before the scalable-layout refinement, `node --test tests/*.test.cjs` passed **51/51 tests** in the mobile pass. [MOBILE_READINESS.md](../../MOBILE_READINESS.md) records that historical navigation, gesture, overlay, and mission-interaction coverage, 72 settled Chrome layout audits, observed browser flows, and remaining checks. These results supplement the original seven-test baseline; they are not the current source-suite total or a current browser pass. Chrome viewport stress tests also do not establish native iOS keyboard or device acceptance.
+Before the scalable-layout refinement, the mobile pass ran `node --test tests/*.test.cjs` with no failures. [MOBILE_READINESS.md](../../MOBILE_READINESS.md) records that historical test count, navigation, gesture, overlay, and mission-interaction coverage, its settled Chrome layout audits, observed browser flows, and remaining checks. These results supplement the original seven-test baseline; they are not the current source-suite total or a current browser pass. Chrome viewport stress tests also do not establish native iOS keyboard or device acceptance.
 
 The source/package checkers and clean-extraction verification supply additional export evidence when run and recorded. They do not establish a real daemon, installed CLI, remote Host, security review, production conformance, or pilot acceptance. Those remain **unknown/unverified** until the following gates are satisfied.
 

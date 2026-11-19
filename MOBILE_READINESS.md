@@ -4,7 +4,9 @@ Mobile, replay, and layout checkpoints recorded November 18, 2026; combined-sour
 
 ## Current status and historical boundary
 
-**Combined source-level verification passed.** The scalable-layout/crown source now incorporates replay and adaptive-mobile improvements from `07919b421df5457e778e1b1c6a73512c8f27ba73`. The final combined suite passed **207 tests with zero failures, cancellations, or skips**; the crown check passed **84 view/size combinations** plus canonical digest/aperture/bounds/stable-node checks; and the static source checker passed. **Combined ZIP clean-extraction, rebuilding, and archive verification passed**, including the same source suite and crown checks in the extracted copy. The following evidence belongs to three earlier checkpoints:
+**Current source and package counts are generated** by `node scripts/verify-all.mjs` into [`tests/evidence/current.json`](tests/evidence/current.json) and checked by CI. Everything below is a dated record and is not updated with later changes.
+
+**Combined source-level verification passed (2026-11-18 handoff-edition checkpoint).** The scalable-layout/crown source now incorporates replay and adaptive-mobile improvements from `07919b421df5457e778e1b1c6a73512c8f27ba73`. At that checkpoint the final combined suite passed **207 tests with zero failures, cancellations, or skips**; the crown check passed **84 view/size combinations** plus canonical digest/aperture/bounds/stable-node checks; and the static source checker passed. **Combined ZIP clean-extraction, rebuilding, and archive verification passed**, including the same source suite and crown checks in the extracted copy. The following evidence belongs to three earlier checkpoints:
 
 | Checkpoint | Evidence | What it does not establish |
 | --- | --- | --- |

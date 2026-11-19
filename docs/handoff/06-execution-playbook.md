@@ -34,7 +34,7 @@ python3 -m http.server 8000 --bind 127.0.0.1 --directory dist
 
 Open the local server in that environment and stop it when finished. Do not expose it publicly or bypass a browser/network policy to obtain a preview. Native browser navigation for the v3 revision was policy-blocked; the separate recorded static overview preview proves only what appears in that image.
 
-The historical pre-layout Chrome interaction/mobile pass and its 51-test result are recorded in [MOBILE_READINESS.md](../../MOBILE_READINESS.md). Those fingerprints do not verify the current scalable layout, crown, viewport, density, or sample controls. Current browser QA is unavailable because of the prior browser URL-policy block. Keep these evidence periods separate and record permitted future browser acceptance against the exact source tested. Historical JSON audits remain in the export; repository-only browser screenshots do not.
+The historical pre-layout Chrome interaction/mobile pass and its Node test result are recorded in [MOBILE_READINESS.md](../../MOBILE_READINESS.md). Those fingerprints do not verify the current scalable layout, crown, viewport, density, or sample controls. Current browser QA is unavailable because of the prior browser URL-policy block. Keep these evidence periods separate and record permitted future browser acceptance against the exact source tested. Historical JSON audits remain in the export; repository-only browser screenshots do not.
 
 ## Discover real repositories before proposing commands
 

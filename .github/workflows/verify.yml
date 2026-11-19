@@ -27,5 +27,12 @@ jobs:
           python-version: '3.12'
       - name: Runtime versions
         run: node --version && python3 --version
-      - name: verify-all (source, tests, crown, build, ZIP, clean extraction)
-        run: node scripts/verify-all.mjs
+      - name: verify-all --check (source, tests, crown, build, ZIP, clean extraction, evidence)
+        run: node scripts/verify-all.mjs --check --report "$RUNNER_TEMP/verify-report.json"
+      - name: Upload run report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verify-report
+          path: ${{ runner.temp }}/verify-report.json
+          if-no-files-found: warn
