@@ -6,6 +6,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
+const { loadSimulationModel } = require('./simulation-model-deps.cjs');
 const test = require('node:test');
 const atlasLayout = require('../dist/atlas-layout.js');
 
@@ -101,7 +102,7 @@ function fixture(trace = []) {
     fam: key => ({ name: key, hue: '#abcdef', roles: [] }),
     countOf: (w, predicate) => [...w.agents.values()].filter(predicate).length,
     openAsks: w => [...w.asks.values()].filter(q => q.status === 'open'),
-    normBrief: () => null, briefState: () => null,
+    briefState: () => null,
     seatId: (mission, familiar) => `${mission}/${familiar}`,
     missionXY: () => [80, 40], seatR: () => 30,
     pol: (radius, degrees) => [radius * Math.cos(degrees * Math.PI / 180), radius * Math.sin(degrees * Math.PI / 180)],
@@ -114,7 +115,8 @@ function fixture(trace = []) {
   const constants = source.slice(source.indexOf('const TARGET_ROLES ='), source.indexOf('function sealOf('));
   const ringStart = source.indexOf('const ring =');
   const ring = source.slice(ringStart, source.indexOf('\n', ringStart));
-  const names = ['apply', 'seek', 'hullOf', 'sync', 'sealOf', 'buildSeal', 'drawSeal',
+  context.SimModel = loadSimulationModel({ normBrief: () => null, fam: context.fam });
+  const names = ['seek', 'hullOf', 'sync', 'sealOf', 'buildSeal', 'drawSeal',
     'atlasSyncOverviewMissions', 'atlasProjectGhost'];
   new vm.Script(`${constants}\n${ring}\n${names.map(extract).join('\n')}`, {
     filename: 'actual-replay-render-functions.js',

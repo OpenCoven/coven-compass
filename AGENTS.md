@@ -26,6 +26,7 @@ The table comes from #6. Run its focused check while you work, then `verify-all`
 | Routes and mission browser | `dist/mission-navigation.js`, `dist/atlas-ui.js`, and their bindings in `dist/index.html` | `node --test tests/navigation.test.cjs tests/mission-interactions.test.cjs` |
 | Map and camera | `dist/atlas-layout.js`, `dist/atlas-viewport.js` | `node --test tests/atlas-layout.test.cjs tests/atlas-viewport.test.cjs` |
 | Mobile controls and focus | `dist/mobile-ui.js`, `dist/mobile-interactions.js`, `dist/atlas.css` | `node --test tests/mobile-*.test.cjs` |
+| Simulation fold (what an event does to the world) | `dist/simulation-model.js` | `node --test tests/simulation-model.test.cjs tests/replay-*.test.cjs` |
 | Projection sources (`?source=`) | `dist/projection-source.js`, `dist/fixtures/`, the guard at the top of the inline script in `dist/index.html` | `node --test tests/projection-source.test.cjs` |
 | Handoff | Chapters in `docs/handoff/`, or the landing page `dist/handoff/index.html`. The builder generates `dist/handoff/guide.html`. | `node scripts/verify-all.mjs`, then follow Handoff in the preview |
 
@@ -57,7 +58,8 @@ Keep `tests/fixtures/` (the pinned baseline) and the dated audits in `tests/evid
 
 | Path | What it is |
 | --- | --- |
-| `dist/index.html` | ~5.5k lines: simulation (sample traces, `newWorld`/`apply`/`seek`/`emit`), scene build/sync/projection, seal renderer, replay loop. The main monolith. |
+| `dist/index.html` | ~5.5k lines: sample traces, `seek`/`emit` (selection, camera, effects), scene build/sync/projection, seal renderer, replay loop. The main monolith. |
+| `dist/simulation-model.js` | The simulation model: a pure fold over a trace (`newWorld`, `apply`, `advance`, `append`, `summarize`). No DOM or timers; the page injects its constants. |
 | `dist/atlas-ui.js`, `dist/atlas.css` | Header, project search and sample presets, mission browser, drawer, familiar chips |
 | `dist/atlas-layout.js` | Pure geometry: paired project placement, corridors, gates, bounded mission packing |
 | `dist/atlas-viewport.js` | Measured safe-area fit |

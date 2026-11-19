@@ -7,6 +7,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const test = require('node:test');
+const { loadSimulationModel } = require('./simulation-model-deps.cjs');
 
 const source = fs.readFileSync(path.join(__dirname, '..', 'dist', 'index.html'), 'utf8');
 
@@ -40,13 +41,14 @@ function fixture(playing) {
   let refreshes = 0;
   const context = vm.createContext({
     projects, active: 'active', cursor: 1000, live: false, playing,
-    newWorld, window: {}, normBrief: () => null, fxFor() {}, STRUCT: new Set(),
+    newWorld, window: {}, fxFor() {}, STRUCT: new Set(),
+    SimModel: loadSimulationModel({ normBrief: () => null }),
     Date: { now: () => 10000 },
     tEnd: c => c.recorded ? c.trace.at(-1).t : 10000,
     refresh: () => { refreshes++; },
   });
   context.cur = () => projects[context.active];
-  new vm.Script(['apply', 'seek', 'seekTimeline', 'emit', 'goLive'].map(extract).join('\n'), {
+  new vm.Script(['seek', 'seekTimeline', 'emit', 'goLive'].map(extract).join('\n'), {
     filename: 'actual-replay-emission-functions.js',
   }).runInContext(context);
   context.seekTimeline(context.cursor, true);

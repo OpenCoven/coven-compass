@@ -69,9 +69,19 @@
     return p;
   }
 
+  // options.snapshot() returns {projects: [{key, missions, agents, needs}]}; or pass the
+  // simulation model directly as options.worlds() → [[key, world]] with options.summarize(world).
   function createSimulationSource(options) {
     var snapshot = options && options.snapshot;
-    if (typeof snapshot !== 'function') throw new TypeError('createSimulationSource needs a snapshot function');
+    if (options && typeof options.worlds === 'function' && typeof options.summarize === 'function') {
+      snapshot = function () {
+        return {projects: options.worlds().map(function (entry) {
+          var c = options.summarize(entry[1]);
+          return {key: entry[0], missions: c.missions, agents: c.agents, needs: c.needs};
+        })};
+      };
+    }
+    if (typeof snapshot !== 'function') throw new TypeError('createSimulationSource needs a snapshot function, or worlds and summarize');
     return {
       kind: 'simulation',
       read: function () {
