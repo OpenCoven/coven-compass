@@ -1015,6 +1015,8 @@ body{letter-spacing:-.006em;font-feature-settings:"ss01","cv11";text-rendering:o
 #plan.far .gate-l.on{opacity:0}
 #plan.many .lead-name:not(.gname),#plan.tight .lead-name:not(.gname){opacity:0}
 #plan.many .lead-node:hover+.lead-name,#plan.many .lead-node.sel+.lead-name,#plan.tight .lead-node:hover+.lead-name,#plan.tight .lead-node.sel+.lead-name{opacity:1}
+#plan.tight .atlas-squad>.task-l,#plan.tight .atlas-local-psyche .psy-l{opacity:0}
+#plan.tight .atlas-squad:hover>.task-l{opacity:1}
 .key{margin:0;padding:10px 14px 14px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:7px 12px;font-size:calc(12.5px * var(--fs,1) * var(--fsl,1))}
 .key dt{display:flex;align-items:center;gap:3px;color:var(--foreground);white-space:nowrap}
 .key dd{margin:0;color:var(--muted-foreground)}
@@ -2845,14 +2847,16 @@ let is3d = null, popAt = null;
 // ext is the seal's [top, bottom] offset from q.
 function missionLabelAt(q, pc, ext, U) {
   const dx = q[0] - pc[0], below = q[1] < pc[1] + 1, side = Math.abs(dx) < 12 * U ? 0 : Math.sign(dx);
-  return {x: q[0], y: q[1] + (below ? ext[1] + 15 * U : ext[0] - 8 * U), anchor: side < 0 ? 'end' : side > 0 ? 'start' : 'middle'};
+  return {x: q[0], y: q[1] + (below ? ext[1] + 20 * U : ext[0] - 8 * U), anchor: side < 0 ? 'end' : side > 0 ? 'start' : 'middle'};
 }
 // When seals sit closer on screen than a name needs, names would pile onto each other and the
-// crown, so they hide (like #plan.many) and return on hover or selection. pts are projected
+// crown, so they hide (like #plan.many) and return on hover or selection. The squads' familiar
+// labels and the PSYCHE caption crowd the same space, so #plan.tight hides them too (a squad's
+// label returns on hover). pts are projected
 // seal positions and pc the crown, in SVG units; kpx converts them to screen pixels. A name
 // clears the crown when its seal is far enough to the side (missionLabelAt then anchors it away
 // from the centre line) or far enough above or below.
-const NAME_ROOM_PX = 40, CROWN_SIDE_PX = 16;
+const NAME_ROOM_PX = 56, CROWN_SIDE_PX = 16;
 function missionNamesTight(pts, pc, kpx) {
   for (let i = 0; i < pts.length; i++) {
     const dx = Math.abs(pts[i][0] - pc[0]) * kpx, dy = Math.abs(pts[i][1] - pc[1]) * kpx;

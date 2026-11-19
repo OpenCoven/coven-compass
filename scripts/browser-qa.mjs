@@ -45,7 +45,11 @@ const missionNameClashes = () => {
   const crown = names.filter(n => crownParts.some(c => hit(n, c))).map(n => n.t);
   const pairs = [];
   names.forEach((a, i) => names.slice(i + 1).forEach(b => { if (hit(a, b)) pairs.push(`${a.t} / ${b.t}`); }));
-  return { shown: names.length, crown, pairs };
+  // Familiar labels on the squads: none may overlap another squad's label or a mission name.
+  const squads = [...document.querySelectorAll('#plan .atlas-squad > .task-l')].filter(shown).map(el => ({ t: el.textContent, ...box(el) }));
+  const squadPairs = [];
+  squads.forEach((a, i) => squads.slice(i + 1).concat(names).forEach(b => { if (hit(a, b)) squadPairs.push(`${a.t} / ${b.t}`); }));
+  return { shown: names.length, crown, pairs, squads: squads.length, squadPairs };
 };
 
 const browser = await chromium.launch();
@@ -112,6 +116,8 @@ for (const vp of VIEWPORTS) {
       const named = await page.evaluate(missionNameClashes);
       check(mode, vp.name, 'mission names clear the crown and each other', !named.crown.length && !named.pairs.length,
         `${named.shown} names shown; over the crown: ${named.crown.join(', ') || 'none'}; overlapping: ${named.pairs.join('; ') || 'none'}`);
+      check(mode, vp.name, 'familiar labels clear each other and the mission names', !named.squadPairs.length,
+        `${named.squads} familiar labels shown; overlapping: ${named.squadPairs.slice(0, 6).join('; ') || 'none'}`);
 
       // Open a mission from the mission browser.
       const opener = vp.mobile && await visible(page, '#atlasMobileMissions') ? '#atlasMobileMissions' : '#atlasMissions';
@@ -138,6 +144,8 @@ for (const vp of VIEWPORTS) {
       const replayNamed = await page.evaluate(missionNameClashes);
       check(mode, vp.name, 'replay frame: mission names clear the crown and each other', !replayNamed.crown.length && !replayNamed.pairs.length,
         `${replayNamed.shown} names shown; over the crown: ${replayNamed.crown.join(', ') || 'none'}; overlapping: ${replayNamed.pairs.join('; ') || 'none'}`);
+      check(mode, vp.name, 'replay frame: familiar labels clear each other and the mission names', !replayNamed.squadPairs.length,
+        `${replayNamed.squads} familiar labels shown; overlapping: ${replayNamed.squadPairs.slice(0, 6).join('; ') || 'none'}`);
       if (!query) await shot(page, `${tag}-replay`);
 
       // Seal lab opens and closes.

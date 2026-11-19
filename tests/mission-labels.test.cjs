@@ -27,7 +27,7 @@ const { missionLabelAt, missionNamesTight, NAME_ROOM_PX, CROWN_SIDE_PX } = ctx;
 const pc = [0, 0], ext = [-20, 20], U = 1;
 
 test('a name sits on the side of its seal facing Psyche', () => {
-  assert.equal(missionLabelAt([-40, -30], pc, ext, U).y, -30 + 20 + 15, 'a seal above the crown has its name below it');
+  assert.equal(missionLabelAt([-40, -30], pc, ext, U).y, -30 + 20 + 20, 'a seal above the crown has its name below it, clear of the familiar labels under the seal');
   assert.equal(missionLabelAt([-40, 30], pc, ext, U).y, 30 - 20 - 8, 'a seal below the crown has its name above it');
 });
 
@@ -42,8 +42,10 @@ test('off-axis names are anchored at their seal and run away from the centre lin
 
 test('names hide when seals crowd each other or the crown on screen', () => {
   const grid = d => [[-d, -d], [d, -d], [-d, d], [d, d]].map(([x, y]) => [x / 2, y / 2]);
-  assert.equal(missionNamesTight(grid(80), pc, 1), false, 'a 2x2 grid 80 px apart has room');
-  assert.equal(missionNamesTight(grid(80), pc, 0.25), true, 'the same grid at a quarter of the scale (20 px apart) does not');
+  assert.equal(NAME_ROOM_PX, 56, 'measured: names fit at 63 px (1440x900) and collide at 44 px (390x844)');
+  assert.equal(missionNamesTight(grid(63), pc, 1), false, 'a 2x2 grid 63 px apart (1440x900) has room');
+  assert.equal(missionNamesTight(grid(63), pc, 44 / 63), true, 'the same grid at 44 px apart (390x844) does not');
+  assert.equal(missionNamesTight(grid(63), pc, 12 / 63), true, 'nor at 12 px apart (844x390)');
   assert.equal(missionNamesTight(grid(NAME_ROOM_PX), pc, 1), false, 'exactly the room needed is enough');
   assert.equal(missionNamesTight(grid(NAME_ROOM_PX - 1), pc, 1), true);
   assert.equal(missionNamesTight([[-30, -20]], pc, 1), false, 'one seal well to the side of the crown keeps its name');
@@ -57,4 +59,6 @@ test('the scene applies both rules, and #plan.tight hides names except on hover 
   assert.match(source, /const tight = missionNamesTight\(\[\.\.\.sc\.missions\.values\(\)\]\.map\(s => \[s\.sx, s\.sy\]\), pc, kpx\);\n\s+if \(tight !== sc\.tight\) \{ sc\.tight = tight; plan\.classList\.toggle\('tight', tight\); \}/);
   assert.match(source, /,#plan\.tight \.lead-name:not\(\.gname\)\{opacity:0\}/);
   assert.match(source, /#plan\.tight \.lead-node:hover\+\.lead-name,#plan\.tight \.lead-node\.sel\+\.lead-name\{opacity:1\}/);
+  assert.match(source, /\n#plan\.tight \.atlas-squad>\.task-l,#plan\.tight \.atlas-local-psyche \.psy-l\{opacity:0\}\n/, 'familiar labels and the PSYCHE caption hide too');
+  assert.match(source, /\n#plan\.tight \.atlas-squad:hover>\.task-l\{opacity:1\}\n/, 'a squad label returns on hover');
 });
