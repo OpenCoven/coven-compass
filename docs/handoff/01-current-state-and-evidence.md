@@ -74,6 +74,8 @@ Current counts live in one file, [`tests/evidence/current.json`](../../tests/evi
 
 The run found one bug, in the fixture table layout at phone width, which was fixed in `b3970fd` before the recorded run. Screenshots stay outside the repository. This is browser-engine evidence. It **does not establish** Safari, physical devices, real multi-touch, keyboard-only use, screen readers, or daemon behavior.
 
+A later run of the same script, with two added checks (mission names must clear the local Psyche crown and each other, after opening a Project and on the replay frame), found a second bug. In project scope, mission names covered the crown and ran into each other at every viewport. It was fixed in `877c7ce`, where the script made **213 browser checks, 213 passed** ([record](../../tests/evidence/browser-qa-2026-11-19-mission-names.json)). The same checks fail 12 times on the previous layout.
+
 Everything after this subsection is a **dated historical record**. It keeps its counts as recorded and is not updated with later changes. Other documents link here or to `current.json` instead of repeating counts, and `scripts/check-source.mjs` enforces that.
 
 At the v3 checkpoint, seven Node tests passed with zero failures or skips. They cover mission insertion/removal across replay without a wall-count change; hidden agents before selection; selected-mission agents, reserved places, gate links and gate decisions; familiar filters within projects; local/global selection consistency; unchanged seal logic; and all six seal states across three detail tiers after normalizing the ground origin.
