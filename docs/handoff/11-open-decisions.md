@@ -25,6 +25,19 @@ Record a decision as **proposed**, **accepted by owner**, **implemented**, and *
 | D11 | **Canonical metric mapping.** Psyche owner; UI/Brand consumers | Preserve the current visual vocabulary while mapping each displayed quantity to a verified canonical field or computed projection. | The prototype uses role-owned target progress, wedge shares and resource-limit ratios. Decide whether equivalent production semantics exist. Unsupported metrics should show unknown or be omitted, not be approximated as authoritative progress. |
 | D12 | **Pilot scope and publication.** Val; component owners | A one-repository, one-Project, single-authority-host pilot with an explicit bounded operation and rollback/recovery record. | Select the repository, familiar root/revision, runtime, destination, budget, capabilities and human acceptance owner. Published or paid remote execution requires its own concrete acceptance and authorization; a successful Site simulation is not that evidence. |
 
+## Status of D01–D04: discovery delivered, awaiting owners
+
+Sage's read-only discovery for issue #2 is in [docs/discovery/2026-11-19-d01-d04](../discovery/2026-11-19-d01-d04/README.md), pinned to exact revisions and digests. **Every recommendation in it is proposed.** None of these four decisions is accepted, apart from D01's naming, which Val decided on 2026-11-19.
+
+| ID | Status | Discovery headline | Proposal to review |
+| --- | --- | --- | --- |
+| D01 | Naming decided (Projects contain Castles). Ownership: **discovery delivered, proposed, awaiting owner** | No canonical Project entity exists, and one folder has three unrelated IDs ([findings](../discovery/2026-11-19-d01-d04/findings.md), gaps G1–G3, G10, G11) | Cave Client v1 `projects.list` backs the first read-only view. Show `id`, `name`, and `root` separately, and join work by root. |
+| D02 | **Discovery delivered, proposed, awaiting owner** | Cave owns folder discovery, registration, and daemon selection today. Native `coven host` isn't present (gap G4) | Compass takes no Host role. Host naming and ownership stay with the Coven and Host owners. |
+| D03 | **Discovery delivered, proposed, awaiting owner** | No safe browser path exists: loopback TCP is unauthenticated with no CORS (gap G5) | No static-page daemon connection. Run inside Cave or as a `chat:read` Cave Client v1 consumer. Until then, live data shows as unavailable. |
+| D04 | **Discovery delivered, proposed, awaiting owner** | No project subscription exists, and cursor dialects diverge (gaps G6–G9) | Snapshot plus poll-and-age. Show stale, reconciling, and unsupported-version states explicitly. |
+
+Recording an owner's acceptance is the owner's act. Agents may add evidence here, but they don't change a row to accepted.
+
 ## Recommended dependency order
 
 Resolve D01–D04 through repository discovery and a read-only adapter first. Those decisions make the nouns and read path concrete without changing authority. Prepare D05–D09 as a single vertical operation: one bounded mission, one attempt, one decision, one terminal receipt, including interrupted submission and cancellation. Then exercise D10 through a small synchronized artifact set, not the entire Host directory. Evaluate D11 with real canonical sample records before committing to visual metric claims. D12 is the pilot acceptance decision once the earlier evidence exists.
