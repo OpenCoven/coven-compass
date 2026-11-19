@@ -22,18 +22,18 @@
     },
     {
       "path": "MOBILE_READINESS.md",
-      "bytes": 27348,
-      "sha256": "320baea38b8d98685b5a37650757c945cc8111b6ccb802deb946cf1da1769a57"
+      "bytes": 27652,
+      "sha256": "8bb9a2bd48637d071fd54cbae7d028d819870970bad7d49e5d34f6423933779c"
     },
     {
       "path": "README.md",
-      "bytes": 14313,
-      "sha256": "fe2802fa3ecaf56a30b840e7d5e060ca8336916f32e1447568d0a7244b959a79"
+      "bytes": 13960,
+      "sha256": "6aef652a187c8dbf8f77aea39b0a86954931a65595510f47918cb9d2ca44b71b"
     },
     {
       "path": "START_HERE.md",
-      "bytes": 10880,
-      "sha256": "f8001a6b3ecd99f643dc2cef7e12e7b176626d91c214d066e8e2c6852e4302f2"
+      "bytes": 10746,
+      "sha256": "10d71321226d654f9982453793d778dbdf351b4f4c96f44dfd0f196545312f70"
     },
     {
       "path": "dist/atlas-crown.js",
@@ -62,8 +62,8 @@
     },
     {
       "path": "dist/handoff/guide.html",
-      "bytes": 291209,
-      "sha256": "8a4b060ff9f31abf8e82580bee1dd742f224bf9f3d558d4d10b10979fe40a254"
+      "bytes": 291819,
+      "sha256": "39129d0b506d1faddffaaaa5ff94eabd6712ac5b5693b55a9bfab7083a689b0c"
     },
     {
       "path": "dist/handoff/handoff.css",
@@ -72,8 +72,8 @@
     },
     {
       "path": "dist/handoff/index.html",
-      "bytes": 11773,
-      "sha256": "605633e39b84adb2f9dd1d3d6cc759e410ec61344fab9614e3054b8afc4f9c48"
+      "bytes": 11788,
+      "sha256": "3f3f95eb440da1381665a081087ebb29f9766e070c5c3ac4f126f40be8704c1f"
     },
     {
       "path": "dist/index.html",
@@ -112,13 +112,13 @@
     },
     {
       "path": "docs/handoff/00-handoff-index.md",
-      "bytes": 3445,
-      "sha256": "52bf04f97411c007931310217544db2c5c1580a2b1b98fa210076733a04bc5d9"
+      "bytes": 3442,
+      "sha256": "89df12aec34ddf26fe0a606f13ac2ccf64a7a2583ba0f4f18914db7da1547eb4"
     },
     {
       "path": "docs/handoff/01-current-state-and-evidence.md",
-      "bytes": 20690,
-      "sha256": "b3846094f371d0efa0de937566b8a1f9e0f68b7845124df61730689582604504"
+      "bytes": 21670,
+      "sha256": "45828085d2bbf3edfa4729c173eda72491fcd0aceb6969157756323275c7159a"
     },
     {
       "path": "docs/handoff/02-architecture-and-ownership.md",
@@ -142,13 +142,13 @@
     },
     {
       "path": "docs/handoff/06-execution-playbook.md",
-      "bytes": 8630,
-      "sha256": "00ce54f6df48d7650edbccd0618be3de2d6a38a50105cea4484f02052466a3a4"
+      "bytes": 8632,
+      "sha256": "ec333dc24d91c3063f6196df5ff750513dfd7d18bc810a3bc6aeea8ac0fc186b"
     },
     {
       "path": "docs/handoff/07-validation-and-acceptance.md",
-      "bytes": 14361,
-      "sha256": "6fa4b34998cec469085ec7abbabe92351ed778f8907248076166315fa548b169"
+      "bytes": 14263,
+      "sha256": "e315801b063ebcc0c5117ff0e3b5985a03003d510352f53c08769378898a4ad1"
     },
     {
       "path": "docs/handoff/08-visual-and-interaction-contract.md",
@@ -162,8 +162,8 @@
     },
     {
       "path": "docs/handoff/10-agent-task-prompts.md",
-      "bytes": 12022,
-      "sha256": "49153a0ed04601516adf5b1d8bd399e549694b0b61cc138599bad64a5845263a"
+      "bytes": 11972,
+      "sha256": "4b0eefc6a89bfacc084739ad4d7acb35f88f7d69c6052590924a8dfc82881961"
     },
     {
       "path": "docs/handoff/11-open-decisions.md",
@@ -172,13 +172,13 @@
     },
     {
       "path": "docs/handoff/12-source-ledger.md",
-      "bytes": 8431,
-      "sha256": "ea1ca6c1b4f698b752f054b95c2abcf51871a9ef48072bd90093d77597583949"
+      "bytes": 8404,
+      "sha256": "898bb97b3876bfd405c0dd09a7527a7bf373373a8d457b031254857bb7c3fd61"
     },
     {
       "path": "docs/handoff/15-scalable-atlas-layout.md",
-      "bytes": 23064,
-      "sha256": "8123f6331f8b79e516fd949ff8c906605d0e99e43f7a87266b1e11c78090afe6"
+      "bytes": 22898,
+      "sha256": "63623297e1aad59a1b04d7a7284a027c15dd1c811840bc1f08ab08df75e2271a"
     },
     {
       "path": "docs/handoff/source-context/user-architecture-instructions.md",
@@ -227,8 +227,8 @@
     },
     {
       "path": "scripts/check-source.mjs",
-      "bytes": 15809,
-      "sha256": "03e704efce3c99a3985aa7ae4bf989205da48a302cd63fc808ca5f98a683cdc6"
+      "bytes": 17322,
+      "sha256": "24a69c4181f77d2653f6a64c4c07e551586f6afe5b7f92ae2698e3a028ca9e5b"
     },
     {
       "path": "scripts/test-atlas-crown.mjs",
@@ -237,8 +237,8 @@
     },
     {
       "path": "scripts/verify-all.mjs",
-      "bytes": 4230,
-      "sha256": "dbf804de11dda629ff2d71464571ff707c978f54a55a4d87a39d6d04175751a9"
+      "bytes": 8794,
+      "sha256": "1f2fc22770fbc6879e5d9e517131d23bff94dbf66f63f87174cdd058b4fbaf14"
     },
     {
       "path": "scripts/verify-checkout.sh",
@@ -264,6 +264,11 @@
       "path": "tests/atlas-viewport.test.cjs",
       "bytes": 10053,
       "sha256": "93d7b7c74c540eeba5571991608ae924a792d2ee74681340a03c9b1fab1931f3"
+    },
+    {
+      "path": "tests/evidence/current.json",
+      "bytes": 792,
+      "sha256": "8cd2c7d0298be0b50fc732ca28c2cc3873fb8908a77cfc9197b46bbd02161c0e"
     },
     {
       "path": "tests/evidence/layout-audits.json",
