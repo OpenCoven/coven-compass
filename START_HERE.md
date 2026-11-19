@@ -10,20 +10,32 @@ The scalable overview and crown refinement now incorporates adaptive-mobile repl
 
 ## Start in ten minutes
 
-1. Extract the ZIP. Work from the extracted `Coven_Compass_Handoff_2026-11-19` directory.
+1. Start at the root of your Git checkout. If you received the ZIP, extract it and work from the extracted `Coven_Compass_Handoff_2026-11-19` directory.
 2. Read this file, then [current state and evidence](docs/handoff/01-current-state-and-evidence.md).
-3. Verify the delivered bytes and source with the commands below.
+3. For an extracted delivery, run `python3 scripts/verify-handoff.py .` before making edits. In a Git checkout, use the source checks and verify a rebuilt export as described below.
 4. Preview Compass locally. Enter a Project, select a mission, inspect its agents and pending decisions, and try familiar filters and Seal lab. In Projects, use project search and **Try a larger Coven** to explore the 8/16/32/64/128 sample presets; **Remove extra samples** preserves baseline and user-created Projects. Start replay and switch Projects while it plays; on mobile, explore the Map, Missions, Activity, and View dock.
 5. Read [architecture and ownership](docs/handoff/02-architecture-and-ownership.md), then take the discovery packet in the [implementation plan](docs/handoff/05-implementation-plan.md).
 
 The handoff HTML is also available at `dist/handoff/guide.html`. Markdown chapters are the editable documentation source. The Site's Handoff entry links to the same package and reader.
 
+## Where to make a change
+
+| Change | Editable source | Focused check |
+| --- | --- | --- |
+| Project and mission navigation | `dist/mission-navigation.js`, `dist/atlas-ui.js`, and their app bindings in `dist/index.html` | `node --test tests/navigation.test.cjs tests/mission-interactions.test.cjs` |
+| Map placement and camera | `dist/atlas-layout.js`, `dist/atlas-viewport.js` | `node --test tests/atlas-layout.test.cjs tests/atlas-viewport.test.cjs` |
+| Mobile controls and focus | `dist/mobile-ui.js`, `dist/mobile-interactions.js`, `dist/atlas.css` | `node --test tests/mobile-*.test.cjs` |
+| Handoff chapter | Markdown under `docs/handoff/` | Rebuild the guide and ZIP below, then follow the Handoff link in the preview. |
+
+The application in `dist/` is editable browser source. The builder generates `dist/handoff/guide.html` and the downloadable archive. Preserve the baseline under `tests/fixtures/` and dated audits under `tests/evidence/` as historical evidence.
+
 ## Run and check
+
+From a Git checkout, run the full verification with `sh scripts/verify-checkout.sh`. See [AGENTS.md](AGENTS.md) for editable sources and focused checks.
 
 The package has no npm dependencies and needs no application build. Use Node.js 24 and Python 3.10 or newer; the tested runtimes are Node.js 24.22.1 and Python 3.12.14. Exact results are recorded in [the evidence note](docs/handoff/01-current-state-and-evidence.md). The bundled reference fixture makes the unit tests independent of Git history and network access.
 
 ```bash
-python3 scripts/verify-handoff.py .
 node scripts/check-source.mjs
 node --test tests/*.test.cjs
 node scripts/test-atlas-crown.mjs
@@ -43,6 +55,14 @@ The checksum verifier validates the delivered snapshot. After intentionally edit
 ```bash
 python3 scripts/build-handoff.py
 python3 scripts/verify-handoff.py dist/downloads/Coven_Compass_Handoff_2026-11-19.zip
+```
+
+To check the extracted delivery independently, run these commands from the checkout.
+
+```bash
+export_check=$(mktemp -d)
+python3 -m zipfile -e dist/downloads/Coven_Compass_Handoff_2026-11-19.zip "$export_check"
+python3 scripts/verify-handoff.py "$export_check/Coven_Compass_Handoff_2026-11-19"
 ```
 
 The generated ZIP is excluded from its own contents. It can be recreated from the extracted package. The other files required to run Compass and rebuild the handoff are included.

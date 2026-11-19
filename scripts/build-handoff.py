@@ -15,18 +15,19 @@ import re
 import stat
 import sys
 import tempfile
-from datetime import datetime, timezone
+from datetime import date
 import unicodedata
 from urllib.parse import unquote, urlsplit
 import zipfile
 
 
 ROOT = Path(__file__).resolve().parents[1]
-ARCHIVE_ROOT = "Coven_Compass_Handoff_2026-11-19"
+EDITION = date(2026, 11, 19)
+ARCHIVE_ROOT = f"Coven_Compass_Handoff_{EDITION.isoformat()}"
 BASELINE_COMMIT = "d7b6f1e655140036cca49f31687131352162de13"
 MANIFEST = "HANDOFF_MANIFEST.json"
 CHECKSUMS = "CHECKSUMS.sha256"
-ALLOW_FILES = ("README.md", "START_HERE.md", "MOBILE_READINESS.md", ".gitignore")
+ALLOW_FILES = ("AGENTS.md", "README.md", "START_HERE.md", "MOBILE_READINESS.md", ".gitignore")
 ALLOW_DIRS = ("dist", "docs/handoff", "examples", "tests", "scripts")
 REQUIRED = (
     "README.md", "START_HERE.md", "MOBILE_READINESS.md", "dist/index.html",
@@ -447,7 +448,7 @@ def build(output: Path) -> tuple[int, str, int]:
     manifest = {
         "format_version": 1,
         "artifact": ARCHIVE_ROOT,
-        "created_utc": datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z"),
+        "edition_date": EDITION.isoformat(),
         "baseline_site_version": 3,
         "baseline_source_commit": BASELINE_COMMIT,
         "baseline_relationship": "The v3 source revision is a provenance reference, not a claim that these exported files equal that commit. This handoff includes new documentation, packaging tools, and Site additions.",
@@ -467,7 +468,7 @@ def build(output: Path) -> tuple[int, str, int]:
     try:
         with zipfile.ZipFile(temporary, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
             for name, data in sorted(files.items()):
-                info = zipfile.ZipInfo(f"{ARCHIVE_ROOT}/{name}", date_time=(2026, 11, 19, 0, 0, 0))
+                info = zipfile.ZipInfo(f"{ARCHIVE_ROOT}/{name}", date_time=(EDITION.year, EDITION.month, EDITION.day, 0, 0, 0))
                 info.create_system = 3
                 info.external_attr = (stat.S_IFREG | 0o644) << 16
                 info.compress_type = zipfile.ZIP_DEFLATED
@@ -478,6 +479,8 @@ def build(output: Path) -> tuple[int, str, int]:
             os.unlink(temporary)
     digest = hashlib.sha256(output.read_bytes()).hexdigest()
     atomic_write(Path(str(output) + ".sha256"), f"{digest}  {output.name}\n".encode("utf-8"))
+    for name in (MANIFEST, CHECKSUMS):
+        atomic_write(ROOT / name, files[name])
     return len(files), digest, chapters
 
 
