@@ -2,7 +2,7 @@
 
 ## 1. Checkpoint and provenance
 
-The baseline for this handoff is **Coven Castles · Orchestration Atlas, private Site version 3** (renamed Coven Compass on 2026-11-19; see [D01](11-open-decisions.md)), published from commit `d7b6f1e655140036cca49f31687131352162de13` on 18 November 2026. The selected Site is `appgprj_6afd98fc7e5081918f0609d2ebda9324`, at https://coven-castles-atlas-v27.dewy-bean-6653.chatgpt.site.
+The baseline for this handoff is **Coven Castles · Orchestration Atlas, private Site version 3** (renamed Coven Compass on 2026-11-19; see [D01](11-open-decisions.md)), published from commit `d7b6f1e655140036cca49f31687131352162de13` on 18 November 2026.
 
 The export adds documentation, portable test fixtures, packaging/checking utilities, a Handoff link/reader, mission-navigation/mobile changes, and the scalable layout, viewport, density, sample-control, and crown refinement. The combined source also incorporates replay/adaptive-mobile work from `07919b421df5457e778e1b1c6a73512c8f27ba73`. It is not a byte-for-byte export of the older v3 commit or either pre-combination branch. `HANDOFF_MANIFEST.json` identifies the baseline and inventories the exported files; `CHECKSUMS.sha256` records their bytes. A publication receipt, when recorded, identifies its particular artifact and must not be inferred from an earlier checkpoint.
 

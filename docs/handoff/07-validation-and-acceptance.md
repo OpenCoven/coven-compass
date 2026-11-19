@@ -28,7 +28,7 @@ The seven fixtures exercise these actual extracted functions and behaviors:
 
 These are **Node unit tests using a DOM facade**, not browser execution, accessibility, CSS/layout, or runtime integration tests. The portable suite reads and verifies the bundled v2 baseline fixture rather than inspecting an arbitrary Git checkout.
 
-The source ledger records a generated static preview for saved Site version `appgver_54012053f1f88191a2c28ff5b36205af`, associated with the same v3 revision. Its inspected overview image supports a visual observation of the simplified composition only. Native browser navigation was blocked by URL policy at that checkpoint; interaction, focus, responsive, and reduced-motion behavior were not verified by that historical record.
+The source ledger records a generated static preview for the saved v3 Site version, associated with the same v3 revision. Its inspected overview image supports a visual observation of the simplified composition only. Native browser navigation was blocked by URL policy at that checkpoint; interaction, focus, responsive, and reduced-motion behavior were not verified by that historical record.
 
 ## Historical pre-layout mobile verification
 

@@ -24,7 +24,6 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 ARCHIVE_ROOT = "Coven_Compass_Handoff_2026-11-19"
 BASELINE_COMMIT = "d7b6f1e655140036cca49f31687131352162de13"
-BASELINE_VERSION_ID = "appgprj_6afd98fc7e5081918f0609d2ebda9324~appgver_54012053f1f88191a2c28ff5b36205af"
 MANIFEST = "HANDOFF_MANIFEST.json"
 CHECKSUMS = "CHECKSUMS.sha256"
 ALLOW_FILES = ("README.md", "START_HERE.md", "MOBILE_READINESS.md", ".gitignore")
@@ -450,7 +449,6 @@ def build(output: Path) -> tuple[int, str, int]:
         "artifact": ARCHIVE_ROOT,
         "created_utc": datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z"),
         "baseline_site_version": 3,
-        "baseline_site_version_id": BASELINE_VERSION_ID,
         "baseline_source_commit": BASELINE_COMMIT,
         "baseline_relationship": "The v3 source revision is a provenance reference, not a claim that these exported files equal that commit. This handoff includes new documentation, packaging tools, and Site additions.",
         "conceptual_documents_are_canonical_contracts": False,
