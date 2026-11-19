@@ -1196,7 +1196,7 @@ python3 scripts/verify-handoff.py dist/downloads/Coven_Compass_Handoff_2026-11-1
 <ol start="1">
 <li><p>Start at the root of your Git checkout. If you received the ZIP, extract it and work from the extracted <code>Coven_Compass_Handoff_2026-11-19</code> directory.</p></li>
 <li><p>Read this file, then <a href="#doc-01-current-state-and-evidence">current state and evidence</a>.</p></li>
-<li><p>For an extracted delivery, run <code>python3 scripts/verify-handoff.py .</code> before making edits. In a Git checkout, use the source checks and verify a rebuilt export as described below.</p></li>
+<li><p>For an extracted delivery, run <code>python3 scripts/verify-handoff.py .</code> before making edits. In a Git checkout, run <code>node scripts/verify-all.mjs</code> instead: the manifest and checksums are generated into the ZIP and aren&#x27;t committed, so <code>verify-handoff.py .</code> refuses a checkout and says so.</p></li>
 <li><p>Preview Compass locally. Enter a Project, select a mission, inspect its agents and pending decisions, and try familiar filters and Seal lab. In Projects, use project search and <strong>Try a larger Coven</strong> to explore the 8/16/32/64/128 sample presets; <strong>Remove extra samples</strong> preserves baseline and user-created Projects. Start replay and switch Projects while it plays; on mobile, explore the Map, Missions, Activity, and View dock.</p></li>
 <li><p>Read <a href="#doc-02-architecture-and-ownership">architecture and ownership</a>, then take the discovery packet in the <a href="#doc-05-implementation-plan">implementation plan</a>.</p></li>
 </ol>
@@ -1246,7 +1246,7 @@ python3 scripts/verify-handoff.py &quot;$export_check/Coven_Compass_Handoff_2026
 <li><p><code>tests/</code>: source regression coverage for presentation/layout/viewport geometry, navigation, replay timing/rendering/delayed reports, adaptive mobile controls, gestures/overlays, and mission interactions; the pinned v2 reference source; and historical JSON evidence. Run the full command for the combined count. Replay cases are in clock <code>(tests/replay-clock.test.cjs)</code>, render <code>(tests/replay-render.test.cjs)</code>, and emission <code>(tests/replay-emission.test.cjs)</code> tests.</p></li>
 <li><p><code>MOBILE_READINESS.md</code>: separate historical mobile and incoming replay/mobile checkpoints, the combined refinement&#x27;s evidence boundary, and remaining native-device checks.</p></li>
 <li><p><code>scripts/</code>: source and crown checks, repeatable package generation with a fresh export timestamp, and archive/extracted-directory verification.</p></li>
-<li><p><code>HANDOFF_MANIFEST.json</code>, <code>CHECKSUMS.sha256</code>: export provenance, file inventory, and byte-integrity checks.</p></li>
+<li><p><code>HANDOFF_MANIFEST.json</code>, <code>CHECKSUMS.sha256</code>: export provenance, file inventory, and byte-integrity checks. <code>build-handoff.py</code> generates them into each ZIP; they are not committed to the source repository.</p></li>
 </ul>
 <p>Git metadata, credentials, local runtime state, browser profiles, historical QA screenshots, installed dependencies, and previous export archives are intentionally excluded. No license or production authority is created by this package. Preserve the applicable upstream terms and current repository instructions when integrating.</p>
 <h3 id="doc-starthere--first-implementation-recommendation">First implementation recommendation</h3>

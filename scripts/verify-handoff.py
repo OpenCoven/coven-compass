@@ -290,6 +290,11 @@ def main() -> int:
             kind = "ZIP CRC and paths"
         else:
             raise VerificationError(f"Input does not exist: {path}")
+        if path.is_dir() and MANIFEST not in records and (path / ".git").exists():
+            raise VerificationError(
+                "This is a source checkout, not an extracted handoff. HANDOFF_MANIFEST.json and "
+                "CHECKSUMS.sha256 are generated into the ZIP by build-handoff.py and are not committed. "
+                "Run `node scripts/verify-all.mjs`, which builds the ZIP and verifies it and a clean extraction.")
         payload, checksums = verify_records(records)
         print(f"PASS: {len(records)} files; {payload} payload entries; {checksums} SHA-256 checks; {kind} verified")
         if ignored:
