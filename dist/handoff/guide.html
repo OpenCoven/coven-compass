@@ -1192,17 +1192,24 @@ python3 scripts/verify-handoff.py dist/downloads/Coven_Compass_Handoff_2026-11-1
 <p>The scalable overview and crown refinement now incorporates adaptive-mobile replay improvements; <strong>combined source-level verification passed</strong>. It adds compact project placement, bounded overview mission detail, project search and sample presets, explicit scope, chrome-safe fit, and canonical crown relief. See <a href="#doc-15-scalable-atlas-layout">guide 15</a>; historical browser evidence does not qualify these changes.</p>
 <h3 id="doc-starthere--start-in-ten-minutes">Start in ten minutes</h3>
 <ol start="1">
-<li><p>Extract the ZIP. Work from the extracted <code>Coven_Compass_Handoff_2026-11-19</code> directory.</p></li>
+<li><p>Start at the root of your Git checkout. If you received the ZIP, extract it and work from the extracted <code>Coven_Compass_Handoff_2026-11-19</code> directory.</p></li>
 <li><p>Read this file, then <a href="#doc-01-current-state-and-evidence">current state and evidence</a>.</p></li>
-<li><p>Verify the delivered bytes and source with the commands below.</p></li>
+<li><p>For an extracted delivery, run <code>python3 scripts/verify-handoff.py .</code> before making edits. In a Git checkout, use the source checks and verify a rebuilt export as described below.</p></li>
 <li><p>Preview Compass locally. Enter a Project, select a mission, inspect its agents and pending decisions, and try familiar filters and Seal lab. In Projects, use project search and <strong>Try a larger Coven</strong> to explore the 8/16/32/64/128 sample presets; <strong>Remove extra samples</strong> preserves baseline and user-created Projects. Start replay and switch Projects while it plays; on mobile, explore the Map, Missions, Activity, and View dock.</p></li>
 <li><p>Read <a href="#doc-02-architecture-and-ownership">architecture and ownership</a>, then take the discovery packet in the <a href="#doc-05-implementation-plan">implementation plan</a>.</p></li>
 </ol>
 <p>The handoff HTML is also available at <code>dist/handoff/guide.html</code>. Markdown chapters are the editable documentation source. The Site&#x27;s Handoff entry links to the same package and reader.</p>
+<h3 id="doc-starthere--where-to-make-a-change">Where to make a change</h3>
+<table><thead><tr><th>Change</th><th>Editable source</th><th>Focused check</th></tr></thead><tbody>
+<tr><td>Project and mission navigation</td><td><code>dist/mission-navigation.js</code>, <code>dist/atlas-ui.js</code>, and their app bindings in <code>dist/index.html</code></td><td><code>node --test tests/navigation.test.cjs tests/mission-interactions.test.cjs</code></td></tr>
+<tr><td>Map placement and camera</td><td><code>dist/atlas-layout.js</code>, <code>dist/atlas-viewport.js</code></td><td><code>node --test tests/atlas-layout.test.cjs tests/atlas-viewport.test.cjs</code></td></tr>
+<tr><td>Mobile controls and focus</td><td><code>dist/mobile-ui.js</code>, <code>dist/mobile-interactions.js</code>, <code>dist/atlas.css</code></td><td><code>node --test tests/mobile-*.test.cjs</code></td></tr>
+<tr><td>Handoff chapter</td><td>Markdown under <code>docs/handoff/</code></td><td>Rebuild the guide and ZIP below, then follow the Handoff link in the preview.</td></tr>
+</tbody></table>
+<p>The application in <code>dist/</code> is editable browser source. The builder generates <code>dist/handoff/guide.html</code> and the downloadable archive. Preserve the baseline under <code>tests/fixtures/</code> and dated audits under <code>tests/evidence/</code> as historical evidence.</p>
 <h3 id="doc-starthere--run-and-check">Run and check</h3>
 <p>The package has no npm dependencies and needs no application build. Use Node.js 24 and Python 3.10 or newer; the tested runtimes are Node.js 24.22.1 and Python 3.12.14. Exact results are recorded in <a href="#doc-01-current-state-and-evidence">the evidence note</a>. The bundled reference fixture makes the unit tests independent of Git history and network access.</p>
-<pre><code class="language-bash">python3 scripts/verify-handoff.py .
-node scripts/check-source.mjs
+<pre><code class="language-bash">node scripts/check-source.mjs
 node --test tests/*.test.cjs
 node scripts/test-atlas-crown.mjs
 python3 -m http.server 8000 --bind 127.0.0.1 --directory dist</code></pre>
@@ -1213,6 +1220,10 @@ python3 -m http.server 8000 --bind 127.0.0.1 --directory dist</code></pre>
 <p>The checksum verifier validates the delivered snapshot. After intentionally editing files, changed checksums are expected; run the source/unit checks and rebuild the export. A checksum manifest detects byte changes relative to itself. It is not a cryptographic signature or a proof of trust.</p>
 <pre><code class="language-bash">python3 scripts/build-handoff.py
 python3 scripts/verify-handoff.py dist/downloads/Coven_Compass_Handoff_2026-11-19.zip</code></pre>
+<p>To check the extracted delivery independently, run these commands from the checkout.</p>
+<pre><code class="language-bash">export_check=$(mktemp -d)
+python3 -m zipfile -e dist/downloads/Coven_Compass_Handoff_2026-11-19.zip &quot;$export_check&quot;
+python3 scripts/verify-handoff.py &quot;$export_check/Coven_Compass_Handoff_2026-11-19&quot;</code></pre>
 <p>The generated ZIP is excluded from its own contents. It can be recreated from the extracted package. The other files required to run Compass and rebuild the handoff are included.</p>
 <h3 id="doc-starthere--what-to-read-for-your-role">What to read for your role</h3>
 <table><thead><tr><th>Role</th><th>Reading order</th><th>First output</th></tr></thead><tbody>
