@@ -139,7 +139,11 @@
     if (status) status.textContent = count + (count === 1 ? ' Project' : ' Projects') + (needle ? ' found' : ' in this Coven');
   }
   var fort = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 3 7 5h10l4-2-2 4v10l2 4-4-2H7l-4 2 2-4V7Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>';
-  var seal = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.2"/><circle cx="10" cy="10" r="2" fill="currentColor"/><path d="M10 3v5M12 11l4 2.5M8 11l-4 2.5" stroke="currentColor" stroke-width="1.2"/></svg>';
+  function headerAction(control, label, drawing) {
+    control.innerHTML = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + drawing + '</svg>';
+    control.append(node('span', '', label));
+    return control;
+  }
   function mount(client) {
     if (api) return;
     api = client;
@@ -158,29 +162,27 @@
     );
     var sim = node('span', 'atlas-simulation', 'Simulation');
     sim.title = 'An interactive local simulation. Decisions and chat affect sample data only.';
-    var lab = button('atlasLab', '', function () {
-      closeBrowse(false); closeMissions(false);
-      if (window.CovenSealLab) window.CovenSealLab.open();
-    });
-    lab.innerHTML = seal;
-    lab.append(node('span', '', 'Seal lab'));
-    lab.title = 'Explore the mission seals'; lab.setAttribute('aria-label', 'Open the seal lab');
-    var browse = button('atlasBrowse', '', function () {
+    var browse = headerAction(button('atlasBrowse', '', function () {
       if ($('atlasSidebar').hidden) openBrowse(); else closeBrowse(false);
-    });
-    browse.innerHTML = fort; browse.append(node('span', '', 'Projects'));
+    }), 'Projects', '<path d="M3 3l3 1.5h8L17 3l-1.5 3v8l1.5 3-3-1.5H6L3 17l1.5-3V6L3 3Z"/>');
     browse.setAttribute('aria-expanded', 'false'); browse.setAttribute('aria-controls', 'atlasSidebar');
-    browse.title = 'Browse Projects';
-    var missions = button('atlasMissions', 'Missions', function () {
+    browse.title = 'Browse Projects'; browse.setAttribute('aria-label', 'Browse Projects');
+    var missions = headerAction(button('atlasMissions', '', function () {
       if ($('atlasMissionBrowser').hidden) openMissions(false); else closeMissions(false);
-    });
+    }), 'Missions', '<circle cx="10" cy="6" r="3"/><circle cx="6" cy="13.5" r="3"/><circle cx="14" cy="13.5" r="3"/>');
     missions.setAttribute('aria-expanded', 'false'); missions.setAttribute('aria-controls', 'atlasMissionBrowser');
     missions.title = 'Find a mission and explore its details';
-    var handoff = node('a', 'atlas-button'); handoff.id = 'atlasHandoff'; handoff.href = 'handoff/';
-    handoff.innerHTML = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 2.5h7l3 3v12H5Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M12 2.5v4h3M7.5 10h5M7.5 13h5" stroke="currentColor" stroke-width="1.2"/></svg>';
-    handoff.append(node('span', '', 'Handoff')); handoff.title = 'Source ZIP and implementation handoff';
+    var handoff = headerAction(node('a', 'atlas-button'), 'Handoff', '<path d="M5 2.5h7l3 3v12H5Z M12 2.5v4h3 M7.5 10h5 M7.5 13h5"/>');
+    handoff.id = 'atlasHandoff'; handoff.href = 'handoff/'; handoff.title = 'Source ZIP and implementation handoff';
     handoff.setAttribute('aria-label', 'Open the source ZIP and implementation handoff');
-    head.append(brand, nav, browse, missions, handoff, lab, sim); shield(head);
+    var lab = headerAction(button('atlasLab', '', function () {
+      closeBrowse(false); closeMissions(false);
+      if (window.CovenSealLab) window.CovenSealLab.open(lab);
+    }), 'Seal lab', '<circle cx="10" cy="10" r="7"/><circle cx="10" cy="10" r="2" fill="currentColor" stroke="none"/><path d="M10 3v5 M12 11l4 2.5 M8 11l-4 2.5"/>');
+    lab.title = 'Explore the mission seals'; lab.setAttribute('aria-label', 'Open the seal lab');
+    lab.setAttribute('aria-haspopup', 'dialog');
+    var actions = node('div', 'atlas-actions'); actions.append(browse, missions, handoff, lab);
+    head.append(brand, nav, actions, sim); shield(head);
 
     var aside = node('aside', 'atlas-sidebar'); aside.id = 'atlasSidebar'; aside.hidden = true;
     aside.setAttribute('aria-labelledby', 'atlasProjectsTitle');

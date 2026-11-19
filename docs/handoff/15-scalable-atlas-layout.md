@@ -9,8 +9,7 @@ The inspected implementation surfaces are [`atlas-layout.js`](../../dist/atlas-l
 | Representation | Meaning | Constraint |
 | --- | --- | --- |
 | Uniform four-corner Project | One project within the displayed Coven scope | The four corners describe the enclosure, not a four-project limit or a permission model. |
-| Mission seal inside a Project | One mission in that project | At full detail, at most eight mission seals appear; compact/tiny modes use aggregates and retain the full mission collection. |
-| Explicit overflow marker | Additional missions omitted from the miniature | Its count is the exact known remainder, and activation leads to the full mission browser. |
+| Mission count inside a Project | Exact known mission total in that Project | Enter the Project or use the searchable mission browser for individual seals and details. |
 | Central canonical crown | Psyche coordination in the displayed scope | Its relief does not encode priority, progress, authority, or a separate identity. |
 | Shared branch corridor | A readable coordination connection from Psyche to a project | Shared segments do not assert execution order, dependencies, network connectivity, or shared permissions. |
 | Inward-facing Project gate | Where that project's coordination route meets its enclosure | The direction is geometric. North, east, south, and west do not create authorization categories. |
@@ -28,7 +27,7 @@ At unchanged geometric options, appending keys preserves existing node positions
 
 “N-many” means that placement is data-driven and has no hardcoded four-project or sixteen-project scenario. It does **not** promise unlimited rendering performance. Finite geometry, DOM cost, text legibility, interaction targets, and device limits still constrain useful detail. At dense counts, favor compact summaries, search, and project drilldown. Introducing viewport culling or list virtualization later requires measured evidence and must preserve the full accessible collection; it is not established by this geometry helper alone.
 
-The implementation selects **full**, **compact**, or **tiny** detail from the projected Project size. Full detail includes the bounded mission seals and overflow; compact/tiny modes replace miniature seals with the exact mission aggregate. Tiny mode limits visual project-name detail until interaction while retaining the project's accessible name and browser entry. This bounds inner visual detail without changing project or mission totals. [Scene integration](../../dist/index.html) · [Density styling](../../dist/semantic-map.css)
+The overview uses a single count per Project. Project names appear when the projected enclosure is wide enough and remain available to assistive technology, the Projects drawer, and hover or focus. Density uses separate entry and exit thresholds to reduce flicker during zoom. At compact sizes, the boundary square marks a pending decision and the Project label and drawer provide the exact count. The larger badge has its own review target when there is room.
 
 ### Explore larger Covens without removing user projects
 
@@ -40,11 +39,11 @@ The former cosmetic sixteen-Project and twelve-mission creation caps have been r
 
 `missionPacking(count, options)` supplies a bounded overview arrangement: up to eight seal slots and, when needed, one additional overflow slot. It returns `total`, `visible`, `hidden`, the visible positions, the overflow position/count, and a suitable seal radius. The helper does not change mission priority, state, progress, or the source collection. Caller order determines which missions occupy the visible slots. [Packing implementation](../../dist/atlas-layout.js)
 
-For a project with thirteen known missions, full overview detail can show eight seals and a `+5` marker while project details retain the exact total of thirteen. Compact/tiny views show the total instead of miniature seals. The full mission browser exposes the complete local collection, supports search, and opens missions directly; overflow opens that Project's full mission browser. Reducing miniature detail must never silently discard missions from navigation, totals, keyboard access, or selected-mission details.
+A Project with thirteen known missions shows thirteen in its enclosure. Enter the Project for individual seals or use the searchable mission browser to open a mission directly.
 
-Keep three quantities distinct: the complete known project total, the number matching an active filter, and the number of seals currently rendered. Label filtered totals explicitly. The eight-seal cap is a presentation limit, not a maximum number of canonical missions or council members. It also differs from the existing seal renderer's own wedge and pip limits, which continue to require exact numerical details elsewhere. [Seal limits](08-visual-and-interaction-contract.md)
+Keep the complete known Project total separate from the number matching an active filter. Preserve the independent wedge and working-pip limits, with exact values in the mission details. [Seal limits](08-visual-and-interaction-contract.md)
 
-The prototype can calculate exact totals from its complete in-memory fixtures. A production adapter may receive a partial page or unavailable count. In that case, retain coverage and freshness information and show an unknown or qualified total. Do not calculate an apparently complete `+N` from an incomplete page, and do not turn unavailable missions into a zero-mission dormant Project. Search and overflow are alternate access paths to the same scoped collection, not evidence that all source data has been received.
+The prototype can calculate exact totals from its complete in-memory fixtures. A production adapter may receive a partial page or unavailable count. In that case, retain coverage and freshness information and show an unknown or qualified total. Do not calculate an apparently complete `+N` from an incomplete page, and do not turn unavailable missions into a zero-mission dormant Project. Search and drilldown give access to the known collection. Show its coverage separately.
 
 ## 4. Scope and camera are separate controls
 
@@ -80,7 +79,7 @@ When replay removes a selected mission, selection reconciliation restores the sa
 
 The scene crown uses the existing `#crown` symbol as its exact front and back faces. Derived edge samples form the extrusion's side walls, including the central aperture. The canonical path remains the identity-bearing asset; the sampled geometry is a rendering aid, not an alternative logo. Its provenance is recorded in the renderer and guarded by the dedicated crown check. [Renderer](../../dist/atlas-crown.js) · [Crown check](../../scripts/test-atlas-crown.mjs)
 
-The crown uses solid violet shading and bounded oblique relief. It retains visible depth at pitch zero and responds smoothly to scene pitch and yaw while remaining recognizable. It does not spin, glow, introduce gradients, or substitute a new silhouette. Flat header, navigation, and other UI marks remain flat. Crown relief is a specific presentation treatment for the coordination sculpture; it must not become a new quantitative encoding that competes with mission-seal progress.
+Both map centers use the same lavender as the flat Psyche marks. A single darker lavender rim adds shallow, proportional depth along the bottom. The face stays upright as the camera orbits, preserving the canonical proportions and aperture. The rim is decorative, while mission-seal relief represents progress.
 
 The integration interface is:
 
@@ -89,9 +88,7 @@ const crown = window.CovenAtlasCrown.create(psycheGroup, svgEl);
 window.CovenAtlasCrown.draw(crown, {
   x: projectedX,
   y: projectedY,
-  size: nominalWidth,
-  pitch: scenePitchDegrees,
-  yaw: sceneYawDegrees
+  size: nominalWidth
 });
 ```
 
@@ -119,7 +116,7 @@ Before connecting live data, inspect the owning repositories and map their exist
 1. **Preserve stable inputs.** Resolve project keys, caller order, complete or qualified totals, familiar bindings, and scope through the existing adapter. Keep operational state out of geometry functions.
 2. **Compute one layout snapshot.** Call `CovenAtlasLayout.layout(keys, options)` with measured available aspect and reserved Project/label dimensions. Cache by ordered keys and normalized geometric options, not by every mission-progress tick.
 3. **Render one overview vocabulary.** Use the uniform four-corner Project for each project. Place routes from the returned points and gate metadata, respecting corridor clearance and maximum corner radius.
-4. **Bound miniature detail.** Use mission packing for eight seals plus overflow. Retain exact known totals and direct access to the full scoped mission browser. Keep selection valid when a chosen mission is outside the visible miniature subset.
+4. **Bound map detail.** Show Project totals on the overview. Use projected scale and spacing to reveal seal relief and selected agents within the Project. Preserve the selected mission and keep the full collection accessible through the mission browser.
 5. **Keep scope explicit.** Connect project opening, Coven return, and search results to navigation. Connect Fit and camera gestures to camera state. Avoid zoom-based scope switching.
 6. **Fit the measured safe area.** Include projected geometry and screen-space labels, observe relevant chrome changes, and refit on resize only in auto-fit mode.
 7. **Reuse the crown record.** Keep canonical front faces and decorative relief isolated from flat UI marks, hit targets, and semantic mission topography.
@@ -140,6 +137,8 @@ node scripts/check-source.mjs
 ```
 
 Headless Chromium QA of the current source ran on 2026-11-19 ([record](../../tests/evidence/browser-qa-2026-11-19.json), summarized in chapter 01); it does not establish Safari, physical-device, real multi-touch, keyboard-only, or screen-reader acceptance. Before calling the integrated result visually accepted, inspect desktop and narrow layouts with chrome open and closed; zero, one, odd, and dense project counts; more than eight missions; exact overflow and aggregate totals; density transitions; project/mission search and drilldown; sample presets and preservation of user-created Projects on reset; keyboard and touch navigation; label overlap; route clearance; explicit scope changes; auto-fit resize behavior; and preservation of a manually adjusted camera. Check the canonical aperture and readable depth at low pitch in both scopes.
+
+Browser QA should cover desktop and narrow layouts in both camera modes. Check dense sample presets, exact Project totals, selection and focus across density changes, label and leader clearance, and the shared seal geometry in Seal Lab.
 
 Older screenshots or unrelated mobile checks do not establish acceptance of this refinement. No daemon integration, live authorization behavior, production throughput, or cross-device persistence is demonstrated by these presentation tests. Use the existing [validation plan](07-validation-and-acceptance.md) and [evidence record template](templates/evidence-record.md) for the integration's remaining gates.
 
