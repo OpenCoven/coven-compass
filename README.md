@@ -70,6 +70,12 @@ Replay renders missions before their first council seat, so opening events no lo
 
 The starting model contains four Projects, seven missions, and 114 delegated agents. All displayed totals are derived from the simulation. Activity changes over time. Chat and approval controls affect sample data only; they do not send communications, run agents, authorize real operations, or write to external projects.
 
+## Projection sources
+
+The mode is explicit. With no `source` parameter the Site runs the simulation exactly as before. `?source=fixture` (optionally `&scenario=fresh|stale|partial|disconnected|unsupported-version`) reads a static fixture shaped after Cave Client v1 `projects.list`, as cited in the [D01–D04 discovery](docs/discovery/2026-11-19-d01-d04/README.md). It shows each Project's name, root, and Cave id separately, and labels the state explicitly as *fresh*, *stale*, *reconciling* (incomplete pages), or *unavailable* (disconnected, unsupported version, unreadable). Any non-simulation mode stops before the simulation boots, and an unknown `source` value shows *unavailable*, so sample data never stands in for another source. There is no live mode: D03 is unresolved.
+
+Both sources implement one interface, `read() → Promise<Projection>`, described at the top of `dist/projection-source.js`. A live adapter would be a third implementation of that interface. In simulation mode the map still renders from its own state; the registered simulation source wraps `atlasSnapshot` for consumers of the interface.
+
 ## Source
 
 - `dist/index.html`: original simulation and seal renderer, with scope-based scene visibility and the orchestration-atlas integration.
@@ -78,6 +84,7 @@ The starting model contains four Projects, seven missions, and 114 delegated age
 - `dist/atlas-viewport.js`: measured safe-area fitting for the projected scene and visible chrome.
 - `dist/atlas-crown.js`: exact canonical crown faces with sampled extrusion walls and restrained solid shading.
 - `dist/mission-navigation.js`: canonical route codec and replay selection reconciliation.
+- `dist/projection-source.js`, `dist/fixtures/cave-projects-list.json`: the projection seam and its static fixture (see Projection sources below).
 - `dist/mobile-interactions.js`: pointer geometry, camera gestures, and visual viewport geometry.
 - `dist/mobile-ui.js`: responsive portals, adaptive workspace dock, measured map space, modal stacking, focus restoration, keyboard handling, and viewport variables.
 - `dist/semantic-map.css`: scope-specific scene visibility, familiar glyphs, agent dots, and boundary decision markers.
