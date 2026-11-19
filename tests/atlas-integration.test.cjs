@@ -78,7 +78,7 @@ function scopeFixture() {
       ['a3', {mission: second.id, fam: 'echo'}],
     ]), asks: [{status: 'open', mission: second.id}, {status: 'closed', mission: second.id}]},
   ];
-  const castles = {
+  const projects = {
     'a / project': {world: worlds[0], sel: null, fam: null, detail: null},
     other: {world: worlds[1], sel: null, fam: null, detail: null},
   };
@@ -89,7 +89,7 @@ function scopeFixture() {
   }]));
   let context;
   context = load(['atlasSnapshot', 'atlasWriteRoute'], {
-    castles, active: 'a / project', cur: () => castles[context.active],
+    projects, active: 'a / project', cur: () => projects[context.active],
     FAM: families, fam: key => families[key], avatar: key => `<svg data-family="${key}"></svg>`,
     openAsks: world => world.asks.filter(ask => ask.status === 'open'),
     countOf: (world, predicate) => [...world.agents.values()].filter(predicate).length,
@@ -99,17 +99,17 @@ function scopeFixture() {
     atlasNavigationReady: true, atlasRestoringRoute: false, atlasLastRoute: null,
     window: {CovenMissionNavigation: navigation}, history, location,
   });
-  return {context, castles, writes, location};
+  return {context, projects, writes, location};
 }
 
 test('actual snapshot and hash writer keep explicit scope at extreme and mismatched zoom', () => {
-  const {context, castles, writes, location} = scopeFixture();
-  const castle = castles['a / project'];
+  const {context, projects, writes, location} = scopeFixture();
+  const project = projects['a / project'];
   for (const [scope, selection, expected] of [
     ['coven', null, 'coven'], ['coven', 'same/id', 'coven'],
-    ['castle', null, 'castle'], ['castle', 'same/id', 'mission'], ['castle', 'removed', 'castle'],
+    ['project', null, 'project'], ['project', 'same/id', 'mission'], ['project', 'removed', 'project'],
   ]) for (const zoom of [0.00001, 0.03, 1, 6]) {
-    context.atlasScope = scope; castle.sel = selection; castle.fam = 'astra'; castle.detail = 'side';
+    context.atlasScope = scope; project.sel = selection; project.fam = 'astra'; project.detail = 'side';
     context.camT.zoom = zoom; context.cam.zoom = 6.00001 - zoom; context.sc.g = zoom * 17;
     location.hash = '#force-a-new-write';
     const snapshot = context.atlasSnapshot(true);
@@ -119,18 +119,18 @@ test('actual snapshot and hash writer keep explicit scope at extreme and mismatc
     assert.equal(route.scope, expected, `${scope}/${selection}/${zoom} hash`);
     assert.equal(snapshot.missions, 2); assert.equal(snapshot.agents, 3); assert.equal(snapshot.needs, 2);
     assert.equal(snapshot.missionItems.length, 2, 'the mission browser keeps full project-qualified records');
-    assert.deepEqual(Array.from(snapshot.missionItems, item => [item.castle, item.id]), [
+    assert.deepEqual(Array.from(snapshot.missionItems, item => [item.project, item.id]), [
       ['a / project', 'same/id'], ['other', 'same/id'],
     ]);
     if (expected === 'mission') {
-      assert.equal(route.castle, snapshot.active); assert.equal(route.mission, snapshot.missionId);
+      assert.equal(route.project, snapshot.active); assert.equal(route.mission, snapshot.missionId);
       assert.equal(route.familiar, 'astra'); assert.equal(route.view, 'agents'); assert.equal(route.detail, 'side');
     }
   }
-  context.active = 'other'; castles.other.sel = 'same/id'; context.atlasScope = 'castle';
+  context.active = 'other'; projects.other.sel = 'same/id'; context.atlasScope = 'project';
   context.atlasWriteRoute(true);
   assert.equal(writes.at(-1).kind, 'replaceState');
-  assert.equal(navigation.parse(location.hash).castle, 'other', 'equal mission ids remain Castle-qualified');
+  assert.equal(navigation.parse(location.hash).project, 'other', 'equal mission ids remain Project-qualified');
   const n = writes.length;
   context.atlasWriteRoute(); assert.equal(writes.length, n, 'identical routes do not grow browser history');
   context.atlasRestoringRoute = true; context.atlasScope = 'coven'; context.atlasWriteRoute();
@@ -139,12 +139,12 @@ test('actual snapshot and hash writer keep explicit scope at extreme and mismatc
 
 function overviewFixture() {
   const all = Array.from({length: 128}, (_, index) => ({id: `m${index}`, name: `Mission ${index}`, seats: ['astra']}));
-  const castle = {world: {missions: new Map(), agents: new Map()}, layout: {n: 4}};
+  const demoProject = {world: {missions: new Map(), agents: new Map()}, layout: {n: 4}};
   const gh = {k: 'demo', g: svgEl('g'), missions: [], runs: [], plinths: [], faces: [], ox: 0, oy: 0};
   gh.aggregate = svgEl('text', {}, gh.g); gh.more = svgEl('g', {}, gh.g); gh.moreLabel = svgEl('text', {}, gh.more);
   const opens = [], draws = [], cam = {zoom: 1};
   const context = load(['atlasFocusable', 'atlasSyncOverviewMissions', 'atlasProjectGhost'], {
-    castles: {demo: castle}, window: {CovenAtlasLayout: layout}, svgEl,
+    projects: {demo: demoProject}, window: {CovenAtlasLayout: layout}, svgEl,
     atlasOpenMission: (...args) => opens.push(args),
     stage: {clientWidth: 1000, clientHeight: 700}, cam, sc: {hl: null}, ZPL: 14, ZT: 0,
     plural: (count, noun) => `${count} ${noun}${count === 1 ? '' : 's'}`,
@@ -159,8 +159,8 @@ function overviewFixture() {
   const sync = () => context.atlasSyncOverviewMissions(gh);
   const project = () => context.atlasProjectGhost(gh, (x, y, z) => [x, y, z], n => n.toFixed(2), 1,
     points => points.map(point => point.slice(0, 2).join(',')).join(' '));
-  const set = missions => { castle.world.missions = new Map(missions.map(mission => [mission.id, mission])); sync(); };
-  return {context, all, castle, gh, cam, opens, draws, sync, project, set};
+  const set = missions => { demoProject.world.missions = new Map(missions.map(mission => [mission.id, mission])); sync(); };
+  return {context, all, demoProject, gh, cam, opens, draws, sync, project, set};
 }
 
 test('actual overview packing keeps eight seals plus exact overflow through 128 missions', () => {
@@ -182,7 +182,7 @@ test('actual overview packing keeps eight seals plus exact overflow through 128 
     });
     if (count === 1) first = f.gh.missions[0];
     if (count > 1) assert.equal(f.gh.missions[0], first, 'unaffected DOM records survive changing slot geometry');
-    assert.equal(f.castle.layout.n, 4, 'mission count does not require a boundary-count change');
+    assert.equal(f.demoProject.layout.n, 4, 'mission count does not require a boundary-count change');
   }
   near(f.draws.at(-1)[4].radius, f.gh.packing.sealRadius, 'real renderer receives the bounded packed radius');
   f.gh.missions[7].g.dispatch('click'); f.gh.missions[7].g.dispatch('keydown', {key: ' '});
@@ -294,13 +294,13 @@ test('a mobile modal inspector does not collapse the inert map frame; desktop in
 
 function fitFixture(width, height, count) {
   const f = frameFixture(width, height), keys = Array.from({length: count}, (_, index) => `project-${index}`);
-  const castles = Object.fromEntries(keys.map(key => [key, {layout: {n: 4}, sel: null}]));
+  const projects = Object.fromEntries(keys.map(key => [key, {layout: {n: 4}, sel: null}]));
   const calls = {save: 0, kick: 0, build: 0, sync: 0};
   let context;
   const worldOf = source.match(/^const worldOf = .*$/m)?.[0];
   assert.ok(worldOf, 'extract the real world-origin lookup');
   context = load(['atlasViewportFrame', 'atlasWorldLayout', 'atlasFitScene'], {
-    ...f.globals, castles, active: keys.at(-1), cur: () => castles[context.active],
+    ...f.globals, projects, active: keys.at(-1), cur: () => projects[context.active],
     atlasScope: 'coven', atlasLayoutCache: null, atlasAutoFit: false,
     camT: {yaw: 17, pitch: 24, zoom: 1, px: 0, py: 0}, sc: null,
     clamp, RAD: Math.PI / 180, ZMIN: 0.00001,
@@ -308,7 +308,7 @@ function fitFixture(width, height, count) {
     buildScene() { calls.build++; context.sc.layoutSignature = context.atlasLayoutCache.signature; },
     sync() { calls.sync++; },
   }, worldOf);
-  return {...f, context, calls, castles};
+  return {...f, context, calls, projects};
 }
 
 function projectToScreen(point, origin, camera, stage) {
@@ -355,7 +355,7 @@ test('Coven fit caps an incoming 78-degree orbit and contains the screen-facing 
       assert.ok(x >= frame.x - EPS && x <= frame.x + frame.width + EPS, 'uncompressed hub horizontal bounds');
       assert.ok(y >= frame.y - EPS && y <= frame.y + frame.height + EPS, 'uncompressed crown and label vertical bounds');
     }
-    context.atlasScope = 'castle'; context.camT.pitch = 78; context.fortExt = () => 362;
+    context.atlasScope = 'project'; context.camT.pitch = 78; context.fortExt = () => 362;
     context.atlasFitScene(false);
     assert.equal(context.camT.pitch, 78, 'project detail may keep its steeper orbit');
   }
@@ -364,36 +364,36 @@ test('Coven fit caps an incoming 78-degree orbit and contains the screen-facing 
 test('layout cache retains mission-only changes and rebuilds the scene on topology changes', () => {
   const f = fitFixture(1200, 800, 4), {context} = f;
   const first = context.atlasWorldLayout();
-  f.castles['project-0'].world = {missions: new Map([['new', {}]])};
+  f.projects['project-0'].world = {missions: new Map([['new', {}]])};
   assert.equal(context.atlasWorldLayout(), first, 'mission changes do not reorder project geometry');
   context.sc = {layoutSignature: first.signature};
-  f.castles['new-project'] = {layout: {n: 4}, sel: null};
+  f.projects['new-project'] = {layout: {n: 4}, sel: null};
   context.atlasFitScene(false);
   const second = context.atlasWorldLayout();
   assert.notEqual(second, first); assert.equal(second.nodes.length, 5);
   assert.equal(f.calls.build, 1); assert.equal(f.calls.sync, 1);
-  delete f.castles['new-project']; context.atlasFitScene(false);
+  delete f.projects['new-project']; context.atlasFitScene(false);
   assert.equal(context.atlasWorldLayout().nodes.length, 4); assert.equal(f.calls.build, 2);
 });
 
 test('selected-mission fit remains centered in its asymmetric safe frame after the zoom cap', () => {
   const f = frameFixture(); f.queries['#notes .manifest'].hidden = false;
-  const M = {id: 'm1', seats: []}, castle = {sel: M.id, world: {missions: new Map([[M.id, M]]), agents: new Map()}};
+  const M = {id: 'm1', seats: []}, project = {sel: M.id, world: {missions: new Map([[M.id, M]]), agents: new Map()}};
   const position = {x: 200, y: -100};
   const context = load(['atlasViewportFrame', 'fitTarget'], {
     ...f.globals, sc: {missions: new Map([[M.id, position]]), seats: new Map(), agents: new Map()},
     camT: {yaw: 0, pitch: 0}, clamp, RAD: Math.PI / 180, ZL: 0, ZT: 0, ZS: 0, ZMIN: 0.00001, PAN: 1000000,
   });
-  const camera = context.fitTarget(castle), frame = context.atlasViewportFrame(true);
+  const camera = context.fitTarget(project), frame = context.atlasViewportFrame(true);
   assert.equal(camera.zoom, 2.3, 'this mission exercises the upper zoom cap');
   const screen = projectToScreen([position.x, position.y], [0, 0], {...camera, yaw: 0, pitch: 0}, f.stage);
   near(screen[0], frame.cx, 'capped mission horizontal center'); near(screen[1], frame.cy, 'capped mission vertical center');
-  castle.sel = 'removed'; assert.equal(context.fitTarget(castle), null, 'replay removal has no stale fit target');
+  project.sel = 'removed'; assert.equal(context.fitTarget(project), null, 'replay removal has no stale fit target');
 });
 
 test('replay removal restores the pre-selection manual camera and automatic-fit preference', () => {
   const newWorld = () => ({t: -Infinity, missions: new Map(), agents: new Map()});
-  const castle = {
+  const project = {
     world: {t: 1000, missions: new Map([['m1', {id: 'm1', seats: ['astra']}]]), agents: new Map()},
     trace: [{t: 1000, type: 'mission.opened', mission: 'm1'}], applied: 1,
     sel: 'm1', fam: 'astra', detail: 'card', pick: null,
@@ -402,10 +402,10 @@ test('replay removal restores the pre-selection manual camera and automatic-fit 
   const context = load(['seek'], {
     newWorld, window: {CovenMissionNavigation: navigation}, atlasNavigationReady: true,
     atlasAutoFit: true, cam: {locked: false}, camT: {zoom: 2.3, px: 5, py: 9, yaw: 17, pitch: 24},
-    cur: () => castle, castles: {sample: castle}, active: 'sample',
+    cur: () => project, projects: {sample: project}, active: 'sample',
   });
-  assert.equal(context.seek(castle, 500, true), true);
-  assert.equal(castle.sel, null); assert.equal(castle.camBack, null);
+  assert.equal(context.seek(project, 500, true), true);
+  assert.equal(project.sel, null); assert.equal(project.camBack, null);
   assert.equal(context.atlasAutoFit, false, 'replay removal must restore manual framing, just as deselection does');
   assert.deepEqual(plain(context.camT), {zoom: 0.4, px: 17, py: -20, yaw: 17, pitch: 24}, 'only position and zoom return; orbit is unchanged');
 });
@@ -446,7 +446,7 @@ test('manual zoom and camera lock suppress queued automatic fitting without chan
   context.atlasAutoFit = true; context.cam.locked = true;
   context.atlasQueueFit(); callbacks[2](); assert.equal(fits.length, 1, 'a locked camera is not reframed');
   const before = context.camT.zoom; context.zoomBy(2); assert.equal(context.camT.zoom, before);
-  context.cam.locked = false; context.atlasScope = 'castle'; context.atlasQueueFit(); callbacks[3]();
+  context.cam.locked = false; context.atlasScope = 'project'; context.atlasQueueFit(); callbacks[3]();
   assert.deepEqual(fits, [true, false]); assert.equal(calls.draw, 4, 'cards still refresh after suppressed fitting');
   bodyClasses.add('atlas-keyboard-open'); context.atlasQueueFit(); callbacks[4]();
   assert.equal(fits.length, 2, 'the ResizeObserver path must not fit to a keyboard-shrunken viewport');
@@ -458,7 +458,7 @@ test('manual zoom and camera lock suppress queued automatic fitting without chan
 test('queued fitting measures the current mission-card structure after a responsive transition', () => {
   const calls = []; let callback, cardMode = 'old direct HUD';
   const context = load(['atlasQueueFit'], {
-    atlasResizeFrame: 0, atlasAutoFit: true, atlasScope: 'castle', cam: {locked: false},
+    atlasResizeFrame: 0, atlasAutoFit: true, atlasScope: 'project', cam: {locked: false},
     document: {body: {classList: {contains: () => false}}},
     requestAnimationFrame: fn => { callback = fn; return 1; },
     drawLeadCard: () => { cardMode = 'new manifest'; calls.push('card'); },
@@ -469,39 +469,68 @@ test('queued fitting measures the current mission-card structure after a respons
   assert.deepEqual(calls, ['card', 'fit', 'kick']);
 });
 
-test('layout simulation counts preserve user Castles and reset only generated samples', () => {
+test('layout simulation counts preserve user Projects and reset only generated samples', () => {
   const real = {name: 'real', trace: [{type: 'user-content'}]}, collision = {name: 'atlas-001', sample: true};
-  const castles = {real, 'atlas-001': collision}, calls = {enter: 0, overview: 0, seek: 0, announcements: []};
+  const projects = {real, 'atlas-001': collision}, calls = {enter: 0, overview: 0, seek: 0, announcements: []};
   const context = load(['atlasSetProjectCount'], {
-    castles, active: 'real', Date: {now: () => 123456},
-    makeCastle: (key, trace, recorded) => ({key, trace, recorded}), sampleTrace: (key, time) => [{key, time}],
-    seek: (castle, time, quiet) => { assert.equal(time, 123456); assert.equal(quiet, true); calls.seek++; },
+    projects, active: 'real', Date: {now: () => 123456},
+    makeProject: (key, trace, recorded) => ({key, trace, recorded}), sampleTrace: (key, time) => [{key, time}],
+    seek: (project, time, quiet) => { assert.equal(time, 123456); assert.equal(quiet, true); calls.seek++; },
     enter: () => { calls.enter++; }, atlasOverview: () => { calls.overview++; },
     window: {CovenAtlas: {announce: text => calls.announcements.push(text)}},
   });
   for (const invalid of [-1, 129, 2.5, 'invalid', Infinity]) {
-    assert.equal(context.atlasSetProjectCount(invalid), false); assert.equal(Object.keys(castles).length, 2);
+    assert.equal(context.atlasSetProjectCount(invalid), false); assert.equal(Object.keys(projects).length, 2);
   }
   assert.equal(calls.enter, 0, 'invalid values cause no topology change');
   for (const count of [16, 64, 128]) {
-    assert.equal(context.atlasSetProjectCount(count), true); assert.equal(Object.keys(castles).length, count);
-    assert.equal(castles.real, real); assert.equal(castles['atlas-001'], collision);
-    Object.entries(castles).filter(([key]) => key !== 'real' && key !== 'atlas-001').forEach(([, castle]) => {
-      assert.equal(castle.layoutDemo, true); assert.equal(castle.sample, true); assert.equal(castle.recorded, false);
+    assert.equal(context.atlasSetProjectCount(count), true); assert.equal(Object.keys(projects).length, count);
+    assert.equal(projects.real, real); assert.equal(projects['atlas-001'], collision);
+    Object.entries(projects).filter(([key]) => key !== 'real' && key !== 'atlas-001').forEach(([, project]) => {
+      assert.equal(project.layoutDemo, true); assert.equal(project.sample, true); assert.equal(project.recorded, false);
     });
   }
-  const generated = Object.keys(castles).find(key => castles[key].layoutDemo);
+  const generated = Object.keys(projects).find(key => projects[key].layoutDemo);
   context.active = generated;
   assert.equal(context.atlasSetProjectCount(0), true);
-  assert.deepEqual(Object.keys(castles), ['real', 'atlas-001']); assert.equal(context.active, 'real');
+  assert.deepEqual(Object.keys(projects), ['real', 'atlas-001']); assert.equal(context.active, 'real');
   assert.deepEqual(real.trace, [{type: 'user-content'}]);
   assert.equal(calls.seek, 126); assert.equal(calls.enter, 4); assert.equal(calls.overview, 4);
-  assert.match(calls.announcements.at(-1), /^2 Castles/);
+  assert.match(calls.announcements.at(-1), /^2 Projects/);
 });
 
 test('scope and navigation do not retain the obsolete zoom-to-scope threshold', () => {
   assert.doesNotMatch(source, /cam(?:T)?\.zoom\s*[<>]\s*\.?6\s*\/\s*sc\.g/);
-  for (const name of ['atlasSnapshot', 'atlasWriteRoute', 'atlasOpenProject', 'atlasOpenMission', 'openNew', 'openCastleForm']) {
+  for (const name of ['atlasSnapshot', 'atlasWriteRoute', 'atlasOpenProject', 'atlasOpenMission', 'openNew', 'openProjectForm']) {
     assert.doesNotMatch(extract(name), /sc\.far|cam(?:T)?\.zoom\s*[<>]/, `${name} must use explicit scope`);
   }
+});
+
+test('traces recorded before the rename load their castle.* events as project.* events', () => {
+  const known = source.match(/^const KNOWN = (new Set\(\[[^\]]*\]\));$/m);
+  assert.ok(known, 'KNOWN event types must exist in the actual Site source');
+  const context = load(['parseTrace'], {}, `var KNOWN = ${known[1]};`);
+  for (const type of ['founded', 'moved', 'renamed', 'stopped', 'resumed']) {
+    assert.equal(context.KNOWN.has(`project.${type}`), true, `project.${type} is a known event`);
+    assert.equal(context.KNOWN.has(`castle.${type}`), false, `castle.${type} is never written`);
+  }
+  const T0 = Date.UTC(2026, 10, 18); // milliseconds, so parseTrace keeps t as written
+  const lines = [
+    {t: T0 + 1000, type: 'castle.founded', name: 'ui', repo: 'OpenCoven/ui', root: '~/code/ui'},
+    {t: T0 + 2000, type: 'castle.moved', root: '~/code/ui-next'},
+    {t: T0 + 3000, type: 'castle.renamed', name: 'ui-next', from: 'ui'},
+    {t: T0 + 4000, type: 'castle.stopped'},
+    {t: T0 + 5000, type: 'castle.resumed'},
+    {t: T0 + 6000, type: 'project.renamed', name: 'ui-final', from: 'ui-next'},
+    {t: T0 + 7000, type: 'castle.unknown'},
+  ];
+  for (const text of [lines.map(line => JSON.stringify(line)).join('\n'), JSON.stringify(lines)]) {
+    const {events, bad} = context.parseTrace(text);
+    assert.equal(bad, 1, 'only an unknown legacy type is rejected');
+    assert.deepEqual(plain(events).map(event => event.type), [
+      'project.founded', 'project.moved', 'project.renamed', 'project.stopped', 'project.resumed', 'project.renamed',
+    ]);
+    assert.deepEqual(plain(events[0]), {...lines[0], type: 'project.founded'}, 'other fields are kept');
+  }
+  assert.equal(lines[0].type, 'castle.founded', 'input objects are not mutated');
 });

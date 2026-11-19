@@ -13,7 +13,7 @@ const COUNTS = [0, 1, 2, 4, 8, 12, 24, 64, 128];
 const ASPECTS = [0.4, 0.7, 1, 1.6, 2.5];
 const PRODUCTION_GEOMETRY = Object.freeze({ nodeWidth: 1000, nodeHeight: 1150, gap: 200, hubRadius: 360, gateOffset: 280, padding: 80 });
 const EPSILON = 1e-7;
-const keysFor = count => Array.from({ length: count }, (_, i) => 'castle-' + (i + 1));
+const keysFor = count => Array.from({ length: count }, (_, i) => 'project-' + (i + 1));
 
 function box(node) {
   return { x0: node.x - node.width / 2, x1: node.x + node.width / 2, y0: node.y - node.height / 2, y1: node.y + node.height / 2 };
@@ -62,7 +62,7 @@ function assertValid(result, keys) {
     assert.ok(Math.hypot(nearX, nearY) >= hub.radius + config.gap - EPSILON, 'hub has its reserved clearance');
     for (let j = i + 1; j < nodes.length; j++) {
       const b = rectangles[j];
-      assert.ok(a.x1 <= b.x0 + EPSILON || b.x1 <= a.x0 + EPSILON || a.y1 <= b.y0 + EPSILON || b.y1 <= a.y0 + EPSILON, 'Castle and label reservations do not overlap');
+      assert.ok(a.x1 <= b.x0 + EPSILON || b.x1 <= a.x0 + EPSILON || a.y1 <= b.y0 + EPSILON || b.y1 <= a.y0 + EPSILON, 'Project and label reservations do not overlap');
     }
     const route = routes[i];
     assert.ok(route.points.length >= 2);
@@ -102,7 +102,7 @@ for (const count of COUNTS) {
   }
 }
 
-test('default geometry is also safe when the hub is larger than half a Castle', () => {
+test('default geometry is also safe when the hub is larger than half a Project', () => {
   const keys = keysFor(24);
   assertValid(layout(keys), keys);
 });
@@ -164,7 +164,7 @@ test('inputs remain untouched and output snapshots do not share mutable state', 
 });
 
 test('invalid keys and geometry fail explicitly', () => {
-  assert.throws(() => layout('castle'), TypeError);
+  assert.throws(() => layout('project'), TypeError);
   assert.throws(() => layout(['a', 'a']), RangeError);
   assert.throws(() => layout([{}]), TypeError);
   assert.throws(() => layout([NaN]), TypeError);

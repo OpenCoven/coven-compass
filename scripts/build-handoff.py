@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the standalone Coven Castles handoff (Python 3.10+, standard library)."""
+"""Build the standalone Coven Compass handoff (Python 3.10+, standard library)."""
 
 from __future__ import annotations
 
@@ -22,15 +22,15 @@ import zipfile
 
 
 ROOT = Path(__file__).resolve().parents[1]
-ARCHIVE_ROOT = "Coven_Castles_Atlas_Handoff_2026-11-18"
+ARCHIVE_ROOT = "Coven_Compass_Handoff_2026-11-19"
 BASELINE_COMMIT = "d7b6f1e655140036cca49f31687131352162de13"
 BASELINE_VERSION_ID = "appgprj_6afd98fc7e5081918f0609d2ebda9324~appgver_54012053f1f88191a2c28ff5b36205af"
 MANIFEST = "HANDOFF_MANIFEST.json"
 CHECKSUMS = "CHECKSUMS.sha256"
-ALLOW_FILES = ("README.md", "START_HERE.md", "MOBILE_READINESS.md", ".openai/hosting.json", ".gitignore")
+ALLOW_FILES = ("README.md", "START_HERE.md", "MOBILE_READINESS.md", ".gitignore")
 ALLOW_DIRS = ("dist", "docs/handoff", "examples", "tests", "scripts")
 REQUIRED = (
-    "README.md", "START_HERE.md", "MOBILE_READINESS.md", ".openai/hosting.json", "dist/index.html",
+    "README.md", "START_HERE.md", "MOBILE_READINESS.md", "dist/index.html",
     "dist/handoff/index.html", "dist/handoff/handoff.css",
     "tests/presentation.test.cjs", "tests/fixtures/baseline.json",
     "scripts/check-source.mjs", "scripts/build-handoff.py", "scripts/verify-handoff.py",
@@ -366,8 +366,8 @@ def write_guide() -> int:
         chapters.append(f'<article class="chapter" id="{chapter_id}"><p class="chapter-source"><code>{html.escape(relative)}</code></p>\n{content}\n</article>')
     page = """<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Coven Castles · Complete implementation guide</title><link rel="stylesheet" href="handoff.css"></head>
-<body><header class="page-header"><a class="wordmark" href="index.html">Coven Castles</a><span class="header-context">Implementation handoff</span><a class="text-link" href="../">Return to Atlas</a></header>
+<title>Coven Compass · Complete implementation guide</title><link rel="stylesheet" href="handoff.css"></head>
+<body><header class="page-header"><a class="wordmark" href="index.html">Coven Compass</a><span class="header-context">Implementation handoff</span><a class="text-link" href="../">Return to Compass</a></header>
 <div class="guide-layout">
 <nav class="guide-toc" aria-label="Guide chapters"><h2>Chapters</h2><ol>
 """ + "\n".join(toc) + "\n</ol></nav><main class=\"guide-main\" id=\"guide-main\"><h1>Complete implementation guide</h1><p>Source-backed prototype evidence and proposed implementation work. Conceptual documents and examples are not canonical production contracts.</p>\n" + "\n".join(chapters) + "\n</main></div></body></html>\n"
@@ -469,7 +469,7 @@ def build(output: Path) -> tuple[int, str, int]:
     try:
         with zipfile.ZipFile(temporary, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
             for name, data in sorted(files.items()):
-                info = zipfile.ZipInfo(f"{ARCHIVE_ROOT}/{name}", date_time=(2026, 11, 18, 0, 0, 0))
+                info = zipfile.ZipInfo(f"{ARCHIVE_ROOT}/{name}", date_time=(2026, 11, 19, 0, 0, 0))
                 info.create_system = 3
                 info.external_attr = (stat.S_IFREG | 0o644) << 16
                 info.compress_type = zipfile.ZIP_DEFLATED
@@ -485,7 +485,7 @@ def build(output: Path) -> tuple[int, str, int]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, epilog="No Git, npm, network, or third-party packages are required. Digests provide integrity checks, not authenticated signatures.")
-    parser.add_argument("--output", type=Path, default=ROOT / "dist/downloads" / f"{ARCHIVE_ROOT}.zip", help="ZIP output path (default: dist/downloads/Coven_Castles_Atlas_Handoff_2026-11-18.zip)")
+    parser.add_argument("--output", type=Path, default=ROOT / "dist/downloads" / f"{ARCHIVE_ROOT}.zip", help="ZIP output path (default: dist/downloads/Coven_Compass_Handoff_2026-11-19.zip)")
     args = parser.parse_args()
     try:
         output = args.output.absolute()

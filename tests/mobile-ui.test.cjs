@@ -108,7 +108,7 @@ function fixture(width = 390, withAdaptiveChrome = false) {
   const launcher = add('button', 'launcher', app), unrelated = add('aside', 'originally-inert', document.body);
   unrelated.inert = true;
   const overlays = {};
-  for (const id of ['inspect', 'psyche', 'empty', 'castleForm', 'atlasSidebar', 'atlasMissionBrowser', 'keyModal', 'cpModal']) {
+  for (const id of ['inspect', 'psyche', 'empty', 'projectForm', 'atlasSidebar', 'atlasMissionBrowser', 'keyModal', 'cpModal']) {
     const container = add('aside', id, ['keyModal', 'cpModal'].includes(id) ? document.body : stage);
     container.hidden = true;
     let content = container;
@@ -166,7 +166,7 @@ test('mobile portals preserve nodes and restore their original desktop order wit
   f.overlays.psyche.input.value = 'Unsent draft'; f.overlays.psyche.container.scrollTop = 123;
   f.mount();
   assert.equal(f.document.activeElement, f.document.body);
-  for (const id of ['inspect', 'psyche', 'empty', 'castleForm', 'atlasSidebar', 'atlasMissionBrowser']) assert.equal(f.overlays[id].container.parentNode, f.document.body);
+  for (const id of ['inspect', 'psyche', 'empty', 'projectForm', 'atlasSidebar', 'atlasMissionBrowser']) assert.equal(f.overlays[id].container.parentNode, f.document.body);
   f.resize(1200);
   assert.deepEqual(f.stage.children, originalOrder);
   assert.equal(f.overlays.psyche.input.value, 'Unsent draft');

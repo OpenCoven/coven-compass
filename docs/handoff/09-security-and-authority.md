@@ -1,12 +1,12 @@
 # Security and authority handoff
 
-**Status:** proposed integration requirements. The governing ownership rules come from Val’s supplied OpenCoven instructions. Production repository conformance has not been inspected in this handoff. The shipped Atlas is a local simulation, as documented in [README](../../README.md); it neither authenticates a principal to Coven nor executes protected operations.
+**Status:** proposed integration requirements. The governing ownership rules come from Val’s supplied OpenCoven instructions. Production repository conformance has not been inspected in this handoff. The shipped Compass Site is a local simulation, as documented in [README](../../README.md); it neither authenticates a principal to Coven nor executes protected operations.
 
 ## 1. Preserve the trust boundary while replacing the simulation
 
 The current `atlasSnapshot()` reads local JavaScript worlds, and `emit()` appends local simulation events. `gate.resolved` changes those sample worlds. Those functions are useful presentation and replay seams; they are not suitable authorization or durable-commit implementations. The implementation is visible in [dist/index.html](../../dist/index.html). No transport adapter should silently reinterpret a local `allowed` state as a real permit.
 
-Use one authority path. Coven owns authoritative transitions and persistence; Psyche owns orchestration semantics; Coven Threads owns protected-surface authorization and proposal-versus-commit decisions; the SDK exposes constrained canonical bindings. Atlas, Castles, Cave, CLI, and Psyche Build consume those owners. A Host folder, browser cache, familiar message, or UI control cannot create another writer or authorize itself.
+Use one authority path. Coven owns authoritative transitions and persistence; Psyche owns orchestration semantics; Coven Threads owns protected-surface authorization and proposal-versus-commit decisions; the SDK exposes constrained canonical bindings. Compass, Cave, CLI, and Psyche Build consume those owners. A Host folder, browser cache, familiar message, or UI control cannot create another writer or authorize itself.
 
 The first live integration should be read-only. Introduce command submission only after the exact existing authentication, operation authorization, replay protection, revocation, and receipt contracts are mapped and tested. Keep the local simulation adapter visibly separate from a daemon adapter. A transport failure must not fall back to simulated success.
 

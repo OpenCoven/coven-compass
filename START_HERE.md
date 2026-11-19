@@ -1,8 +1,8 @@
-# Coven Castles · Orchestration Atlas — full implementation handoff
+# Coven Compass — full implementation handoff
 
 Prepared for Val · 18 November 2026 · package edition 1
 
-This package contains the complete runnable Atlas source, its regression fixtures, a readable handoff, and a proposed integration plan for Coven Host, Coven Castles, Coven CLI, Psyche, Psyche Build, and related OpenCoven components.
+This package contains the complete runnable Compass source, its regression fixtures, a readable handoff, and a proposed integration plan for Coven Host, Coven Compass, Coven CLI, Psyche, Psyche Build, and related OpenCoven components.
 
 **The implemented application is a local simulation. The backend integration is a proposal.** This handoff does not establish that a production repository implements a proposed API, folder layout, lease, receipt, or authorization behavior. Verify canonical contracts at current pinned revisions before implementation.
 
@@ -10,10 +10,10 @@ The scalable overview and crown refinement now incorporates adaptive-mobile repl
 
 ## Start in ten minutes
 
-1. Extract the ZIP. Work from the extracted `Coven_Castles_Atlas_Handoff_2026-11-18` directory.
+1. Extract the ZIP. Work from the extracted `Coven_Compass_Handoff_2026-11-19` directory.
 2. Read this file, then [current state and evidence](docs/handoff/01-current-state-and-evidence.md).
 3. Verify the delivered bytes and source with the commands below.
-4. Preview the Atlas locally. Enter a Castle, select a mission, inspect its agents and pending decisions, and try familiar filters and Seal lab. In Castles, use project search and **Try a larger Coven** to explore the 8/16/32/64/128 sample presets; **Remove extra samples** preserves baseline and user-created Castles. Start replay and switch Castles while it plays; on mobile, explore the Map, Missions, Activity, and View dock.
+4. Preview Compass locally. Enter a Project, select a mission, inspect its agents and pending decisions, and try familiar filters and Seal lab. In Projects, use project search and **Try a larger Coven** to explore the 8/16/32/64/128 sample presets; **Remove extra samples** preserves baseline and user-created Projects. Start replay and switch Projects while it plays; on mobile, explore the Map, Missions, Activity, and View dock.
 5. Read [architecture and ownership](docs/handoff/02-architecture-and-ownership.md), then take the discovery packet in the [implementation plan](docs/handoff/05-implementation-plan.md).
 
 The handoff HTML is also available at `dist/handoff/guide.html`. Markdown chapters are the editable documentation source. The Site's Handoff entry links to the same package and reader.
@@ -42,10 +42,10 @@ The checksum verifier validates the delivered snapshot. After intentionally edit
 
 ```bash
 python3 scripts/build-handoff.py
-python3 scripts/verify-handoff.py dist/downloads/Coven_Castles_Atlas_Handoff_2026-11-18.zip
+python3 scripts/verify-handoff.py dist/downloads/Coven_Compass_Handoff_2026-11-19.zip
 ```
 
-The generated ZIP is excluded from its own contents. It can be recreated from the extracted package. The other files required to run the Atlas and rebuild the handoff are included.
+The generated ZIP is excluded from its own contents. It can be recreated from the extracted package. The other files required to run Compass and rebuild the handoff are included.
 
 ## What to read for your role
 
@@ -53,9 +53,9 @@ The generated ZIP is excluded from its own contents. It can be recreated from th
 | --- | --- | --- |
 | Product / architecture owner | 01 → 02 → 05 → 11 | Accepted scope, canonical owners, and decisions requiring validation |
 | Coven / SDK implementer | 02 → 03 → 09 → 07 | Verified binding map and one read-only end-to-end slice |
-| Host / Castles implementer | 02 → 04 → 09 → 07 | Folder classification, authority owner, synchronization/recovery evidence |
+| Host / Projects implementer | 02 → 04 → 09 → 07 | Folder classification, authority owner, synchronization/recovery evidence |
 | Psyche / Psyche Build implementer | 02 → 03 → 05 → 06 | Canonical mission/attempt mapping and bounded execution packet |
-| Atlas / Cave / CLI implementer | 01 → 03 → 08 → 15 → 07 | Client projection, scalable layout, explicit scope, and stale/proposal/error behavior |
+| Compass / Cave / CLI implementer | 01 → 03 → 08 → 15 → 07 | Client projection, scalable layout, explicit scope, and stale/proposal/error behavior |
 | Coordinating agent | 06 → 10 → 05 | Pinned inventory, lane ownership, narrow implementation, exact evidence |
 
 ## Package map
@@ -67,14 +67,13 @@ The generated ZIP is excluded from its own contents. It can be recreated from th
 - `tests/`: source regression coverage for presentation/layout/viewport geometry, navigation, replay timing/rendering/delayed reports, adaptive mobile controls, gestures/overlays, and mission interactions; the pinned v2 reference source; and historical JSON evidence. Run the full command for the combined count. Replay cases are in [clock](tests/replay-clock.test.cjs), [render](tests/replay-render.test.cjs), and [emission](tests/replay-emission.test.cjs) tests.
 - `MOBILE_READINESS.md`: separate historical mobile and incoming replay/mobile checkpoints, the combined refinement's evidence boundary, and remaining native-device checks.
 - `scripts/`: source and crown checks, repeatable package generation with a fresh export timestamp, and archive/extracted-directory verification.
-- `.openai/hosting.json`: existing Site identity and deployment configuration.
 - `HANDOFF_MANIFEST.json`, `CHECKSUMS.sha256`: export provenance, file inventory, and byte-integrity checks.
 
 Git metadata, credentials, local runtime state, browser profiles, historical QA screenshots, installed dependencies, and previous export archives are intentionally excluded. No license or production authority is created by this package. Preserve the applicable upstream terms and current repository instructions when integrating.
 
 ## First implementation recommendation
 
-Deliver **one read-only Castle backed by the canonical Coven projection** before enabling operational commands. Map a familiar's exact identity revision, one mission, its task/attempt state, a pending decision, and a resulting receipt into the Atlas. Show source freshness and disconnection explicitly. Then introduce bounded command proposals through the existing SDK/authorization path and prove refusal/recovery behavior before connecting remote execution.
+Deliver **one read-only Project backed by the canonical Coven projection** before enabling operational commands. Map a familiar's exact identity revision, one mission, its task/attempt state, a pending decision, and a resulting receipt into Compass. Show source freshness and disconnection explicitly. Then introduce bounded command proposals through the existing SDK/authorization path and prove refusal/recovery behavior before connecting remote execution.
 
 Keep the simulation available as an explicit demo/fixture mode. A production mode must not silently fall back to sample data, synthetic acknowledgements, or browser-generated success states.
 

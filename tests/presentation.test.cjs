@@ -171,7 +171,7 @@ function presentationFixture() {
     syncLeads() {}, syncInspect() {}, drawLeadCard() {}, drawComposer() {}, drawCrumb() {},
     kick: () => { calls.kick++; },
     document: {activeElement: null}, narrow: {matches: false}, atlasNavigationReady: false,
-    atlasScope: 'castle', atlasAutoFit: true, atlasFitScene() {}, atlasQueueFit() {},
+    atlasScope: 'project', atlasAutoFit: true, atlasFitScene() {}, atlasQueueFit() {},
     atlasWriteRoute() {}, atlasFocusSelection() {},
     window: { CovenAtlas: { update: () => { calls.update++; } } },
   }, source, nearestGateDeclaration);
@@ -186,7 +186,7 @@ test('overview adds, removes, and restores mission seals while wall count stays 
   const gh = { k: 'coven-cave', g: svgEl('g'), missions: [] };
   const opens = [];
   const context = loadFunctions(['atlasFocusable', 'atlasSyncOverviewMissions'], {
-    castles: { 'coven-cave': c }, svgEl, pol,
+    projects: { 'coven-cave': c }, svgEl, pol,
     window: { CovenAtlasLayout: atlasLayout },
     atlasOpenMission: (...args) => opens.push(args),
   });
@@ -366,7 +366,7 @@ test('rendered seal geometry matches the v2 baseline in all six states and three
   for (const state of ['planned', 'active', 'needsYou', 'stalled', 'sealed', 'broken']) {
     const fixture = sealFixture(state, [17, 2, 1]);
     const data = current.sealOf(fixture.w, fixture.M);
-    for (const tier of ['coven', 'castle', 'selected']) {
+    for (const tier of ['coven', 'project', 'selected']) {
       const actual = render(current, source, data, tier), expected = render(old, baseline, data, tier);
       assert.deepEqual(actual.geometry, expected.geometry, `${state}/${tier} paths and attributes`);
       actual.bounds.forEach((bound, i) => near(bound, expected.bounds[i], `${state}/${tier} bounds`));

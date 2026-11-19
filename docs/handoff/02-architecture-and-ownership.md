@@ -2,7 +2,7 @@
 
 ## Decision and evidence boundary
 
-**Use the Castles Site as a presentation and interaction reference for existing OpenCoven systems. Keep authoritative state transitions in Coven, orchestration meaning in Psyche, and identity governance in the Familiar Contract.** Coven Host should make this work discoverable in a folder and across devices; it should not introduce another daemon, identity root, scheduler, or competing state database. These are the user's architectural requirements, not claims that every production repository already implements them. [U1]
+**Use the Compass Site as a presentation and interaction reference for existing OpenCoven systems. Keep authoritative state transitions in Coven, orchestration meaning in Psyche, and identity governance in the Familiar Contract.** Coven Host should make this work discoverable in a folder and across devices; it should not introduce another daemon, identity root, scheduler, or competing state database. These are the user's architectural requirements, not claims that every production repository already implements them. [U1]
 
 The historical Site baseline is commit `d7b6f1e655140036cca49f31687131352162de13`. The bundle also contains subsequent mobile/navigation work and the [scalable layout/crown refinement](15-scalable-atlas-layout.md), which is implemented and source-level verified. Its README continues to identify the application as a local simulation. Production repositories, their current APIs, and packaged runtime behavior were **not inspected for this handoff**. Treat the integration below as **proposed** until repository discovery establishes the existing contracts and tests. Export provenance identifies the delivered source separately from historical checkpoints. [S1]
 
@@ -44,7 +44,8 @@ The following ownership map is a **supplied requirement**. “Discover” means 
 | Psyche | Tasks, lanes, leases, attempts, approvals, receipts, retries, and recovery semantics. | A second independent runtime authority. | Canonical state model and how Coven applies it. |
 | Coven | Daemon authority, persistence, sessions, execution, and authoritative transitions. | A passive mirror of browser or synced-folder decisions. | Durable storage, transaction boundaries, command/event interfaces. |
 | Coven Host | Proposed folder/product arrangement for local and remote work. | Another daemon, scheduler, or control plane. | Existing host registration and workspace lifecycle owners. |
-| Castles | Proposed project/workspace scope and its human representation. | An invented parallel project schema. | Exact repository, manifest, identifier, and ownership contract. |
+| Projects (drawn by Compass) | Proposed project/workspace scope and its human representation, using Coven's existing project noun. | An invented parallel project schema. | Exact repository, manifest, identifier, and ownership contract. |
+| Castles (`OpenCoven/coven-castles`) | A hosted place where a familiar runs work for a Project, such as a bound sandbox. A Project has zero or more Castles (decided 2026-11-19, [D01](11-open-decisions.md)). | Project scope, or an enclosure on the Compass map. | Whether a Castle serves exactly one Project, and its binding to Coven execution. |
 | CLI | Human/automation client of the same daemon through canonical bindings. | A privileged bypass with separate state. | Current commands, structured output, errors, and SDK use. |
 | SDK | Constrained public clients and canonical bindings. | A second source of orchestration semantics. | Supported versions, adapters, subscription and command methods. |
 | Coven Runtimes | Capability descriptors and conformance. | Capabilities asserted by a caller-supplied Boolean. | Runtime identity, attestation/evidence model, qualification gates. |

@@ -39,6 +39,6 @@ Broader strategy files mentioned in older conversation memory were not supplied 
 
 ## Production repository discovery
 
-The owner named Coven Host, Coven Castles, Coven CLI, Psyche, and Psyche Build. Candidate repository names in the implementation documents are discovery starting points. Record exact repository URL, checkout, branch, revision, instructions, schemas, SDK symbols, and tests before using any binding. A product name is not proof of a dedicated repository or permission to create one.
+The owner named Coven Host, Coven Castles, Coven CLI, Psyche, and Psyche Build. On 2026-11-19 the map was renamed Coven Compass, and “Castle” now means a hosted execution place inside a Project ([D01](11-open-decisions.md)). Candidate repository names in the implementation documents are discovery starting points. Record exact repository URL, checkout, branch, revision, instructions, schemas, SDK symbols, and tests before using any binding. A product name is not proof of a dedicated repository or permission to create one.
 
-No production API endpoint or CLI subcommand is asserted merely because it appears in a conceptual example. If a current canonical owner already implements a needed behavior, extend or consume it. If a responsibility is absent, record the gap and proposed owner for review instead of creating a duplicate control plane inside the Atlas.
+No production API endpoint or CLI subcommand is asserted merely because it appears in a conceptual example. If a current canonical owner already implements a needed behavior, extend or consume it. If a responsibility is absent, record the gap and proposed owner for review instead of creating a duplicate control plane inside Compass.

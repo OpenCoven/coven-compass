@@ -15,7 +15,7 @@
     "idempotency_key": "fixture:deduplication:limit-change:1",
     "target": {
       "host_ref": "fixture:host:primary",
-      "castle_ref": "fixture:castle:psyche-build",
+      "project_ref": "fixture:project:psyche-build",
       "mission_ref": "fixture:mission:review-readiness",
       "attempt_ref": "fixture:attempt:3",
       "proposal_ref": "fixture:proposal:limit-change:1"

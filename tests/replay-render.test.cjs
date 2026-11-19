@@ -91,7 +91,7 @@ function fixture(trace = []) {
   ghost.moreLabel = svgEl('text', {}, ghost.more);
   const elements = new Map();
   const context = vm.createContext({
-    sc, castles: { sample: c }, active: 'sample', cur: () => c, window: {CovenAtlasLayout: atlasLayout},
+    sc, projects: { sample: c }, active: 'sample', cur: () => c, window: {CovenAtlasLayout: atlasLayout},
     // Project layout and density are scene boundaries; actual mission packing,
     // folding, synchronization, seal construction and rendering run below.
     atlasWorldLayout: () => ({signature: sc.layoutSignature}),

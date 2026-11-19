@@ -4,7 +4,7 @@
 
 **Proposed production work.** The design input began with the v3 Site at revision `d7b6f1e655140036cca49f31687131352162de13`; the bundle also contains subsequent mobile/navigation work and the [scalable Atlas layout/crown refinement](15-scalable-atlas-layout.md). The latter is implemented and source-level verified. The buildless JavaScript/SVG interface, local event reducer, sample decisions, replay, and seal laboratory remain a presentation reference. They do not establish a daemon integration, production authorization, remote execution, or durable orchestration service. Record actual delivered source and packaging separately from historical baseline evidence.
 
-Paths such as `README.md`, `dist/index.html`, and `tests/presentation.test.cjs` are relative to the bundle root. Read the shared source ledger and `docs/handoff/source-context/user-architecture-instructions.md` before implementation. API names, repository locations, and supported protocol versions remain **TBD through canonical repository discovery**. “Coven Host,” “Castles,” and “CLI” describe requested integration surfaces; their existing ownership and implementation must be verified.
+Paths such as `README.md`, `dist/index.html`, and `tests/presentation.test.cjs` are relative to the bundle root. Read the shared source ledger and `docs/handoff/source-context/user-architecture-instructions.md` before implementation. API names, repository locations, and supported protocol versions remain **TBD through canonical repository discovery**. “Coven Host,” “Compass” (formerly “Castles”), and “CLI” describe requested integration surfaces; their existing ownership and implementation must be verified.
 
 The intended result is one coherent path from a human-readable project and mission view to authoritative state, bounded work, and auditable outcomes. Keep the familiar identity distinct from its delegated agents. Preserve the visual grammar while replacing sample data with a constrained projection of canonical records.
 
@@ -19,7 +19,7 @@ The intended result is one coherent path from a human-readable project and missi
 | Coven | Daemon authority, persistence, sessions, runtime execution, authoritative transitions. |
 | Coven Host | Discover its actual role; bind remote execution/access to canonical Coven authority. |
 | Coven Runtimes / SDK | Runtime capability conformance and constrained canonical client bindings. |
-| Castles / Cave | Project-scope visualization and human oversight; discover where production UI belongs. |
+| Compass / Cave | Project-scope visualization and human oversight; discover where production UI belongs. |
 | Psyche Build / CLI | Coding cockpit and terminal clients consuming the same authorized objects. Discover the CLI’s relationship to Coven Code. |
 
 These boundaries are design constraints, not evidence that every component already exposes the required capability. Before adding any service, schema, storage, or adapter, establish whether an existing component owns it.
@@ -48,7 +48,7 @@ These boundaries are design constraints, not evidence that every component alrea
 
 ### W04 · Bind the visual grammar to source-backed facts
 
-**Owner:** Castles/Cave UI owner with Psyche review. **Dependencies:** W03; static component work may proceed after W02. **Discover:** existing UI components, accessibility conventions, and navigation ownership. Replace `atlasSnapshot()` sample totals with adapter-derived data. Keep uniform project boundaries, mission seals, familiar identity marks, selected-mission agent dots, and boundary decision entry points.
+**Owner:** Compass/Cave UI owner with Psyche review. **Dependencies:** W03; static component work may proceed after W02. **Discover:** existing UI components, accessibility conventions, and navigation ownership. Replace `atlasSnapshot()` sample totals with adapter-derived data. Keep uniform project boundaries, mission seals, familiar identity marks, selected-mission agent dots, and boundary decision entry points.
 
 **Acceptance:** exact counts remain available beside minimum-angle and pip-cap encodings; stale/disconnected/reconciling are explicit connection conditions, separate from the six mission states. Missing data never becomes zero by default. **Evidence:** projection fixtures, interaction/accessibility results, and traceable seal calculations.
 
@@ -62,11 +62,11 @@ These boundaries are design constraints, not evidence that every component alrea
 
 ### W06 · Present pending, rejected, and uncertain outcomes accurately
 
-**Owner:** Castles/Cave and SDK. **Dependencies:** W05. **Discover:** decision request/result shapes and operation-status lookup. Replace the local `resolve()` simulation with proposal submission and authoritative readback. Submission remains pending until a canonical outcome is known; transport loss produces an explicit unknown outcome.
+**Owner:** Compass/Cave and SDK. **Dependencies:** W05. **Discover:** decision request/result shapes and operation-status lookup. Replace the local `resolve()` simulation with proposal submission and authoritative readback. Submission remains pending until a canonical outcome is known; transport loss produces an explicit unknown outcome.
 
 **Acceptance:** the boundary square opens relevant pending decisions, review displays actual operation and scope, and duplicate input cannot duplicate execution. Rejection or a lost acknowledgement never causes an automatic permission retry. **Evidence:** UI contract tests and server receipts correlated to a single operation identity.
 
-## Phase 3 — bounded execution in one Castle
+## Phase 3 — bounded execution in one Project
 
 ### W07 · Connect one scoped execution path
 
@@ -100,13 +100,13 @@ These boundaries are design constraints, not evidence that every component alrea
 
 **Owner:** Psyche Build and SDK. **Dependencies:** W03–W08; remote features wait for W10. **Discover:** existing task/lane views, proposal surfaces, receipt links, coding workspaces, and recovery UI. Preserve Build’s specialized cockpit without inventing an independent scheduler or approval store.
 
-**Acceptance:** Build and Castles show the same underlying mission, attempt, proposal, and receipt identities. A changed view does not change authority. **Evidence:** a shared scenario replayed through both clients and canonical state comparisons.
+**Acceptance:** Build and Compass show the same underlying mission, attempt, proposal, and receipt identities. A changed view does not change authority. **Evidence:** a shared scenario replayed through both clients and canonical state comparisons.
 
 ### W12 · Verify packaged CLI and oversight parity
 
 **Owner:** actual CLI/Coven Code owner, Cave, SDK, and packaging maintainers. **Dependencies:** W05–W08. **Discover:** real supported commands, machine-readable output, exit behavior, configuration, authentication, and packaged entry points. Document discovered commands only after verifying them.
 
-**Acceptance:** packaged CLI, Cave, Build, and Castles preserve pending/committed/rejected/unknown distinctions and point to the same receipts. Noninteractive use fails closed when required authority is absent. **Evidence:** installed-package tests and a cross-client operation matrix; source imports alone do not prove the shipped CLI works.
+**Acceptance:** packaged CLI, Cave, Build, and Compass preserve pending/committed/rejected/unknown distinctions and point to the same receipts. Noninteractive use fails closed when required authority is absent. **Evidence:** installed-package tests and a cross-client operation matrix; source imports alone do not prove the shipped CLI works.
 
 ## Phase 6 — packaging and bounded pilot gates
 

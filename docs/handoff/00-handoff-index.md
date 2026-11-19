@@ -9,7 +9,7 @@ For the **historical pre-layout** 51-test and Chrome mobile pass, read [Mobile r
 | Chapter | Purpose |
 | --- | --- |
 | [01 — Current state and evidence](01-current-state-and-evidence.md) | Exactly what the Site implements, what was checked, and what remains unknown |
-| [02 — Architecture and ownership](02-architecture-and-ownership.md) | Boundaries between Host, Castles, Coven, Psyche, clients, identity, and authorization |
+| [02 — Architecture and ownership](02-architecture-and-ownership.md) | Boundaries between Host, Projects, Castles, Coven, Psyche, clients, identity, and authorization |
 | [03 — Integration proposal](03-integration-proposal.md) | Read models, event reconciliation, commands, receipts, identity binding, and adapter seams |
 | [04 — Host folder sync and recovery](04-host-folder-sync-and-recovery.md) | Portable files, excluded authority/runtime data, conflicts, disconnection, and recovery |
 | [05 — Implementation plan](05-implementation-plan.md) | Phases, work packets, dependencies, acceptance gates, and delivery order |
@@ -20,7 +20,7 @@ For the **historical pre-layout** 51-test and Chrome mobile pass, read [Mobile r
 | [10 — Agent task prompts](10-agent-task-prompts.md) | Ready-to-use prompts for discovery and scoped implementation |
 | [11 — Open decisions](11-open-decisions.md) | Proposed defaults, owners, risks, and validation needed |
 | [12 — Source ledger](12-source-ledger.md) | Provenance and limits for each source class |
-| [15 — Scalable Atlas layout and crown](15-scalable-atlas-layout.md) | Uniform Castles, compact placement, bounded mission detail, density/search/sample controls, explicit scope, measured fit, and canonical crown relief |
+| [15 — Scalable Atlas layout and crown](15-scalable-atlas-layout.md) | Uniform Projects, compact placement, bounded mission detail, density/search/sample controls, explicit scope, measured fit, and canonical crown relief |
 
 ## Working templates
 

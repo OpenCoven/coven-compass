@@ -2,7 +2,7 @@
 
 ## Recommended first delivery
 
-**Connect one existing project and one familiar to an observational Castles view, then qualify one bounded task through the existing Coven/Psyche path.** Expand to durable remote execution and Host synchronization only after the same operation can be inspected, refused, cancelled, and recovered through canonical interfaces.
+**Connect one existing project and one familiar to an observational Compass view, then qualify one bounded task through the existing Coven/Psyche path.** Expand to durable remote execution and Host synchronization only after the same operation can be inspected, refused, cancelled, and recovered through canonical interfaces.
 
 Everything in this document is **proposed integration work**. The bundled Site currently mounts `CovenAtlas` with local snapshot, navigation, familiar-highlight, and legend functions. Its chat, approval, and activity behavior modifies sample worlds; it is not a production transport or SDK. Do not replace a function with a network call and assume the resulting application has inherited the necessary authority model. [S1] [S2] [S3]
 
@@ -10,7 +10,7 @@ Everything in this document is **proposed integration work**. The bundled Site c
 
 | Stage | Concrete work | Primary owner to establish | Exit evidence |
 | --- | --- | --- | --- |
-| 0. Discover | Map exact production objects, public clients, lifecycle rules, and packaged entry points. | Existing repository owners across Coven, Psyche, SDK, and Castles. | Revision-pinned contract map; unresolved assumptions assigned. |
+| 0. Discover | Map exact production objects, public clients, lifecycle rules, and packaged entry points. | Existing repository owners across Coven, Psyche, SDK, and Compass. | Revision-pinned contract map; unresolved assumptions assigned. |
 | 1. Isolate presentation | Separate sample data generation from rendering and selection. Preserve the standalone demo. | Existing production UI/client owner, informed by Cave and Brand. | Demo remains explicit; operational mode cannot invoke sample mutation. |
 | 2. Observe | Read one project's canonical snapshot and follow updates without writes. | SDK adapter plus Coven read surface. | Correct initial state, duplicate handling, gap detection, reconnect, and unavailable states. |
 | 3. Propose | Submit a bounded proposal and render its actual decision/receipt lifecycle. | Threads/Coven integration through canonical SDK. | Unauthorized, stale, replayed, and revoked requests refuse correctly. |

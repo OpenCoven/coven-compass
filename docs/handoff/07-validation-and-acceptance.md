@@ -40,7 +40,7 @@ The source/package checkers and clean-extraction verification supply additional 
 
 Preserve angular project scope, circular missions, stable familiar identity marks, selected-mission agent dots, boundary decisions, and Psyche coordination. Confirm that each tier exposes the intended detail, including keyboard navigation and a meaningful focus return after drawers/dialogs close. Test actual browser interactions at supported viewport sizes and reduced-motion settings.
 
-For the new overview, test uniform four-corner Castles, compact paired placement, non-intersecting reserved rectangles, and shared corridor routes ending at inward gates. Inspect full/compact/tiny density transitions, up to eight miniature seals plus an exact remainder, aggregate counts, and the full searchable mission collection. Exercise project search, 8/16/32/64/128 sample presets, and reset without removing baseline or user-created Castles. Verify that the removed cosmetic creation caps do not reappear as navigation limits.
+For the new overview, test uniform four-corner Projects, compact paired placement, non-intersecting reserved rectangles, and shared corridor routes ending at inward gates. Inspect full/compact/tiny density transitions, up to eight miniature seals plus an exact remainder, aggregate counts, and the full searchable mission collection. Exercise project search, 8/16/32/64/128 sample presets, and reset without removing baseline or user-created Projects. Verify that the removed cosmetic creation caps do not reappear as navigation limits.
 
 Keep Coven/project scope explicit across pan, zoom, orbit, search, and history navigation. Fit must include the measured chrome-safe viewport and visible crown/label bounds. Resize should refit in auto-fit mode and preserve manual framing otherwise. Inspect the canonical crown aperture at low pitch in both scopes, with flat UI marks unchanged and no spinning or glow. These source contracts still require browser evidence for rendered clearance, focus, touch targets, and readability.
 
@@ -81,7 +81,7 @@ The canonical owner must define API names and transition details before implemen
 | Event gap/reordering | Drop, duplicate, or reorder events around snapshot recovery. | Mark freshness uncertain, use supported reconciliation, converge without duplicate effects; never infer omitted approvals. | Cursor/snapshot trace and final-state comparison. |
 | Limit reached/increased | Exhaust a bound, then submit an unauthorized increase. | Canonical enforcement stops further prohibited work; only a valid protected decision can increase a limit. | Measured usage, rejected increase, authorized-path receipt. |
 | Host/daemon restart | Restart before persistence, after commit, and before delivery of receipt. | Recover only durable authoritative state; retain fencing/replay guarantees and explain uncertain outcomes. | Restart fault harness, durable records, effect counts. |
-| Cross-client conflict | Act on the same proposal through Cave, CLI, Build, and Castles. | Clients share authoritative outcomes; later stale decisions cannot create extra effects or a different permission result. | Packaged/client integration matrix and common receipt references. |
+| Cross-client conflict | Act on the same proposal through Cave, CLI, Build, and Compass. | Clients share authoritative outcomes; later stale decisions cannot create extra effects or a different permission result. | Packaged/client integration matrix and common receipt references. |
 
 ## Evidence gates
 

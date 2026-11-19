@@ -139,8 +139,8 @@ function formFixture() {
   const f = domFixture(), stage = f.add('div', 'stage'), form = f.add('form', 'empty');
   for (const id of ['emptyX', 'nmLeadL', 'nmTitle', 'raise', 'nmLeadSec', 'emptyName', 'emptyState', 'nmFoot']) f.add('button', id, form);
   const input = f.add('input', 'nmName', form); input.value = 'Draft mission';
-  const makeCastle = () => ({world: {missions: new Map()}, layout: {ang: new Map()}, composing: false});
-  let castle = makeCastle(), actionable = true;
+  const makeProject = () => ({world: {missions: new Map()}, layout: {ang: new Map()}, composing: false});
+  let project = makeProject(), actionable = true;
   const nm = {edit: null, lead: 'echo', touched: true, brief: {atMost: {agents: 6}}}, cz = {open: false};
   const mobileUI = {
     activate(id) {
@@ -153,13 +153,13 @@ function formFixture() {
     },
   };
   const context = load(['drawNew', 'openNew', 'closeNew'], {
-    ...f, stage, nm, cz, cur: () => castle, active: 'brand', atlasScope: 'castle',
+    ...f, stage, nm, cz, cur: () => project, active: 'brand', atlasScope: 'project',
     canAct: () => actionable,
     sc: {far: false}, select() {}, setView() {}, setLead() {}, drawBriefForm() {},
     window: {CovenMobileUI: mobileUI},
   });
-  return {...f, stage, form, input, nm, cz, context, mobileUI, makeCastle,
-    get castle() { return castle; }, switchCastle: next => { castle = next; },
+  return {...f, stage, form, input, nm, cz, context, mobileUI, makeProject,
+    get project() { return project; }, switchProject: next => { project = next; },
     setActionable: value => { actionable = value; }};
 }
 
@@ -189,14 +189,14 @@ function agentFixture() {
   return {...f, context, c, a, q, inspect, missionTitle, row, slot, other, pop, details};
 }
 
-test('a dormant Castle form can close and leaves a usable New mission action after rerender', () => {
+test('a dormant Project form can close and leaves a usable New mission action after rerender', () => {
   const f = formFixture(); f.context.drawNew(); f.mobileUI.activate('empty');
   assert.equal(f.form.hidden, false); assert.equal(f.$('emptyX').hidden, false);
   f.context.closeNew();
   assert.equal(f.form.hidden, true);
   assert.equal(f.stage.inert, false, 'dismissal must release background controls immediately');
   assert.equal(f.stage.classList.contains('composing'), false);
-  assert.equal(f.$('emptyCastlePrompt').hidden, false);
+  assert.equal(f.$('emptyProjectPrompt').hidden, false);
   assert.equal(f.$('emptyNew').disabled, false);
   assert.equal(f.document.activeElement, f.$('emptyNew'));
   f.context.drawNew();
@@ -207,30 +207,30 @@ test('the empty-state action reopens the retained draft and focuses its name aft
   const f = formFixture(); f.context.drawNew(); f.context.closeNew();
   f.input.value = 'Finish the mobile interaction review'; f.calls.length = 0;
   f.$('emptyNew').click();
-  assert.equal(f.form.hidden, false); assert.equal(f.$('emptyCastlePrompt').hidden, true);
+  assert.equal(f.form.hidden, false); assert.equal(f.$('emptyProjectPrompt').hidden, true);
   assert.equal(f.input.value, 'Finish the mobile interaction review');
   assert.equal(f.document.activeElement, f.input);
   assert.equal(f.input.selectionStart, 0); assert.equal(f.input.selectionEnd, f.input.value.length);
   assert.ok(f.calls.findIndex(call => call.kind === 'activate') < f.calls.findIndex(call => call.kind === 'focus' && call.target === f.input));
 });
 
-test('empty-state dismissal belongs to its Castle and the prompt hides for populated or editing Castles', () => {
-  const f = formFixture(), first = f.castle;
+test('empty-state dismissal belongs to its Project and the prompt hides for populated or editing Projects', () => {
+  const f = formFixture(), first = f.project;
   f.context.drawNew(); f.context.closeNew();
-  f.switchCastle(f.makeCastle()); f.context.drawNew();
-  assert.equal(f.form.hidden, false, 'a different dormant Castle has its own initial invitation');
-  f.switchCastle(first); f.context.drawNew();
-  assert.equal(f.form.hidden, true); assert.equal(f.$('emptyCastlePrompt').hidden, false);
+  f.switchProject(f.makeProject()); f.context.drawNew();
+  assert.equal(f.form.hidden, false, 'a different dormant Project has its own initial invitation');
+  f.switchProject(first); f.context.drawNew();
+  assert.equal(f.form.hidden, true); assert.equal(f.$('emptyProjectPrompt').hidden, false);
   first.world.missions.set('m1', {id: 'm1'}); f.context.drawNew();
-  assert.equal(f.$('emptyCastlePrompt').hidden, true);
+  assert.equal(f.$('emptyProjectPrompt').hidden, true);
   first.world.missions.clear(); f.cz.open = true; f.context.drawNew();
-  assert.equal(f.form.hidden, true); assert.equal(f.$('emptyCastlePrompt').hidden, true);
+  assert.equal(f.form.hidden, true); assert.equal(f.$('emptyProjectPrompt').hidden, true);
 });
 
-test('an empty Castle at a read-only replay position does not expose an enabled create action', () => {
+test('an empty Project at a read-only replay position does not expose an enabled create action', () => {
   const f = formFixture(); f.context.drawNew(); f.context.closeNew();
   f.setActionable(false); f.context.drawNew();
-  assert.equal(f.$('emptyCastlePrompt').hidden, false);
+  assert.equal(f.$('emptyProjectPrompt').hidden, false);
   assert.equal(f.$('emptyNew').disabled, true);
   f.$('emptyNew').click(); assert.equal(f.form.hidden, true);
   f.setActionable(true); f.context.drawNew();
@@ -239,29 +239,29 @@ test('an empty Castle at a read-only replay position does not expose an enabled 
 
 test('Coven scope hides dormant-project forms and prompts while preserving the retained draft', () => {
   const f = formFixture(); f.context.drawNew();
-  f.input.value = 'Retained local draft'; f.castle.composing = true;
+  f.input.value = 'Retained local draft'; f.project.composing = true;
   f.context.atlasScope = 'coven'; f.context.drawNew();
-  assert.equal(f.form.hidden, true); assert.equal(f.$('emptyCastlePrompt').hidden, true);
+  assert.equal(f.form.hidden, true); assert.equal(f.$('emptyProjectPrompt').hidden, true);
   assert.equal(f.stage.classList.contains('composing'), false);
   assert.equal(f.input.value, 'Retained local draft');
-  f.context.atlasScope = 'castle'; f.context.drawNew();
+  f.context.atlasScope = 'project'; f.context.drawNew();
   assert.equal(f.form.hidden, false); assert.equal(f.input.value, 'Retained local draft');
   f.context.closeNew(); f.context.atlasScope = 'coven'; f.context.drawNew();
-  assert.equal(f.form.hidden, true); assert.equal(f.$('emptyCastlePrompt').hidden, true);
+  assert.equal(f.form.hidden, true); assert.equal(f.$('emptyProjectPrompt').hidden, true);
 });
 
-test('opening Castle edit releases its inert surface before focusing and selecting the name', () => {
-  const f = domFixture(), launcher = f.add('button', 'editCastle'), form = f.add('form', 'castleForm');
+test('opening Project edit releases its inert surface before focusing and selecting the name', () => {
+  const f = domFixture(), launcher = f.add('button', 'editProject'), form = f.add('form', 'projectForm');
   const input = f.add('input', 'czName', form); f.add('input', 'czRepo', form); f.add('input', 'czRoot', form);
   form.hidden = true; form.inert = true; launcher.focus(); f.calls.length = 0;
-  const cz = {}, castle = {}, context = load(['openCastleForm'], {
-    ...f, cz, cur: () => castle, castles: {brand: castle}, sc: {far: false}, atlasScope: 'castle',
+  const cz = {}, project = {}, context = load(['openProjectForm'], {
+    ...f, cz, cur: () => project, projects: {brand: project}, sc: {far: false}, atlasScope: 'project',
     metaOf: () => ({repo: 'https://example.test/brand', root: '~/code/brand'}),
     closeNew() {}, select() {}, setView() {},
-    drawCastleForm: () => { form.hidden = !cz.open; },
+    drawProjectForm: () => { form.hidden = !cz.open; },
     window: {CovenMobileUI: {activate: id => { f.calls.push({kind: 'activate', id}); f.$(id).inert = false; }}},
   });
-  context.openCastleForm('brand');
+  context.openProjectForm('brand');
   assert.equal(form.hidden, false); assert.equal(f.document.activeElement, input);
   assert.equal(input.value, 'brand'); assert.equal(input.selectionStart, 0); assert.equal(input.selectionEnd, 5);
   assert.equal(f.$('czRepo').value, 'https://example.test/brand'); assert.equal(f.$('czRoot').value, '~/code/brand');
