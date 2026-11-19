@@ -19,11 +19,11 @@
     "producer_hint": "fixture:host:primary",
     "scope": {
       "principal_ref": "fixture:principal:owner",
-      "castle_ref": "fixture:castle:psyche-build"
+      "project_ref": "fixture:project:psyche-build"
     },
     "snapshot": {
       "revision_ref": "fixture:snapshot:42",
-      "stream_scope_ref": "fixture:stream:primary-castle",
+      "stream_scope_ref": "fixture:stream:primary-project",
       "cursor_ref": "fixture:cursor:42",
       "complete_for_scope": true,
       "observed_at": "2026-11-18T11:59:59Z"
@@ -38,7 +38,7 @@
     "missions": [
       {
         "mission_ref": "fixture:mission:review-readiness",
-        "castle_ref": "fixture:castle:psyche-build",
+        "project_ref": "fixture:project:psyche-build",
         "display_name": "Review readiness",
         "orchestration_state": "PROPOSED.awaiting_decision",
         "state_revision_ref": "fixture:mission-revision:12",

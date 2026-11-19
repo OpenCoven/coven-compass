@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <title>Castles · responsive QA</title>
+  <title>Coven Compass · responsive QA</title>
   <style>
     :root { color-scheme: dark; font-family: system-ui, sans-serif; color: #eceaf2; background: #0c0c10; }
     * { box-sizing: border-box; }
@@ -34,7 +34,7 @@
 </head>
 <body>
   <header>
-    <h1>Castles · responsive QA</h1>
+    <h1>Coven Compass · responsive QA</h1>
     <p class="note">CSS viewport stress tests. This is Chrome rendering, not physical iPhone or Safari verification.</p>
     <div class="controls">
       <label>Viewport preset
@@ -69,7 +69,7 @@
   </header>
   <main class="workbench">
     <section class="device" aria-label="Responsive Site viewport">
-      <iframe id="siteFrame" title="OpenCoven Castles responsive test viewport" src="./index.html#/coven"></iframe>
+      <iframe id="siteFrame" title="OpenCoven Compass responsive test viewport" src="./index.html#/coven"></iframe>
     </section>
     <aside aria-labelledby="auditTitle">
       <h2 id="auditTitle">Read-only layout audit</h2>
@@ -165,7 +165,7 @@
             scrollingAncestors: clip.scrolling
           };
         }
-        var navIds = ['atlasOverview', 'atlasCastle', 'atlasBrowse', 'atlasMissions', 'atlasHandoff', 'atlasHandoffDrawer', 'atlasLab', 'atlasMobileMap', 'atlasMobileMissions', 'atlasMobileActivity', 'atlasMobileView', 'play', 'scrub', 'speed', 'live', 'atlasPlan', 'atlas3d', 'atlasMove', 'atlasOrbit', 'atlasZoomOut', 'atlasZoomIn', 'atlasFit', 'atlasLock', 'launcher', 'atlasMissionClose', 'send'];
+        var navIds = ['atlasOverview', 'atlasProject', 'atlasBrowse', 'atlasMissions', 'atlasHandoff', 'atlasHandoffDrawer', 'atlasLab', 'atlasMobileMap', 'atlasMobileMissions', 'atlasMobileActivity', 'atlasMobileView', 'play', 'scrub', 'speed', 'live', 'atlasPlan', 'atlas3d', 'atlasMove', 'atlasOrbit', 'atlasZoomOut', 'atlasZoomIn', 'atlasFit', 'atlasLock', 'launcher', 'atlasMissionClose', 'send'];
         var keyControls = navIds.map(function (id) { return doc.getElementById(id); }).filter(visible).map(function (el) {
           return Object.assign({control: label(el), disabled: !!el.disabled}, geometry(el));
         });
@@ -181,7 +181,7 @@
         var visibleInputs = Array.from(doc.querySelectorAll('input:not([type="hidden"]), textarea, select')).filter(visible).map(function (el) {
           var g = geometry(el); return {control: label(el), fontSize: win.getComputedStyle(el).fontSize, rect: g.rect, fullyVisible: g.fullyVisible, centerReachable: g.centerReachable};
         }).filter(function (item) { return item.fullyVisible; });
-        var overlayIds = ['atlasSidebar', 'atlasMissionBrowser', 'inspect', 'psyche', 'empty', 'castleForm', 'keyModal', 'cpModal'];
+        var overlayIds = ['atlasSidebar', 'atlasMissionBrowser', 'inspect', 'psyche', 'empty', 'projectForm', 'keyModal', 'cpModal'];
         var overlays = overlayIds.map(function (id) { return doc.getElementById(id); }).filter(visible).map(function (el) {
           return Object.assign({id: el.id, role: el.getAttribute('role'), modal: el.getAttribute('aria-modal'), portaled: el.parentElement === doc.body}, geometry(el));
         });

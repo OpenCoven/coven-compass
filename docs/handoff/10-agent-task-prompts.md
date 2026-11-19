@@ -28,12 +28,12 @@ Authorization needed for any external action:
 ```text
 Own W01–W02 and coordinate dependent packets from this handoff. Pin the prototype reference to d7b6f1e655140036cca49f31687131352162de13; separately record every actual repository revision and export change. Read README.md, docs/handoff/source-context/user-architecture-instructions.md, the source ledger, and documents 05–07 and 10. Inspect current AGENTS.md, ADRs, schemas, tests, CI, releases, and dirty-worktree constraints before edits.
 
-Discover the actual owners and interfaces for Coven Host, Castles, CLI/Coven Code, Psyche, Psyche Build, Cave, Threads, Familiar Contract, Runtimes, and SDK. Map identity, project, mission, task/attempt, lease/fence, proposal, decision, receipt, cursor, cancellation, and recovery. Unknown API names remain TBD. Do not create duplicate authority, identity, storage, or orchestration systems.
+Discover the actual owners and interfaces for Coven Host, Compass, CLI/Coven Code, Psyche, Psyche Build, Cave, Threads, Familiar Contract, Runtimes, and SDK. Map identity, project, mission, task/attempt, lease/fence, proposal, decision, receipt, cursor, cancellation, and recovery. Unknown API names remain TBD. Do not create duplicate authority, identity, storage, or orchestration systems.
 
 Deliver a source-backed owner/contract map and issue-sized dependencies. Start independent read-only work immediately; unblock lanes against reviewed pinned contracts. Continue through authorized reversible implementation and evidence collection. Never auto-retry a rejected, expired, or uncertain permission operation. Stop only for material policy/access/authority ambiguity, identifying the exact blocker; preserve progress and continue independent work. Do not deploy, publish, or send communications without session authorization. Use the exact completion record in document 10 at each handoff.
 ```
 
-## 2. Canonical read projection and Castles/Cave UI
+## 2. Canonical read projection and Compass/Cave UI
 
 ```text
 Own W03–W04 and the client portion of W06. Historical prototype reference: d7b6f1e655140036cca49f31687131352162de13. Read README.md, docs/handoff/source-context/user-architecture-instructions.md, documents 05–08, 10, and 15, and the pinned contract map. Inspect repository instructions and current code first. Record actual delivered/implementation revisions; preserve unrelated work.
@@ -48,7 +48,7 @@ Do not make the local reducer, localStorage, trace format, or sample resolve() a
 ```text
 Own W05 and coordinate W07–W08 with Coven, Threads, Psyche, and Runtimes owners. Prototype reference: d7b6f1e655140036cca49f31687131352162de13. Read docs/handoff/source-context/user-architecture-instructions.md, the source ledger, documents 05–07 and 10, and discovered canonical contracts. Pin actual code revisions and inspect current tests before changing behavior.
 
-Implement one supported proposal-to-receipt path and one bounded single-Castle execution path in existing authoritative components. Bind the authenticated principal, operation, scope, exact familiar root/revision, and session. Verify authorization atomically with commit or against the same immutable snapshot. Treat all UI/model/task fields as untrusted. Keep pending decisions separate from committed effects.
+Implement one supported proposal-to-receipt path and one bounded single-Project execution path in existing authoritative components. Bind the authenticated principal, operation, scope, exact familiar root/revision, and session. Verify authorization atomically with commit or against the same immutable snapshot. Treat all UI/model/task fields as untrusted. Keep pending decisions separate from committed effects.
 
 For authority bugs, capture red-to-green tests at the enforcing boundary. Cover substituted identity, revocation races, stale state, replay, lease fencing, limits, cancellation, and lost acknowledgements. Use a real daemon/runtime where source-only tests cannot prove effects. Never auto-retry rejected/expired authority or resubmit an uncertain protected operation; reconcile its original identity. Do not add duplicate approval, scheduler, or persistence authority. Continue until authorized packet acceptance is met; stop only for material policy/access ambiguity. Return the exact document-10 evidence record, receipts, skipped checks, and remaining risks.
 ```
@@ -68,7 +68,7 @@ Build deterministic failure cases for dropped acknowledgements, event gaps, reor
 ```text
 Own W11–W12. Prototype reference: d7b6f1e655140036cca49f31687131352162de13. Read README.md, the user architecture instructions, documents 05–07 and 10, and the reviewed contract map. Inspect actual client repositories, package entry points, tests, CI, and supported help before documenting commands. Pin each revision and preserve unrelated changes.
 
-Make Build, the real CLI/Coven Code surface, Cave, and Castles consume the same mission/attempt/proposal/decision/receipt identities through canonical bindings. Preserve each client's useful presentation without a second scheduler or approval store. Pending, rejected, stale, disconnected, and unknown outcomes must remain honest across clients. Noninteractive flows must fail closed without required authority.
+Make Build, the real CLI/Coven Code surface, Cave, and Compass consume the same mission/attempt/proposal/decision/receipt identities through canonical bindings. Preserve each client's useful presentation without a second scheduler or approval store. Pending, rejected, stale, disconnected, and unknown outcomes must remain honest across clients. Noninteractive flows must fail closed without required authority.
 
 Run a shared operation scenario and compare authoritative outcomes across clients. Test the installed CLI/package, including configuration, authentication, machine-readable results, and exit behavior; importing source modules is insufficient. Add red-to-green tests for any boundary defect in its actual enforcing owner. Never auto-retry denied or uncertain permission operations. Continue authorized reversible work through acceptance, stopping only for material policy/access ambiguity. Return the exact document-10 evidence record, actual commands, package identities, and unresolved parity gaps.
 ```

@@ -23,28 +23,28 @@ function extract(name) {
 function fixture() {
   const pending = new Map(), seeks = [], routes = [];
   let ticket = 0;
-  const castles = Object.fromEntries(['build', 'cave'].map(key => [key, {
+  const projects = Object.fromEntries(['build', 'cave'].map(key => [key, {
     key, recorded: false, trace: [{t: 0}, {t: 10000}], world: {t: 1000},
     sel: null, pick: null,
   }]));
   const context = vm.createContext({
-    castles, active: 'build', cursor: 1000, live: false, playing: true, speed: 10,
+    projects, active: 'build', cursor: 1000, live: false, playing: true, speed: 10,
     raf: 0, lastTs: 0, framing: false, sealAnimating: false, packets: [],
     cz: {open: false}, insp: {}, leadSig: '', needsSig: '', streamSig: '', marksSig: '', lcSig: '', wardSig: '', traceSig: '',
     cam: {px: 0, py: 0, yaw: 0, pitch: 0, locked: false}, camT: {pitch: 0}, RAD: Math.PI / 180, PAN: 12000, reduce: false,
-    atlasScope: 'castle', atlasAutoFit: true, atlasFitScene() {},
+    atlasScope: 'project', atlasAutoFit: true, atlasFitScene() {},
     document: {querySelectorAll: () => []}, $: () => ({}),
-    tEnd: castle => castle.recorded ? castle.trace.at(-1).t : 10000,
-    tStart: castle => castle.trace[0].t - 15000,
+    tEnd: project => project.recorded ? project.trace.at(-1).t : 10000,
+    tStart: project => project.trace[0].t - 15000,
     worldOf: key => key === 'build' ? [0, 0] : [100, 100],
     viewOf: () => ({px: 0, py: 0, zoom: 1}), clamp: (n, min, max) => Math.max(min, Math.min(max, n)),
     select() {}, buildScene() {}, saveView() {},
     atlasWriteRoute: () => routes.push(context.active),
-    seek: (castle, t) => { castle.world.t = t; seeks.push({key: castle.key, t}); return true; },
+    seek: (project, t) => { project.world.t = t; seeks.push({key: project.key, t}); return true; },
     easeCam: () => false, stepAgents: () => false, project() {}, timelineUI() {},
     requestAnimationFrame: callback => { const id = ++ticket; pending.set(id, callback); return id; },
   });
-  context.cur = () => context.castles[context.active];
+  context.cur = () => context.projects[context.active];
   context.refresh = () => context.kick();
   const names = ['go', 'enter', 'kick', 'frame', 'seekTimeline', 'tStart', 'timelineHasEvents'];
   new vm.Script(names.map(extract).join('\n'), {filename: 'actual-site-replay-clock.js'}).runInContext(context);
@@ -70,7 +70,7 @@ test('changing focused project preserves playing replay time and seeks the new p
 test('changing project while paused preserves the position, including before its first event', () => {
   const {context: c} = fixture();
   c.playing = false; c.cursor = -500;
-  c.castles.cave.trace[0].t = 5000;
+  c.projects.cave.trace[0].t = 5000;
   c.go('cave');
   assert.equal(c.playing, false);
   assert.equal(c.live, false);
@@ -82,11 +82,11 @@ test('opening a dormant project from Coven scope preserves the shared replay sta
   for (const playing of [false, true]) {
     const {context: c} = fixture();
     c.atlasScope = 'coven'; c.playing = playing;
-    c.castles.cave.trace = []; c.castles.cave.world.t = 9000;
+    c.projects.cave.trace = []; c.projects.cave.world.t = 9000;
     c.go('cave');
-    assert.equal(c.active, 'cave'); assert.equal(c.atlasScope, 'castle');
+    assert.equal(c.active, 'cave'); assert.equal(c.atlasScope, 'project');
     assert.equal(c.cursor, 1000); assert.equal(c.live, false); assert.equal(c.playing, playing);
-    assert.equal(c.castles.build.world.t, 1000); assert.equal(c.castles.cave.world.t, 1000);
+    assert.equal(c.projects.build.world.t, 1000); assert.equal(c.projects.cave.world.t, 1000);
     assert.equal(c.timelineHasEvents(c.cur()), true, 'a dormant project still uses the workspace replay');
   }
 });
@@ -106,26 +106,26 @@ test('replay continues with elapsed frame time across consecutive event refreshe
 
 test('overview projects follow the same cursor while replaying and seeking', () => {
   const f = fixture(), c = f.context;
-  c.castles.cave.world.t = 9000;
+  c.projects.cave.world.t = 9000;
   c.kick(); f.tick(100);
-  assert.equal(c.castles.build.world.t, c.cursor);
-  assert.equal(c.castles.cave.world.t, c.cursor, 'overview must not retain future events');
+  assert.equal(c.projects.build.world.t, c.cursor);
+  assert.equal(c.projects.cave.world.t, c.cursor, 'overview must not retain future events');
   c.go('cave');
-  assert.equal(c.castles.build.world.t, c.castles.cave.world.t);
+  assert.equal(c.projects.build.world.t, c.projects.cave.world.t);
 });
 
-test('live projects share timeline bounds and empty Castles can replay the workspace', () => {
+test('live projects share timeline bounds and empty Projects can replay the workspace', () => {
   const {context: c} = fixture();
-  c.castles.cave.trace[0].t = 5000;
-  assert.equal(c.tStart(c.castles.build), -15000);
-  assert.equal(c.tStart(c.castles.cave), -15000);
-  c.castles.cave.trace = [];
-  assert.equal(c.timelineHasEvents(c.castles.cave), true);
-  assert.equal(c.tStart(c.castles.cave), -15000);
-  c.castles.cave.recorded = true;
-  assert.equal(c.timelineHasEvents(c.castles.cave), false, 'an empty recording has no replay');
-  c.castles.cave.trace = [{t: 5000}, {t: 6000}];
-  assert.equal(c.tStart(c.castles.cave), -10000, 'imported recordings retain their own extent');
+  c.projects.cave.trace[0].t = 5000;
+  assert.equal(c.tStart(c.projects.build), -15000);
+  assert.equal(c.tStart(c.projects.cave), -15000);
+  c.projects.cave.trace = [];
+  assert.equal(c.timelineHasEvents(c.projects.cave), true);
+  assert.equal(c.tStart(c.projects.cave), -15000);
+  c.projects.cave.recorded = true;
+  assert.equal(c.timelineHasEvents(c.projects.cave), false, 'an empty recording has no replay');
+  c.projects.cave.trace = [{t: 5000}, {t: 6000}];
+  assert.equal(c.tStart(c.projects.cave), -10000, 'imported recordings retain their own extent');
 });
 
 test('slow frames advance replay by elapsed time while camera motion stays bounded', () => {

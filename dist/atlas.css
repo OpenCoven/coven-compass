@@ -1,4 +1,4 @@
-/* Coven Castles — compact chrome around the existing semantic scene. */
+/* Coven Compass — compact chrome around the existing semantic scene. */
 body.atlas-enhanced {
   --background: #0b0b0e;
   --card: #141417;
@@ -89,7 +89,7 @@ body.atlas-enhanced .atlas-layout-simulation p { color: #a39aaf; line-height: 1.
 body.atlas-enhanced .atlas-layout-presets { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 5px; margin: 8px 0; }
 body.atlas-enhanced .atlas-layout-presets button { min-height: 44px; padding: 0 4px; }
 body.atlas-enhanced #atlasResetLayout { width: 100%; min-height: 40px; font-size: 10px; }
-body.atlas-enhanced #atlasNewCastle { width: 100%; min-height: 44px; margin-top: 8px; }
+body.atlas-enhanced #atlasNewProject { width: 100%; min-height: 44px; margin-top: 8px; }
 body.atlas-enhanced .atlas-brand { display: flex; align-items: center; gap: 9px; min-width: 0; color: #d7d2e0; }
 body.atlas-enhanced .atlas-brand > svg { flex: none; width: 24px; height: 24px; color: var(--primary); fill: currentColor; }
 body.atlas-enhanced .atlas-brand > b { font-size: 13px; line-height: 1.2; font-weight: 500; white-space: nowrap; letter-spacing: -.15px; }
@@ -97,7 +97,7 @@ body.atlas-enhanced .atlas-nav { justify-self: start; display: flex; gap: 2px; p
 body.atlas-enhanced .atlas-nav button { min-height: 30px; padding: 0 10px; border: 1px solid transparent; border-radius: 4px; color: var(--subtle); font-size: 11px; font-weight: 500; white-space: nowrap; }
 body.atlas-enhanced .atlas-nav button:hover { background: rgba(255, 255, 255, .035); color: var(--foreground); }
 body.atlas-enhanced .atlas-nav button[aria-pressed="true"] { border-color: rgba(179, 170, 235, .16); background: rgba(179, 170, 235, .075); color: #d9d2ed; }
-body.atlas-enhanced #atlasCastle { max-width: 18ch; overflow: hidden; text-overflow: ellipsis; }
+body.atlas-enhanced #atlasProject { max-width: 18ch; overflow: hidden; text-overflow: ellipsis; }
 body.atlas-enhanced #atlasOverview { min-width: 44px; }
 body.atlas-enhanced .atlas-button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 36px; padding: 0 11px; border: 1px solid var(--border); border-radius: 7px; background: rgba(21, 21, 26, .9); color: var(--muted-foreground); font-size: 11px; font-weight: 500; white-space: nowrap; text-decoration: none; }
 body.atlas-enhanced .atlas-handoff-link { display: flex; min-height: 44px; margin-top: 8px; white-space: normal; text-align: center; }
@@ -306,7 +306,7 @@ body.atlas-enhanced :focus-visible { outline: 2px solid #c7bff4; outline-offset:
 @container atlas-stage (max-width: 480px) {
   body.atlas-enhanced .atlas-brand > b { font-size: 12px; }
   body.atlas-enhanced .atlas-nav button { padding-inline: 7px; font-size: 10px; }
-  body.atlas-enhanced #atlasCastle { max-width: 9ch; }
+  body.atlas-enhanced #atlasProject { max-width: 9ch; }
   body.atlas-enhanced #atlasBrowse,
   body.atlas-enhanced #atlasMissions { padding-inline: 8px; gap: 5px; }
   body.atlas-enhanced #atlasLab { width: 36px; padding: 0; }
@@ -420,16 +420,16 @@ body.atlas-enhanced :focus-visible { outline: 2px solid #c7bff4; outline-offset:
   body.atlas-enhanced textarea,
   body.atlas-enhanced select { min-height: 44px; font-size: 16px; }
   body.atlas-enhanced #empty,
-  body.atlas-enhanced #castleForm { position: fixed; z-index: 55; top: auto; left: 50%; right: auto; bottom: calc(var(--keyboard-inset, 0px) + max(10px, env(safe-area-inset-bottom, 0px))); transform: translateX(-50%); width: min(600px, calc(var(--viewport-width, 100vw) - max(10px, env(safe-area-inset-left, 0px)) - max(10px, env(safe-area-inset-right, 0px)))); max-height: calc(var(--app-height, 100dvh) - max(10px, env(safe-area-inset-top, 0px)) - max(10px, env(safe-area-inset-bottom, 0px))); border: 1px solid var(--border-strong); border-radius: 14px; overflow-y: auto; overscroll-behavior: contain; background: #17171c; box-shadow: 0 0 0 100vmax rgba(0, 0, 0, .35), 0 18px 44px -10px rgba(0, 0, 0, .65); -webkit-user-select: text; user-select: text; scroll-padding-block: 66px 90px; }
+  body.atlas-enhanced #projectForm { position: fixed; z-index: 55; top: auto; left: 50%; right: auto; bottom: calc(var(--keyboard-inset, 0px) + max(10px, env(safe-area-inset-bottom, 0px))); transform: translateX(-50%); width: min(600px, calc(var(--viewport-width, 100vw) - max(10px, env(safe-area-inset-left, 0px)) - max(10px, env(safe-area-inset-right, 0px)))); max-height: calc(var(--app-height, 100dvh) - max(10px, env(safe-area-inset-top, 0px)) - max(10px, env(safe-area-inset-bottom, 0px))); border: 1px solid var(--border-strong); border-radius: 14px; overflow-y: auto; overscroll-behavior: contain; background: #17171c; box-shadow: 0 0 0 100vmax rgba(0, 0, 0, .35), 0 18px 44px -10px rgba(0, 0, 0, .65); -webkit-user-select: text; user-select: text; scroll-padding-block: 66px 90px; }
   body.atlas-enhanced .empty .hd,
   body.atlas-enhanced .empty .em-act { flex: none; }
   body.atlas-enhanced #empty,
-  body.atlas-enhanced #castleForm { overflow: hidden; }
+  body.atlas-enhanced #projectForm { overflow: hidden; }
   body.atlas-enhanced .mobile-form-body { display: block; flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scroll-padding-block: 16px; }
   body.atlas-enhanced #empty > .hd,
-  body.atlas-enhanced #castleForm > .hd,
+  body.atlas-enhanced #projectForm > .hd,
   body.atlas-enhanced #empty > .em-act,
-  body.atlas-enhanced #castleForm > .em-act { position: relative; top: auto; bottom: auto; }
+  body.atlas-enhanced #projectForm > .em-act { position: relative; top: auto; bottom: auto; }
   body.atlas-enhanced .empty .em-act { flex-wrap: wrap; }
   body.atlas-enhanced .empty .em-act .nm-foot { flex-basis: 100%; }
   body.atlas-enhanced .empty .dr > summary { min-height: 44px; }
@@ -447,7 +447,7 @@ body.atlas-enhanced :focus-visible { outline: 2px solid #c7bff4; outline-offset:
   body.atlas-enhanced #inspect,
   body.atlas-enhanced .psyche,
   body.atlas-enhanced #empty,
-  body.atlas-enhanced #castleForm { left: calc(var(--viewport-left, 0px) + var(--viewport-width, 100vw) / 2); }
+  body.atlas-enhanced #projectForm { left: calc(var(--viewport-left, 0px) + var(--viewport-width, 100vw) / 2); }
   body.atlas-enhanced .grip,
   body.atlas-enhanced .grip-t,
   body.atlas-enhanced .grip-c { display: none; }
@@ -476,7 +476,7 @@ body.atlas-enhanced :focus-visible { outline: 2px solid #c7bff4; outline-offset:
   body.atlas-enhanced .atlas-brand > b { font-size: 11px; }
   body.atlas-enhanced #atlasBrowse > svg,
   body.atlas-enhanced #atlasMissions > svg { display: none; }
-  body.atlas-enhanced #atlasCastle { max-width: 8ch; }
+  body.atlas-enhanced #atlasProject { max-width: 8ch; }
 }
 
 /* When a keyboard leaves little height, the sheet itself can scroll to results. */
@@ -510,7 +510,7 @@ body.atlas-enhanced :focus-visible { outline: 2px solid #c7bff4; outline-offset:
   body.atlas-enhanced .atlas-brand > b { font-size: 11px; }
   body.atlas-enhanced .atlas-nav { justify-self: start; }
   body.atlas-enhanced .atlas-nav button { padding-inline: 6px; font-size: 10px; }
-  body.atlas-enhanced #atlasCastle { max-width: 10ch; }
+  body.atlas-enhanced #atlasProject { max-width: 10ch; }
   body.atlas-enhanced #atlasBrowse,
   body.atlas-enhanced #atlasMissions { grid-column: auto; grid-row: 1; padding-inline: 8px; }
   body.atlas-enhanced #atlasLab { grid-column: auto; grid-row: 1; width: 44px; padding: 0; }
@@ -574,7 +574,7 @@ body.atlas-enhanced.atlas-adaptive-mobile .app {
 }
 body.atlas-enhanced.atlas-adaptive-mobile .main { flex: 0 0 auto; }
 body.atlas-enhanced.atlas-adaptive-mobile #wardCtl summary { min-width: 44px; }
-/* The dock owns overview and mission entry points; the map header keeps Castle
+/* The dock owns overview and mission entry points; the map header keeps Project
    browsing, the lab, and the simulation status in one reachable row. */
 body.atlas-enhanced.atlas-adaptive-mobile .atlas-header {
   grid-template-columns: minmax(0, 1fr) auto auto auto;

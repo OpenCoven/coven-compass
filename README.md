@@ -1,10 +1,10 @@
-# Coven Castles · Orchestration Atlas
+# Coven Compass
 
 A private, interactive Site exploration of the supplied Coven Castles v27 prototype. This presentation builds on its existing event-driven simulation; it does not connect to a Coven daemon or confer protected authority.
 
 ## Full source and implementation handoff
 
-Open [START_HERE.md](START_HERE.md) for the runnable ZIP workflow and [the handoff index](docs/handoff/00-handoff-index.md) for the complete proposed architecture, ownership, synchronization/recovery plan, execution packets, agent prompts, acceptance matrix, and evidence ledger. The in-app **Handoff** entry opens a readable guide and downloads the complete source package. The implementation proposal covers Coven Host, Castles, Coven CLI, Psyche, Psyche Build, SDK, Threads, Cave, familiar identity, runtimes, and read-only memory/continuity views.
+Open [START_HERE.md](START_HERE.md) for the runnable ZIP workflow and [the handoff index](docs/handoff/00-handoff-index.md) for the complete proposed architecture, ownership, synchronization/recovery plan, execution packets, agent prompts, acceptance matrix, and evidence ledger. The in-app **Handoff** entry opens a readable guide and downloads the complete source package. The implementation proposal covers Coven Host, Compass, Coven CLI, Psyche, Psyche Build, SDK, Threads, Cave, familiar identity, runtimes, and read-only memory/continuity views.
 
 The handoff preserves the prototype as a simulation. Production APIs, schemas, and command paths require current-repository discovery and acceptance; conceptual JSON examples are inert documentation fixtures.
 
@@ -13,18 +13,18 @@ node scripts/check-source.mjs
 node --test tests/*.test.cjs
 node scripts/test-atlas-crown.mjs
 python3 scripts/build-handoff.py
-python3 scripts/verify-handoff.py dist/downloads/Coven_Castles_Atlas_Handoff_2026-11-18.zip
+python3 scripts/verify-handoff.py dist/downloads/Coven_Compass_Handoff_2026-11-19.zip
 ```
 
 The tests include their exact reference fixture and work without Git history. The generated export includes the mobile-readiness report, source harness, historical JSON evidence, and its own inventory and checksums. Historical browser screenshots remain in the repository only and are excluded from the handoff, along with credentials, runtime data, and previous ZIPs. Historical fingerprints describe their recorded checkpoint; they are not verification of the current layout source.
 
 ## Scalable overview refinement
 
-**Implemented; combined source-level verification passed.** The current refinement uses uniform four-corner Castles in an aspect-aware compact lattice, paired positions, and shared branch corridors that meet each project's inward-facing gate. Routes show coordination, not execution dependencies or authority. Read [the scalable layout and crown guide](docs/handoff/15-scalable-atlas-layout.md) for implementation and integration details.
+**Implemented; combined source-level verification passed.** The current refinement uses uniform four-corner Projects in an aspect-aware compact lattice, paired positions, and shared branch corridors that meet each project's inward-facing gate. Routes show coordination, not execution dependencies or authority. Read [the scalable layout and crown guide](docs/handoff/15-scalable-atlas-layout.md) for implementation and integration details.
 
-At full overview detail, each Castle shows up to eight mission seals plus an explicit overflow count. Compact and tiny density modes replace unreadable miniatures with an exact mission aggregate; all missions remain reachable through search and project drilldown. The full mission browser retains exact known totals. The previous cosmetic 16-Castle and 12-mission creation caps have been removed; rendering detail stays bounded independently of the underlying collection. Mission resource bounds and protected decision/brief rules retain their separate semantics.
+At full overview detail, each Project shows up to eight mission seals plus an explicit overflow count. Compact and tiny density modes replace unreadable miniatures with an exact mission aggregate; all missions remain reachable through search and project drilldown. The full mission browser retains exact known totals. The previous cosmetic 16-Project and 12-mission creation caps have been removed; rendering detail stays bounded independently of the underlying collection. Mission resource bounds and protected decision/brief rules retain their separate semantics.
 
-Open **Castles → Try a larger Coven** for 8, 16, 32, 64, or 128-Castle sample presets. **Remove extra samples** removes only generated layout samples and preserves existing baseline and user-created Castles. A preset never reduces the user's existing collection to meet its target, so the actual total can exceed the requested preset. These samples explore composition; 128 is neither a production capacity claim nor an architectural limit.
+Open **Projects → Try a larger Coven** for 8, 16, 32, 64, or 128-Project sample presets. **Remove extra samples** removes only generated layout samples and preserves existing baseline and user-created Projects. A preset never reduces the user's existing collection to meet its target, so the actual total can exceed the requested preset. These samples explore composition; 128 is neither a production capacity claim nor an architectural limit.
 
 Coven/project scope is explicit and separate from camera zoom. Fit uses measured chrome-safe space; resize refits only in auto-fit mode and preserves a manually adjusted camera. The canonical Psyche crown has restrained projected relief in both scene scopes, with its exact aperture and leaf silhouette. Flat UI marks remain unchanged; the sculpture does not spin or glow.
 
@@ -44,23 +44,23 @@ The v27 seal constraints remain: a 12-degree minimum wedge angle, at most eight 
 
 ## Interactions
 
-1. Browse the Coven map or open Castles to search project names and explore the larger-Coven sample presets. Use Missions to search across Castles and filter by Castle or mission state; an overview overflow marker opens all missions for its Castle.
-2. Use the familiar chips along the bottom to follow a familiar across Castles. Select the same chip again to clear the filter.
+1. Browse the Coven map or open Projects to search project names and explore the larger-Coven sample presets. Use Missions to search across Projects and filter by Project or mission state; an overview overflow marker opens all missions for its Project.
+2. Use the familiar chips along the bottom to follow a familiar across Projects. Select the same chip again to clear the filter.
 3. Select a near-white square on a project boundary to open its pending decisions.
-4. Open mission details for Brief, Council, Tasks, and Agents. Previous/Next explores the current Castle; Back to mission leaves a familiar view; All missions restores the search and selected row.
+4. Open mission details for Brief, Council, Tasks, and Agents. Previous/Next explores the current Project; Back to mission leaves a familiar view; All missions restores the search and selected row.
 5. Use Seal lab to explore Planned, Active, Needs you, Stalled, Sealed, and Broken, plus target progress, working counts, and resource limits.
-6. Replay the shared live timeline, pause or scrub to a moment, and change the focused Castle without restarting playback. Go live returns to the current sample state. Imported recordings keep their own extent and finish paused.
+6. Replay the shared live timeline, pause or scrub to a moment, and change the focused Project without restarting playback. Go live returns to the current sample state. Imported recordings keep their own extent and finish paused.
 7. On mobile, use **Map**, **Missions**, **Activity**, and **View** in the bottom workspace dock. Replay and Go live stay reachable while browsing the map; View reveals the 2D, 3D, Move, Orbit, zoom, Fit, and Lock controls. Drag to pan in 2D; choose Move or Orbit in 3D. Two-pointer pan/pinch preserves the point under the gesture centroid. Fit enables automatic framing; a manual camera adjustment preserves that framing through later resize events.
 
-Mission routes include Castle identity, mission, section, familiar scope, and card/detail mode. Browser Back/Forward and reload restore that state. Older Castle bookmarks remain supported. A mission that disappears at an earlier replay position clears its selection with an explanatory status message.
+Mission routes include Project identity, mission, section, familiar scope, and card/detail mode. Browser Back/Forward and reload restore that state. A mission that disappears at an earlier replay position clears its selection with an explanatory status message.
 
-Mobile sheets follow the visible viewport, keep the active surface above the map, and restore focus through nested views. Mission and Castle forms keep their header/action row outside the scrolling fields. Draft text survives resizing and minimizing/reopening the conversation within the loaded session.
+Mobile sheets follow the visible viewport, keep the active surface above the map, and restore focus through nested views. Mission and Project forms keep their header/action row outside the scrolling fields. Draft text survives resizing and minimizing/reopening the conversation within the loaded session.
 
 The mobile dock moves the original controls instead of creating a second replay state. It yields to open sheets and the keyboard, and restores the controls to their desktop positions when the layout changes. The available viewport and measured header/dock heights determine the map height. Compact, short-landscape, and tablet arrangements adapt to screen shape; an explicit View expansion survives rotation.
 
-Replay renders missions before their first council seat, so opening events no longer stop the frame loop. Event refreshes preserve elapsed time, and camera smoothing retains its separate bounded delta. All visible Castles follow the shared replay cursor; delayed sample reports remain in the trace until that cursor reaches them.
+Replay renders missions before their first council seat, so opening events no longer stop the frame loop. Event refreshes preserve elapsed time, and camera smoothing retains its separate bounded delta. All visible Projects follow the shared replay cursor; delayed sample reports remain in the trace until that cursor reaches them.
 
-The starting model contains four Castles, seven missions, and 114 delegated agents. All displayed totals are derived from the simulation. Activity changes over time. Chat and approval controls affect sample data only; they do not send communications, run agents, authorize real operations, or write to external projects.
+The starting model contains four Projects, seven missions, and 114 delegated agents. All displayed totals are derived from the simulation. Activity changes over time. Chat and approval controls affect sample data only; they do not send communications, run agents, authorize real operations, or write to external projects.
 
 ## Source
 
@@ -80,7 +80,6 @@ The starting model contains four Castles, seven missions, and 114 delegated agen
 - `tests/mobile-qa.html`: an interactive responsive QA harness, excluded from the deployment.
 - `tests/evidence/`: historical mobile and incoming replay/mobile JSON audits with source fingerprints; repository-only browser screenshots are excluded from the exported handoff.
 - `MOBILE_READINESS.md`: separate mobile, replay, and layout checkpoints, the combined source's verification boundary, and physical-device acceptance criteria.
-- `.openai/hosting.json`: canonical Site identity and static deployment configuration.
 
 No build step or runtime dependencies are required. Google Fonts is the inherited optional typography dependency, with system font fallbacks.
 

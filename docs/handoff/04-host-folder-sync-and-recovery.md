@@ -4,17 +4,17 @@
 
 **Make Coven Host a familiar place to find project work, proposals, artifacts, and receipts while Coven remains the authority that executes and commits.** A folder can make work portable and reviewable without becoming the source of identity or permission. The user's instructions require one coherent authority model and treat cloud infrastructure as an execution surface, not the fundamental home of a familiar. [U1]
 
-This document is a **proposal**. The Site's Castle metadata includes illustrative repository and root strings, but it does not mount folders, synchronize files, or connect to a remote daemon. The production Castles schema, Host implementation, filesystem layout, and transport must be discovered before choosing exact filenames or APIs. [S1] [S2]
+This document is a **proposal**. The Site's Project metadata includes illustrative repository and root strings, but it does not mount folders, synchronize files, or connect to a remote daemon. The production Project schema, Host implementation, filesystem layout, and transport must be discovered before choosing exact filenames or APIs. [S1] [S2]
 
 The first sync delivery should use **one authoritative owner per project/run**. It may distribute eligible content and display remote results, but it should not support opportunistic offline ownership takeover or replicate live daemon databases.
 
 ## Proposed folder contents
 
-The paths below illustrate a user experience, not a required new directory standard. Reuse existing Castle/package conventions when discovery finds them. Ordinary file permissions can reduce accidental edits, but authoritative validation remains necessary.
+The paths below illustrate a user experience, not a required new directory standard. Reuse existing Project/package conventions when discovery finds them. Ordinary file permissions can reduce accidental edits, but authoritative validation remains necessary.
 
 | Illustrative location | Intended content | Treatment |
 | --- | --- | --- |
-| `<Host>/Castles/<project>/workspace/` | User work and approved execution inputs. | Versioned working material; never implicit permission to execute. |
+| `<Host>/Projects/<project>/workspace/` | User work and approved execution inputs. | Versioned working material; never implicit permission to execute. |
 | `…/proposals/` | Draft intents, requested changes, and imported suggestions. | Pending until accepted through the canonical authority path. |
 | `…/artifacts/` | Produced reports, patches, exports, and supporting evidence. | Bind each accepted version to content identity and its attempt. |
 | `…/receipts/` | Exported copies of authoritative outcomes. | Read-only projection; edited copies do not rewrite history. |
@@ -100,7 +100,7 @@ On restart, load authoritative state first, reconcile ownership and attempts, th
 | Offline proposal uses a revoked/stale binding | Reconnection refuses or requests renewed authorization. |
 | Sync scans a live database or secret | Exclusion policy prevents transfer; diagnostics avoid leaking contents. |
 
-Assign discovery of folder conventions to the Castles/Host owner, authoritative transitions to Coven/Psyche, protected decisions to Threads integration, public bindings to SDK, and cross-client acceptance to Cave, CLI, and Psyche Build owners. Each packet should identify real modules and tests after discovery. [U1]
+Assign discovery of folder conventions to the Project/Host owner, authoritative transitions to Coven/Psyche, protected decisions to Threads integration, public bindings to SDK, and cross-client acceptance to Cave, CLI, and Psyche Build owners. Each packet should identify real modules and tests after discovery. [U1]
 
 The acceptance result is a recoverable relationship between files, exact inputs, authority, attempts, and receipts. A folder that merely looks synchronized is not enough.
 
@@ -112,5 +112,5 @@ The acceptance result is a recoverable relationship between files, exact inputs,
 
 - [U1 — supplied authority, identity, persistence, and client boundaries][U1].
 - [S1 — simulation scope and absence of production integration][S1].
-- [S2 — illustrative Castle metadata, local replay, and sample decisions][S2].
+- [S2 — illustrative Project metadata, local replay, and sample decisions][S2].
 - Related: [architecture and ownership](02-architecture-and-ownership.md), [integration stages and qualification](03-integration-proposal.md).

@@ -18,7 +18,7 @@ import zipfile
 import zlib
 
 
-ARCHIVE_ROOT = "Coven_Castles_Atlas_Handoff_2026-11-18"
+ARCHIVE_ROOT = "Coven_Compass_Handoff_2026-11-19"
 BASELINE_COMMIT = "d7b6f1e655140036cca49f31687131352162de13"
 MANIFEST = "HANDOFF_MANIFEST.json"
 CHECKSUMS = "CHECKSUMS.sha256"

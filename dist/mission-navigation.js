@@ -14,10 +14,10 @@
     return typeof value === 'string' && value.trim().length > 0 && !/[\u0000-\u001f\u007f]/.test(value);
   }
 
-  function route(scope, castle, mission, view, detail, familiar) {
+  function route(scope, project, mission, view, detail, familiar) {
     return {
       scope: scope,
-      castle: castle || null,
+      project: project || null,
       mission: mission || null,
       view: view || null,
       detail: detail || null,
@@ -49,26 +49,22 @@
       var raw = hash.charAt(0) === '#' ? hash.slice(1) : hash;
       if (!raw) return route('coven');
       if (raw.indexOf('#') >= 0) return null;
-      if (raw.charAt(0) !== '/') {
-        // The original Site used an encoded Castle name as the entire fragment.
-        var legacyCastle = decodeURIComponent(raw);
-        return identifier(legacyCastle) ? route('castle', legacyCastle) : null;
-      }
+      if (raw.charAt(0) !== '/') return null;
       var question = raw.indexOf('?');
       var path = question < 0 ? raw : raw.slice(0, question);
       var query = question < 0 ? '' : raw.slice(question + 1);
       if (path === '/coven') return query ? null : route('coven');
       var parts = path.split('/');
-      if (parts[1] !== 'castle' || (parts.length !== 3 && parts.length !== 5)) return null;
-      var castle = decodeURIComponent(parts[2]);
-      if (!identifier(castle)) return null;
-      if (parts.length === 3) return query ? null : route('castle', castle);
+      if (parts[1] !== 'project' || (parts.length !== 3 && parts.length !== 5)) return null;
+      var project = decodeURIComponent(parts[2]);
+      if (!identifier(project)) return null;
+      if (parts.length === 3) return query ? null : route('project', project);
       if (parts[3] !== 'mission') return null;
       var mission = decodeURIComponent(parts[4]);
       if (!identifier(mission)) return null;
       var values = parseQuery(query);
       if (!values) return null;
-      return route('mission', castle, mission, values.view || 'brief', values.detail || 'card', values.familiar);
+      return route('mission', project, mission, values.view || 'brief', values.detail || 'card', values.familiar);
     } catch (error) {
       return null;
     }
@@ -77,9 +73,9 @@
   function format(value) {
     try {
       if (!value || value.scope === 'coven') return '#/coven';
-      if ((value.scope !== 'castle' && value.scope !== 'mission') || !identifier(value.castle)) return '#/coven';
-      var hash = '#/castle/' + encodeURIComponent(value.castle);
-      if (value.scope === 'castle') return hash;
+      if ((value.scope !== 'project' && value.scope !== 'mission') || !identifier(value.project)) return '#/coven';
+      var hash = '#/project/' + encodeURIComponent(value.project);
+      if (value.scope === 'project') return hash;
       if (!identifier(value.mission)) return '#/coven';
       var view = value.view == null ? 'brief' : value.view;
       var detail = value.detail == null ? 'card' : value.detail;
@@ -96,27 +92,27 @@
     }
   }
 
-  function normalizeSelection(castle) {
+  function normalizeSelection(project) {
     var result = {missionRemoved: false, familiarRemoved: false, agentRemoved: false};
-    if (!castle || !castle.world || !castle.world.missions || !castle.world.agents) return result;
-    var mission = castle.sel ? castle.world.missions.get(castle.sel) : null;
-    if (castle.sel && !mission) {
+    if (!project || !project.world || !project.world.missions || !project.world.agents) return result;
+    var mission = project.sel ? project.world.missions.get(project.sel) : null;
+    if (project.sel && !mission) {
       result.missionRemoved = true;
-      result.familiarRemoved = !!castle.fam;
-      result.agentRemoved = !!castle.pick;
-      castle.sel = null;
-      castle.fam = null;
-      castle.detail = null;
-      castle.pick = null;
-      castle.camBack = null;
+      result.familiarRemoved = !!project.fam;
+      result.agentRemoved = !!project.pick;
+      project.sel = null;
+      project.fam = null;
+      project.detail = null;
+      project.pick = null;
+      project.camBack = null;
       return result;
     }
-    if (castle.fam && (!mission || !mission.seats.includes(castle.fam))) {
-      castle.fam = null;
+    if (project.fam && (!mission || !mission.seats.includes(project.fam))) {
+      project.fam = null;
       result.familiarRemoved = true;
     }
-    if (castle.pick && !castle.world.agents.has(castle.pick.id)) {
-      castle.pick = null;
+    if (project.pick && !project.world.agents.has(project.pick.id)) {
+      project.pick = null;
       result.agentRemoved = true;
     }
     return result;

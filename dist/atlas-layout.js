@@ -5,10 +5,10 @@
  * Keys retain caller order. Opposite pairs fill the nearest cells in an
  * aspect-weighted lattice, instead of making one increasingly sparse ring.
  * At unchanged options, appending keys preserves existing node positions.
- * The central cell reserves the hub; other cells reserve the complete Castle
+ * The central cell reserves the hub; other cells reserve the complete Project
  * AND label rectangle. Empty cells and shared routes imply no task dependency.
  *
- * Routes start exactly on the hub circle and enter the cardinal Castle gate
+ * Routes start exactly on the hub circle and enter the cardinal Project gate
  * nearest the hub. They follow the empty aisles between rows/columns. Their
  * final approach may enter their own reserved rectangle, never another one.
  * Rendering may round corners by at most maxCornerRadius without exhausting

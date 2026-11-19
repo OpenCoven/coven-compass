@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  var PORTALS = ['inspect', 'psyche', 'empty', 'castleForm', 'atlasSidebar', 'atlasMissionBrowser'];
+  var PORTALS = ['inspect', 'psyche', 'empty', 'projectForm', 'atlasSidebar', 'atlasMissionBrowser'];
   var OVERLAYS = PORTALS.concat(['keyModal', 'cpModal']);
   var records = new Map(), stack = [], inertState = [], modalState = [];
   var settings = null, mounted = false, syncing = false, initial = true;

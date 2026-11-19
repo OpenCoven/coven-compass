@@ -1,10 +1,10 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#09090b;color:#edecf2}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<title>Coven Castles · Orchestration Atlas</title>
-<meta name="description" content="Explore a living Coven: connected project Castles, persistent familiars, quantitative mission seals, and bounded simulated work.">
+<title>Coven Compass</title>
+<meta name="description" content="Explore a living Coven: connected Projects, persistent familiars, quantitative mission seals, and bounded simulated work.">
 <meta name="theme-color" content="#09090b">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif&display=swap">
 <style>
-/* Layout: the castle fills the screen; Psyche floats bottom right as a chat window and can dock as a resizable side panel.
+/* Layout: the project fills the screen; Psyche floats bottom right as a chat window and can dock as a resizable side panel.
    Surfaces stack in three steps (background, card, raised). Detail stays folded until asked for. */
 :root{
   --background:#09090B;
@@ -335,7 +335,7 @@ h1,h2,h3,p,dl,dd{margin:0}
 .field input::placeholder{color:var(--subtle)}
 
 @media (pointer:coarse){
-  .btn{min-height:40px}.btn.icon{width:40px}.castle-tab{min-height:36px}.attn{min-height:36px}.seg button{min-height:34px}
+  .btn{min-height:40px}.btn.icon{width:40px}.project-tab{min-height:36px}.attn{min-height:36px}.seg button{min-height:34px}
   .dot{width:30px;height:30px}.x{width:40px;height:40px}.field input{height:40px}
 }
 @media (max-width:1100px), (pointer:coarse){
@@ -558,7 +558,7 @@ h1,h2,h3,p,dl,dd{margin:0}
 
 /* ================= type scale ================= */
 body{letter-spacing:-.006em;font-feature-settings:"ss01","cv11";text-rendering:optimizeLegibility}
-.mono,.castle-tab span,.clock,.a-info .id,.aid,.code,.tag.mono,.kv dd.mono{letter-spacing:0}
+.mono,.project-tab span,.clock,.a-info .id,.aid,.code,.tag.mono,.kv dd.mono{letter-spacing:0}
 .gate-l{font-size:calc(11px * var(--u,1) * var(--fs,1))}
 .psy-l{font-size:calc(11.5px * var(--u,1) * var(--fs,1));letter-spacing:calc(4.5px * var(--u,1));stroke-width:calc(4px * var(--u,1))}
 .lead-name{font-size:calc(13.5px * var(--u,1) * var(--fs,1));stroke-width:calc(5px * var(--u,1))}
@@ -632,7 +632,7 @@ body{letter-spacing:-.006em;font-feature-settings:"ss01","cv11";text-rendering:o
 .nt.shared em{color:var(--subtle)}
 .avs{display:inline-flex}
 .avs .avatar+.avatar{margin-left:-6px}
-/* lines keep their weight at any zoom, so far castles stay drawn */
+/* lines keep their weight at any zoom, so far projects stay drawn */
 .wall,.road,.moat,.plinth,.thread,.link,.glink,.stem,.colink line{vector-effect:non-scaling-stroke}
 
 /* ================= quiet pass: one title bar, one kind of row, one popover ================= */
@@ -713,7 +713,7 @@ body{letter-spacing:-.006em;font-feature-settings:"ss01","cv11";text-rendering:o
 .tr-axis{display:flex;justify-content:space-between;align-items:center;font-family:var(--f-mono);font-size:calc(10.5px * var(--fs,1) * var(--fsl,1));color:var(--subtle)}
 .tr-axis .k{display:inline-flex;align-items:center;gap:5px;font-family:var(--f-body);font-size:calc(11.5px * var(--fs,1) * var(--fsl,1))}
 .tr-axis .k::before{content:"";width:6px;height:6px;border-radius:1px;background:var(--attention)}
-/* empty castle */
+/* empty project */
 .empty{inset:auto;left:14px;top:10px;z-index:2;width:min(calc(336px * var(--fs,1)),calc(100% - 28px));display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:0;padding:0;text-align:left;
   border:1px solid transparent;border-radius:var(--radius);background:linear-gradient(var(--popover),var(--popover)) padding-box,var(--hair) border-box;
   -webkit-backdrop-filter:blur(22px) saturate(1.5);backdrop-filter:blur(22px) saturate(1.5);box-shadow:var(--shadow-pop);animation:drop .24s cubic-bezier(.2,.8,.2,1);transform-origin:top left}
@@ -974,7 +974,7 @@ body{letter-spacing:-.006em;font-feature-settings:"ss01","cv11";text-rendering:o
 #plan.far .court,#plan.far .pad,#plan.far .court-sh{opacity:.5}
 .pill-body{z-index:8;background:linear-gradient(#17171A,#17171A) padding-box,var(--hair) border-box}
 
-/* ================= the Coven: one Psyche, four familiars, a lane to each castle for each familiar working there ================= */
+/* ================= the Coven: one Psyche, four familiars, a lane to each project for each familiar working there ================= */
 .hub{cursor:pointer}
 .hubring{fill:none;stroke:var(--primary);stroke-opacity:.38;stroke-width:1.2;vector-effect:non-scaling-stroke}
 .huborb{fill:var(--primary);stroke:var(--card);stroke-width:7}
@@ -1168,7 +1168,7 @@ body{letter-spacing:-.006em;font-feature-settings:"ss01","cv11";text-rendering:o
 @media (max-width:520px){.cf-l,.cf-r,.notif .cf-f{padding-left:12px}}
 @media (prefers-reduced-motion:reduce){.nitem,.notif .nitem .cf{transition:none;animation:none}}
 
-/* ================= a castle is a name, a repository and a folder: its form, and where it lives in the project picker ================= */
+/* ================= a project is a name, a repository and a folder: its form, and where it lives in the project picker ================= */
 .cz-sec{gap:6px;padding:11px 14px 9px}
 .cz-sec .nm-l{display:flex;align-items:center;gap:7px}
 .cz-i{display:grid;place-items:center;width:13px;height:13px;color:var(--primary)}
@@ -1534,7 +1534,7 @@ button.fm-r:hover svg{color:var(--hue,var(--primary))}
 .plate.ask-note.sel{z-index:4;border-color:var(--hue);box-shadow:var(--shadow-pop),0 0 0 4px color-mix(in srgb,var(--hue) 20%,transparent)}
 .plate.ask-note:focus-visible{z-index:5}
 
-/* ================= castle tab: the open project in one place ================= */
+/* ================= project tab: the open project in one place ================= */
 .psyche .cast{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;display:flex;flex-direction:column;animation:fade .16s ease-out}
 .p-tab{padding:0 10px}
 .cs-top{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;align-items:center;gap:10px;padding:14px 14px 12px}
@@ -1705,7 +1705,7 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
             <div class="ctl vsw" role="group" aria-label="Camera">
               <button type="button" id="vPlan" aria-pressed="false" aria-label="Plan view"><svg viewBox="0 0 14 14" aria-hidden="true"><rect x="2.5" y="2.5" width="9" height="9" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M2.5 7h9M7 2.5v9" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Plan</span></button>
               <button type="button" id="v3d" aria-pressed="true" aria-label="3D view"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 1.8 11.5 4.4v5.2L7 12.2 2.5 9.6V4.4zM2.5 4.4 7 7l4.5-2.6M7 7v5.2" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/></svg><span>3D</span></button>
-              <button type="button" id="vAll" aria-pressed="false" aria-label="Coven view, every castle"><svg viewBox="0 0 14 14" aria-hidden="true"><rect x="2" y="2" width="4" height="4" rx=".9" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><rect x="8" y="2" width="4" height="4" rx=".9" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><rect x="2" y="8" width="4" height="4" rx=".9" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><rect x="8" y="8" width="4" height="4" rx=".9" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Coven</span></button>
+              <button type="button" id="vAll" aria-pressed="false" aria-label="Coven view, every project"><svg viewBox="0 0 14 14" aria-hidden="true"><rect x="2" y="2" width="4" height="4" rx=".9" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><rect x="8" y="2" width="4" height="4" rx=".9" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><rect x="2" y="8" width="4" height="4" rx=".9" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><rect x="8" y="8" width="4" height="4" rx=".9" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Coven</span></button>
             </div>
             <div class="ctl" role="group" aria-label="Zoom">
               <button type="button" id="zOut" aria-label="Zoom out"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
@@ -1718,21 +1718,21 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
             <div class="ctl stop-ctl"><button class="stopb" type="button" id="stopBtn" aria-expanded="false" aria-controls="stopPop" hidden><i></i><span id="stopTxt">Stop</span></button></div>
             <div class="ctl"><button type="button" id="footBtn" aria-pressed="true" aria-label="Hide the timeline and missions"><svg viewBox="0 0 14 14" aria-hidden="true"><rect x="2" y="2.5" width="10" height="9" rx="1.3" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M2 8.4h10" stroke="currentColor" stroke-width="1.3"/></svg><span id="footClock" hidden></span></button></div>
           </div>
-          <section class="notif stop-pop" id="stopPop" aria-label="Stop this castle" hidden>
-      <div class="hd"><span class="hd-i q" id="stopIc"></span><span class="hd-t">Stop this castle</span><span class="hd-m" id="stopName"></span></div>
+          <section class="notif stop-pop" id="stopPop" aria-label="Stop this project" hidden>
+      <div class="hd"><span class="hd-i q" id="stopIc"></span><span class="hd-t">Stop this project</span><span class="hd-m" id="stopName"></span></div>
       <p class="pc-note">Every agent here stops at once and stays stopped until you resume. This does not go through Psyche.</p>
-      <div class="cf-f"><span></span><button class="btn sm" type="button" id="stopNo">Cancel</button><button class="btn pri sm" type="button" id="stopYes">Stop castle</button></div>
+      <div class="cf-f"><span></span><button class="btn sm" type="button" id="stopNo">Cancel</button><button class="btn pri sm" type="button" id="stopYes">Stop project</button></div>
     </section>
         </div>
         <div class="plan-body">
-          <div class="stage" id="stage" tabindex="0" aria-label="Castle view. Arrow keys move, Shift with arrows orbits, plus and minus zoom, zero resets.">
-            <svg id="plan" viewBox="-392 -392 784 784" role="img" aria-label="The castle: Psyche at the top, missions around it, each with its council of familiars and their squads of agents, gates on the walls"></svg>
+          <div class="stage" id="stage" tabindex="0" aria-label="Project view. Arrow keys move, Shift with arrows orbits, plus and minus zoom, zero resets.">
+            <svg id="plan" viewBox="-392 -392 784 784" role="img" aria-label="The project: Psyche at the top, missions around it, each with its council of familiars and their squads of agents, gates on the walls"></svg>
             <div class="gizmo" id="gizmo" aria-hidden="true">
               <svg viewBox="0 0 46 46"><line id="gx" x1="23" y1="23"/><line id="gy" x1="23" y1="23"/><line class="z" id="gz" x1="23" y1="23"/><text id="gxl">x</text><text id="gyl">y</text><text id="gzl">z</text></svg>
               <div class="gcap"><span id="gcap">Boundaries contain projects. Seals are missions. Glyphs identify familiars.</span><span id="ghint"></span></div>
             </div>
-            <form class="empty" id="castleForm" aria-label="Castle" autocomplete="off" novalidate hidden>
-              <div class="hd"><span class="hd-i" id="czIcon"></span><h2 class="hd-t" id="czTitle">New castle</h2><span class="hd-m" id="czMeta"></span><button class="btn x" type="button" id="czX" aria-label="Close">×</button></div>
+            <form class="empty" id="projectForm" aria-label="Project" autocomplete="off" novalidate hidden>
+              <div class="hd"><span class="hd-i" id="czIcon"></span><h2 class="hd-t" id="czTitle">New project</h2><span class="hd-m" id="czMeta"></span><button class="btn x" type="button" id="czX" aria-label="Close">×</button></div>
               <div class="mobile-form-body">
               <div class="nm-sec cz-sec">
                 <label class="nm-l" for="czName"><span class="cz-i" id="czNameI"></span>Name</label>
@@ -1750,11 +1750,11 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
                 <p class="cz-e" id="czRootE"></p>
               </div>
               <div class="nm-sec cz-rm" id="czRm" hidden>
-                <button class="rf" type="button" id="czRmAsk">Remove this castle</button>
+                <button class="rf" type="button" id="czRmAsk">Remove this project</button>
                 <div class="cz-sure" id="czRmSure" hidden><span id="czRmText"></span><button class="btn sm" type="button" id="czRmNo">Keep</button><button class="btn sm" type="button" id="czRmYes">Remove</button></div>
               </div>
               </div>
-              <div class="em-act"><span class="nm-foot" id="czFoot"></span><button class="btn pri" id="czGo" type="submit">Create castle</button></div>
+              <div class="em-act"><span class="nm-foot" id="czFoot"></span><button class="btn pri" id="czGo" type="submit">Create project</button></div>
             </form>
             <form class="empty" id="empty" aria-label="New mission" autocomplete="off" hidden>
               <div class="hd"><h2 class="hd-t" id="nmTitle">New mission</h2><span class="hd-m" id="emptyName"></span><span class="hd-s off" id="emptyState">Dormant</span><button class="btn x" type="button" id="emptyX" aria-label="Close" hidden>×</button></div>
@@ -1802,12 +1802,12 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
       <div class="p-tabs" role="tablist" aria-label="Psyche panel">
         <button class="p-tab" type="button" role="tab" id="tabChat" aria-controls="stream" aria-selected="true">Conversation</button>
         <button class="p-tab" type="button" role="tab" id="tabNeeds" aria-controls="notif" aria-selected="false">Inbox<b id="tabNeedsN"></b></button>
-        <button class="p-tab" type="button" role="tab" id="tabCastle" aria-controls="castPane" aria-selected="false">Castle</button>
+        <button class="p-tab" type="button" role="tab" id="tabProject" aria-controls="castPane" aria-selected="false">Project</button>
         <button class="p-tab" type="button" role="tab" id="tabFams" aria-controls="fams" aria-selected="false">Familiars</button>
       </div>
       <div class="stream" id="stream" role="tabpanel" aria-labelledby="tabChat" aria-live="polite"></div>
       <section class="notif" id="notif" role="tabpanel" aria-labelledby="tabNeeds" hidden></section>
-      <section class="cast" id="castPane" role="tabpanel" aria-labelledby="tabCastle" hidden></section>
+      <section class="cast" id="castPane" role="tabpanel" aria-labelledby="tabProject" hidden></section>
       <section class="fams" id="fams" role="tabpanel" aria-labelledby="tabFams" hidden></section>
       <form class="comp" id="comp" autocomplete="off">
         <div class="comp-note" id="compNote" hidden></div>
@@ -1852,14 +1852,14 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
       <div class="kz-col">
       <section class="kz" aria-labelledby="kzShape"><h3 id="kzShape"><i class="kz-t"></i>Shape <span>what it is</span></h3>
         <div class="kz-r"><span class="kz-m"><svg viewBox="0 0 20 20" aria-hidden="true"><path class="kl" d="M2 2 6 4h8l4-2-2 4v8l2 4-4-2H6l-4 2 2-4V6Z"/></svg></span><div><b>Angular boundary</b><p>One project. Its missions stay inside it; a quiet empty boundary is dormant</p></div></div>
-        <div class="kz-r"><span class="kz-m"><svg viewBox="-9 -9 18 18" aria-hidden="true" style="color:var(--primary)"><use href="#crown" x="-8.4" y="-8.1" width="16.8" height="15.5" fill="currentColor"/></svg></span><div><b>Crown</b><p>Psyche, at the center of each castle and of the Coven</p></div></div>
+        <div class="kz-r"><span class="kz-m"><svg viewBox="-9 -9 18 18" aria-hidden="true" style="color:var(--primary)"><use href="#crown" x="-8.4" y="-8.1" width="16.8" height="15.5" fill="currentColor"/></svg></span><div><b>Crown</b><p>Psyche, at the center of each project and of the Coven</p></div></div>
         <div class="kz-r"><span class="kz-m" id="kzSealMark"></span><div><b>Seal</b><p>A mission. Its parts and states are set out under Mission seal</p></div></div>
         <div class="kz-r"><span class="kz-m"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="m7 3-5 6 5 6M11 3l5 6-5 6" fill="none" stroke="var(--fam-cody)" stroke-width="1.5"/></svg></span><div><b>Familiar glyph</b><p>A persistent identity. The same mark and color follow it from project to mission to agent</p></div></div>
         <div class="kz-r"><span class="kz-m"><svg viewBox="0 0 34 14" aria-hidden="true"><circle class="kc on" cx="6" cy="7" r="4"/><circle class="kc" cx="17" cy="7" r="4"/><circle class="kc dash" cx="28" cy="7" r="4"/></svg></span><div><b>Agent dot</b><p>Filled is working, hollow is idle. A dashed place remains reserved while its agent waits at a gate. Select a mission to reveal its agents</p></div></div>
         <div class="kz-r"><span class="kz-m"><svg viewBox="0 0 14 14" aria-hidden="true"><circle class="kc on" cx="7" cy="7" r="4.5"/><circle cx="7" cy="7" r="2" fill="var(--fam-cody)"/></svg></span><div><b>Dot with a second color</b><p>An agent whose task is shared by two familiars</p></div></div>
         <div class="kz-r"><span class="kz-m"><svg viewBox="0 0 18 18" aria-hidden="true"><rect x="3" y="3" width="12" height="12" rx="1" fill="none" stroke="var(--attention)"/><path d="M9 6v6" stroke="var(--attention)"/></svg></span><div><b>Boundary square</b><p>Pending decisions. The count includes permission requests and resource-limit requests. Open it to review</p></div></div>
       </section>
-      <section class="kz" aria-labelledby="kzCoven"><h3 id="kzCoven"><i class="kz-t"></i>Coven <span>every castle at once</span></h3>
+      <section class="kz" aria-labelledby="kzCoven"><h3 id="kzCoven"><i class="kz-t"></i>Coven <span>every project at once</span></h3>
         <div class="kz-r"><span class="kz-m"><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M2 7h22" stroke="var(--muted-foreground)" stroke-width="1.3"/></svg></span><div><b>Connection</b><p>Psyche coordinates that project. Choose a familiar below the map to color its connections and highlight its missions</p></div></div>
         <div class="kz-r"><span class="kz-m"><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M2 7h22" stroke="var(--muted-foreground)" stroke-width="1.3" stroke-dasharray="2 4"/></svg></span><div><b>Dotted connection</b><p>No agents are assigned to that project</p></div></div>
         <div class="kz-r"><span class="kz-m"><svg viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="6" fill="none" stroke="var(--border-strong)"/><circle cx="9" cy="9" r="2" fill="var(--primary)"/></svg></span><div><b>Position</b><p>Projects surround Psyche. Missions sit inside their project; familiar groups sit beside their mission. Positions stay stable during replay</p></div></div>
@@ -2077,7 +2077,7 @@ function applyFams(saved) {
   if (dup('sym')) ks.forEach(k => { FAM[k].sym = FAM_DEF[k].sym; }); if (dup('color')) ks.forEach(k => { FAM[k].color = FAM_DEF[k].color; });
   ks.forEach(k => document.documentElement.style.setProperty('--fam-' + k, FAM[k].color));
 }
-applyFams(store.get('coven-castles-fams'));
+applyFams(store.get('coven-compass-fams'));
 const fam = k => FAM[k] || {name: cap(String(k)), role: 'Familiar', hue: 'var(--primary)', may: 'Set by its ward', must: 'Set by its ward', acts: ['Working']};
 const STATE = {work: 'Working', idle: 'Idle', gate: 'At gate'};
 const kindOf = t => /limit/i.test(t) ? 'cap' : /write|edit|path|file/i.test(t) ? 'write' : /send|email|mail|post|publish/i.test(t) ? 'send' : /fetch|reach|url|outside|network|web/i.test(t) ? 'reach' : 'ward';
@@ -2103,16 +2103,16 @@ const GATE_NAME = {N: 'north', E: 'east', S: 'south', W: 'west'};
 const SLOTS = [[214, -19], [224, 16], [298, -1], [392, 0], [252, 40], [252, -42]];
 
 // ------------------------------------------------------------ trace
-// A castle holds missions. Each mission seats a council of the familiars it needs. The mission spawns agents, and each
+// A project holds missions. Each mission seats a council of the familiars it needs. The mission spawns agents, and each
 // familiar on the council instructs its own squad. One event per line; types the reducer understands:
 //   mission.opened {mission, name}       council.seated {mission, familiar}         agent.spawned {agent, mission, familiar, doing?}
 //   agent.state {agent, state, doing?}   agent.retired {agent}                      gate.requested {ask, mission, familiar, gate, agents[], title, detail}
 //   gate.resolved {ask, decision}        familiar.report {mission, familiar, text}  psyche.said {text}
 //   psyche.routed {mission, to[]}        you.said {text, mission?, familiar?}       task.opened {task, mission, familiar, name}
 //   agent.assigned {agent, task}         (agent.spawned may also carry task)        task.lead.added {task, familiar}  (task.opened may carry leads[])
-//   castle.founded {name, repo, root}  castle.moved {repo?, root?}  castle.renamed {name, from}  mission.renamed {mission, name}  mission.closed {mission}
+//   project.founded {name, repo, root}  project.moved {repo?, root?}  project.renamed {name, from}  mission.renamed {mission, name}  mission.closed {mission}
 //   a round: you.said {round}  psyche.routed {round, mode, why, targets[{mission, familiar, agent?}]}  familiar.report {round, agent?}  round.closed {round}
-const KNOWN = new Set(['mission.opened', 'council.seated', 'task.opened', 'task.lead.added', 'agent.assigned', 'agent.spawned', 'agent.state', 'agent.retired', 'gate.requested', 'gate.resolved', 'familiar.report', 'psyche.said', 'psyche.routed', 'you.said', 'mission.briefed', 'mission.progress', 'artifact.state', 'mission.paused', 'mission.resumed', 'castle.stopped', 'castle.resumed', 'castle.founded', 'castle.moved', 'castle.renamed', 'mission.renamed', 'mission.closed', 'round.closed']);
+const KNOWN = new Set(['mission.opened', 'council.seated', 'task.opened', 'task.lead.added', 'agent.assigned', 'agent.spawned', 'agent.state', 'agent.retired', 'gate.requested', 'gate.resolved', 'familiar.report', 'psyche.said', 'psyche.routed', 'you.said', 'mission.briefed', 'mission.progress', 'artifact.state', 'mission.paused', 'mission.resumed', 'project.stopped', 'project.resumed', 'project.founded', 'project.moved', 'project.renamed', 'mission.renamed', 'mission.closed', 'round.closed']);
 const STRUCT = new Set(['mission.opened', 'council.seated', 'agent.spawned']);
 // A mission's brief says four things, in the same words everywhere: what it delivers, the floors it must reach ("at least"),
 // the ceilings it must stay under ("at most"), and how it will be judged.
@@ -2226,7 +2226,7 @@ function sampleTrace(key, endT) {
   if (!d) return ev;
   const at = m => Math.round(endT - (d.span - m) * 60000);
   let n = 0, qn = 0, kn = 0;
-  if (d.repo) ev.push({t: at(0), type: 'castle.founded', name: key, repo: d.repo, root: d.root});
+  if (d.repo) ev.push({t: at(0), type: 'project.founded', name: key, repo: d.repo, root: d.root});
   d.missions.forEach((M, mi) => {
     const mission = 'm-' + (mi + 1);
     ev.push({t: at(M.at), type: 'mission.opened', mission, name: M.name, brief: M.brief});
@@ -2293,13 +2293,13 @@ function apply(w, e) {
       w.agents.forEach(a => { if (a.mission === m.id && a.state === 'work') { a.state = 'idle'; a.held = true; a.since = e.t; } }); break; }
     case 'mission.resumed': { const m = w.missions.get(e.mission); if (!m) break; m.paused = null;                 // whoever was stopped mid-work picks it up again
       if (!w.stopped) w.agents.forEach(a => { if (a.mission === m.id && a.held && a.state === 'idle') { a.state = 'work'; a.held = false; a.since = e.t; } }); break; }
-    case 'castle.stopped': w.stopped = true; w.agents.forEach(a => { if (a.state === 'work') { a.state = 'idle'; a.held = true; a.since = e.t; } });
-      w.items.push({kind: 'note', t: e.t, text: 'You stopped every agent in this castle'}); break;
-    case 'castle.resumed': if (w.stopped) { w.stopped = false; w.items.push({kind: 'note', t: e.t, text: 'You let this castle run again'});
+    case 'project.stopped': w.stopped = true; w.agents.forEach(a => { if (a.state === 'work') { a.state = 'idle'; a.held = true; a.since = e.t; } });
+      w.items.push({kind: 'note', t: e.t, text: 'You stopped every agent in this project'}); break;
+    case 'project.resumed': if (w.stopped) { w.stopped = false; w.items.push({kind: 'note', t: e.t, text: 'You let this project run again'});
       w.agents.forEach(a => { const m = w.missions.get(a.mission); if (a.held && a.state === 'idle' && !(m && m.paused)) { a.state = 'work'; a.held = false; a.since = e.t; } }); } break;
-    case 'castle.founded': case 'castle.moved': { const o = w.meta || {repo: '', root: ''}; w.meta = {repo: typeof e.repo === 'string' && e.repo ? e.repo : o.repo, root: typeof e.root === 'string' && e.root ? e.root : o.root};
-      if (e.type === 'castle.moved') w.items.push({kind: 'note', t: e.t, text: 'This castle now ' + [e.repo ? 'works on ' + e.repo : '', e.root ? 'is rooted at ' + e.root : ''].filter(Boolean).join(' and ')}); break; }
-    case 'castle.renamed': if (e.name) w.items.push({kind: 'note', t: e.t, text: `This castle is now called ${e.name}`}); break;
+    case 'project.founded': case 'project.moved': { const o = w.meta || {repo: '', root: ''}; w.meta = {repo: typeof e.repo === 'string' && e.repo ? e.repo : o.repo, root: typeof e.root === 'string' && e.root ? e.root : o.root};
+      if (e.type === 'project.moved') w.items.push({kind: 'note', t: e.t, text: 'This project now ' + [e.repo ? 'works on ' + e.repo : '', e.root ? 'is rooted at ' + e.root : ''].filter(Boolean).join(' and ')}); break; }
+    case 'project.renamed': if (e.name) w.items.push({kind: 'note', t: e.t, text: `This project is now called ${e.name}`}); break;
     case 'mission.renamed': { const m = w.missions.get(e.mission); if (m && e.name) { w.items.push({kind: 'note', t: e.t, text: `${m.name} is now called ${String(e.name).slice(0, 60)}`}); m.name = String(e.name).slice(0, 60); } break; }
     case 'mission.closed': { const m = w.missions.get(e.mission); if (!m) break;                    // its agents are retired, what it asked is held, its bastion stands empty
       w.agents.forEach((a, id) => { if (a.mission === m.id) w.agents.delete(id); });
@@ -2365,7 +2365,7 @@ function layoutOf(trace) {
   });
   return L;
 }
-function makeCastle(key, trace, recorded) {
+function makeProject(key, trace, recorded) {
   return {key, trace, recorded: !!recorded, world: newWorld(), applied: 0, layout: layoutOf(trace), sel: null, fam: null, detail: null, pick: null, ackN: 0, expanded: new Set()};
 }
 let atlasNavigationReady = false, atlasRestoringRoute = false, atlasLastRoute = '';
@@ -2385,33 +2385,33 @@ function seek(c, t, quiet) {
       }
     }
   }
-  if (!quiet && !reset && fresh.length <= 8 && c === castles[active]) fresh.forEach(fxFor);
+  if (!quiet && !reset && fresh.length <= 8 && c === projects[active]) fresh.forEach(fxFor);
   return changed;
 }
-const castles = {};
-Object.keys(SAMPLES).forEach(k => { castles[k] = makeCastle(k, sampleTrace(k, Date.now()), false); castles[k].sample = true; seek(castles[k], Date.now(), true); });
-const fromHash = () => { const route = window.CovenMissionNavigation && window.CovenMissionNavigation.parse(location.hash); return route && castles[route.castle] ? route.castle : null; };
+const projects = {};
+Object.keys(SAMPLES).forEach(k => { projects[k] = makeProject(k, sampleTrace(k, Date.now()), false); projects[k].sample = true; seek(projects[k], Date.now(), true); });
+const fromHash = () => { const route = window.CovenMissionNavigation && window.CovenMissionNavigation.parse(location.hash); return route && projects[route.project] ? route.project : null; };
 let active = fromHash() || 'psyche-build';
-const cur = () => castles[active];
+const cur = () => projects[active];
 
 // time
 let live = true, playing = false, speed = 30, cursor = Date.now();
 const SPEEDS = [10, 30, 120];
 const tEnd = c => c.recorded ? (c.trace.length ? c.trace[c.trace.length - 1].t : Date.now()) : Date.now();
 function timelineHasEvents(c) {
-  return c.recorded ? c.trace.length > 0 : Object.values(castles).some(other => !other.recorded && other.trace.length > 0);
+  return c.recorded ? c.trace.length > 0 : Object.values(projects).some(other => !other.recorded && other.trace.length > 0);
 }
 function tStart(c) {
-  const traces = c.recorded ? [c] : Object.values(castles).filter(other => !other.recorded);
+  const traces = c.recorded ? [c] : Object.values(projects).filter(other => !other.recorded);
   const starts = traces.filter(other => other.trace.length).map(other => other.trace[0].t - 15000);
   return starts.length ? Math.min(...starts) : tEnd(c) - 60000;
 }
 const canAct = () => live && !cur().recorded;
-// One replay position for every visible Castle, including the overview.
+// One replay position for every visible Project, including the overview.
 // A recording remains at its last event when the shared clock passes its end.
 function seekTimeline(t, quiet) {
   let changed = false;
-  Object.values(castles).forEach(c => {
+  Object.values(projects).forEach(c => {
     if (seek(c, c.recorded ? Math.min(t, tEnd(c)) : t, quiet || c !== cur())) changed = true;
   });
   return changed;
@@ -2433,10 +2433,10 @@ const coLead = (w, a) => { const t = a.task ? w.tasks.get(a.task) : null; return
 // ------------------------------------------------------------ scene
 const plan = $('plan'), stage = $('stage');
 const PAN = 1000000, ZMIN = .00001, ZPL = 14, WIN = .94, RUNZ = [ZW, ZW, ZW + 9, ZW + 18, ZW + 9, ZW, ZW], MAC = /Mac|iPhone|iPad/.test(navigator.platform || '');
-// every castle is a project with its own ground; together they are the Coven, a project of projects
+// every project has its own ground; together they are the Coven, a project of projects
 // A measured, compact arrangement around Psyche; branch aisles carry coordination.
 const HUB_R = 330, HUB_M = 520;
-let atlasScope = 'castle', atlasLayoutCache = null, atlasAutoFit = true, atlasResizeFrame = 0;
+let atlasScope = 'project', atlasLayoutCache = null, atlasAutoFit = true, atlasResizeFrame = 0;
 const worldOf = k => { const n = atlasWorldLayout().byKey.get(k); return n ? [n.x, n.y] : [0, 0]; };
 // The SVG keeps its full-stage coordinates. Chrome contributes measured safe insets.
 function atlasViewportFrame(selection) {
@@ -2461,7 +2461,7 @@ function atlasViewportFrame(selection) {
   return window.CovenAtlasViewport.safeFrame({width, height, occluders, padding: width < 600 ? 16 : 28});
 }
 function atlasWorldLayout(remeasure) {
-  const keys = Object.keys(castles), key = JSON.stringify(keys);
+  const keys = Object.keys(projects), key = JSON.stringify(keys);
   if (atlasLayoutCache && atlasLayoutCache.key === key && !remeasure) return atlasLayoutCache;
   const frame = atlasViewportFrame(false), pitch = typeof camT === 'object' ? camT.pitch : 24;
   const aspect = Math.round(clamp(frame.width / frame.height * Math.cos(pitch * RAD), .25, 4) * 20) / 20;
@@ -2579,13 +2579,13 @@ function buildScene() {
   cv.stem = svgEl('line', {class: 'stem'}, cv.g); cv.hit = svgEl('circle', {class: 'hubhit', r: 350}, cv.g);
   cv.crown = window.CovenAtlasCrown.create(cv.g, svgEl);
   cv.name = svgEl('text', {class: 'hub-l faronly'}, cv.g); cv.name.textContent = 'PSYCHE'; cv.sub = svgEl('text', {class: 'task-l gsub show faronly'}, cv.g); cv.need = svgEl('text', {class: 'task-l gsub show gneed faronly'}, cv.g);
-  svgEl('title', {}, cv.g).textContent = 'Psyche, the one channel to every castle. Open the chat';
+  svgEl('title', {}, cv.g).textContent = 'Psyche, the one channel to every project. Open the chat';
   cv.g.addEventListener('click', ev => { ev.stopPropagation(); openPsyche(); });
-  atlasFocusable(cv.g, 'Psyche, coordination across all Castles. Open simulated conversation', () => openPsyche());
+  atlasFocusable(cv.g, 'Psyche, coordination across all Projects. Open simulated conversation', () => openPsyche());
   cv.arcG = svgEl('g', {}, sc.world); cv.roadG = svgEl('g', {class: 'atlas-roads'}, sc.world); cv.laneG = svgEl('g', {class: 'atlas-lanes'}, sc.world);
-  Object.keys(castles).forEach(k => { const o = worldOf(k); cv.links.push({k, ox: o[0] - here[0], oy: o[1] - here[1], road: svgEl('path', {class: 'road'}, cv.roadG), lanes: [], sig: null}); });
-  sc.ghosts = Object.keys(castles).map(k => {
-    const o = worldOf(k), c2 = castles[k], g = svgEl('g', {class: 'ghostfort' + (c2.world.agents.size ? '' : ' dormant')}, sc.world);
+  Object.keys(projects).forEach(k => { const o = worldOf(k); cv.links.push({k, ox: o[0] - here[0], oy: o[1] - here[1], road: svgEl('path', {class: 'road'}, cv.roadG), lanes: [], sig: null}); });
+  sc.ghosts = Object.keys(projects).map(k => {
+    const o = worldOf(k), c2 = projects[k], g = svgEl('g', {class: 'ghostfort' + (c2.world.agents.size ? '' : ' dormant')}, sc.world);
     const rec = {k, ox: o[0] - here[0], oy: o[1] - here[1], g, floor: svgEl('polygon', {class: 'gfloor'}, g), base: [], top: [], vert: [], marks: [], runs: fortRuns(4)};
     rec.plinths = rec.runs.flat().map(() => svgEl('polygon', {class: 'atlas-gplate'}, g));
     rec.faces = [];
@@ -2604,11 +2604,11 @@ function buildScene() {
     rec.aggregate = svgEl('text', {class: 'atlas-aggregate', 'aria-hidden': 'true'}, g);
     svgEl('title', {}, g).textContent = 'Go to ' + k;
     g.addEventListener('click', ev => { ev.stopPropagation(); atlasOpenProject(k); });
-    atlasFocusable(g, k + ', project Castle', () => atlasOpenProject(k));
+    atlasFocusable(g, k + ', Project', () => atlasOpenProject(k));
     return rec;
   });
-  // every familiar the Coven knows stands round Psyche, turned so none sits on a castle's road
-  const fks = [...new Set(Object.keys(FAM).concat(...Object.keys(castles).map(k => [...castles[k].world.missions.values()].flatMap(m => m.seats))))], stepF = 360 / fks.length;
+  // every familiar the Coven knows stands round Psyche, turned so none sits on a project's road
+  const fks = [...new Set(Object.keys(FAM).concat(...Object.keys(projects).map(k => [...projects[k].world.missions.values()].flatMap(m => m.seats))))], stepF = 360 / fks.length;
   const cAng = cv.links.map(L => Math.atan2(L.oy - cv.y, L.ox - cv.x) / RAD); let phi = -135, bestD = -1;
   for (let t = -135; t < -135 + stepF; t += 1) { let dm = 999; for (let i = 0; i < fks.length; i++) cAng.forEach(ca => { dm = Math.min(dm, Math.abs(((t + i * stepF - ca + 540) % 360) - 180)); }); if (dm > bestD + .01) { bestD = dm; phi = t; } }
   fks.forEach((k, i) => {
@@ -2617,7 +2617,7 @@ function buildScene() {
     const nm = svgEl('text', {class: 'lead-name gname faronly'}, g), sub = svgEl('text', {class: 'task-l gsub show faronly'}, g); nm.textContent = F0.name;
     svgEl('title', {}, g).textContent = `${F0.name}, ${F0.role}. Show where it works`;
     g.addEventListener('click', ev => { ev.stopPropagation(); covHl(sc.hl === k ? null : k); });
-    atlasFocusable(g, F0.name + ', highlight assignments across Castles', () => covHl(sc.hl === k ? null : k));
+    atlasFocusable(g, F0.name + ', highlight assignments across Projects', () => covHl(sc.hl === k ? null : k));
     cv.fams.push({k, ang: phi + i * stepF, half: Math.max(6, stepF / 2 - 8), arc, g, m, nm, sub, solid});
   });
   cv.links.forEach(L => {
@@ -2636,7 +2636,7 @@ function buildScene() {
   sc.floor = svgEl('polygon', {class: 'floor'}, detail);
   sc.glow = svgEl('ellipse', {class: 'atlas-floor-glow', fill: 'url(#glow)'}, detail);
   sc.home = svgEl('text', {class: 'lead-name gname faronly'}, detail); sc.home.textContent = active;
-  atlasFocusable(sc.home, active + ', enter this Castle', () => atlasOpenProject(active));
+  atlasFocusable(sc.home, active + ', enter this Project', () => atlasOpenProject(active));
   sc.home.addEventListener('click', ev => { ev.stopPropagation(); atlasOpenProject(active); });
   plan.classList.toggle('many', sc.n > 5);
   const walls = svgEl('g', {class: 'atlas-project-wall'}, detail);
@@ -2837,17 +2837,17 @@ function sync() {
     sc.glow.style.opacity = tot ? (.2 + .8 * countOf(w, a => a.state === 'work') / tot).toFixed(2) : '0';
     sc.gateL.forEach(g => g.t.classList.toggle('on', hot.has(g.k))); }
   syncCoven();
-  sc.ghosts.forEach(gh => { atlasSyncOverviewMissions(gh); const g2 = castles[gh.k].world, t = g2.agents.size ? `${plural(g2.missions.size, 'mission')} · ${g2.agents.size} agents` : g2.missions.size ? plural(g2.missions.size, 'planned mission') : 'dormant'; if (gh.sub.textContent !== t) gh.sub.textContent = t; gh.g.classList.toggle('dormant', !g2.missions.size); });
+  sc.ghosts.forEach(gh => { atlasSyncOverviewMissions(gh); const g2 = projects[gh.k].world, t = g2.agents.size ? `${plural(g2.missions.size, 'mission')} · ${g2.agents.size} agents` : g2.missions.size ? plural(g2.missions.size, 'planned mission') : 'dormant'; if (gh.sub.textContent !== t) gh.sub.textContent = t; gh.g.classList.toggle('dormant', !g2.missions.size); });
   sc.dirty = true;
   applySel();
 }
 // a selected mission lights its council; a selected familiar lights every seat it holds, across councils
-// the Coven's own figures: who works where and how much, and which castles are waiting on you
+// the Coven's own figures: who works where and how much, and which projects are waiting on you
 function syncCoven() {
   const cv = sc.cov; if (!cv) return;
   const tot = new Map(), where = new Map(); let agents = 0, need = 0;
   cv.links.forEach(L => {
-    const w2 = castles[L.k].world, by = new Map();
+    const w2 = projects[L.k].world, by = new Map();
     w2.agents.forEach(a => by.set(a.fam, (by.get(a.fam) || 0) + 1));
     const ks = Object.keys(FAM).filter(k => by.has(k)).concat([...by.keys()].filter(k => !FAM[k])), sig = ks.join('+');
     if (sig !== L.sig) { L.sig = sig; L.lanes.forEach(x => x.el.remove()); L.lanes = ks.map(k => { const el = svgEl('path', {class: 'lane'}, cv.laneG); el.style.setProperty('--hue', fam(k).hue); return {k, el}; }); }
@@ -3129,11 +3129,11 @@ function frame(ts) {
   }
   if (busy && !raf) raf = requestAnimationFrame(frame);
 }
-function saveView() { store.set('coven-castles-view', {yaw: camT.yaw, pitch: camT.pitch, zoom: camT.zoom, px: camT.px, py: camT.py, locked: cam.locked}); }
+function saveView() { store.set('coven-compass-view', {yaw: camT.yaw, pitch: camT.pitch, zoom: camT.zoom, px: camT.px, py: camT.py, locked: cam.locked}); }
 const viewOf = name => { const v = VIEWS[name], g = cur().layout.g; return Object.assign({}, v, {zoom: v.zoom / g, py: v.py * g}); };   // a bigger fort is framed from further back
 function setView(name) {
   if (cam.locked) return;
-  atlasScope = 'castle'; atlasAutoFit = true;
+  atlasScope = 'project'; atlasAutoFit = true;
   atlasGestureMode = name === 'plan' ? 'pan' : 'orbit';
   cam.yaw = ((cam.yaw + 180) % 360 + 360) % 360 - 180;
   Object.assign(camT, viewOf(name)); atlasFitScene(false); if (window.CovenAtlas) window.CovenAtlas.update(); atlasWriteRoute();
@@ -3215,10 +3215,10 @@ stage.addEventListener('pointerup', endDrag); stage.addEventListener('pointercan
 addEventListener('blur', () => endDrag());
 stage.addEventListener('click', ev => { if (dragged && performance.now() - lastGestureAt < 350 && (ev.target === stage || ev.target.closest('#plan'))) { dragged = false; ev.stopPropagation(); ev.preventDefault(); } }, true);
 stage.addEventListener('click', () => { const c = cur(); if (c.pick) clearPick(); else if (c.sel && c.detail === 'card') select(null); });
-function hintDone() { if ($('ghint').hidden) return; $('ghint').hidden = true; store.set('coven-castles-hint', 1); }
+function hintDone() { if ($('ghint').hidden) return; $('ghint').hidden = true; store.set('coven-compass-hint', 1); }
 function updateGestureHint() { $('ghint').textContent = narrow.matches ? 'Drag to move in 2D. Choose Orbit in 3D. Pinch with two fingers to zoom.' : `Drag to orbit, ${MAC ? '\u2318' : 'Ctrl'}-drag to move, scroll to zoom`; }
 updateGestureHint(); narrow.addEventListener('change', updateGestureHint);
-$('ghint').hidden = !!store.get('coven-castles-hint');
+$('ghint').hidden = !!store.get('coven-compass-hint');
 addEventListener('keydown', ev => { if ((ev.key === 'Meta' || ev.key === 'Control') && !cam.locked) stage.classList.add('panning'); });
 addEventListener('keyup', ev => { if ((ev.key === 'Meta' || ev.key === 'Control') && !drag) stage.classList.remove('panning'); });
 addEventListener('blur', () => stage.classList.remove('panning'));
@@ -3251,11 +3251,11 @@ stage.addEventListener('wheel', ev => {
 
 // ------------------------------------------------------------ chrome
 function go(k) {
-  if (!castles[k] || k === active) return;
+  if (!projects[k] || k === active) return;
   if (cur().sel) select(null, null, null, {history: false, focus: false});
   const a = worldOf(active), b = worldOf(k), dx = b[0] - a[0], dy = b[1] - a[1], cyw = Math.cos(cam.yaw * RAD), syw = Math.sin(cam.yaw * RAD);
   const sx = dx * cyw - dy * syw, sy = (dx * syw + dy * cyw) * Math.cos(cam.pitch * RAD);
-  atlasScope = 'castle'; atlasAutoFit = true; active = k;
+  atlasScope = 'project'; atlasAutoFit = true; active = k;
   enter(true);
   if (!cam.locked) { cam.px -= sx; cam.py -= sy; const v = viewOf(cam.pitch > 2 || camT.pitch > 2 ? '3d' : 'plan'); camT.px = v.px; camT.py = v.py; camT.zoom = v.zoom; if (reduce) Object.assign(cam, camT); saveView(); }
   else { cam.px = camT.px = clamp(cam.px - sx, -PAN, PAN); cam.py = camT.py = clamp(cam.py - sy, -PAN, PAN); }
@@ -3264,7 +3264,7 @@ function go(k) {
 }
 addEventListener('hashchange', () => atlasRestoreRoute(false));
 addEventListener('popstate', () => atlasRestoreRoute(false));
-// the breadcrumb in the toolbar: which project (castle), which mission
+// the breadcrumb in the toolbar: which project, which mission
 let dotSig = '';
 function drawCrumb() {
   const c = cur(), w = c.world, M = c.sel ? w.missions.get(c.sel) : null, none = w.missions.size === 0, need = openAsks(w).length;
@@ -3278,26 +3278,26 @@ function drawCrumb() {
 const optRow = (cls, cur2) => { const b = html('button', 'opt' + (cls ? ' ' + cls : '')); b.type = 'button'; if (cur2) b.setAttribute('aria-current', 'true'); return b; };
 const optEnd = (b, meta, need, cur2) => { if (need) b.appendChild(html('span', 'opt-q', String(need))); if (meta) b.appendChild(html('span', 'opt-m', meta)); const ck = html('span', 'opt-c'); if (cur2) ck.innerHTML = ICON.check; b.appendChild(ck); };
 function drawProjects() {
-  const box = $('projBody'), keys = Object.keys(castles); box.textContent = '';
-  box.appendChild(hd('Projects', `${keys.length} castles in the Coven`, null, 'fort'));
+  const box = $('projBody'), keys = Object.keys(projects); box.textContent = '';
+  box.appendChild(hd('Projects', `${keys.length} projects in the Coven`, null, 'fort'));
   const list = html('div', 'opts');
   keys.forEach(k => {
-    const w = castles[k].world, n = w.agents.size, need = openAsks(w).length, b = optRow(n ? '' : 'off', k === active);
+    const w = projects[k].world, n = w.agents.size, need = openAsks(w).length, b = optRow(n ? '' : 'off', k === active);
     b.append(html('i', 'opt-d'), html('span', 'opt-n', k)); optEnd(b, n ? `${n} agents` : 'Dormant', need, k === active);
     b.setAttribute('aria-label', `${k}, ${n ? `${plural(w.missions.size, 'mission')}, ${n} agents` : 'dormant'}${need ? `, ${need} waiting on you` : ''}`);
     b.addEventListener('click', () => { $('proj').open = false; atlasOpenProject(k); });
-    const km = metaOf(castles[k]); if (km) b.title = `${km.repo}\n${km.root}`;
+    const km = metaOf(projects[k]); if (km) b.title = `${km.repo}\n${km.root}`;
     list.appendChild(b);
   });
-  const me = metaOf(cur()), info = html('dl', 'pj-meta');                      // the open castle: the repository it works on, the folder it is rooted in
+  const me = metaOf(cur()), info = html('dl', 'pj-meta');                      // the open project: the repository it works on, the folder it is rooted in
   [['repo', 'Repository', me && me.repo ? repoShort(me.repo) || me.repo : 'Not set'], ['folder', 'Location', me && me.root ? me.root : 'Not set']].forEach(([icon, k, v]) => {
     const dt = html('dt'), dd = html('dd', null, v); dt.innerHTML = ICON[icon]; dt.append(k); if (v === 'Not set') dd.className = 'off'; info.append(dt, dd); });
   const foot = html('div', 'opts'), all = optRow('quiet'); all.append(html('span', 'opt-n', 'See the whole Coven'));
   all.addEventListener('click', () => { $('proj').open = false; $('vAll').click(); }); all.disabled = cam.locked; foot.appendChild(all);
-  const edit = optRow('quiet'); edit.append(html('span', 'opt-n', 'Castle details'));
-  edit.addEventListener('click', () => { $('proj').open = false; setTab('castle', true); }); foot.appendChild(edit);
-  const add = optRow('quiet'); add.append(html('span', 'opt-n', '+ New castle'));
-  add.addEventListener('click', () => openCastleForm()); foot.appendChild(add);
+  const edit = optRow('quiet'); edit.append(html('span', 'opt-n', 'Project details'));
+  edit.addEventListener('click', () => { $('proj').open = false; setTab('project', true); }); foot.appendChild(edit);
+  const add = optRow('quiet'); add.append(html('span', 'opt-n', '+ New project'));
+  add.addEventListener('click', () => openProjectForm()); foot.appendChild(add);
   box.append(list, info, foot);
 }
 function drawMissions() {
@@ -3465,7 +3465,7 @@ function select(m, k, mode, options) {
   const c = cur(), was = c.sel, priorMode = c.detail, priorFam = c.fam, origin = document.activeElement, priorAutoFit = atlasAutoFit;
   const mission = m && c.world.missions.get(m);
   if (m && !mission) return false;
-  if (m && atlasScope === 'coven') { atlasScope = 'castle'; atlasFitScene(false); }
+  if (m && atlasScope === 'coven') { atlasScope = 'project'; atlasFitScene(false); }
   if (m) atlasAutoFit = true;
   if (k && (!mission || !mission.seats.includes(k))) k = null;
   if (m && !was && origin && origin !== document.body) c.selectionOrigin = origin;
@@ -3510,7 +3510,7 @@ const selName = c => { const M = c.world.missions.get(c.sel); return !M ? '' : c
 const inSel = (c, a) => a.mission === c.sel && (!c.fam || a.fam === c.fam);
 const xBtn = (label, fn) => { const x = html('button', 'btn x', '×'); x.type = 'button'; x.setAttribute('aria-label', label); x.addEventListener('click', fn); return x; };
 // On a wide stage the mission reads as a manifest down the left edge: its title plate, then one plate per council seat
-// with that familiar's tasks, each tied to its squad in the castle by a leader line. Anything of the mission's waiting
+// with that familiar's tasks, each tied to its squad in the project by a leader line. Anything of the mission's waiting
 // at a gate is tagged where it stands. On a narrow stage the seats carry small tags instead.
 let lcSig = '', notes = [], hud = null;
 const briefSig = (st, M) => st ? (M && M.paused ? 'P' : '') + (M && M.tpl || '') + (M ? sealOf(cur().world, M).sig : '') + JSON.stringify([st.deliver.map(x => x.state), st.floors.map(x => [Math.round(x.have), x.need]), st.caps.map(x => [Math.round(x.used * (x.k === 'usd' ? 100 : 1)), x.max]), st.measures.map(x => x.k)]) : 'none';
@@ -3549,7 +3549,7 @@ function drawLeadCard(force) {
       more.addEventListener('click', () => select(c.sel, c.fam, 'side'));
       ask.addEventListener('click', () => { openPsyche(); $('say').focus(); });
       const bf = html('button', 'hud-brief'); bf.type = 'button'; bf.setAttribute('aria-label', 'Open the brief');
-      bf.addEventListener('click', () => { panelView = 'brief'; store.set('coven-castles-panel', panelView); select(c.sel, c.fam, 'side'); });
+      bf.addEventListener('click', () => { panelView = 'brief'; store.set('coven-compass-panel', panelView); select(c.sel, c.fam, 'side'); });
       act.append(more, ask); h.append(top, stats, bar, bf, act); col.appendChild(h); hud = {nums, bar, bf, m: M.id, bsig: null};
       const cyOf = k => { const q = sc.seats.get(seatId(M.id, k)); return q && q.cy != null ? q.cy : 0; };
       M.seats.slice().sort((x, y) => cyOf(x) - cyOf(y)).forEach(k => {
@@ -3630,7 +3630,7 @@ function placeCard() {
 // ------------------------------------------------------------ side panel + agent info
 // A mission lists its council, one row per familiar. A familiar lists every council it sits on, one row per mission.
 const insp = {sig: '', nums: null, dots: new Map(), slot: null};
-let panelView = store.get('coven-castles-panel');
+let panelView = store.get('coven-compass-panel');
 if (!['brief', 'council', 'tasks', 'agents'].includes(panelView)) panelView = 'brief';
 function syncInspect(force) {
   const c = cur(), w = c.world, box = $('inspect'), M = c.sel && c.detail === 'side' ? w.missions.get(c.sel) : null;
@@ -3683,7 +3683,7 @@ function syncInspect(force) {
       const b = html('button', null, label); b.type = 'button'; b.id = 'mission-tab-' + v; b.dataset.focus = b.id;
       b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', String(panelView === v)); b.setAttribute('aria-pressed', String(panelView === v));
       b.setAttribute('aria-controls', 'mission-section'); b.tabIndex = panelView === v ? 0 : -1;
-      b.addEventListener('click', () => { panelView = v; store.set('coven-castles-panel', v); syncInspect(true); atlasWriteRoute(true); const nb = $('inspect').querySelector('.i-view [aria-selected="true"]'); if (nb) nb.focus({preventScroll: true}); });
+      b.addEventListener('click', () => { panelView = v; store.set('coven-compass-panel', v); syncInspect(true); atlasWriteRoute(true); const nb = $('inspect').querySelector('.i-view [aria-selected="true"]'); if (nb) nb.focus({preventScroll: true}); });
       seg.appendChild(b);
     });
     seg.addEventListener('keydown', ev => {
@@ -3852,9 +3852,9 @@ document.addEventListener('keydown', ev => {
   if (!$('stopPop').hidden) { $('stopPop').hidden = true; drawStop(); return $('stopBtn').focus(); }
   if (needsOpen && cur().expanded.size) { cur().expanded.clear(); return drawNeeds(); }
   if (needsOpen && psy.mode !== 'closed' && !cur().pick && !open) return setNeeds(false, true);
-  if ((railTab === 'fams' || railTab === 'castle') && psy.mode !== 'closed' && !cur().pick && !open && !cz.open) return setTab('chat', true, true);
+  if ((railTab === 'fams' || railTab === 'project') && psy.mode !== 'closed' && !cur().pick && !open && !cz.open) return setTab('chat', true, true);
   if (ev.target === $('say') && psy.mode === 'float') return setMode('closed', true);
-  if (cz.open && !open) return closeCastleForm();
+  if (cz.open && !open) return closeProjectForm();
   if (!$('empty').hidden && !open && !cur().pick) return closeNew();
   if (cur().pick) clearPick(); else if (open) { open.open = false; open.firstElementChild.focus(); } else if (cur().sel && cur().fam) select(cur().sel, null, cur().detail); else if (cur().sel && cur().detail === 'side') select(cur().sel, null, 'card'); else if (cur().sel) select(null); else if (psy.mode === 'float') setMode('closed', true);
 });
@@ -3887,7 +3887,7 @@ function drawWard() {
     dr('paths', 'Locations', `${WARD.editable.length} · free to write`, [ul(WARD.editable, 'mono')], {open: was.has('paths'), icon: 'folder'}));
   box.append(rows, html('p', 'pc-foot', 'Anything else stops at a gate until you answer.'));
 }
-const FAMILY = [['Missions', ['mission.opened', 'council.seated', 'task.opened', 'task.lead.added', 'mission.briefed', 'mission.progress', 'artifact.state', 'mission.paused', 'mission.resumed', 'mission.renamed', 'mission.closed', 'castle.founded', 'castle.moved', 'castle.renamed', 'castle.stopped', 'castle.resumed']], ['Agents', ['agent.spawned', 'agent.state', 'agent.assigned', 'agent.retired']], ['Messages', ['you.said', 'psyche.said', 'psyche.routed', 'familiar.report', 'round.closed']], ['Gates', ['gate.requested', 'gate.resolved']]];
+const FAMILY = [['Missions', ['mission.opened', 'council.seated', 'task.opened', 'task.lead.added', 'mission.briefed', 'mission.progress', 'artifact.state', 'mission.paused', 'mission.resumed', 'mission.renamed', 'mission.closed', 'project.founded', 'project.moved', 'project.renamed', 'project.stopped', 'project.resumed']], ['Agents', ['agent.spawned', 'agent.state', 'agent.assigned', 'agent.retired']], ['Messages', ['you.said', 'psyche.said', 'psyche.routed', 'familiar.report', 'round.closed']], ['Gates', ['gate.requested', 'gate.resolved']]];
 function drawTrace() {
   const c = cur(), tr = c.trace, t0 = tStart(c), t1 = tEnd(c), span = Math.max(1, t1 - t0);
   const mark = $('traceNow'); if (mark) mark.style.left = (clamp((cursor - t0) / span, 0, 1) * 100).toFixed(2) + '%';
@@ -3942,9 +3942,9 @@ function lintEvent(text, c) {
   if (!c.recorded && t > Date.now()) return {line: key('t'), error: `Line ${key('t')}: "t" is in the future.`};
   return {obj: Object.assign({}, o, {t})};
 }
-// an edited event rewrites history: the castle is rebuilt by replaying the changed trace
+// an edited event rewrites history: the project is rebuilt by replaying the changed trace
 function retrace(tr) {
-  const o = cur(), n = makeCastle(active, tr, o.recorded); castles[active] = n;
+  const o = cur(), n = makeProject(active, tr, o.recorded); projects[active] = n;
   if (live) cursor = Date.now();
   seekTimeline(cursor, true);
   if (o.sel && n.world.missions.has(o.sel)) { n.sel = o.sel; n.fam = o.fam && n.world.missions.get(o.sel).seats.includes(o.fam) ? o.fam : null; n.detail = o.detail; n.camBack = o.camBack; }
@@ -3992,7 +3992,7 @@ function jsonEditor(c, e) {
     lint(); if (res.error) return ta.focus();                      // linted again on save; nothing invalid gets through
     const i = c.trace.indexOf(e); if (i < 0 || c !== cur()) { msg.textContent = 'This event has moved. Reopen it.'; msg.className = 'je-msg bad'; return; }
     const tr = c.trace.slice(); tr[i] = res.obj; tr.sort((a, b) => a.t - b.t);
-    evNote = `Saved ${res.obj.type}. The castle was replayed with the change.`; retrace(tr); drawEvents();
+    evNote = `Saved ${res.obj.type}. The project was replayed with the change.`; retrace(tr); drawEvents();
   });
   box.append(pre, ta); bar.append(msg, fmt, save); wrap.append(box, bar); lint();
   return wrap;
@@ -4015,7 +4015,7 @@ async function loadTrace(file) {
   let res; try { res = parseTrace(await file.text()); } catch (e) { return fail('That file could not be read.'); }
   if (!res.events.length) return fail('No recognized events in that file. Each line needs t and a known type.');
   err.hidden = !res.bad; if (res.bad) err.textContent = `${plural(res.bad, 'line')} skipped as unrecognized.`;
-  const wasDemo = cur().layoutDemo; castles[active] = makeCastle(active, res.events, true); castles[active].layoutDemo = wasDemo;
+  const wasDemo = cur().layoutDemo; projects[active] = makeProject(active, res.events, true); projects[active].layoutDemo = wasDemo;
   enter(); atlasQueueFit(); atlasWriteRoute(true);
 }
 {
@@ -4056,9 +4056,9 @@ function drawNeeds() {
   needsSig = sig;
   const box = $('notif'); box.textContent = ''; needEls.clear(); box.hidden = !needsOpen;
   $('stream').hidden = $('comp').hidden = railTab !== 'chat';            // one panel at a time: the conversation, what is waiting on you, or the familiars
-  $('fams').hidden = railTab !== 'fams'; $('castPane').hidden = railTab !== 'castle';
+  $('fams').hidden = railTab !== 'fams'; $('castPane').hidden = railTab !== 'project';
   $('needBtn').setAttribute('aria-pressed', String(needsOpen));
-  [['chat', 'tabChat'], ['needs', 'tabNeeds'], ['castle', 'tabCastle'], ['fams', 'tabFams']].forEach(([t, id]) => { $(id).setAttribute('aria-selected', String(railTab === t)); $(id).tabIndex = railTab === t ? 0 : -1; });
+  [['chat', 'tabChat'], ['needs', 'tabNeeds'], ['project', 'tabProject'], ['fams', 'tabFams']].forEach(([t, id]) => { $(id).setAttribute('aria-selected', String(railTab === t)); $(id).tabIndex = railTab === t ? 0 : -1; });
   $('tabNeedsN').textContent = open.length ? String(open.length) : ''; $('tabNeeds').classList.toggle('q', open.length > 0);
   if (!needsOpen) return;
   if (!open.length) { const none = html('div', 'n-none'); none.innerHTML = ICON.check; none.append(html('b', null, 'Inbox clear'), html('span', null, `Requests from the gates of ${active} appear here.`)); box.appendChild(none); return; }
@@ -4118,11 +4118,11 @@ function drawNeeds() {
   box.appendChild(list);
 }
 // Needs you is a tab of the side rail, behind the conversation. Opening it docks the rail so it has the full height.
-const TABS = ['chat', 'needs', 'castle', 'fams'], TAB_ID = {chat: 'tabChat', needs: 'tabNeeds', castle: 'tabCastle', fams: 'tabFams'};
+const TABS = ['chat', 'needs', 'project', 'fams'], TAB_ID = {chat: 'tabChat', needs: 'tabNeeds', project: 'tabProject', fams: 'tabFams'};
 function setTab(tab, focus, stay) {
   railTab = tab; needsOpen = tab === 'needs'; if (!needsOpen) cur().expanded.clear();
   if (tab !== 'chat' && (psy.mode === 'closed' || (!stay && psy.mode !== 'dock'))) setMode('dock');          // on a narrow screen this becomes the chat window
-  needsSig = ''; castSig = ''; drawNeeds(); drawFams(); drawCastle(); drawSummary();
+  needsSig = ''; castSig = ''; drawNeeds(); drawFams(); drawProject(); drawSummary();
   if (tab === 'chat') { streamSig = ''; drawStream(); }
   if (focus) $(TAB_ID[tab]).focus();
 }
@@ -4132,7 +4132,7 @@ TABS.forEach(t => $(TAB_ID[t]).addEventListener('click', () => setTab(t, false, 
 document.querySelector('.p-tabs').addEventListener('keydown', ev => { const d = ev.key === 'ArrowRight' ? 1 : ev.key === 'ArrowLeft' ? -1 : 0; if (!d) return; ev.preventDefault(); setTab(TABS[(TABS.indexOf(railTab) + d + TABS.length) % TABS.length], true, true); });
 // ------------------------------------------------------------ familiars: who Psyche coordinates, what each is for, how each is drawn
 const famsOpen = new Set(), famSec = {}; let famTry = '';
-const saveFams = () => { const o = {}; Object.keys(FAM_DEF).forEach(k => { o[k] = {roles: FAM[k].roles, sym: FAM[k].sym, color: FAM[k].color}; }); store.set('coven-castles-fams', o); };
+const saveFams = () => { const o = {}; Object.keys(FAM_DEF).forEach(k => { o[k] = {roles: FAM[k].roles, sym: FAM[k].sym, color: FAM[k].color}; }); store.set('coven-compass-fams', o); };
 function famChanged(focusId) {                       // a familiar's mark is drawn in many places, so everything that shows one is redrawn
   saveFams(); Object.keys(FAM_DEF).forEach(k => { FAM[k].role = FAM[k].roles.join(', '); document.documentElement.style.setProperty('--fam-' + k, FAM[k].color); });
   $('nmLeads').querySelectorAll('.nm-lead').forEach(b => { const k = b.dataset.k; b.innerHTML = avatar(k); b.append(FAM[k].name); });
@@ -4213,7 +4213,7 @@ function drawFams(focusId) {
   box.appendChild(list);
   const foot = html('div', 'fm-foot'), changed = Object.keys(FAM_DEF).some(k => JSON.stringify([FAM[k].roles, FAM[k].sym, FAM[k].color]) !== JSON.stringify([FAM_DEF[k].roles, FAM_DEF[k].sym, FAM_DEF[k].color])), rb = html('button', 'btn sm', 'Reset to defaults');
   rb.type = 'button'; rb.disabled = !changed; rb.addEventListener('click', () => { applyFams(null); famChanged(); });
-  foot.append(html('span', null, 'Kept in this browser. Familiars are shared by every castle.'), rb); box.appendChild(foot);
+  foot.append(html('span', null, 'Kept in this browser. Familiars are shared by every project.'), rb); box.appendChild(foot);
   box.scrollTop = y;
   if (focusId) { const el = box.querySelector(`[data-id="${focusId}"]`); if (el && !el.disabled) el.focus(); }
 }
@@ -4354,8 +4354,8 @@ function suggestions() {
   if (w.missions.size) out.push('What is waiting on me?', 'Status across every mission?');
   out.push('What can I ask you to do?');
   const fresh = out.filter(x => !(c.sent && c.sent.has(x)));       // do not offer again what was just said
-  // these complete what you have started to type: the ways to make and manage castles and missions
-  const more = ['@all Where does each council stand?'].concat(Object.keys(FAM).map(k => '@' + FAM[k].name + ' '), w.agents.size ? [[...w.agents.keys()][0] + ', what are you on?'] : [], ['Create a castle.', 'Open a mission to ', 'Which castles are there?', 'Where does this castle live?', 'Rename this castle to ', 'Move this castle to ~/code/', 'Remove this castle.']);
+  // these complete what you have started to type: the ways to make and manage projects and missions
+  const more = ['@all Where does each council stand?'].concat(Object.keys(FAM).map(k => '@' + FAM[k].name + ' '), w.agents.size ? [[...w.agents.keys()][0] + ', what are you on?'] : [], ['Create a project.', 'Open a mission to ', 'Which projects are there?', 'Where does this project live?', 'Rename this project to ', 'Move this project to ~/code/', 'Remove this project.']);
   if (M) more.push('Pause this mission.', 'Resume this mission.', 'Close this mission.', 'Rename this mission to ', 'Raise the token limit to ');
   return [...new Set((fresh.length ? fresh : out).concat(more))];
 }
@@ -4374,7 +4374,7 @@ $('say').addEventListener('keydown', ev => {
   if (ev.key === 'Tab' || (ev.key === 'ArrowRight' && input.selectionStart === input.value.length && input.value)) { ev.preventDefault(); takeSug(); }
 });
 $('sugKey').addEventListener('click', takeSug);
-// a few questions are answered from what the castle actually holds; anything else gets an acknowledgement
+// a few questions are answered from what the project actually holds; anything else gets an acknowledgement
 function answer(text, M, to) {
   const c = cur(), w = c.world, l = text.toLowerCase(), open = openAsks(w), n = (m, st) => countOf(w, a => (!m || a.mission === m.id) && (!st || a.state === st));
   if (/brief/.test(l)) { const st = briefState(w, M); return {text: st ? `${M.name}. ${briefSentence(M.brief)} So far: ${st.met} of ${st.total} targets met${st.worst ? `, ${st.worst.label.toLowerCase()} at ${Math.round(st.worst.frac * 100)}%` : ''}.` : `${M.name} has no brief yet. Set one from its details.`}; }
@@ -4416,9 +4416,9 @@ $('comp').addEventListener('submit', ev => {
   const c = cur(), w = c.world, input = $('say'), text = input.value.trim(), ms = [...w.missions.values()];
   if (!text || !canAct()) return;
   (c.sent || (c.sent = new Set())).add(text); input.value = ''; syncSend(); drawSug();
-  if (converse(c, text)) return drawRoute();        // making or managing a castle or a mission is settled with Psyche herself
+  if (converse(c, text)) return drawRoute();        // making or managing a project or a mission is settled with Psyche herself
   if (!ms.length) { emit(c, {type: 'you.said', text}); tell(c, `${active} has no missions yet, so there is no council to pass that to. Say “Open a mission to …” and I will set it up.`); return; }
-  // Psyche decides where it goes. What she can answer from the castle she answers herself; anything else starts a round.
+  // Psyche decides where it goes. What she can answer from the project she answers herself; anything else starts a round.
   const R = routeOf(c, text, cast.on); cast.on = false; if (!R.targets.length) return drawRoute();
   const M0 = w.missions.get(R.targets[0].mission), own = R.explicit ? null : answer(text, M0, [R.targets[0].familiar]);
   if (own && !own.from) { emit(c, {type: 'you.said', text, mission: c.sel || undefined, familiar: c.fam || undefined}); tell(c, own.text, 900); return drawRoute(); }
@@ -4453,7 +4453,7 @@ function routeOf(c, text, force) {
   ms.forEach(m => { if (m.seats.length) add(m.id, m.seats[0]); });
   return {mode: 'broadcast', why: 'no one named, so every lead', targets: T};
 }
-// each recipient answers for itself, from what the castle holds at that moment
+// each recipient answers for itself, from what the project holds at that moment
 function replyFor(c, text, tg, R) {
   const w = c.world, M = w.missions.get(tg.mission), k = tg.familiar; if (!M) return 'That mission has closed.';
   const a = cur() === c ? answer(text, M, [k]) : null; if (a && a.from === k) return a.text;
@@ -4474,7 +4474,7 @@ function drawRoute() {
   if (own) { box.append(chip('Psyche', 'var(--primary)'), html('span', 'rt-w', own)); return; }
   const R = routeOf(c, text, cast.on), w = c.world, ms = [...new Set(R.targets.map(x => x.mission))];
   const self = text && !R.explicit && R.targets.length ? answer(text, w.missions.get(R.targets[0].mission), [R.targets[0].familiar]) : null;
-  if (self && !self.from) { box.append(chip('Psyche', 'var(--primary)'), html('span', 'rt-w', 'she can answer this from the castle')); return; }
+  if (self && !self.from) { box.append(chip('Psyche', 'var(--primary)'), html('span', 'rt-w', 'she can answer this from the project')); return; }
   if (R.mode === 'agent') R.targets.slice(0, 3).forEach(x => box.appendChild(chip(x.agent, fam(x.familiar).hue, true)));
   else if (R.mode === 'broadcast' || R.mode === 'council') box.appendChild(chip(R.mode === 'broadcast' ? (R.targets.length === ms.length ? `Every lead · ${ms.length}` : `Everyone · ${R.targets.length}`) : (w.missions.get(ms[0]) || {name: ''}).name + ' council', ''));
   else [...new Set(R.targets.map(x => x.familiar))].slice(0, 3).forEach(k => box.appendChild(chip(fam(k).name + (ms.length > 1 ? ' · ' + R.targets.filter(x => x.familiar === k).length : ''), fam(k).hue)));
@@ -4499,8 +4499,8 @@ const TEMPLATES = [
   {id: 'video', name: 'Walkthrough video', role: 'Recorder', says: ['walkthrough video', 'video'], brief: () => BR([['video', ['mp4']]], {reviews: 1}, {minutes: 45, tokens: 200000, usd: 3, agents: 8}, ['time', 'targets'])},
 ];
 const TPL_MAX = 8, clone = o => JSON.parse(JSON.stringify(o));
-let userTpl = (Array.isArray(store.get('coven-castles-templates')) ? store.get('coven-castles-templates') : []).filter(t => t && typeof t.name === 'string' && normBrief(t.brief)).slice(0, TPL_MAX).map((t, i) => ({id: 'u-' + i, name: t.name.slice(0, 28), brief: normBrief(t.brief), own: true}));
-const saveTpl = () => store.set('coven-castles-templates', userTpl.map(t => ({name: t.name, brief: t.brief})));
+let userTpl = (Array.isArray(store.get('coven-compass-templates')) ? store.get('coven-compass-templates') : []).filter(t => t && typeof t.name === 'string' && normBrief(t.brief)).slice(0, TPL_MAX).map((t, i) => ({id: 'u-' + i, name: t.name.slice(0, 28), brief: normBrief(t.brief), own: true}));
+const saveTpl = () => store.set('coven-compass-templates', userTpl.map(t => ({name: t.name, brief: t.brief})));
 const allTpl = () => TEMPLATES.concat(userTpl), tplOf = id => allTpl().find(t => t.id === id) || null;
 const tplBrief = id => { const t = tplOf(id) || TEMPLATES[5]; return normBrief(t.own ? clone(t.brief) : t.brief()); };
 const tplFor = k => TEMPLATES.find(t => (fam(k).roles || []).includes(t.role)) || TEMPLATES[5];          // the template that suits a familiar's roles
@@ -4573,12 +4573,12 @@ function drawNew() {
   if (nm.edit && (!c.composing || !w.missions.has(nm.edit))) { nm.edit = null; nm.briefTouched = false; nm.open = null; c.composing = false; return setLead(nm.lead); }
   const EM = nm.edit ? w.missions.get(nm.edit) : null, ok = canAct();
   const show = atlasScope !== 'coven' && !cz.open && (!!c.composing || (bare && !c.emptyDismissed)); if ($('empty').hidden === show) $('empty').hidden = !show;
-  let prompt = $('emptyCastlePrompt');
+  let prompt = $('emptyProjectPrompt');
   if (!prompt && bare) {
-    prompt = html('section', 'empty'); prompt.id = 'emptyCastlePrompt'; prompt.setAttribute('aria-labelledby', 'emptyCastleTitle');
+    prompt = html('section', 'empty'); prompt.id = 'emptyProjectPrompt'; prompt.setAttribute('aria-labelledby', 'emptyProjectTitle');
     const head = html('div', 'hd'), title = html('h2', 'hd-t', 'No missions yet'), action = html('div', 'em-act'), add = html('button', 'btn pri', '+ New mission');
-    title.id = 'emptyCastleTitle'; add.id = 'emptyNew'; add.type = 'button'; add.addEventListener('click', () => openNew());
-    head.appendChild(title); action.appendChild(add); prompt.append(head, html('p', 'em-lede', 'Start the first mission in this castle.'), action);
+    title.id = 'emptyProjectTitle'; add.id = 'emptyNew'; add.type = 'button'; add.addEventListener('click', () => openNew());
+    head.appendChild(title); action.appendChild(add); prompt.append(head, html('p', 'em-lede', 'Start the first mission in this project.'), action);
     prompt.addEventListener('click', ev => ev.stopPropagation()); stage.appendChild(prompt);
   }
   if (prompt) { prompt.hidden = atlasScope === 'coven' || !bare || show || cz.open; $('emptyNew').disabled = !ok; $('emptyNew').title = ok ? 'Open a new mission' : 'Go live to open a mission'; }
@@ -4660,20 +4660,20 @@ function rebrief(c, M, brief, template) {
   if (M2 && M2.paused === 'limit' && st2 && !st2.caps.some(x => x.k === 'agents' ? x.frac > 1 : x.frac >= 1)) { emit(c, {type: 'mission.resumed', mission: M.id}); if (c.noticed) [...c.noticed].forEach(k2 => { if (k2.indexOf(M.id + '|') === 0) c.noticed.delete(k2); });
     openAsks(c.world).filter(q => q.mission === M.id && q.limit).forEach(q => emit(c, {type: 'gate.resolved', ask: q.id, decision: 'allowed_once'})); }
 }
-// ------------------------------------------------------------ the castle tab: everything about the open project in one place
+// ------------------------------------------------------------ the project tab: everything about the open project in one place
 let castSig = '';
-function drawCastle() {
-  const box = $('castPane'); if (railTab !== 'castle') { if (box.firstChild) { box.textContent = ''; castSig = ''; } return; }
-  const c = cur(), w = c.world, m = metaOf(c) || {}, ms = [...w.missions.values()], open = openAsks(w), work = countOf(w, a => a.state === 'work'), keys = Object.keys(castles);
+function drawProject() {
+  const box = $('castPane'); if (railTab !== 'project') { if (box.firstChild) { box.textContent = ''; castSig = ''; } return; }
+  const c = cur(), w = c.world, m = metaOf(c) || {}, ms = [...w.missions.values()], open = openAsks(w), work = countOf(w, a => a.state === 'work'), keys = Object.keys(projects);
   const sum = k => ms.reduce((t, M) => t + (M.prog[k] || 0), 0), capSum = k => ms.reduce((t, M) => t + ((M.brief && M.brief.atMost[k]) || 0), 0);
   const sig = [active, keys.join(), w.agents.size, work, open.length, ms.map(M => M.id + M.name + (M.paused || '') + (M.tpl || '') + sealOf(w, M).sig).join(), w.stopped, m.repo, m.root, c.recorded, live, Math.round(sum('tokens') / 5000), Math.floor(c.trace.length / 20),
-    keys.map(k => castles[k].world.agents.size + '.' + openAsks(castles[k].world).length).join(), Object.keys(FAM).map(k => FAM[k].color + FAM[k].sym + FAM[k].role).join()].join('|');
+    keys.map(k => projects[k].world.agents.size + '.' + openAsks(projects[k].world).length).join(), Object.keys(FAM).map(k => FAM[k].color + FAM[k].sym + FAM[k].role).join()].join('|');
   if (sig === castSig) return; castSig = sig;
   const y = box.scrollTop, fid = document.activeElement && box.contains(document.activeElement) ? document.activeElement.dataset.id : null; box.textContent = '';
   const sec = (icon, name, note, count) => { const sh = html('div', 'n-sec cs-h'), ic = html('span', 'n-si'); ic.innerHTML = ICON[icon]; sh.append(ic, html('b', null, name), html('span', null, note || '')); if (count != null) sh.appendChild(html('i', null, String(count))); box.appendChild(sh); const b = html('div', 'cs-b'); box.appendChild(b); return b; };
   // who it is, and its state
   const state = c.recorded ? ['Recorded', 'off'] : w.stopped ? ['Stopped', 'q'] : !w.agents.size ? ['Dormant', 'off'] : live ? ['Live', 'on'] : ['Replaying', 'q'];
-  const head = html('div', 'cs-top'), mark = html('span', 'cs-mark'), tt = html('div'), eb = html('button', 'btn sm', 'Edit'); mark.innerHTML = ICON.fort; eb.type = 'button'; eb.dataset.id = 'cs-edit'; eb.disabled = c.recorded; eb.addEventListener('click', () => openCastleForm(active));
+  const head = html('div', 'cs-top'), mark = html('span', 'cs-mark'), tt = html('div'), eb = html('button', 'btn sm', 'Edit'); mark.innerHTML = ICON.fort; eb.type = 'button'; eb.dataset.id = 'cs-edit'; eb.disabled = c.recorded; eb.addEventListener('click', () => openProjectForm(active));
   tt.append(html('h2', null, active), html('p', null, m.repo ? repoShort(m.repo) || m.repo : 'No repository set')); head.append(mark, tt, html('span', 'hd-s ' + state[1], state[0]), eb); box.appendChild(head);
   // now: four numbers
   const tiles = html('div', 'cs-tiles'), tile = (n, label, cls, fn) => { const t = html(fn ? 'button' : 'div', 'cs-tile' + (cls ? ' ' + cls : '')); if (fn) { t.type = 'button'; t.dataset.id = 'cs-t-' + label; t.addEventListener('click', fn); } t.append(html('b', null, String(n)), html('span', null, label)); tiles.appendChild(t); };
@@ -4684,7 +4684,7 @@ function drawCastle() {
     b.addEventListener('click', () => { const done = () => { b.classList.add('ok'); setTimeout(() => b.classList.remove('ok'), 1200); }; try { navigator.clipboard.writeText(text).then(done, () => {}); } catch (e) {} }); return b; };
   const line = (icon, k, v) => { const r = html('div', 'cs-kv'), ic = html('span', 'cs-ki'), val = html('code', v ? '' : 'off', v ? v.replace(/^https:\/\//, '') : 'Not set'); if (v) val.title = v; ic.innerHTML = ICON[icon]; r.append(ic, html('span', null, k), val); if (v) r.appendChild(copy(v)); pl.appendChild(r); };
   line('repo', 'Repository', m.repo); line('folder', 'Location', m.root);
-  { const f0 = c.trace.find(e => e.type === 'castle.founded'), r = html('div', 'cs-kv'), ic = html('span', 'cs-ki'); ic.innerHTML = ICON.fort; r.append(ic, html('span', null, 'Trace'), html('code', null, `${c.trace.length} events${f0 ? ' since ' + hm(f0.t) : ''}${c.recorded ? ', recorded' : c.sample ? ', sample' : ''}`)); pl.appendChild(r); }
+  { const f0 = c.trace.find(e => e.type === 'project.founded'), r = html('div', 'cs-kv'), ic = html('span', 'cs-ki'); ic.innerHTML = ICON.fort; r.append(ic, html('span', null, 'Trace'), html('code', null, `${c.trace.length} events${f0 ? ' since ' + hm(f0.t) : ''}${c.recorded ? ', recorded' : c.sample ? ', sample' : ''}`)); pl.appendChild(r); }
   // missions: one row each, to open it
   const mb = sec('flag', 'Missions', ms.length ? 'open one to see its council' : 'none yet', ms.length);
   ms.forEach(M => { const row = html('button', 'cs-m'), dots = html('span', 'opt-dots'), n = countOf(w, a => a.mission === M.id), wk = countOf(w, a => a.mission === M.id && a.state === 'work'), q = open.filter(x => x.mission === M.id).length, tx = html('span', 'cs-mt');
@@ -4697,15 +4697,15 @@ function drawCastle() {
   if (ms.some(M => M.brief)) { const ub = sec('gauge', 'Usage', 'against every brief here');
     [['tokens', 'Tokens'], ['usd', 'Spend']].forEach(([k, label]) => { const u = sum(k), cp2 = capSum(k), r = html('div', 'bfl' + (cp2 && u / cp2 >= .9 ? ' near' : '')), mt = html('i', 'meter'), fi = html('i'); fi.style.width = (cp2 ? Math.min(100, u / cp2 * 100) : 0) + '%'; mt.appendChild(fi);
       r.append(html('span', null, label), html('b', null, cp2 ? `${fmtN(k, u)} of ${fmtN(k, cp2)}` : fmtN(k, u)), mt); ub.appendChild(r); });
-    ub.appendChild(html('p', 'fm-n', c.sample ? 'Sample figures, not read from a daemon.' : 'Figures come from this castle’s trace.')); }
+    ub.appendChild(html('p', 'fm-n', c.sample ? 'Sample figures, not read from a daemon.' : 'Figures come from this project’s trace.')); }
   // who works here
   const seated = Object.keys(FAM).filter(k => ms.some(M => M.seats.includes(k)));
   if (seated.length) { const fb = sec('role', 'Familiars here', '', seated.length);
     seated.forEach(k => { const f = fam(k), r = html('div', 'cs-f'); r.style.setProperty('--hue', f.hue); r.innerHTML = avatar(k);
       r.append(html('b', null, f.name), html('span', null, (f.roles || [f.role]).join(', ')), html('em', null, `${plural(ms.filter(M => M.seats.includes(k)).length, 'council')} · ${countOf(w, a => a.fam === k)}`)); fb.appendChild(r); }); }
-  // the other castles, to step across
-  if (keys.length > 1) { const ob = sec('fort', 'Other castles', '', keys.length - 1);
-    keys.filter(k => k !== active).forEach(k => { const cw = castles[k].world, q = openAsks(cw).length, row = html('button', 'cs-m'), tx = html('span', 'cs-mt'), km = metaOf(castles[k]); row.type = 'button'; row.dataset.id = 'cs-c-' + k;
+  // the other projects, to step across
+  if (keys.length > 1) { const ob = sec('fort', 'Other projects', '', keys.length - 1);
+    keys.filter(k => k !== active).forEach(k => { const cw = projects[k].world, q = openAsks(cw).length, row = html('button', 'cs-m'), tx = html('span', 'cs-mt'), km = metaOf(projects[k]); row.type = 'button'; row.dataset.id = 'cs-c-' + k;
       tx.append(html('b', null, k), html('span', null, km && km.repo ? repoShort(km.repo) || km.repo : 'No repository set')); row.append(html('i', 'opt-d' + (cw.agents.size ? '' : ' off')), tx); if (q) row.appendChild(html('span', 'opt-q', String(q)));
       row.appendChild(html('span', 'cs-n', cw.agents.size ? `${cw.agents.size} agents` : 'Dormant')); row.insertAdjacentHTML('beforeend', CHEV); row.addEventListener('click', () => go(k)); ob.appendChild(row); }); }
   box.scrollTop = y; if (fid) { const el = box.querySelector(`[data-id="${fid}"]`); if (el && !el.disabled) el.focus(); }
@@ -4791,9 +4791,9 @@ $('keyModal').addEventListener('keydown', ev => {      // focus stays inside the
   if (ev.key !== 'Tab') return; const f = [...$('keyModal').querySelectorAll('button:not(:disabled)')], i = f.indexOf(document.activeElement);
   if (ev.shiftKey && i <= 0) { ev.preventDefault(); f[f.length - 1].focus(); } else if (!ev.shiftKey && i === f.length - 1) { ev.preventDefault(); f[0].focus(); }
 });
-// ------------------------------------------------------------ castles: a project is a name, a repository and a folder on this machine
+// ------------------------------------------------------------ projects: a project is a name, a repository and a folder on this machine
 // The daemon starts every session from a project root: a real folder, made canonical, that the work has to stay inside.
-// So a castle is that folder, the repository checked out in it, and a name to call it by. Only their shape can be checked here.
+// So a project is that folder, the repository checked out in it, and a name to call it by. Only their shape can be checked here.
 const NAME_RESERVED = /^(?:settings|sidebar|customize|upgrade|downloads|comment-.*)$/;
 const slug = x => String(x || '').toLowerCase().trim().replace(/['’"“”]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 32).replace(/-+$/, '');
 const REPO_RE = /^(?:https:\/\/[a-z0-9.-]+\.[a-z]{2,}(?::\d+)?\/[\w.~-]+(?:\/[\w.~-]+)+|git@[a-z0-9.-]+:[\w.~-]+(?:\/[\w.~-]+)+|ssh:\/\/(?:git@)?[a-z0-9.-]+(?::\d+)?\/[\w.~-]+(?:\/[\w.~-]+)+)$/i;
@@ -4801,14 +4801,14 @@ const cleanRepo = u => String(u || '').trim().replace(/\/+$/, '');
 const repoShort = u => { const m = cleanRepo(u).replace(/\.git$/i, '').match(/([\w.~-]+)\/([\w.~-]+)$/); return m ? m[1] + '/' + m[2] : ''; };
 const repoName = u => slug(repoShort(u).split('/').pop() || '');
 const cleanRoot = r => { r = String(r || '').trim(); return r.length > 3 ? r.replace(/[\\/]+$/, '') : r; };
-const metaOf = c => { let m = null; for (const e of c.trace) if (e.type === 'castle.founded' || e.type === 'castle.moved') m = {repo: e.repo || (m && m.repo) || '', root: e.root || (m && m.root) || ''}; return m; };
+const metaOf = c => { let m = null; for (const e of c.trace) if (e.type === 'project.founded' || e.type === 'project.moved') m = {repo: e.repo || (m && m.repo) || '', root: e.root || (m && m.root) || ''}; return m; };
 function nameIssue(n, except) {
   if (!n) return 'Give it a name.';
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(n)) return 'Use lowercase letters, digits and single hyphens.';
   if (n.length < 2) return 'At least 2 characters.';
   if (n.length > 32) return 'At most 32 characters.';
   if (NAME_RESERVED.test(n)) return 'That name is reserved by the page address.';
-  if (castles[n] && n !== except) return 'Another castle already has that name.';
+  if (projects[n] && n !== except) return 'Another project already has that name.';
   return '';
 }
 function repoIssue(u) {
@@ -4825,111 +4825,111 @@ function rootIssue(r, except) {
   if (!/^(?:\/|~\/|[A-Za-z]:[\\/])/.test(r)) return 'Use a full path: /…, ~/… or C:\\….';
   if (/(?:^|[\\/])\.\.(?:[\\/]|$)/.test(r)) return 'No “..” in the path. The daemon resolves it to one real folder.';
   if (/\s{2,}|[<>|*?"]/.test(r)) return 'That does not look like a folder path.';
-  const hit = Object.keys(castles).find(k => k !== except && (metaOf(castles[k]) || {}).root === r);
+  const hit = Object.keys(projects).find(k => k !== except && (metaOf(projects[k]) || {}).root === r);
   return hit ? `${hit} is already rooted there.` : '';
 }
 function rebuild() { leadSig = needsSig = streamSig = marksSig = lcSig = wardSig = traceSig = dotSig = ''; insp.sig = ''; buildScene(); refresh(); }
-function foundCastle(name, repo, root, said) {
-  const c = castles[name] = makeCastle(name, [], false);
-  emit(c, {type: 'castle.founded', name, repo, root});
-  if (said) emit(c, {type: 'you.said', text: `Found a castle: ${name}, on ${repo}, at ${root}.`});
+function foundProject(name, repo, root, said) {
+  const c = projects[name] = makeProject(name, [], false);
+  emit(c, {type: 'project.founded', name, repo, root});
+  if (said) emit(c, {type: 'you.said', text: `Found a project: ${name}, on ${repo}, at ${root}.`});
   emit(c, {type: 'psyche.said', text: `${name} stands on ${repoShort(repo) || repo}, rooted at ${root}. Nothing was cloned or written from here. Tell me its first mission, or fill in the form.`});
   return c;
 }
-function renameCastle(old, nw) {                     // the order of the castles, and so their places in the Coven, stays as it was
-  const ent = Object.entries(castles); ent.forEach(([k]) => delete castles[k]); ent.forEach(([k, v]) => { castles[k === old ? nw : k] = v; });
-  castles[nw].key = nw;
+function renameProject(old, nw) {                     // the order of the projects, and so their places in the Coven, stays as it was
+  const ent = Object.entries(projects); ent.forEach(([k]) => delete projects[k]); ent.forEach(([k, v]) => { projects[k === old ? nw : k] = v; });
+  projects[nw].key = nw;
   if (active === old) active = nw;
   rebuild(); atlasQueueFit(); atlasWriteRoute(true); // names and routes follow the same projection
-  emit(castles[nw], {type: 'castle.renamed', name: nw, from: old});
+  emit(projects[nw], {type: 'project.renamed', name: nw, from: old});
 }
-function changeCastle(k, name, repo, root) {
-  const c = castles[k], m = metaOf(c) || {}, done = [], e = {type: 'castle.moved'};
+function changeProject(k, name, repo, root) {
+  const c = projects[k], m = metaOf(c) || {}, done = [], e = {type: 'project.moved'};
   if (!c || c.recorded) return done;
   if (repo && repo !== m.repo) { e.repo = repo; done.push('works on ' + (repoShort(repo) || repo)); }
   if (root && root !== m.root) { e.root = root; done.push('is rooted at ' + root); }
   if (e.repo || e.root) emit(c, e);
-  if (name && name !== k) { renameCastle(k, name); done.unshift('is now called ' + name); }
+  if (name && name !== k) { renameProject(k, name); done.unshift('is now called ' + name); }
   rebuild(); return done;
 }
-function removeCastle(k) {
-  const ks = Object.keys(castles), i = ks.indexOf(k); if (ks.length < 2 || i < 0) return false;
+function removeProject(k) {
+  const ks = Object.keys(projects), i = ks.indexOf(k); if (ks.length < 2 || i < 0) return false;
   if (k === active) {
     if (cur().sel) select(null, null, null, {history: false, focus: false});
-    active = ks[i ? i - 1 : 1]; delete castles[k];
+    active = ks[i ? i - 1 : 1]; delete projects[k];
     enter();
     if (!cam.locked) { const v = viewOf(cam.pitch > 2 || camT.pitch > 2 ? '3d' : 'plan'); camT.px = v.px; camT.py = v.py; camT.zoom = v.zoom; if (reduce) Object.assign(cam, camT); saveView(); }
-  } else { delete castles[k]; rebuild(); }
+  } else { delete projects[k]; rebuild(); }
   atlasQueueFit(); atlasWriteRoute(true); return true;
 }
 
-// the castle form: three required fields, each checked as you leave it and all of them when you submit
+// the project form: three required fields, each checked as you leave it and all of them when you submit
 const cz = {open: false, edit: null, touched: {}, tried: false, rm: false};
 const CZ = ['Name', 'Repo', 'Root'], CZ_HINT = {Name: 'Lowercase letters, digits and hyphens.', Repo: 'The address you would clone, HTTPS or SSH.', Root: 'The folder the daemon uses as the project root.'};
 const czIssues = () => ({Name: nameIssue($('czName').value, cz.edit), Repo: repoIssue($('czRepo').value), Root: rootIssue($('czRoot').value, cz.edit)});
 $('czIcon').innerHTML = ICON.fort; $('czNameI').innerHTML = ICON.fort; $('czRepoI').innerHTML = ICON.repo; $('czRootI').innerHTML = ICON.folder;
-function drawCastleForm() {
-  const f = $('castleForm'); if (f.hidden === cz.open) f.hidden = !cz.open;
+function drawProjectForm() {
+  const f = $('projectForm'); if (f.hidden === cz.open) f.hidden = !cz.open;
   drawNew();
   if (!cz.open) return;
-  const ed = cz.edit, bad = czIssues(), n = Object.keys(castles).length, c = ed ? castles[ed] : null;
+  const ed = cz.edit, bad = czIssues(), n = Object.keys(projects).length, c = ed ? projects[ed] : null;
   const locked = ed ? (!c || c.recorded ? 'Recorded trace. It cannot be changed.' : ed === active && !canAct() ? 'Replaying. Go live first.' : '') : '';
-  $('czTitle').textContent = ed ? 'Edit castle' : 'New castle'; $('czMeta').textContent = ed || 'a project in the Coven'; $('czGo').textContent = ed ? 'Save' : 'Create castle';
+  $('czTitle').textContent = ed ? 'Edit project' : 'New project'; $('czMeta').textContent = ed || 'a project in the Coven'; $('czGo').textContent = ed ? 'Save' : 'Create project';
   CZ.forEach(k => { const el = $('cz' + k), note = $('cz' + k + 'E'), show = !!bad[k] && (cz.tried || (!!el.value.trim() && document.activeElement !== el));
     note.textContent = show ? bad[k] : CZ_HINT[k]; note.classList.toggle('bad', show); el.setAttribute('aria-invalid', String(show)); el.parentNode.classList.toggle('bad', show); });
-  $('czFoot').textContent = locked || (ed ? 'Recorded in this castle’s trace.' : 'Nothing is cloned or written to disk.');
+  $('czFoot').textContent = locked || (ed ? 'Recorded in this project’s trace.' : 'Nothing is cloned or written to disk.');
   $('czGo').disabled = !!locked;
   $('czRm').hidden = !ed;
-  if (ed) { const last = n < 2; $('czRmAsk').hidden = cz.rm; $('czRmAsk').disabled = last; $('czRmAsk').textContent = last ? 'The only castle cannot be removed' : 'Remove this castle';
+  if (ed) { const last = n < 2; $('czRmAsk').hidden = cz.rm; $('czRmAsk').disabled = last; $('czRmAsk').textContent = last ? 'The only project cannot be removed' : 'Remove this project';
     $('czRmSure').hidden = !cz.rm; $('czRmText').textContent = `Remove ${ed}? Its missions and trace go. The folder is not touched.`; }
 }
-function openCastleForm(editKey) {
+function openProjectForm(editKey) {
   document.querySelectorAll('details.pill[open]').forEach(d => d.open = false);
   const c = cur(); if (c.composing) closeNew(); if (c.sel) select(null); if (atlasScope === 'coven') setView('3d');
-  const m = editKey ? metaOf(castles[editKey]) || {} : {};
+  const m = editKey ? metaOf(projects[editKey]) || {} : {};
   Object.assign(cz, {open: true, edit: editKey || null, touched: {}, tried: false, rm: false});
   $('czName').value = editKey || ''; $('czRepo').value = m.repo || ''; $('czRoot').value = m.root || '';
-  drawCastleForm(); if (window.CovenMobileUI) window.CovenMobileUI.activate('castleForm');
+  drawProjectForm(); if (window.CovenMobileUI) window.CovenMobileUI.activate('projectForm');
   const i = $('czName'); i.focus(); i.select();
 }
-function closeCastleForm() {
-  const editing = cz.edit; cz.open = false; cz.rm = false; drawCastleForm();
+function closeProjectForm() {
+  const editing = cz.edit; cz.open = false; cz.rm = false; drawProjectForm();
   if (window.CovenMobileUI) window.CovenMobileUI.sync();
-  if (editing && !$('psyche').hidden && railTab === 'castle') {
+  if (editing && !$('psyche').hidden && railTab === 'project') {
     const edit = $('castPane').querySelector('[data-id="cs-edit"]'); if (edit) edit.focus({preventScroll: true});
   }
 }
-$('czX').addEventListener('click', closeCastleForm);
+$('czX').addEventListener('click', closeProjectForm);
 $('czName').addEventListener('input', ev => {
   if (composingInput(ev)) return;
   const el = ev.target, v = el.value.toLowerCase().replace(/[\s_]+/g, '-').replace(/[^a-z0-9-]/g, '').replace(/-{2,}/g, '-').replace(/^-/, '');
   if (v !== el.value) el.value = v; cz.touched.Name = true;
   if (!cz.edit && !cz.touched.Root) $('czRoot').value = slug(v) ? '~/code/' + slug(v) : '';
-  drawCastleForm();
+  drawProjectForm();
 });
 $('czRepo').addEventListener('input', () => {                          // a pasted address offers the name and the folder, until you set them yourself
   cz.touched.Repo = true; const v = $('czRepo').value, nm2 = repoIssue(v) ? '' : repoName(v);
   if (!cz.edit && nm2) { if (!cz.touched.Name) $('czName').value = nm2; if (!cz.touched.Root) $('czRoot').value = '~/code/' + ($('czName').value || nm2); }
-  drawCastleForm();
+  drawProjectForm();
 });
-$('czRoot').addEventListener('input', () => { cz.touched.Root = true; drawCastleForm(); });
-$('castleForm').addEventListener('focusout', () => setTimeout(() => { if (cz.open) drawCastleForm(); }, 0));
-$('castleForm').addEventListener('click', ev => ev.stopPropagation());
-$('czRmAsk').addEventListener('click', () => { cz.rm = true; drawCastleForm(); $('czRmNo').focus(); });
-$('czRmNo').addEventListener('click', () => { cz.rm = false; drawCastleForm(); $('czRmAsk').focus(); });
-$('czRmYes').addEventListener('click', () => { const k = cz.edit; closeCastleForm(); if (removeCastle(k)) emit(cur(), {type: 'psyche.said', text: `${k} is gone from the Coven. Its folder and repository were not touched.`}); });
-$('castleForm').addEventListener('submit', ev => {
+$('czRoot').addEventListener('input', () => { cz.touched.Root = true; drawProjectForm(); });
+$('projectForm').addEventListener('focusout', () => setTimeout(() => { if (cz.open) drawProjectForm(); }, 0));
+$('projectForm').addEventListener('click', ev => ev.stopPropagation());
+$('czRmAsk').addEventListener('click', () => { cz.rm = true; drawProjectForm(); $('czRmNo').focus(); });
+$('czRmNo').addEventListener('click', () => { cz.rm = false; drawProjectForm(); $('czRmAsk').focus(); });
+$('czRmYes').addEventListener('click', () => { const k = cz.edit; closeProjectForm(); if (removeProject(k)) emit(cur(), {type: 'psyche.said', text: `${k} is gone from the Coven. Its folder and repository were not touched.`}); });
+$('projectForm').addEventListener('submit', ev => {
   ev.preventDefault(); if (composingText.has(document.activeElement)) return; cz.tried = true;
   const bad = czIssues(), first = CZ.find(k => bad[k]);
-  if (first) { drawCastleForm(); return $('cz' + first).focus(); }
+  if (first) { drawProjectForm(); return $('cz' + first).focus(); }
   const name = $('czName').value, repo = cleanRepo($('czRepo').value), root = cleanRoot($('czRoot').value), ed = cz.edit;
-  if (!ed) { closeCastleForm(); foundCastle(name, repo, root, true); return go(name); }
-  if (!castles[ed] || castles[ed].recorded || (ed === active && !canAct())) return;
-  closeCastleForm(); const c = castles[ed], done = changeCastle(ed, name, repo, root);
-  if (done.length) emit(c, {type: 'psyche.said', text: `Done. This castle ${done.join(', and ')}.`});
+  if (!ed) { closeProjectForm(); foundProject(name, repo, root, true); return go(name); }
+  if (!projects[ed] || projects[ed].recorded || (ed === active && !canAct())) return;
+  closeProjectForm(); const c = projects[ed], done = changeProject(ed, name, repo, root);
+  if (done.length) emit(c, {type: 'psyche.said', text: `Done. This project ${done.join(', and ')}.`});
 });
 
-// ------------------------------------------------------------ Psyche in conversation: castles and missions are made and managed by saying so
+// ------------------------------------------------------------ Psyche in conversation: projects and missions are made and managed by saying so
 // Psyche asks for what is missing one question at a time, offers the likely answer in the composer, and confirms before
 // anything is founded, removed or closed. What she settles is written to the trace like everything else.
 const YES = /^(?:y|yes|yep|yeah|sure|ok|okay|do it|go ahead|confirm(?:ed)?|create it|open it|save it|remove it|close it|rename it|move it|please do|correct|right|looks good)\b/i;
@@ -4947,7 +4947,7 @@ function readPlace(text) {                           // a repository address and
   return {repo, root, rest};
 }
 const readName = rest => { const m = rest.match(/\b(?:called|named|name it|call it|name is)\s+["“']?([A-Za-z0-9][\w .-]{0,38}?)["”']?\s*(?=$|[,.;!]|\b(?:at|from|in|on|with|using|for|and|rooted|located)\b)/i); return m ? slug(m[1]) : ''; };
-const castleIn = l => Object.keys(castles).sort((a, b) => b.length - a.length).find(k => new RegExp('(?:^|[^a-z0-9-])' + k + '(?:$|[^a-z0-9-])').test(l)) || null;
+const projectIn = l => Object.keys(projects).sort((a, b) => b.length - a.length).find(k => new RegExp('(?:^|[^a-z0-9-])' + k + '(?:$|[^a-z0-9-])').test(l)) || null;
 const missionIn = (c, l) => { const ms = [...c.world.missions.values()]; return ms.slice().sort((a, b) => b.name.length - a.name.length).find(m => l.includes(m.name.toLowerCase())) || (c.sel && c.world.missions.get(c.sel)) || (ms.length === 1 ? ms[0] : null); };
 const leadGuess = name => (roleMatch(name)[0] || {k: 'echo'}).k;      // whose roles the task's words match
 const leadIn = text => Object.keys(FAM).find(k => new RegExp('\\b' + FAM[k].name + '\\b', 'i').test(text)) || null;
@@ -4981,9 +4981,9 @@ function tweakBrief(b, text) {
   if (lg.length) b.deliver.forEach(a => { if (KIND[a.kind][2] && lg.join() !== a.langs.join()) { a.langs = lg.slice(); ch.push(KIND[a.kind][0].toLowerCase() + ' in ' + lg.join(', ')); } });
   return ch;
 }
-const HELP = 'Castles: “Create a castle”, “Rename this castle to …”, “Move this castle to ~/code/…”, “Remove this castle”, “Which castles are there?”. Missions: “Open a mission to …, led by Cody, at most 200k tokens”, “Rename this mission to …”, “Raise the token limit to 400k”, “Pause this mission”, “Resume this mission”, “Close this mission”. I ask for whatever is missing and confirm before founding, removing or closing. Anything else I pass to the council.';
+const HELP = 'Projects: “Create a project”, “Rename this project to …”, “Move this project to ~/code/…”, “Remove this project”, “Which projects are there?”. Missions: “Open a mission to …, led by Cody, at most 200k tokens”, “Rename this mission to …”, “Raise the token limit to 400k”, “Pause this mission”, “Resume this mission”, “Close this mission”. I ask for whatever is missing and confirm before founding, removing or closing. Anything else I pass to the council.';
 
-function castleNewStep(c, d, text) {
+function projectNewStep(c, d, text) {
   const got = readPlace(text), bad = [], l = text.trim();
   let name = readName(got.rest); if (!name && d.ask === 'name') name = slug(got.rest.replace(/^\s*(?:it'?s|it is|call it|name it)\s+/i, ''));
   if (name) { const i = nameIssue(name); if (i) bad.push(`“${name}” will not do. ${i}`); else d.name = name; }
@@ -4992,10 +4992,10 @@ function castleNewStep(c, d, text) {
   if (d.ask === 'confirm' && !name && !got.repo && !got.root) {
     if (!YES.test(l)) return ask(c, d, 'Say yes to found it, tell me what to change, or cancel.', 'Yes, create it.');
     endDlg(c); tell(c, `Founding ${d.name}. Taking you there.`, 400);
-    return setTimeout(() => { if (castles[d.name]) return; foundCastle(d.name, d.repo, d.root); go(d.name); }, 1100);
+    return setTimeout(() => { if (projects[d.name]) return; foundProject(d.name, d.repo, d.root); go(d.name); }, 1100);
   }
   const pre = bad.length ? bad.join(' ') + ' ' : '';
-  if (!d.name) return ask(c, Object.assign(d, {ask: 'name'}), pre + 'What should the castle be called?', d.repo && !nameIssue(repoName(d.repo)) ? repoName(d.repo) : '');
+  if (!d.name) return ask(c, Object.assign(d, {ask: 'name'}), pre + 'What should the project be called?', d.repo && !nameIssue(repoName(d.repo)) ? repoName(d.repo) : '');
   if (!d.repo) return ask(c, Object.assign(d, {ask: 'repo'}), pre + `Which repository does ${d.name} work on? Paste its address.`, `https://github.com/OpenCoven/${d.name}`);
   if (!d.root) return ask(c, Object.assign(d, {ask: 'root'}), pre + `Where does ${d.name} live on this machine? Give me the folder.`, rootIssue('~/code/' + d.name) ? '' : '~/code/' + d.name);
   return ask(c, Object.assign(d, {ask: 'confirm'}), pre + `Found ${d.name} on ${repoShort(d.repo) || d.repo}, rooted at ${d.root}? Nothing is cloned or written from here.`, 'Yes, create it.');
@@ -5020,30 +5020,30 @@ const missionBrief = d => { const b = d.tpl ? tplBrief(d.tpl) : (NM_BRIEF[d.lead
 function confirmStep(c, d, text) { if (!YES.test(text.trim())) return ask(c, d, 'Say yes to go ahead, or cancel.', d.sug); endDlg(c); d.run(); }
 
 function intentOf(c, text) {
-  const l = text.toLowerCase(), w = c.world, place = readPlace(text), K = castleIn(place.rest.toLowerCase()), keys = Object.keys(castles);
-  const castleWord = /\b(?:castles?|projects?)\b/.test(l), mWord = /\bmissions?\b/.test(l), named = [...w.missions.values()].some(m => l.includes(m.name.toLowerCase()));
+  const l = text.toLowerCase(), w = c.world, place = readPlace(text), K = projectIn(place.rest.toLowerCase()), keys = Object.keys(projects);
+  const projectWord = /\bprojects?\b/.test(l), mWord = /\bmissions?\b/.test(l), named = [...w.missions.values()].some(m => l.includes(m.name.toLowerCase()));
   const confirm = (q, sug, run) => () => ask(c, {kind: 'confirm', run}, q, sug);
   if (/\bwhat can (?:you|i)\b|\bwhat (?:do|should) i say\b|^help\b/.test(l)) return () => tell(c, HELP);
-  // ---- castles
-  if (castleWord && !mWord && /\b(?:new|create|found|add|build|raise|start|set up|make)\b/.test(l)) return () => castleNewStep(c, {kind: 'castle.new', ask: 'start'}, text);
-  if (castleWord && !mWord && /\b(?:remove|delete|demolish|drop|retire|close)\b/.test(l)) { const k = K || active;
-    if (keys.length < 2) return () => tell(c, `${k} is the only castle, so it stays.`);
-    return confirm(`Remove ${k} from the Coven? Its missions, agents and trace go with it. The folder and the repository are not touched.`, 'Yes, remove it.', () => { if (removeCastle(k)) tell(cur(), `${k} is gone from the Coven. Its folder and repository were not touched.`); }); }
-  if (/\brename\b/.test(l) && (castleWord || (K && !named)) && !mWord) { const k = K || active, to = slug((text.match(/\bto\s+["“']?([\w .-]+?)["”']?[.!]?\s*$/i) || [])[1] || ''), i = to ? nameIssue(to, k) : '';
-    if (castles[k].recorded) return () => tell(c, `${k} is a recorded trace. It cannot be changed.`);
-    if (!to) return () => tell(c, 'Tell me the new name: “Rename this castle to …”.');
+  // ---- projects
+  if (projectWord && !mWord && /\b(?:new|create|found|add|build|raise|start|set up|make)\b/.test(l)) return () => projectNewStep(c, {kind: 'project.new', ask: 'start'}, text);
+  if (projectWord && !mWord && /\b(?:remove|delete|demolish|drop|retire|close)\b/.test(l)) { const k = K || active;
+    if (keys.length < 2) return () => tell(c, `${k} is the only project, so it stays.`);
+    return confirm(`Remove ${k} from the Coven? Its missions, agents and trace go with it. The folder and the repository are not touched.`, 'Yes, remove it.', () => { if (removeProject(k)) tell(cur(), `${k} is gone from the Coven. Its folder and repository were not touched.`); }); }
+  if (/\brename\b/.test(l) && (projectWord || (K && !named)) && !mWord) { const k = K || active, to = slug((text.match(/\bto\s+["“']?([\w .-]+?)["”']?[.!]?\s*$/i) || [])[1] || ''), i = to ? nameIssue(to, k) : '';
+    if (projects[k].recorded) return () => tell(c, `${k} is a recorded trace. It cannot be changed.`);
+    if (!to) return () => tell(c, 'Tell me the new name: “Rename this project to …”.');
     if (i) return () => tell(c, `“${to}” will not do. ${i}`);
     if (to === k) return () => tell(c, `It is already called ${k}.`);
-    return confirm(`Rename ${k} to ${to}? Its repository and folder stay as they are.`, 'Yes, rename it.', () => { const done = changeCastle(k, to); tell(c, done.length ? `Done. ${k} ${done.join(', and ')}.` : 'Nothing changed.'); }); }
-  if ((place.repo || place.root) && !mWord && /\b(?:move|relocate|set|change|point)\b/.test(l) && (castleWord || /\b(?:root|folder|location|repo|repository|it)\b/.test(l))) { const k = K || active, m = metaOf(castles[k]) || {};
+    return confirm(`Rename ${k} to ${to}? Its repository and folder stay as they are.`, 'Yes, rename it.', () => { const done = changeProject(k, to); tell(c, done.length ? `Done. ${k} ${done.join(', and ')}.` : 'Nothing changed.'); }); }
+  if ((place.repo || place.root) && !mWord && /\b(?:move|relocate|set|change|point)\b/.test(l) && (projectWord || /\b(?:root|folder|location|repo|repository|it)\b/.test(l))) { const k = K || active, m = metaOf(projects[k]) || {};
     const repo = place.repo ? cleanRepo(place.repo) : '', root = place.root ? cleanRoot(place.root) : '', i = (repo && repoIssue(repo)) || (root && rootIssue(root, k));
-    if (castles[k].recorded) return () => tell(c, `${k} is a recorded trace. It cannot be changed.`);
+    if (projects[k].recorded) return () => tell(c, `${k} is a recorded trace. It cannot be changed.`);
     if (i) return () => tell(c, i);
     if ((!repo || repo === m.repo) && (!root || root === m.root)) return () => tell(c, `${k} is already there.`);
-    return confirm(`Point ${k} at ${[repo ? 'the repository ' + (repoShort(repo) || repo) : '', root ? 'the folder ' + root : ''].filter(Boolean).join(' and ')}? I only change the record. Nothing on disk moves.`, 'Yes, move it.', () => { const done = changeCastle(k, null, repo, root); tell(c, done.length ? `Done. ${k} ${done.join(', and ')}. Nothing on disk moved.` : 'Nothing changed.'); }); }
-  if (/\b(?:castles|projects)\b/.test(l) && /\b(?:which|what|list|show|how many|all)\b/.test(l)) return () => tell(c, `${plural(keys.length, 'castle')} in the Coven: ` + keys.map(k => { const cw = castles[k].world, m = metaOf(castles[k]);
+    return confirm(`Point ${k} at ${[repo ? 'the repository ' + (repoShort(repo) || repo) : '', root ? 'the folder ' + root : ''].filter(Boolean).join(' and ')}? I only change the record. Nothing on disk moves.`, 'Yes, move it.', () => { const done = changeProject(k, null, repo, root); tell(c, done.length ? `Done. ${k} ${done.join(', and ')}. Nothing on disk moved.` : 'Nothing changed.'); }); }
+  if (/\bprojects\b/.test(l) && /\b(?:which|what|list|show|how many|all)\b/.test(l)) return () => tell(c, `${plural(keys.length, 'project')} in the Coven: ` + keys.map(k => { const cw = projects[k].world, m = metaOf(projects[k]);
     return `${k} (${m && m.repo ? repoShort(m.repo) || m.repo : 'no repository set'}, ${cw.missions.size ? plural(cw.missions.size, 'mission') + ', ' + cw.agents.size + ' agents' : 'dormant'})`; }).join('; ') + '.');
-  if (!mWord && /\b(?:where|which repo|what repo|repository|folder|root|located)\b/.test(l) && (castleWord || K || /\b(?:this|it) (?:live|lives|is)\b|\bdoes (?:this|it)\b/.test(l)) && /\?\s*$|^(?:where|which|what)\b/.test(l.trim())) { const k = K || active, m = metaOf(castles[k]);
+  if (!mWord && /\b(?:where|which repo|what repo|repository|folder|root|located)\b/.test(l) && (projectWord || K || /\b(?:this|it) (?:live|lives|is)\b|\bdoes (?:this|it)\b/.test(l)) && /\?\s*$|^(?:where|which|what)\b/.test(l.trim())) { const k = K || active, m = metaOf(projects[k]);
     return () => tell(c, m && (m.repo || m.root) ? `${k} works on ${m.repo || 'no repository yet'} and is rooted at ${m.root || 'no folder yet'}.` : `${k} has no repository or folder set. Edit it from the project menu, or tell me both.`); }
   if (K && K !== active && !mWord && /\b(?:switch to|go to|take me to|enter|show me|jump to|open)\b/.test(l)) return () => { tell(c, `Taking you to ${K}.`, 300); setTimeout(() => go(K), 750); };
   // ---- missions
@@ -5060,7 +5060,7 @@ function intentOf(c, text) {
   if (/\b(?:pause|halt|stop)\b/.test(l)) return () => { if (M.paused) return tell(c, `${M.name} is already stopped.`); emit(c, {type: 'mission.paused', mission: M.id, reason: 'you'}); tell(c, `${M.name} is paused. Its agents are on standby until you say resume.`); };
   if (/\b(?:resume|unpause|continue|carry on)\b/.test(l)) return () => { const st = briefState(w, M), over = st && st.caps.find(x => x.k === 'agents' ? x.frac > 1 : x.frac >= 1);
     if (!M.paused) return tell(c, `${M.name} is not paused.`);
-    if (w.stopped) return tell(c, 'The whole castle is stopped. Let it run again first, from the Stop control.');
+    if (w.stopped) return tell(c, 'The whole project is stopped. Let it run again first, from the Stop control.');
     if (over) return tell(c, `${M.name} is at its ${LIMIT_OF[over.k]} limit (${fmtN(over.k, over.used)} of ${capText(over.k, over.max)}). Raise the limit and it carries on.`);
     emit(c, {type: 'mission.resumed', mission: M.id}); tell(c, `${M.name} is running again.`); };
   if (/\b(?:limit|budget|at most|at least|raise|lower|set|change|cap|allow|require|deliver|give)\b/.test(l)) { const b = JSON.parse(JSON.stringify(M.brief || (NM_BRIEF[M.seats[0]] || NM_BRIEF.echo)())), ch = tweakBrief(b, rest);
@@ -5072,7 +5072,7 @@ function converse(c, text) {
   if (d && !/\?\s*$/.test(text)) {                   // an answer to what Psyche asked; a question is answered on its own and the thread stays open
     you();
     if (NO.test(text.trim())) { endDlg(c); tell(c, 'Left as it was.'); return true; }
-    if (d.kind === 'castle.new') castleNewStep(c, d, text); else if (d.kind === 'mission.new') missionNewStep(c, d, text, false); else confirmStep(c, d, text);
+    if (d.kind === 'project.new') projectNewStep(c, d, text); else if (d.kind === 'mission.new') missionNewStep(c, d, text, false); else confirmStep(c, d, text);
     return true;
   }
   const run = intentOf(c, text); if (!run) return false;
@@ -5083,7 +5083,7 @@ setLead('echo');
 
 // ------------------------------------------------------------ Psyche window: bubble, floating chat (resizable), docked panel (resizable)
 const psy = {mode: 'closed', w: 400, fw: 400, fh: 640};
-const savePsy = () => store.set('coven-castles-psyche', {mode: psy.mode, w: psy.w, fw: psy.fw, fh: psy.fh});
+const savePsy = () => store.set('coven-compass-psyche', {mode: psy.mode, w: psy.w, fw: psy.fw, fh: psy.fh});
 function setMode(mode, focus) {
   if (mode === 'dock' && narrow.matches) mode = 'float';
   psy.mode = mode;
@@ -5171,7 +5171,7 @@ $('play').addEventListener('click', () => {
 $('speed').addEventListener('click', () => { speed = SPEEDS[(SPEEDS.indexOf(speed) + 1) % SPEEDS.length]; timelineUI(); });
 $('live').addEventListener('click', goLive);
 $('traceFile').addEventListener('change', ev => { const f = ev.target.files && ev.target.files[0]; ev.target.value = ''; loadTrace(f); });
-$('traceReset').addEventListener('click', () => { const wasDemo = cur().layoutDemo; castles[active] = makeCastle(active, sampleTrace(SAMPLES[active] ? active : 'ui', Date.now()), false); castles[active].layoutDemo = wasDemo; $('traceErr').hidden = true; enter(); atlasQueueFit(); atlasWriteRoute(true); });
+$('traceReset').addEventListener('click', () => { const wasDemo = cur().layoutDemo; projects[active] = makeProject(active, sampleTrace(SAMPLES[active] ? active : 'ui', Date.now()), false); projects[active].layoutDemo = wasDemo; $('traceErr').hidden = true; enter(); atlasQueueFit(); atlasWriteRoute(true); });
 
 // ------------------------------------------------------------ wiring
 ICON.stop = '<svg viewBox="0 0 14 14" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.3" fill="currentColor"/></svg>'; $('stopIc').innerHTML = ICON.stop;
@@ -5183,15 +5183,15 @@ function drawStop() {
 }
 $('stopBtn').addEventListener('click', () => {
   const c = cur(); if (!canAct()) return;
-  if (c.world.stopped) return emit(c, {type: 'castle.resumed'});
+  if (c.world.stopped) return emit(c, {type: 'project.resumed'});
   const pop = $('stopPop'); pop.hidden = !pop.hidden; $('stopName').textContent = active; drawStop(); if (!pop.hidden) $('stopYes').focus();
 });
 $('stopNo').addEventListener('click', () => { $('stopPop').hidden = true; drawStop(); $('stopBtn').focus(); });
-$('stopYes').addEventListener('click', () => { const c = cur(); $('stopPop').hidden = true; if (canAct()) emit(c, {type: 'castle.stopped'}); drawStop(); $('stopBtn').focus(); });
+$('stopYes').addEventListener('click', () => { const c = cur(); $('stopPop').hidden = true; if (canAct()) emit(c, {type: 'project.stopped'}); drawStop(); $('stopBtn').focus(); });
 $('stopPop').addEventListener('click', ev => ev.stopPropagation());
 function refresh() {
   const focused = document.activeElement;
-  sync(); drawCastle(); drawSummary(); drawCrumb(); drawStop(); syncLeads(); drawNeeds(); drawStream(); syncInspect(); drawLeadCard(); drawComposer(); drawWard(); timelineUI(); if (cur().pick) showPick(); kick(); if (window.CovenAtlas) window.CovenAtlas.update();
+  sync(); drawProject(); drawSummary(); drawCrumb(); drawStop(); syncLeads(); drawNeeds(); drawStream(); syncInspect(); drawLeadCard(); drawComposer(); drawWard(); timelineUI(); if (cur().pick) showPick(); kick(); if (window.CovenAtlas) window.CovenAtlas.update();
   if (atlasNavigationReady && cur().navigationNotice) {
     if (window.CovenAtlas) window.CovenAtlas.announce(cur().navigationNotice);
     cur().navigationNotice = null; atlasWriteRoute(true);
@@ -5200,7 +5200,7 @@ function refresh() {
 }
 function enter(preserveTime = false) {
   const c = cur();
-  if (cz.open && cz.edit) { cz.open = false; $('castleForm').hidden = true; }
+  if (cz.open && cz.edit) { cz.open = false; $('projectForm').hidden = true; }
   if (!preserveTime) { playing = false; live = !c.recorded; cursor = tEnd(c); }
   else if (live) { live = !c.recorded; cursor = tEnd(c); }
   else if (c.recorded && cursor >= tEnd(c)) { cursor = tEnd(c); playing = false; }
@@ -5210,7 +5210,7 @@ function enter(preserveTime = false) {
   buildScene(); refresh();
 }
 {
-  const v = store.get('coven-castles-view'), p = store.get('coven-castles-psyche') || {};
+  const v = store.get('coven-compass-view'), p = store.get('coven-compass-psyche') || {};
   if (v && isFinite(v.yaw + v.pitch + v.zoom + v.px + v.py)) { Object.assign(camT, {yaw: v.yaw, pitch: clamp(v.pitch, 0, 78), zoom: clamp(v.zoom, ZMIN, 6), px: clamp(v.px, -PAN, PAN), py: clamp(v.py, -PAN, PAN)}); Object.assign(cam, camT); }
   else if (reduce) Object.assign(cam, camT);
   setLock(!!(v && v.locked));
@@ -5221,13 +5221,13 @@ function enter(preserveTime = false) {
   enter();
 }
 // text size: one scale for the whole interface, stepped from the top bar and remembered
-let fsz = +store.get('coven-castles-fs') || 1;
+let fsz = +store.get('coven-compass-fs') || 1;
 function setFs(v) {
   fsz = clamp(Math.round(v * 20) / 20, .85, 1.35);
   document.documentElement.style.setProperty('--fs', fsz);
   $('fsDown').disabled = fsz <= .85; $('fsUp').disabled = fsz >= 1.35;
   $('fsDown').setAttribute('aria-label', `Smaller text (now ${Math.round(fsz * 100)}%)`); $('fsUp').setAttribute('aria-label', `Larger text (now ${Math.round(fsz * 100)}%)`);
-  store.set('coven-castles-fs', fsz); atlasQueueFit(); kick();
+  store.set('coven-compass-fs', fsz); atlasQueueFit(); kick();
 }
 $('fsDown').addEventListener('click', () => setFs(fsz - .05));
 $('fsUp').addEventListener('click', () => setFs(fsz + .05));
@@ -5236,11 +5236,11 @@ setFs(fsz);
 function setLean(v) {
   const on = !!v, b = $('footBtn'), label = on ? 'Show the timeline and missions' : 'Hide the timeline and missions';
   $('app').classList.toggle('lean', on); b.setAttribute('aria-pressed', String(!on)); b.setAttribute('aria-label', label); b.title = label;
-  b.classList.toggle('wide', on); $('footClock').hidden = !on; store.set('coven-castles-lean', on); drawLeadCard(); kick();
+  b.classList.toggle('wide', on); $('footClock').hidden = !on; store.set('coven-compass-lean', on); drawLeadCard(); kick();
 }
 $('footBtn').addEventListener('click', () => setLean(!$('app').classList.contains('lean')));
 $('footHide').addEventListener('click', () => { setLean(true); $('footBtn').focus(); });
-setLean(store.get('coven-castles-lean'));
+setLean(store.get('coven-compass-lean'));
 const openPill = () => document.querySelector('details.pill[open]');
 addEventListener('resize', () => { atlasQueueFit(); if (openPill()) placePill(openPill()); });
 setInterval(() => { if (document.hidden) return; if (live && !playing) { cursor = Date.now(); if (seekTimeline(cursor, true)) refresh(); } timelineUI(); }, 1000);
@@ -5287,7 +5287,7 @@ function atlasFocusable(el, label, action) {
   });
 }
 function atlasSyncOverviewMissions(gh) {
-  const c = castles[gh.k], all = [...c.world.missions.values()], packing = window.CovenAtlasLayout.missionPacking(all.length, {limit: 8, radius: 150});
+  const c = projects[gh.k], all = [...c.world.missions.values()], packing = window.CovenAtlasLayout.missionPacking(all.length, {limit: 8, radius: 150});
   const byId = new Map(gh.missions.map(m => [m.id, m])), visible = new Set(packing.items.map(p => all[p.index].id));
   gh.missions.forEach(m => { if (!visible.has(m.id)) m.g.remove(); });
   gh.packing = packing;
@@ -5311,7 +5311,7 @@ function atlasProjectGhost(gh, P, f, cp, pp) {
     const p = gh.runs[face.i], a = p[face.j], b = p[face.j + 1];
     face.el.setAttribute('points', pp([at(a[0], a[1], 0), at(b[0], b[1], 0), at(b[0], b[1], RUNZ[face.j + 1]), at(a[0], a[1], RUNZ[face.j])]));
   });
-  const w = castles[gh.k].world, pixels = 724 * Math.min(stage.clientWidth, stage.clientHeight) * cam.zoom / 784;
+  const w = projects[gh.k].world, pixels = 724 * Math.min(stage.clientWidth, stage.clientHeight) * cam.zoom / 784;
   gh.density = pixels >= 60 ? 'full' : pixels >= 32 ? 'compact' : 'tiny';
   gh.g.setAttribute('data-density', gh.density);
   gh.g.setAttribute('data-label-detail', pixels >= 112 ? 'full' : 'compact');
@@ -5354,10 +5354,10 @@ function atlasEaseProgress(se, key, target, hasHeight) {
   return v.value;
 }
 function atlasOpenProject(k) {
-  if (!castles[k]) return false;
+  if (!projects[k]) return false;
   const restoring = atlasRestoringRoute, locked = cam.locked; atlasRestoringRoute = true;
   if (locked) setLock(false);
-  atlasScope = 'castle'; atlasAutoFit = true; document.body.dataset.atlasScope = 'castle'; document.body.classList.remove('atlas-browse-open');
+  atlasScope = 'project'; atlasAutoFit = true; document.body.dataset.atlasScope = 'project'; document.body.classList.remove('atlas-browse-open');
   if (k !== active) go(k);
   if (cur().sel) select(null, null, null, {history: false, focus: false});
   drawNew();
@@ -5368,7 +5368,7 @@ function atlasOpenProject(k) {
   atlasWriteRoute(); return true;
 }
 function atlasOpenMission(k, id, mode) {
-  if (!castles[k] || !castles[k].world.missions.has(id)) return false;
+  if (!projects[k] || !projects[k].world.missions.has(id)) return false;
   const restoring = atlasRestoringRoute, locked = cam.locked; atlasRestoringRoute = true;
   if (locked) setLock(false);
   if (k !== active || atlasScope === 'coven') atlasOpenProject(k);
@@ -5380,23 +5380,23 @@ function atlasOpenMission(k, id, mode) {
 }
 function atlasSetProjectCount(requested) {
   const count = Number(requested); if (!Number.isInteger(count) || count < 0 || count > 128) return false;
-  const base = Object.keys(castles).filter(k => !castles[k].layoutDemo), target = Math.max(base.length, count), now = Date.now();
-  const demos = Object.keys(castles).filter(k => castles[k].layoutDemo);
-  while (base.length + demos.length > target) delete castles[demos.pop()];
+  const base = Object.keys(projects).filter(k => !projects[k].layoutDemo), target = Math.max(base.length, count), now = Date.now();
+  const demos = Object.keys(projects).filter(k => projects[k].layoutDemo);
+  while (base.length + demos.length > target) delete projects[demos.pop()];
   let index = 1;
   while (base.length + demos.length < target) {
-    let key; do { key = 'atlas-' + String(index++).padStart(3, '0'); } while (castles[key]);
+    let key; do { key = 'atlas-' + String(index++).padStart(3, '0'); } while (projects[key]);
     const template = ['ui', 'coven-cave', 'psyche-build', 'brand'][demos.length % 4];
-    const c = makeCastle(key, sampleTrace(template, now), false); c.layoutDemo = true; c.sample = true;
-    castles[key] = c; seek(c, now, true); demos.push(key);
+    const c = makeProject(key, sampleTrace(template, now), false); c.layoutDemo = true; c.sample = true;
+    projects[key] = c; seek(c, now, true); demos.push(key);
   }
-  if (!castles[active]) active = base[0];
+  if (!projects[active]) active = base[0];
   enter(); atlasOverview();
-  if (window.CovenAtlas) window.CovenAtlas.announce(Object.keys(castles).length + ' Castles in the simulation. Your existing Castles are preserved.');
+  if (window.CovenAtlas) window.CovenAtlas.announce(Object.keys(projects).length + ' Projects in the simulation. Your existing Projects are preserved.');
   return true;
 }
 function atlasOpenAllMissions(k) {
-  if (window.CovenAtlas && window.CovenAtlas.openMissionsForCastle) window.CovenAtlas.openMissionsForCastle(k);
+  if (window.CovenAtlas && window.CovenAtlas.openMissionsForProject) window.CovenAtlas.openMissionsForProject(k);
   else atlasOpenProject(k);
 }
 function atlasOverview() {
@@ -5434,7 +5434,7 @@ function atlasFocusSelection(preferOpen, previousMission) {
 function atlasWriteRoute(replace) {
   if (!atlasNavigationReady || atlasRestoringRoute || !window.CovenMissionNavigation) return;
   const c = cur(), selected = c.sel && c.world.missions.has(c.sel);
-  const route = {scope: atlasScope === 'coven' ? 'coven' : selected ? 'mission' : 'castle', castle: active, mission: selected ? c.sel : null, familiar: c.fam, view: panelView, detail: c.detail || 'card'};
+  const route = {scope: atlasScope === 'coven' ? 'coven' : selected ? 'mission' : 'project', project: active, mission: selected ? c.sel : null, familiar: c.fam, view: panelView, detail: c.detail || 'card'};
   const hash = window.CovenMissionNavigation.format(route);
   if (location.hash !== hash) {
     try { history[replace ? 'replaceState' : 'pushState']({covenNavigation: true}, '', hash); } catch (e) { return; }
@@ -5451,20 +5451,20 @@ function atlasRestoreRoute(initial) {
   const locked = cam.locked; if (locked) setLock(false);
   atlasRestoringRoute = true;
   try {
-    if (!route || route.scope === 'coven' || !castles[route.castle]) {
+    if (!route || route.scope === 'coven' || !projects[route.project]) {
       if (!route) notice = 'That navigation link is not valid. Showing the Coven overview.';
-      else if (route.scope !== 'coven') notice = 'That Castle is not available in this simulation. Showing the Coven overview.';
+      else if (route.scope !== 'coven') notice = 'That Project is not available in this simulation. Showing the Coven overview.';
       atlasOverview();
     } else {
-      if (active !== route.castle) go(route.castle);
+      if (active !== route.project) go(route.project);
       if (route.scope === 'mission' && cur().world.missions.has(route.mission)) {
-        if (atlasScope === 'coven') atlasOpenProject(route.castle);
+        if (atlasScope === 'coven') atlasOpenProject(route.project);
         const M = cur().world.missions.get(route.mission), familiar = route.familiar && M.seats.includes(route.familiar) ? route.familiar : null;
         if (route.familiar && !familiar) notice = 'That familiar is not on this mission. Showing the whole mission.';
-        panelView = route.view || 'brief'; store.set('coven-castles-panel', panelView);
+        panelView = route.view || 'brief'; store.set('coven-compass-panel', panelView);
         select(route.mission, familiar, route.detail || 'card', {history: false, focus: !initial});
       } else {
-        atlasOpenProject(route.castle);
+        atlasOpenProject(route.project);
         if (route.scope === 'mission') notice = 'That mission is not available here. It may be outside this replay position or from a previous local simulation.';
       }
     }
@@ -5475,22 +5475,22 @@ function atlasRestoreRoute(initial) {
 function atlasSnapshot(includeMissions) {
   const ps = [], missionItems = [], fs = new Map(Object.keys(FAM).map(k => [k, {key: k, name: fam(k).name, color: fam(k).hue, avatar: avatar(k), projects: 0, agents: 0}]));
   let missions = 0, agents = 0, needs = 0;
-  Object.keys(castles).forEach(k => {
-    const w = castles[k].world, q = openAsks(w).length, by = new Map();
+  Object.keys(projects).forEach(k => {
+    const w = projects[k].world, q = openAsks(w).length, by = new Map();
     ps.push({key: k, missions: w.missions.size, agents: w.agents.size, needs: q});
     if (includeMissions || ($('atlasMissionBrowser') && !$('atlasMissionBrowser').hidden)) w.missions.forEach(M => {
       const seal = sealOf(w, M);
-      missionItems.push({castle: k, id: M.id, name: M.name, state: seal.state, stateLabel: SEAL_STATE[seal.state][0], agents: countOf(w, a => a.mission === M.id), needs: openAsks(w).filter(q => q.mission === M.id).length, council: M.seats.map(f => fam(f).name).join(', '), seal: sealSvg(seal, 30)});
+      missionItems.push({project: k, id: M.id, name: M.name, state: seal.state, stateLabel: SEAL_STATE[seal.state][0], agents: countOf(w, a => a.mission === M.id), needs: openAsks(w).filter(q => q.mission === M.id).length, council: M.seats.map(f => fam(f).name).join(', '), seal: sealSvg(seal, 30)});
     });
     missions += w.missions.size; agents += w.agents.size; needs += q;
     w.agents.forEach(a => by.set(a.fam, (by.get(a.fam) || 0) + 1));
     by.forEach((n, f) => { if (!fs.has(f)) fs.set(f, {key: f, name: fam(f).name, color: fam(f).hue, avatar: avatar(f), projects: 0, agents: 0}); const item = fs.get(f); item.projects++; item.agents += n; });
   });
-  const c = cur(), M = c.sel && c.world.missions.get(c.sel), scope = atlasScope === 'coven' ? 'coven' : M ? 'mission' : 'castle';
+  const c = cur(), M = c.sel && c.world.missions.get(c.sel), scope = atlasScope === 'coven' ? 'coven' : M ? 'mission' : 'project';
   return {active, scope, projects: ps, familiars: [...fs.values()], missions, missionItems, agents, needs, highlight: sc.hl || null, mission: M ? M.name : null, missionId: M ? M.id : null, detail: c.detail, view: panelView, camera: {is3d: camT.pitch > 2, locked: cam.locked, gestureMode: camT.pitch <= 2 ? 'pan' : atlasGestureMode}};
 }
 if (window.CovenAtlas) {
-  window.CovenAtlas.mount({snapshot: atlasSnapshot, overview: atlasOverview, openProject: atlasOpenProject, openMission: atlasOpenMission, setProjectCount: atlasSetProjectCount, newCastle: () => openCastleForm(), camera: atlasCamera, highlight: covHl, legend: () => $('keyBtn').click()});
+  window.CovenAtlas.mount({snapshot: atlasSnapshot, overview: atlasOverview, openProject: atlasOpenProject, openMission: atlasOpenMission, setProjectCount: atlasSetProjectCount, newProject: () => openProjectForm(), camera: atlasCamera, highlight: covHl, legend: () => $('keyBtn').click()});
   $('plan').setAttribute('role', 'group');
   $('gcap').textContent = 'Angular boundaries contain projects. Seals are missions; glyphs identify familiars. Wedge height shows progress on owned targets.';
   atlasRestoreRoute(true);
@@ -5500,7 +5500,7 @@ if (window.CovenMobileUI) window.CovenMobileUI.mount({
   openActivity: () => { openPsyche(); setTab('chat', false); },
   close: {
     inspect: () => { if (cur().pick) clearPick(); else if (cur().fam) select(cur().sel, null, 'side'); else select(cur().sel, null, 'card'); },
-    psyche: () => setMode('closed', true), empty: closeNew, castleForm: closeCastleForm,
+    psyche: () => setMode('closed', true), empty: closeNew, projectForm: closeProjectForm,
     atlasMissionBrowser: () => window.CovenAtlas.closeMissions(true), atlasSidebar: () => window.CovenAtlas.closeBrowse(true),
     keyModal: closeKey, cpModal: closeWheel,
   },

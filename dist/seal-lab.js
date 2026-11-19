@@ -165,7 +165,7 @@
     ui.total.textContent = state === 'planned' ? '3 familiars · no agents yet' : '3 familiars · 23 delegated agents';
     const modeCopy = {
       coven: 'Coven view · flat wedges and signet',
-      castle: 'Castle view · progress in relief',
+      project: 'Project view · progress in relief',
       selected: 'Selected mission · working agents at the edge',
     };
     ui.modeCopy.textContent = modeCopy[view];
@@ -236,7 +236,7 @@
     const mode = el('div', 'csl-modes');
     mode.setAttribute('role', 'group');
     mode.setAttribute('aria-label', 'Seal detail level');
-    ui.modeButtons = [['coven', 'Coven'], ['castle', 'Castle'], ['selected', 'Selected']].map(([key, label]) => {
+    ui.modeButtons = [['coven', 'Coven'], ['project', 'Project'], ['selected', 'Selected']].map(([key, label]) => {
       const node = button('', label, () => { view = key; refresh(false); });
       node.dataset.mode = key;
       mode.append(node);

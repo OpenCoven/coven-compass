@@ -115,7 +115,7 @@ for (const [width, height] of VIEWPORTS) {
         { x: width / 4, y: height - (width < 200 ? 14 : 48), width: width / 2, height: 48, edge: 'bottom' },
         ...(width >= 1000 ? [{ x: width - 320, y: 100, width: 320, height: height - 150, edge: 'right' }] : [])
       ] });
-      const keys = Array.from({ length: count }, (_, i) => 'castle-' + i);
+      const keys = Array.from({ length: count }, (_, i) => 'project-' + i);
       const scene = layout(keys, { aspect: f.width / f.height, nodeWidth: 1000, nodeHeight: 1150, gap: 200, hubRadius: 360, gateOffset: 280, padding: 80 });
       const rectangles = scene.nodes.map(node => ({ x0: node.x - node.width / 2, y0: node.y - node.height / 2, x1: node.x + node.width / 2, y1: node.y + node.height / 2 }));
       // Crown/hub and routes are explicitly included, rather than silently

@@ -24,7 +24,7 @@ python3 scripts/build-handoff.py --help
 python3 scripts/verify-handoff.py --help
 ```
 
-The standard output is `dist/downloads/Coven_Castles_Atlas_Handoff_2026-11-18.zip`. Verify a generated ZIP by passing its path to the verifier. Keep generated archives, `.git`, environment files, credentials, and runtime data outside archive contents. A successful source check is neither a security audit nor a production build result.
+The standard output is `dist/downloads/Coven_Compass_Handoff_2026-11-19.zip`. Verify a generated ZIP by passing its path to the verifier. Keep generated archives, `.git`, environment files, credentials, and runtime data outside archive contents. A successful source check is neither a security audit nor a production build result.
 
 For a recipient’s local preview, where local browser access is permitted:
 

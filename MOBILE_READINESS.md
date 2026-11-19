@@ -1,4 +1,4 @@
-# Coven Castles mobile readiness
+# Coven Compass mobile readiness
 
 Mobile, replay, and layout checkpoints recorded November 18, 2026; combined-source verification tracked separately below.
 
@@ -14,7 +14,7 @@ Mobile, replay, and layout checkpoints recorded November 18, 2026; combined-sour
 
 Browser QA for the current combined source is unavailable because of the prior browser URL-policy block. The incoming audit records its own source fingerprints; it is pre-this-combined-layout evidence, not a new browser run against the merged artifact. Current results belong in [current state and evidence](docs/handoff/01-current-state-and-evidence.md). Physical iPhone/Safari acceptance remains necessary for a production device claim. The Site remains a local simulation without a native iOS binary, daemon connection, persistent mission execution, or real authorization.
 
-The overview retains compact paired placement, shared coordination corridors, and full/compact/tiny density modes. Full detail shows at most eight mission seals plus overflow; denser views show exact aggregates, with all missions available through search and drilldown. Castles provides project search and 8/16/32/64/128 sample presets; **Remove extra samples** preserves baseline and user-created Castles. Coven/project scope stays explicit. Measured stage changes from the adaptive dock must honor the same auto-fit policy: resize refits only in auto-fit mode and preserves manual framing. [Scalable layout guide](docs/handoff/15-scalable-atlas-layout.md)
+The overview retains compact paired placement, shared coordination corridors, and full/compact/tiny density modes. Full detail shows at most eight mission seals plus overflow; denser views show exact aggregates, with all missions available through search and drilldown. The Projects drawer provides project search and 8/16/32/64/128 sample presets; **Remove extra samples** preserves baseline and user-created Projects. Coven/project scope stays explicit. Measured stage changes from the adaptive dock must honor the same auto-fit policy: resize refits only in auto-fit mode and preserves manual framing. [Scalable layout guide](docs/handoff/15-scalable-atlas-layout.md)
 
 The implementation adapts to viewport size and primary pointer type. It does not hard-code an iPhone model or assume that folding produces one particular CSS resolution. Mobile sheets apply through 1100 CSS pixels and on primary coarse-pointer devices.
 
@@ -22,13 +22,13 @@ The implementation adapts to viewport size and primary pointer type. It does not
 
 | Surface | Expected behavior |
 | --- | --- |
-| Missions | Search mission, Castle, or familiar; filter by Castle and state; recover from no matches with Clear filters. |
-| Detail exploration | Brief, Council, Tasks, and Agents use accessible tabs. Arrow keys, Home, and End move between sections. Previous/Next stays within the Castle. |
+| Missions | Search mission, Project, or familiar; filter by Project and state; recover from no matches with Clear filters. |
+| Detail exploration | Brief, Council, Tasks, and Agents use accessible tabs. Arrow keys, Home, and End move between sections. Previous/Next stays within the Project. |
 | Familiar scope | Back to mission returns to the whole selected mission. |
 | Agent scope | Selecting an agent reveals and focuses its information. Close agent details returns to its row. Live updates keep the same focused controls. |
 | Return to browsing | All missions retains the query, filters, scroll position, and selected mission. |
-| Browser navigation | Routes identify Castle and mission together, section, familiar, and card/detail mode. Back/Forward and reload restore this state; transient navigation drawers close during route restoration. |
-| Replay | Playback crosses mission opening and council-seating events. Project focus preserves playing/paused state and time. Live Castles share one timeline, including empty focused Castles; imported recordings keep their own extent and finish paused. A removed mission/familiar/agent is reconciled immediately. |
+| Browser navigation | Routes identify Project and mission together, section, familiar, and card/detail mode. Back/Forward and reload restore this state; transient navigation drawers close during route restoration. |
+| Replay | Playback crosses mission opening and council-seating events. Project focus preserves playing/paused state and time. Live Projects share one timeline, including empty focused Projects; imported recordings keep their own extent and finish paused. A removed mission/familiar/agent is reconciled immediately. |
 | Mobile workspace | Map, Missions, and Activity open existing surfaces. Replay and Go live remain reachable on the map. View expands the existing camera controls; Escape folds them without leaving the selected mission. |
 | Adaptive views | Compact, short-landscape, and tablet arrangements use visible viewport geometry and measured header/dock heights. Rotation retains an explicit camera expansion and the original control/draft nodes. |
 | 2D traversal | A direct drag pans without changing the viewing plane. |
@@ -37,8 +37,8 @@ The implementation adapts to viewport size and primary pointer type. It does not
 | Scope, Fit, and Lock | Coven/project scope is explicit and does not switch at a zoom threshold. Fit restores the current scope using measured chrome-safe space and enables auto-fit; resize preserves a manually adjusted camera. Lock disables the seven camera actions and direct map gestures; Unlock remains available. |
 | Mobile overlays | Only the top managed sheet is interactive. Tab wraps, Escape closes the top surface, and nested closes restore focus. A native Seal Lab dialog retains priority. |
 | Typing | Editable text uses at least 16px mobile type. Composition guards preserve IME candidate keys. Drafts stay in their existing DOM nodes through viewport transitions. |
-| Forms | Headers and primary actions stay outside the scrolling fields, preventing a sticky action bar from covering form controls. Empty Castles have a dismissible form and a persistent New mission action. |
-| Source handoff | The desktop header opens the source package and guide. On mobile, the same link sits in the Castles drawer, leaving the primary mission controls clear. The handoff provides a direct return to the Atlas. |
+| Forms | Headers and primary actions stay outside the scrolling fields, preventing a sticky action bar from covering form controls. Empty Projects have a dismissible form and a persistent New mission action. |
+| Source handoff | The desktop header opens the source package and guide. On mobile, the same link sits in the Projects drawer, leaving the primary mission controls clear. The handoff provides a direct return to Compass. |
 
 The camera actions are folded behind View and use two rows on compact screens. The workspace dock yields to modal sheets and the keyboard; it restores the original controls to their desktop placement when leaving the mobile layout. Safe-area insets, visual viewport width/height, and viewport offsets position sheets around available screen space. The visual viewport keyboard heuristic is used for layout behavior; it is not a claim that every iOS keyboard has been reproduced in testing.
 
@@ -47,7 +47,7 @@ The camera actions are folded behind View and use two rows on compact screens. T
 - A mission could render between its opening event and its first council seat. An empty seal signature incorrectly looked initialized, so rendering accessed missing SVG nodes and interrupted replay. Both the focused-project and overview constructors now initialize that state correctly.
 - Changing the focused project reset playback to the live edge. Focus-only entry now preserves the shared cursor and playing/paused state; explicit trace import/reset remains a separate transition.
 - Event-driven refreshes reset the previous frame timestamp. One frame owner now preserves elapsed replay time across events while camera smoothing uses its own bounded animation delta.
-- Inactive projects could show later state than the replay cursor. Scrubbing, playback, jumps, live transitions, and retracing now seek the visible Castles consistently. Delayed reports are retained in the trace without advancing a replay that has not reached them.
+- Inactive projects could show later state than the replay cursor. Scrubbing, playback, jumps, live transitions, and retracing now seek the visible Projects consistently. Delayed reports are retained in the trace without advancing a replay that has not reached them.
 - The mobile canvas relied on fixed height deductions and permanently exposed camera controls. The adaptive dock reuses the existing controls, folds camera actions on demand, and derives canvas height from available space. Compact, short-landscape, and tablet modes follow viewport shape rather than device names.
 - The selected mission's floating notes could cover its summary actions. Mobile card mode now uses one compact summary; detailed council/task/request information stays in the existing detail sheets and Activity. Camera controls temporarily replace the summary without clearing selection.
 - A scope-only toolbar resize changed the canvas after the camera had fitted it. Measured stage-height changes notify the camera about available space. In the combined contract, those notifications refit only in auto-fit mode and retain a manually adjusted camera. Focus fallback selects a visible mobile Missions action instead of the hidden desktop header action.
@@ -67,8 +67,8 @@ The record includes application source fingerprints from the incoming branch bef
 - Mission browsing had no unified search/filter surface or durable mission-level navigation route.
 - Detail/familiar/agent transitions could remove the focused control or reveal new content below the visible sheet.
 - Periodic refreshes could rebuild focused agent details.
-- An empty Castle's automatic New mission form could trap mobile navigation because it could not close.
-- Castle editing attempted to focus an input while its sheet was still inert.
+- An empty Project's automatic New mission form could trap mobile navigation because it could not close.
+- Project editing attempted to focus an input while its sheet was still inert.
 - Crossing a desktop/mobile breakpoint could dismiss the mission drawer while preserving only its query.
 - The narrow traversal toolbar hid Fit and Lock in horizontal overflow.
 - Tablet landscape switched to small desktop targets too early.
@@ -85,12 +85,12 @@ Before combination with the layout/crown branch, `node --test tests/*.test.cjs` 
 | File | Tests | Scope |
 | --- | ---: | --- |
 | `tests/presentation.test.cjs` | 7 | Scope visibility, familiar filtering, replay model changes, and retained seal geometry. |
-| `tests/navigation.test.cjs` | 11 | Route parsing/formatting, malformed links, repeated mission IDs across Castles, and stale selection cleanup. |
+| `tests/navigation.test.cjs` | 11 | Route parsing/formatting, malformed links, repeated mission IDs across Projects, and stale selection cleanup. |
 | `tests/mobile-interactions.test.cjs` | 13 | Pointer transitions, centroid anchoring, pan/orbit bounds, lock, orbit recovery, viewport offsets, and keyboard geometry. |
 | [tests/mobile-ui.test.cjs](tests/mobile-ui.test.cjs) | 14 | Portals, nested overlays, focus restoration, Tab/IME handling, viewport scheduling, native-dialog priority, original-node workspace controls, adaptive modes, header resize, and camera Escape. |
 | [tests/mobile-focus.test.cjs](tests/mobile-focus.test.cjs) | 1 | Returning from mission scope chooses a visible mobile, desktop, or map focus target. |
-| `tests/mission-interactions.test.cjs` | 11 | Empty-Castle recovery, form focus order, explicit agent reveal, stable agent DOM/focus, and disappearing actions. |
-| [tests/replay-clock.test.cjs](tests/replay-clock.test.cjs) | 9 | Project focus, playing/paused position, elapsed frame timing, shared live extent, empty Castles, recording/live completion, and frame recovery. |
+| `tests/mission-interactions.test.cjs` | 11 | Empty-Project recovery, form focus order, explicit agent reveal, stable agent DOM/focus, and disappearing actions. |
+| [tests/replay-clock.test.cjs](tests/replay-clock.test.cjs) | 9 | Project focus, playing/paused position, elapsed frame timing, shared live extent, empty Projects, recording/live completion, and frame recovery. |
 | [tests/replay-render.test.cjs](tests/replay-render.test.cjs) | 3 | Actual focused/overview seal rendering before seating; event progression, closure, and backward seeks. |
 | [tests/replay-emission.test.cjs](tests/replay-emission.test.cjs) | 2 | Delayed inactive reports preserve playing or paused replay until the cursor advances or Go live is selected. |
 
@@ -107,10 +107,10 @@ The pre-layout mobile pass ran `node --test tests/*.test.cjs` and recorded **51/
 | File | Tests | Scope |
 | --- | ---: | --- |
 | `tests/presentation.test.cjs` | 7 | Scope visibility, familiar filtering, replay model changes, and retained seal geometry. |
-| `tests/navigation.test.cjs` | 11 | Route parsing/formatting, malformed links, repeated mission IDs across Castles, and stale selection cleanup. |
+| `tests/navigation.test.cjs` | 11 | Route parsing/formatting, malformed links, repeated mission IDs across Projects, and stale selection cleanup. |
 | `tests/mobile-interactions.test.cjs` | 13 | Pointer transitions, centroid anchoring, pan/orbit bounds, lock, orbit recovery, viewport offsets, and keyboard geometry. |
 | `tests/mobile-ui.test.cjs` | 9 | Portals, nested overlays, focus restoration, Tab/IME handling, viewport scheduling, and native-dialog priority. |
-| `tests/mission-interactions.test.cjs` | 11 | Empty-Castle recovery, form focus order, explicit agent reveal, stable agent DOM/focus, and disappearing actions. |
+| `tests/mission-interactions.test.cjs` | 11 | Empty-Project recovery, form focus order, explicit agent reveal, stable agent DOM/focus, and disappearing actions. |
 
 These execute real extracted functions or shared modules with DOM facades and numeric inputs. They do not provide a browser layout engine or emulate iOS.
 
@@ -118,7 +118,7 @@ At that pre-layout checkpoint, standalone JavaScript syntax checks, inline-scrip
 
 ### Historical rendered layout matrix
 
-The historical record contains **72 settled Chrome audits**: four core surfaces at 17 mobile/tablet sizes, three desktop reference audits, and one final Castle-form audit. Before measuring, the harness waited two animation frames for responsive portals and viewport variables to settle. These audits precede the current scalable-layout refinement.
+The historical record contains **72 settled Chrome audits**: four core surfaces at 17 mobile/tablet sizes, three desktop reference audits, and one final Project-form audit. Before measuring, the harness waited two animation frames for responsive portals and viewport variables to settle. These audits precede the current scalable-layout refinement.
 
 | Family | CSS viewport sizes |
 | --- | --- |
@@ -140,7 +140,7 @@ All overview camera controls, including Fit and Lock, were reachable at each mob
 
 The harness excludes hidden/inert content, content inside closed disclosures, SVG map marks, disabled controls, and controls outside their scroll region. It checks geometry and hit testing, not all accessibility semantics, contrast ratios, device performance, or every application state. A reduced-height iframe is a layout stress test, **not** an emulated iOS keyboard.
 
-After integrating a concurrent source-handoff revision, the merged header was rechecked at 320×568, 390×844, 760×600, 768×1024, 1024×768, 852×393, and the 1280×800 desktop reference. No header overlap, document overflow, or unreachable primary controls was observed. The mobile Castles drawer's handoff link also measured 44px high and remained reachable at 320×568 and 390×844. These supplemental checks are recorded separately from the original 72-audit matrix.
+After integrating a concurrent source-handoff revision, the merged header was rechecked at 320×568, 390×844, 760×600, 768×1024, 1024×768, 852×393, and the 1280×800 desktop reference. No header overlap, document overflow, or unreachable primary controls was observed. The mobile Projects drawer's handoff link also measured 44px high and remained reachable at 320×568 and 390×844. These supplemental checks are recorded separately from the original 72-audit matrix.
 
 The handoff landing page, guide navigation, and readiness chapter also passed the visible-control audit at 320×568 after enlarging their mobile navigation links. Return to Atlas, browser Back through the handoff, and the readiness chapter anchor were exercised. A separate desktop header check with Psyche docked and the map reduced to 780px found no overlap or unreachable header controls. The supplemental record contains 12 full layout audits plus that targeted desktop header check.
 
@@ -152,11 +152,11 @@ Observed directly in Chrome at the pre-layout checkpoint:
 2. Mission detail heading focus; agent detail reveal; Close returning to the original agent row.
 3. Conversation Tab wrapping, minimizing/reopening, and nested return to the invoking mission control.
 4. Draft text containing accented characters, Japanese text, and emoji surviving phone/landscape/unfolded/tablet/desktop transitions. This verifies text retention, not a real Japanese IME session.
-5. Dormant Castle → Close → New mission; dismiss/reopen with retained text; switching to another Castle.
+5. Dormant Project → Close → New mission; dismiss/reopen with retained text; switching to another Project.
 6. Form fields and actions remaining unobstructed at 390×360, 890×626, and 320×568; expanded brief options remained reachable.
-7. Castle Edit focusing Name after activation and returning to Edit on close.
+7. Project Edit focusing Name after activation and returning to Edit on close.
 8. Back closing an open mission drawer and restoring the previous mission; Forward and reload restoring the next mission and section.
-9. Legacy Castle bookmarks and missing-mission fallback.
+9. Legacy bookmark formats (since removed, 2026-11-19) and missing-mission fallback.
 10. Replaying before a selected mission existed removed the inspector, cleared selection, and announced the reason.
 11. Direct 2D pan preserved projected geometry; 3D orbit changed geometry and recovered from its lower bound; locked drag left the camera unchanged and disabled the other seven dock controls.
 12. Keyboard tilt updated the 2D/3D control state, and keyboard zoom into the overview updated the URL.
