@@ -78,7 +78,7 @@ For a function-level map of `dist/index.html`, see [chapter 01 §4](docs/handoff
 
 ## Evidence and status vocabulary
 
-- **Evidence level:** `static` | `unit` | `browser` | `daemon` | `packaged CLI` | `remote Host`. verify-all establishes `static` and `unit` only. Browser QA for the current source hasn't been done, and the earlier attempt was blocked by a browser URL policy.
+- **Evidence level:** `static` | `unit` | `browser` | `daemon` | `packaged CLI` | `remote Host`. verify-all establishes `static` and `unit` only. Browser evidence comes from `scripts/browser-qa.mjs` (headless Chromium, run outside verify-all; see its header). The latest record is `tests/evidence/browser-qa-2026-11-19.json`. It doesn't cover Safari, physical devices, real touch, keyboard-only use, or screen readers.
 - **Packet status:** `implemented` | `verified` | `proposed` | `blocked` | `unknown`.
 - **Completion record:** every PR or handoff ends with the exact record in [document 10](docs/handoff/10-agent-task-prompts.md#required-completion-record).
 
