@@ -2077,7 +2077,7 @@ function applyFams(saved) {
   if (dup('sym')) ks.forEach(k => { FAM[k].sym = FAM_DEF[k].sym; }); if (dup('color')) ks.forEach(k => { FAM[k].color = FAM_DEF[k].color; });
   ks.forEach(k => document.documentElement.style.setProperty('--fam-' + k, FAM[k].color));
 }
-applyFams(store.get('coven-castles-fams'));
+applyFams(store.get('coven-compass-fams'));
 const fam = k => FAM[k] || {name: cap(String(k)), role: 'Familiar', hue: 'var(--primary)', may: 'Set by its ward', must: 'Set by its ward', acts: ['Working']};
 const STATE = {work: 'Working', idle: 'Idle', gate: 'At gate'};
 const kindOf = t => /limit/i.test(t) ? 'cap' : /write|edit|path|file/i.test(t) ? 'write' : /send|email|mail|post|publish/i.test(t) ? 'send' : /fetch|reach|url|outside|network|web/i.test(t) ? 'reach' : 'ward';
@@ -2261,8 +2261,6 @@ function sampleTrace(key, endT) {
 function parseTrace(text) {
   const out = []; let bad = 0;
   const push = o => {
-    // traces recorded before the Coven Compass rename wrote castle.* for these project events; read them as project.*
-    if (o && typeof o === 'object' && typeof o.type === 'string' && /^castle\.(?:founded|moved|renamed|stopped|resumed)$/.test(o.type)) o = Object.assign({}, o, {type: 'project.' + o.type.slice(7)});
     if (!o || typeof o !== 'object' || !KNOWN.has(o.type)) { bad++; return; }
     let t = o.t != null ? o.t : (o.ts != null ? o.ts : (o.time != null ? o.time : o.timestamp));
     if (typeof t === 'string') t = Date.parse(t); else if (typeof t === 'number' && t < 1e11) t *= 1000;
@@ -3131,7 +3129,7 @@ function frame(ts) {
   }
   if (busy && !raf) raf = requestAnimationFrame(frame);
 }
-function saveView() { store.set('coven-castles-view', {yaw: camT.yaw, pitch: camT.pitch, zoom: camT.zoom, px: camT.px, py: camT.py, locked: cam.locked}); }
+function saveView() { store.set('coven-compass-view', {yaw: camT.yaw, pitch: camT.pitch, zoom: camT.zoom, px: camT.px, py: camT.py, locked: cam.locked}); }
 const viewOf = name => { const v = VIEWS[name], g = cur().layout.g; return Object.assign({}, v, {zoom: v.zoom / g, py: v.py * g}); };   // a bigger fort is framed from further back
 function setView(name) {
   if (cam.locked) return;
@@ -3217,10 +3215,10 @@ stage.addEventListener('pointerup', endDrag); stage.addEventListener('pointercan
 addEventListener('blur', () => endDrag());
 stage.addEventListener('click', ev => { if (dragged && performance.now() - lastGestureAt < 350 && (ev.target === stage || ev.target.closest('#plan'))) { dragged = false; ev.stopPropagation(); ev.preventDefault(); } }, true);
 stage.addEventListener('click', () => { const c = cur(); if (c.pick) clearPick(); else if (c.sel && c.detail === 'card') select(null); });
-function hintDone() { if ($('ghint').hidden) return; $('ghint').hidden = true; store.set('coven-castles-hint', 1); }
+function hintDone() { if ($('ghint').hidden) return; $('ghint').hidden = true; store.set('coven-compass-hint', 1); }
 function updateGestureHint() { $('ghint').textContent = narrow.matches ? 'Drag to move in 2D. Choose Orbit in 3D. Pinch with two fingers to zoom.' : `Drag to orbit, ${MAC ? '\u2318' : 'Ctrl'}-drag to move, scroll to zoom`; }
 updateGestureHint(); narrow.addEventListener('change', updateGestureHint);
-$('ghint').hidden = !!store.get('coven-castles-hint');
+$('ghint').hidden = !!store.get('coven-compass-hint');
 addEventListener('keydown', ev => { if ((ev.key === 'Meta' || ev.key === 'Control') && !cam.locked) stage.classList.add('panning'); });
 addEventListener('keyup', ev => { if ((ev.key === 'Meta' || ev.key === 'Control') && !drag) stage.classList.remove('panning'); });
 addEventListener('blur', () => stage.classList.remove('panning'));
@@ -3551,7 +3549,7 @@ function drawLeadCard(force) {
       more.addEventListener('click', () => select(c.sel, c.fam, 'side'));
       ask.addEventListener('click', () => { openPsyche(); $('say').focus(); });
       const bf = html('button', 'hud-brief'); bf.type = 'button'; bf.setAttribute('aria-label', 'Open the brief');
-      bf.addEventListener('click', () => { panelView = 'brief'; store.set('coven-castles-panel', panelView); select(c.sel, c.fam, 'side'); });
+      bf.addEventListener('click', () => { panelView = 'brief'; store.set('coven-compass-panel', panelView); select(c.sel, c.fam, 'side'); });
       act.append(more, ask); h.append(top, stats, bar, bf, act); col.appendChild(h); hud = {nums, bar, bf, m: M.id, bsig: null};
       const cyOf = k => { const q = sc.seats.get(seatId(M.id, k)); return q && q.cy != null ? q.cy : 0; };
       M.seats.slice().sort((x, y) => cyOf(x) - cyOf(y)).forEach(k => {
@@ -3632,7 +3630,7 @@ function placeCard() {
 // ------------------------------------------------------------ side panel + agent info
 // A mission lists its council, one row per familiar. A familiar lists every council it sits on, one row per mission.
 const insp = {sig: '', nums: null, dots: new Map(), slot: null};
-let panelView = store.get('coven-castles-panel');
+let panelView = store.get('coven-compass-panel');
 if (!['brief', 'council', 'tasks', 'agents'].includes(panelView)) panelView = 'brief';
 function syncInspect(force) {
   const c = cur(), w = c.world, box = $('inspect'), M = c.sel && c.detail === 'side' ? w.missions.get(c.sel) : null;
@@ -3685,7 +3683,7 @@ function syncInspect(force) {
       const b = html('button', null, label); b.type = 'button'; b.id = 'mission-tab-' + v; b.dataset.focus = b.id;
       b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', String(panelView === v)); b.setAttribute('aria-pressed', String(panelView === v));
       b.setAttribute('aria-controls', 'mission-section'); b.tabIndex = panelView === v ? 0 : -1;
-      b.addEventListener('click', () => { panelView = v; store.set('coven-castles-panel', v); syncInspect(true); atlasWriteRoute(true); const nb = $('inspect').querySelector('.i-view [aria-selected="true"]'); if (nb) nb.focus({preventScroll: true}); });
+      b.addEventListener('click', () => { panelView = v; store.set('coven-compass-panel', v); syncInspect(true); atlasWriteRoute(true); const nb = $('inspect').querySelector('.i-view [aria-selected="true"]'); if (nb) nb.focus({preventScroll: true}); });
       seg.appendChild(b);
     });
     seg.addEventListener('keydown', ev => {
@@ -4134,7 +4132,7 @@ TABS.forEach(t => $(TAB_ID[t]).addEventListener('click', () => setTab(t, false, 
 document.querySelector('.p-tabs').addEventListener('keydown', ev => { const d = ev.key === 'ArrowRight' ? 1 : ev.key === 'ArrowLeft' ? -1 : 0; if (!d) return; ev.preventDefault(); setTab(TABS[(TABS.indexOf(railTab) + d + TABS.length) % TABS.length], true, true); });
 // ------------------------------------------------------------ familiars: who Psyche coordinates, what each is for, how each is drawn
 const famsOpen = new Set(), famSec = {}; let famTry = '';
-const saveFams = () => { const o = {}; Object.keys(FAM_DEF).forEach(k => { o[k] = {roles: FAM[k].roles, sym: FAM[k].sym, color: FAM[k].color}; }); store.set('coven-castles-fams', o); };
+const saveFams = () => { const o = {}; Object.keys(FAM_DEF).forEach(k => { o[k] = {roles: FAM[k].roles, sym: FAM[k].sym, color: FAM[k].color}; }); store.set('coven-compass-fams', o); };
 function famChanged(focusId) {                       // a familiar's mark is drawn in many places, so everything that shows one is redrawn
   saveFams(); Object.keys(FAM_DEF).forEach(k => { FAM[k].role = FAM[k].roles.join(', '); document.documentElement.style.setProperty('--fam-' + k, FAM[k].color); });
   $('nmLeads').querySelectorAll('.nm-lead').forEach(b => { const k = b.dataset.k; b.innerHTML = avatar(k); b.append(FAM[k].name); });
@@ -4501,8 +4499,8 @@ const TEMPLATES = [
   {id: 'video', name: 'Walkthrough video', role: 'Recorder', says: ['walkthrough video', 'video'], brief: () => BR([['video', ['mp4']]], {reviews: 1}, {minutes: 45, tokens: 200000, usd: 3, agents: 8}, ['time', 'targets'])},
 ];
 const TPL_MAX = 8, clone = o => JSON.parse(JSON.stringify(o));
-let userTpl = (Array.isArray(store.get('coven-castles-templates')) ? store.get('coven-castles-templates') : []).filter(t => t && typeof t.name === 'string' && normBrief(t.brief)).slice(0, TPL_MAX).map((t, i) => ({id: 'u-' + i, name: t.name.slice(0, 28), brief: normBrief(t.brief), own: true}));
-const saveTpl = () => store.set('coven-castles-templates', userTpl.map(t => ({name: t.name, brief: t.brief})));
+let userTpl = (Array.isArray(store.get('coven-compass-templates')) ? store.get('coven-compass-templates') : []).filter(t => t && typeof t.name === 'string' && normBrief(t.brief)).slice(0, TPL_MAX).map((t, i) => ({id: 'u-' + i, name: t.name.slice(0, 28), brief: normBrief(t.brief), own: true}));
+const saveTpl = () => store.set('coven-compass-templates', userTpl.map(t => ({name: t.name, brief: t.brief})));
 const allTpl = () => TEMPLATES.concat(userTpl), tplOf = id => allTpl().find(t => t.id === id) || null;
 const tplBrief = id => { const t = tplOf(id) || TEMPLATES[5]; return normBrief(t.own ? clone(t.brief) : t.brief()); };
 const tplFor = k => TEMPLATES.find(t => (fam(k).roles || []).includes(t.role)) || TEMPLATES[5];          // the template that suits a familiar's roles
@@ -5085,7 +5083,7 @@ setLead('echo');
 
 // ------------------------------------------------------------ Psyche window: bubble, floating chat (resizable), docked panel (resizable)
 const psy = {mode: 'closed', w: 400, fw: 400, fh: 640};
-const savePsy = () => store.set('coven-castles-psyche', {mode: psy.mode, w: psy.w, fw: psy.fw, fh: psy.fh});
+const savePsy = () => store.set('coven-compass-psyche', {mode: psy.mode, w: psy.w, fw: psy.fw, fh: psy.fh});
 function setMode(mode, focus) {
   if (mode === 'dock' && narrow.matches) mode = 'float';
   psy.mode = mode;
@@ -5212,7 +5210,7 @@ function enter(preserveTime = false) {
   buildScene(); refresh();
 }
 {
-  const v = store.get('coven-castles-view'), p = store.get('coven-castles-psyche') || {};
+  const v = store.get('coven-compass-view'), p = store.get('coven-compass-psyche') || {};
   if (v && isFinite(v.yaw + v.pitch + v.zoom + v.px + v.py)) { Object.assign(camT, {yaw: v.yaw, pitch: clamp(v.pitch, 0, 78), zoom: clamp(v.zoom, ZMIN, 6), px: clamp(v.px, -PAN, PAN), py: clamp(v.py, -PAN, PAN)}); Object.assign(cam, camT); }
   else if (reduce) Object.assign(cam, camT);
   setLock(!!(v && v.locked));
@@ -5223,13 +5221,13 @@ function enter(preserveTime = false) {
   enter();
 }
 // text size: one scale for the whole interface, stepped from the top bar and remembered
-let fsz = +store.get('coven-castles-fs') || 1;
+let fsz = +store.get('coven-compass-fs') || 1;
 function setFs(v) {
   fsz = clamp(Math.round(v * 20) / 20, .85, 1.35);
   document.documentElement.style.setProperty('--fs', fsz);
   $('fsDown').disabled = fsz <= .85; $('fsUp').disabled = fsz >= 1.35;
   $('fsDown').setAttribute('aria-label', `Smaller text (now ${Math.round(fsz * 100)}%)`); $('fsUp').setAttribute('aria-label', `Larger text (now ${Math.round(fsz * 100)}%)`);
-  store.set('coven-castles-fs', fsz); atlasQueueFit(); kick();
+  store.set('coven-compass-fs', fsz); atlasQueueFit(); kick();
 }
 $('fsDown').addEventListener('click', () => setFs(fsz - .05));
 $('fsUp').addEventListener('click', () => setFs(fsz + .05));
@@ -5238,11 +5236,11 @@ setFs(fsz);
 function setLean(v) {
   const on = !!v, b = $('footBtn'), label = on ? 'Show the timeline and missions' : 'Hide the timeline and missions';
   $('app').classList.toggle('lean', on); b.setAttribute('aria-pressed', String(!on)); b.setAttribute('aria-label', label); b.title = label;
-  b.classList.toggle('wide', on); $('footClock').hidden = !on; store.set('coven-castles-lean', on); drawLeadCard(); kick();
+  b.classList.toggle('wide', on); $('footClock').hidden = !on; store.set('coven-compass-lean', on); drawLeadCard(); kick();
 }
 $('footBtn').addEventListener('click', () => setLean(!$('app').classList.contains('lean')));
 $('footHide').addEventListener('click', () => { setLean(true); $('footBtn').focus(); });
-setLean(store.get('coven-castles-lean'));
+setLean(store.get('coven-compass-lean'));
 const openPill = () => document.querySelector('details.pill[open]');
 addEventListener('resize', () => { atlasQueueFit(); if (openPill()) placePill(openPill()); });
 setInterval(() => { if (document.hidden) return; if (live && !playing) { cursor = Date.now(); if (seekTimeline(cursor, true)) refresh(); } timelineUI(); }, 1000);
@@ -5463,7 +5461,7 @@ function atlasRestoreRoute(initial) {
         if (atlasScope === 'coven') atlasOpenProject(route.project);
         const M = cur().world.missions.get(route.mission), familiar = route.familiar && M.seats.includes(route.familiar) ? route.familiar : null;
         if (route.familiar && !familiar) notice = 'That familiar is not on this mission. Showing the whole mission.';
-        panelView = route.view || 'brief'; store.set('coven-castles-panel', panelView);
+        panelView = route.view || 'brief'; store.set('coven-compass-panel', panelView);
         select(route.mission, familiar, route.detail || 'card', {history: false, focus: !initial});
       } else {
         atlasOpenProject(route.project);

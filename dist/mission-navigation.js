@@ -9,7 +9,6 @@
   var VIEWS = ['brief', 'council', 'tasks', 'agents'];
   var DETAILS = ['card', 'side'];
   var QUERY_KEYS = ['view', 'familiar', 'detail'];
-  var LEGACY_SEGMENT = 'castle'; // read-only alias for pre-rename bookmarks; never written
 
   function identifier(value) {
     return typeof value === 'string' && value.trim().length > 0 && !/[\u0000-\u001f\u007f]/.test(value);
@@ -50,19 +49,13 @@
       var raw = hash.charAt(0) === '#' ? hash.slice(1) : hash;
       if (!raw) return route('coven');
       if (raw.indexOf('#') >= 0) return null;
-      if (raw.charAt(0) !== '/') {
-        // The original Site used an encoded Project name as the entire fragment.
-        var legacyProject = decodeURIComponent(raw);
-        return identifier(legacyProject) ? route('project', legacyProject) : null;
-      }
+      if (raw.charAt(0) !== '/') return null;
       var question = raw.indexOf('?');
       var path = question < 0 ? raw : raw.slice(0, question);
       var query = question < 0 ? '' : raw.slice(question + 1);
       if (path === '/coven') return query ? null : route('coven');
       var parts = path.split('/');
-      // Routes are written as /project/. Before the Coven Compass rename they were
-      // written as /castle/, and those bookmarks still resolve to the same Project.
-      if ((parts[1] !== 'project' && parts[1] !== LEGACY_SEGMENT) || (parts.length !== 3 && parts.length !== 5)) return null;
+      if (parts[1] !== 'project' || (parts.length !== 3 && parts.length !== 5)) return null;
       var project = decodeURIComponent(parts[2]);
       if (!identifier(project)) return null;
       if (parts.length === 3) return query ? null : route('project', project);

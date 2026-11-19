@@ -506,31 +506,21 @@ test('scope and navigation do not retain the obsolete zoom-to-scope threshold', 
   }
 });
 
-test('traces recorded before the rename load their castle.* events as project.* events', () => {
+test('Project events use project.* types and castle.* types are not accepted', () => {
   const known = source.match(/^const KNOWN = (new Set\(\[[^\]]*\]\));$/m);
   assert.ok(known, 'KNOWN event types must exist in the actual Site source');
   const context = load(['parseTrace'], {}, `var KNOWN = ${known[1]};`);
-  for (const type of ['founded', 'moved', 'renamed', 'stopped', 'resumed']) {
+  const T0 = Date.UTC(2026, 10, 19); // milliseconds, so parseTrace keeps t as written
+  for (const [i, type] of ['founded', 'moved', 'renamed', 'stopped', 'resumed'].entries()) {
     assert.equal(context.KNOWN.has(`project.${type}`), true, `project.${type} is a known event`);
-    assert.equal(context.KNOWN.has(`castle.${type}`), false, `castle.${type} is never written`);
+    assert.equal(context.KNOWN.has(`castle.${type}`), false, `castle.${type} is not an event type`);
+    const {events, bad} = context.parseTrace([
+      JSON.stringify({t: T0 + i, type: `project.${type}`, name: 'ui'}),
+      JSON.stringify({t: T0 + i, type: `castle.${type}`, name: 'ui'}),
+    ].join('\n'));
+    assert.deepEqual(plain(events), [{t: T0 + i, type: `project.${type}`, name: 'ui'}]);
+    assert.equal(bad, 1, `castle.${type} is rejected`);
   }
-  const T0 = Date.UTC(2026, 10, 18); // milliseconds, so parseTrace keeps t as written
-  const lines = [
-    {t: T0 + 1000, type: 'castle.founded', name: 'ui', repo: 'OpenCoven/ui', root: '~/code/ui'},
-    {t: T0 + 2000, type: 'castle.moved', root: '~/code/ui-next'},
-    {t: T0 + 3000, type: 'castle.renamed', name: 'ui-next', from: 'ui'},
-    {t: T0 + 4000, type: 'castle.stopped'},
-    {t: T0 + 5000, type: 'castle.resumed'},
-    {t: T0 + 6000, type: 'project.renamed', name: 'ui-final', from: 'ui-next'},
-    {t: T0 + 7000, type: 'castle.unknown'},
-  ];
-  for (const text of [lines.map(line => JSON.stringify(line)).join('\n'), JSON.stringify(lines)]) {
-    const {events, bad} = context.parseTrace(text);
-    assert.equal(bad, 1, 'only an unknown legacy type is rejected');
-    assert.deepEqual(plain(events).map(event => event.type), [
-      'project.founded', 'project.moved', 'project.renamed', 'project.stopped', 'project.resumed', 'project.renamed',
-    ]);
-    assert.deepEqual(plain(events[0]), {...lines[0], type: 'project.founded'}, 'other fields are kept');
-  }
-  assert.equal(lines[0].type, 'castle.founded', 'input objects are not mutated');
+  assert.doesNotMatch(source, /'castle\./, 'the Site never writes castle.* events');
+  assert.doesNotMatch(source, /coven-castles-/, 'browser storage uses coven-compass-* keys');
 });

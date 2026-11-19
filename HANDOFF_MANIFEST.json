@@ -1,7 +1,7 @@
 {
   "format_version": 1,
   "artifact": "Coven_Compass_Handoff_2026-11-19",
-  "created_utc": "2026-11-19T07:12:33Z",
+  "created_utc": "2026-11-19T07:28:32Z",
   "baseline_site_version": 3,
   "baseline_site_version_id": "appgprj_6afd98fc7e5081918f0609d2ebda9324~appgver_54012053f1f88191a2c28ff5b36205af",
   "baseline_source_commit": "d7b6f1e655140036cca49f31687131352162de13",
@@ -18,13 +18,13 @@
     },
     {
       "path": "MOBILE_READINESS.md",
-      "bytes": 27321,
-      "sha256": "8f653512846b918a13eb2a1ecd40a2d4068a35ecc6e9404d9f6652ac716fda3e"
+      "bytes": 27348,
+      "sha256": "320baea38b8d98685b5a37650757c945cc8111b6ccb802deb946cf1da1769a57"
     },
     {
       "path": "README.md",
-      "bytes": 14135,
-      "sha256": "a8473776249d7b23edf391af9826025519cff1da97bd1913abab8a42e70ce0ca"
+      "bytes": 13964,
+      "sha256": "ac18529581b4a932992cd63640aa264baa91b4797ab0852545c1bcd4fb66913c"
     },
     {
       "path": "START_HERE.md",
@@ -58,8 +58,8 @@
     },
     {
       "path": "dist/handoff/guide.html",
-      "bytes": 288993,
-      "sha256": "b28e4e7b66b0a737d1b2b06cbe6787842b457e243ec2791095280fab25ce82fd"
+      "bytes": 288816,
+      "sha256": "4f228659c61f7ed85b8c1b6b57367f667c5343414fa050757e10e2600ced450e"
     },
     {
       "path": "dist/handoff/handoff.css",
@@ -73,13 +73,13 @@
     },
     {
       "path": "dist/index.html",
-      "bytes": 519372,
-      "sha256": "1659f811abdaa4475d31d58442dedf80772197f175a3396e20af442c792b6929"
+      "bytes": 519053,
+      "sha256": "d31f616cf16039c81ed1393910bdb78a8f44b3aec925fd307346ce29e30110d1"
     },
     {
       "path": "dist/mission-navigation.js",
-      "bytes": 5537,
-      "sha256": "02d44fe701c66c6d979646d90d8e5c9f2777f80b884aa0d894253001f89cb3a2"
+      "bytes": 5028,
+      "sha256": "ae26a09a9dc4aaa65018880b34b8f4e645bcdffd4db5a35d5ca474ac1e37875b"
     },
     {
       "path": "dist/mobile-interactions.js",
@@ -238,8 +238,8 @@
     },
     {
       "path": "tests/atlas-integration.test.cjs",
-      "bytes": 33660,
-      "sha256": "03a675b46917a00ee50f1f5e17f1860d5891b0ea60cbdaebc15dc34aa66232e6"
+      "bytes": 33130,
+      "sha256": "9a38bde68eb6753c00e1756deb30019f7a6b009fa9abc56543d672f8e0791769"
     },
     {
       "path": "tests/atlas-layout.test.cjs",
@@ -308,8 +308,8 @@
     },
     {
       "path": "tests/navigation.test.cjs",
-      "bytes": 9491,
-      "sha256": "337297d8965182a014887fd588de1da7f4a71d1eafa6a1aabfd250b1f5327592"
+      "bytes": 8675,
+      "sha256": "193ddd7bfd02a07e6789d989bb3a31aaad7f9999a6ff28f62727219737b3f973"
     },
     {
       "path": "tests/presentation.test.cjs",

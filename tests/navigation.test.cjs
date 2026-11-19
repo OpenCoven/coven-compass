@@ -11,29 +11,24 @@ const empty = {missionRemoved: false, familiarRemoved: false, agentRemoved: fals
 const coven = {scope: 'coven', project: null, mission: null, view: null, detail: null, familiar: null};
 const mission = (project, id = 'm-1', extra = {}) => ({scope: 'mission', project, mission: id, view: 'brief', detail: 'card', familiar: null, ...extra});
 
-test('overview, Project routes, and legacy bookmarks resolve without collisions', () => {
+test('overview and Project routes resolve without collisions', () => {
   for (const hash of ['', '#', '#/coven']) assert.deepEqual(navigation.parse(hash), coven);
-  assert.deepEqual(navigation.parse('#psyche-build'), {
+  assert.deepEqual(navigation.parse('#/project/psyche-build'), {
     scope: 'project', project: 'psyche-build', mission: null, view: null, detail: null, familiar: null,
   });
-  assert.equal(navigation.format(navigation.parse('#psyche-build')), '#/project/psyche-build');
-  assert.equal(navigation.parse('#coven').project, 'coven', 'a legacy Project called coven is not the overview');
-  assert.equal(navigation.parse('#Research%20%26%20Design').project, 'Research & Design');
+  assert.equal(navigation.format(navigation.parse('#/project/psyche-build')), '#/project/psyche-build');
+  assert.equal(navigation.parse('#/project/coven').project, 'coven', 'a Project called coven is not the overview');
   assert.equal(navigation.parse('#/project/Research%20%26%20Design').project, 'Research & Design');
 });
 
-test('pre-rename #/castle/ bookmarks open the same Project and are rewritten as #/project/', () => {
-  assert.deepEqual(navigation.parse('#/castle/psyche-build'), navigation.parse('#/project/psyche-build'));
-  assert.deepEqual(navigation.parse('#/castle/psyche-build'), {
-    scope: 'project', project: 'psyche-build', mission: null, view: null, detail: null, familiar: null,
-  });
-  assert.equal(navigation.format(navigation.parse('#/castle/psyche-build')), '#/project/psyche-build');
-  const old = '#/castle/Research%20%26%20Design/mission/m-1?detail=side&familiar=astra&view=tasks';
-  assert.deepEqual(navigation.parse(old), mission('Research & Design', 'm-1', {view: 'tasks', detail: 'side', familiar: 'astra'}));
-  assert.equal(navigation.format(navigation.parse(old)), '#/project/Research%20%26%20Design/mission/m-1?view=tasks&familiar=astra&detail=side');
-  assert.equal(navigation.parse('#/castle/coven').project, 'coven', 'an old route to a Project called coven is not the overview');
+test('only #/project/ routes are accepted; Castle-era and bare-name fragments are not', () => {
+  for (const hash of ['#psyche-build', '#coven', '#Research%20%26%20Design', '#/castle/psyche-build',
+    '#/castle/psyche-build/mission/m-1', '#/castle/ui/mission/m-1?view=tasks&detail=side']) {
+    assert.doesNotThrow(() => navigation.parse(hash));
+    assert.equal(navigation.parse(hash), null, `retired route format: ${hash}`);
+  }
   for (const selected of [mission('ui'), {scope: 'project', project: 'ui'}]) {
-    assert.equal(navigation.format(selected).startsWith('#/project/'), true, 'new routes are always written with /project/');
+    assert.equal(navigation.format(selected).startsWith('#/project/'), true);
   }
 });
 
@@ -73,7 +68,6 @@ test('malformed fragments and ambiguous or unsupported queries fail without thro
   const invalid = [
     null, undefined, 7, {}, '#%', '#/project/%E0%A4%A', '#/project/',
     '#/project/ui/mission/', '#/project/ui/mission/m-1/extra', '#/workspace/ui', '#/projects/ui', '#/Castle/ui',
-    '#/castle/', '#/castle/ui?view=brief', '#/castle/ui/mission/m-1?view=unknown', '#/castle/ui/mission/m-1/extra',
     '#/project/ui?view=brief', '#/coven?detail=side', '#/project/ui/mission/m-1#other',
     '#/project/ui/mission/m-1?view=unknown', '#/project/ui/mission/m-1?detail=popup',
     '#/project/ui/mission/m-1?familiar=', '#/project/ui/mission/m-1?view=brief&view=tasks',

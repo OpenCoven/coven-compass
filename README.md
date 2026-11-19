@@ -52,7 +52,7 @@ The v27 seal constraints remain: a 12-degree minimum wedge angle, at most eight 
 6. Replay the shared live timeline, pause or scrub to a moment, and change the focused Project without restarting playback. Go live returns to the current sample state. Imported recordings keep their own extent and finish paused.
 7. On mobile, use **Map**, **Missions**, **Activity**, and **View** in the bottom workspace dock. Replay and Go live stay reachable while browsing the map; View reveals the 2D, 3D, Move, Orbit, zoom, Fit, and Lock controls. Drag to pan in 2D; choose Move or Orbit in 3D. Two-pointer pan/pinch preserves the point under the gesture centroid. Fit enables automatic framing; a manual camera adjustment preserves that framing through later resize events.
 
-Mission routes include Project identity, mission, section, familiar scope, and card/detail mode. Browser Back/Forward and reload restore that state. Older bookmarks remain supported, including bare `#name` fragments and pre-rename `#/castle/…` routes, which open the same Project and are rewritten as `#/project/…`. A mission that disappears at an earlier replay position clears its selection with an explanatory status message.
+Mission routes include Project identity, mission, section, familiar scope, and card/detail mode. Browser Back/Forward and reload restore that state. A mission that disappears at an earlier replay position clears its selection with an explanatory status message.
 
 Mobile sheets follow the visible viewport, keep the active surface above the map, and restore focus through nested views. Mission and Project forms keep their header/action row outside the scrolling fields. Draft text survives resizing and minimizing/reopening the conversation within the loaded session.
 

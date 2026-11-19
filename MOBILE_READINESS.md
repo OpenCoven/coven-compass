@@ -156,7 +156,7 @@ Observed directly in Chrome at the pre-layout checkpoint:
 6. Form fields and actions remaining unobstructed at 390×360, 890×626, and 320×568; expanded brief options remained reachable.
 7. Project Edit focusing Name after activation and returning to Edit on close.
 8. Back closing an open mission drawer and restoring the previous mission; Forward and reload restoring the next mission and section.
-9. Legacy Project bookmarks and missing-mission fallback.
+9. Legacy bookmark formats (since removed, 2026-11-19) and missing-mission fallback.
 10. Replaying before a selected mission existed removed the inspector, cleared selection, and announced the reason.
 11. Direct 2D pan preserved projected geometry; 3D orbit changed geometry and recovered from its lower bound; locked drag left the camera unchanged and disabled the other seven dock controls.
 12. Keyboard tilt updated the 2D/3D control state, and keyboard zoom into the overview updated the URL.
