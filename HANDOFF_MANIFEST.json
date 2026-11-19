@@ -62,8 +62,8 @@
     },
     {
       "path": "dist/handoff/guide.html",
-      "bytes": 290629,
-      "sha256": "07a0ddf4e21e2b5fda1c19c5f8db88ffdedb835652ed143069fd2ab1219578c9"
+      "bytes": 291056,
+      "sha256": "5c7405ae64867e19e589bf0a88512762e8616b1be359165209ffec76d9b8099d"
     },
     {
       "path": "dist/handoff/handoff.css",
@@ -167,8 +167,8 @@
     },
     {
       "path": "docs/handoff/11-open-decisions.md",
-      "bytes": 9473,
-      "sha256": "d11be5d8bf2f7f69c7c073d805e4bf14b9157c217dc52f03adbe360a4e0b4c14"
+      "bytes": 9827,
+      "sha256": "6f30ae510410330c1b6cd5f01d7d9e15cdedd8d3e49ff96943037b0a432af37a"
     },
     {
       "path": "docs/handoff/12-source-ledger.md",
