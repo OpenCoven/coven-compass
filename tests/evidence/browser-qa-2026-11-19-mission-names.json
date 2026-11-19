@@ -1,6 +1,6 @@
 {
-  "generated_utc": "2026-11-19T11:38:55.706Z",
-  "commit": "877c7ce",
+  "generated_utc": "2026-11-19T11:56:23.190Z",
+  "commit": "cf04a8b",
   "browser": "chromium 130.0.6723.31",
   "tool": "playwright 1.48.2 (installed outside the repository)",
   "base": "http://127.0.0.1:18433/",
@@ -45,6 +45,13 @@
     {
       "mode": "simulation (default)",
       "viewport": "desktop-1440x900",
+      "name": "familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "10 familiar labels shown; overlapping: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "desktop-1440x900",
       "name": "open a mission",
       "pass": true,
       "detail": "via #atlasMissions; hash #/project/psyche-build/mission/m-1?view=brief&detail=side; inspector visible true"
@@ -54,7 +61,7 @@
       "viewport": "desktop-1440x900",
       "name": "replay starts and moves",
       "pass": true,
-      "detail": "clicked #play; scrub 1000 → 20; clock \"05:39:03\" → \"05:01:27\"; button \"Pause\""
+      "detail": "clicked #play; scrub 1000 → 20; clock \"05:56:31\" → \"05:18:54\"; button \"Pause\""
     },
     {
       "mode": "simulation (default)",
@@ -62,6 +69,13 @@
       "name": "replay frame: mission names clear the crown and each other",
       "pass": true,
       "detail": "1 names shown; over the crown: none; overlapping: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "desktop-1440x900",
+      "name": "replay frame: familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "0 familiar labels shown; overlapping: none"
     },
     {
       "mode": "simulation (default)",
@@ -122,6 +136,13 @@
     {
       "mode": "simulation (?source=simulation)",
       "viewport": "desktop-1440x900",
+      "name": "familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "10 familiar labels shown; overlapping: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "desktop-1440x900",
       "name": "open a mission",
       "pass": true,
       "detail": "via #atlasMissions; hash #/project/psyche-build/mission/m-1?view=brief&detail=side; inspector visible true"
@@ -131,7 +152,7 @@
       "viewport": "desktop-1440x900",
       "name": "replay starts and moves",
       "pass": true,
-      "detail": "clicked #play; scrub 1000 → 20; clock \"05:39:13\" → \"05:01:38\"; button \"Pause\""
+      "detail": "clicked #play; scrub 1000 → 20; clock \"05:56:41\" → \"05:19:06\"; button \"Pause\""
     },
     {
       "mode": "simulation (?source=simulation)",
@@ -139,6 +160,13 @@
       "name": "replay frame: mission names clear the crown and each other",
       "pass": true,
       "detail": "1 names shown; over the crown: none; overlapping: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "desktop-1440x900",
+      "name": "replay frame: familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "0 familiar labels shown; overlapping: none"
     },
     {
       "mode": "simulation (?source=simulation)",
@@ -537,7 +565,14 @@
       "viewport": "phone-390x844",
       "name": "mission names clear the crown and each other",
       "pass": true,
-      "detail": "4 names shown; over the crown: none; overlapping: none"
+      "detail": "0 names shown; over the crown: none; overlapping: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-390x844",
+      "name": "familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "0 familiar labels shown; overlapping: none"
     },
     {
       "mode": "simulation (default)",
@@ -551,7 +586,7 @@
       "viewport": "phone-390x844",
       "name": "replay starts and moves",
       "pass": true,
-      "detail": "clicked #play; scrub 1000 → 20; clock \"05:39:27\" → \"05:01:50\"; button \"Pause\""
+      "detail": "clicked #play; scrub 1000 → 20; clock \"05:56:55\" → \"05:19:18\"; button \"Pause\""
     },
     {
       "mode": "simulation (default)",
@@ -559,6 +594,13 @@
       "name": "replay frame: mission names clear the crown and each other",
       "pass": true,
       "detail": "1 names shown; over the crown: none; overlapping: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-390x844",
+      "name": "replay frame: familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "0 familiar labels shown; overlapping: none"
     },
     {
       "mode": "simulation (default)",
@@ -614,7 +656,14 @@
       "viewport": "phone-390x844",
       "name": "mission names clear the crown and each other",
       "pass": true,
-      "detail": "4 names shown; over the crown: none; overlapping: none"
+      "detail": "0 names shown; over the crown: none; overlapping: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-390x844",
+      "name": "familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "0 familiar labels shown; overlapping: none"
     },
     {
       "mode": "simulation (?source=simulation)",
@@ -628,7 +677,7 @@
       "viewport": "phone-390x844",
       "name": "replay starts and moves",
       "pass": true,
-      "detail": "clicked #play; scrub 1000 → 20; clock \"05:39:38\" → \"05:02:02\"; button \"Pause\""
+      "detail": "clicked #play; scrub 1000 → 20; clock \"05:57:06\" → \"05:19:30\"; button \"Pause\""
     },
     {
       "mode": "simulation (?source=simulation)",
@@ -636,6 +685,13 @@
       "name": "replay frame: mission names clear the crown and each other",
       "pass": true,
       "detail": "1 names shown; over the crown: none; overlapping: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-390x844",
+      "name": "replay frame: familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "0 familiar labels shown; overlapping: none"
     },
     {
       "mode": "simulation (?source=simulation)",
@@ -1039,6 +1095,13 @@
     {
       "mode": "simulation (default)",
       "viewport": "phone-landscape-844x390",
+      "name": "familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "0 familiar labels shown; overlapping: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-landscape-844x390",
       "name": "open a mission",
       "pass": true,
       "detail": "via #atlasMobileMissions; hash #/project/psyche-build/mission/m-1?view=brief&detail=side; inspector visible true"
@@ -1048,7 +1111,7 @@
       "viewport": "phone-landscape-844x390",
       "name": "replay starts and moves",
       "pass": true,
-      "detail": "clicked #play; scrub 1000 → 20; clock \"05:39:51\" → \"05:02:15\"; button \"Pause\""
+      "detail": "clicked #play; scrub 1000 → 20; clock \"05:57:22\" → \"05:19:46\"; button \"Pause\""
     },
     {
       "mode": "simulation (default)",
@@ -1056,6 +1119,13 @@
       "name": "replay frame: mission names clear the crown and each other",
       "pass": true,
       "detail": "0 names shown; over the crown: none; overlapping: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-landscape-844x390",
+      "name": "replay frame: familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "0 familiar labels shown; overlapping: none"
     },
     {
       "mode": "simulation (default)",
@@ -1116,6 +1186,13 @@
     {
       "mode": "simulation (?source=simulation)",
       "viewport": "phone-landscape-844x390",
+      "name": "familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "0 familiar labels shown; overlapping: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-landscape-844x390",
       "name": "open a mission",
       "pass": true,
       "detail": "via #atlasMobileMissions; hash #/project/psyche-build/mission/m-1?view=brief&detail=side; inspector visible true"
@@ -1125,7 +1202,7 @@
       "viewport": "phone-landscape-844x390",
       "name": "replay starts and moves",
       "pass": true,
-      "detail": "clicked #play; scrub 1000 → 20; clock \"05:40:03\" → \"05:02:27\"; button \"Pause\""
+      "detail": "clicked #play; scrub 1000 → 20; clock \"05:57:33\" → \"05:19:57\"; button \"Pause\""
     },
     {
       "mode": "simulation (?source=simulation)",
@@ -1133,6 +1210,13 @@
       "name": "replay frame: mission names clear the crown and each other",
       "pass": true,
       "detail": "0 names shown; over the crown: none; overlapping: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-landscape-844x390",
+      "name": "replay frame: familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "0 familiar labels shown; overlapping: none"
     },
     {
       "mode": "simulation (?source=simulation)",
@@ -1535,8 +1619,8 @@
     "phone-landscape-844x390-_source_live.png"
   ],
   "summary": {
-    "checks": 213,
-    "passed": 213,
+    "checks": 225,
+    "passed": 225,
     "failed": 0
   }
 }
