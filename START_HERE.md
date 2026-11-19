@@ -31,6 +31,8 @@ The application in `dist/` is editable browser source. The builder generates `di
 
 ## Run and check
 
+From a Git checkout, run the full verification with `sh scripts/verify-checkout.sh`. See [AGENTS.md](AGENTS.md) for editable sources and focused checks.
+
 The package has no npm dependencies and needs no application build. Use Node.js 24 and Python 3.10 or newer; the tested runtimes are Node.js 24.22.1 and Python 3.12.14. Exact results are recorded in [the evidence note](docs/handoff/01-current-state-and-evidence.md). The bundled reference fixture makes the unit tests independent of Git history and network access.
 
 ```bash

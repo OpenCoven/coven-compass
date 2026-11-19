@@ -1,7 +1,7 @@
 {
   "format_version": 1,
   "artifact": "Coven_Compass_Handoff_2026-11-19",
-  "created_utc": "2026-11-19T07:59:18Z",
+  "edition_date": "2026-11-19",
   "baseline_site_version": 3,
   "baseline_source_commit": "d7b6f1e655140036cca49f31687131352162de13",
   "baseline_relationship": "The v3 source revision is a provenance reference, not a claim that these exported files equal that commit. This handoff includes new documentation, packaging tools, and Site additions.",
@@ -16,6 +16,11 @@
       "sha256": "3bbd2fc00a3420e3629be47ce4bbd073dd736484eca54a736d626c638a4b33f4"
     },
     {
+      "path": "AGENTS.md",
+      "bytes": 1665,
+      "sha256": "d9c2f6d88497c0054b27ab55eeb08bd8a255ff3b6f3067801c5cdb9f4e8c24ec"
+    },
+    {
       "path": "MOBILE_READINESS.md",
       "bytes": 27348,
       "sha256": "320baea38b8d98685b5a37650757c945cc8111b6ccb802deb946cf1da1769a57"
@@ -27,8 +32,8 @@
     },
     {
       "path": "START_HERE.md",
-      "bytes": 9146,
-      "sha256": "2004e1ae84d1a922392b626b41a3059645c3e66604af634750ea94f46aa662eb"
+      "bytes": 10716,
+      "sha256": "bbac35690e243d6f7888c21f4d8d4dc76697443be51a1a7c8b46e1b4af8c93c0"
     },
     {
       "path": "dist/atlas-crown.js",
@@ -57,8 +62,8 @@
     },
     {
       "path": "dist/handoff/guide.html",
-      "bytes": 288575,
-      "sha256": "d31f7ccf69c3534e8ef86ab95ef2dcb63278011c04314faa0f9c3fb3071627a0"
+      "bytes": 290629,
+      "sha256": "07a0ddf4e21e2b5fda1c19c5f8db88ffdedb835652ed143069fd2ab1219578c9"
     },
     {
       "path": "dist/handoff/handoff.css",
@@ -67,13 +72,13 @@
     },
     {
       "path": "dist/handoff/index.html",
-      "bytes": 11769,
-      "sha256": "4cc1c427bd8d9c1eca3e94c4cc632484f5da36a4dbedcf592f23acb3e49b04f4"
+      "bytes": 11773,
+      "sha256": "605633e39b84adb2f9dd1d3d6cc759e410ec61344fab9614e3054b8afc4f9c48"
     },
     {
       "path": "dist/index.html",
       "bytes": 519053,
-      "sha256": "d31f616cf16039c81ed1393910bdb78a8f44b3aec925fd307346ce29e30110d1"
+      "sha256": "c353398d216c3434baed678bf6488093010987d455a9ea06d44246602bfcdd81"
     },
     {
       "path": "dist/mission-navigation.js",
@@ -217,8 +222,8 @@
     },
     {
       "path": "scripts/build-handoff.py",
-      "bytes": 23979,
-      "sha256": "e94db64b330c6226a6c6837eee8c61f12a053784c2a932394738ddcf439175b3"
+      "bytes": 24074,
+      "sha256": "7f725a797325c78c3b7d5649708fc541579f239859529ee15a1698684b6ba712"
     },
     {
       "path": "scripts/check-source.mjs",
@@ -229,6 +234,11 @@
       "path": "scripts/test-atlas-crown.mjs",
       "bytes": 6215,
       "sha256": "2f107f0e4758edc42ffc8d50632ee162ed883378a0772a6a8a085325f8e57708"
+    },
+    {
+      "path": "scripts/verify-checkout.sh",
+      "bytes": 620,
+      "sha256": "84bbc08603f772aabf06934d260b21ef1be1d26ba8b4a1b1ee017973ddcbffb9"
     },
     {
       "path": "scripts/verify-handoff.py",
