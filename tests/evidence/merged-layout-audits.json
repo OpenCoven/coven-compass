@@ -1,0 +1,2046 @@
+{
+  "date": "2026-11-18",
+  "method": "Supplemental Chrome iframe UI checks after merging source-handoff features. CSS sizes; no physical device certification.",
+  "audits": [
+    {
+      "activeOverlay": null,
+      "document": {
+        "clientWidth": 390,
+        "horizontalOverflow": false,
+        "scrollWidth": 390
+      },
+      "focus": {
+        "element": "Project: psyche-build / Mission: All4 Ward3 Wardpsyche-build3 waitingPermis",
+        "tag": "BODY",
+        "visible": true
+      },
+      "harness": "Read-only Chrome iframe layout audit; no hardware, Safari, touch, or soft-keyboard certification",
+      "headerOverlaps": [],
+      "inputFonts": [],
+      "keyControls": [
+        {
+          "centerReachable": true,
+          "control": "atlasOverview",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 45.6,
+            "x": 25,
+            "y": 77
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasCastle",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 60.6,
+            "x": 72.6,
+            "y": 77
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasBrowse",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 79.2,
+            "x": 218.6,
+            "y": 77
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasMissions",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 63.2,
+            "x": 305.8,
+            "y": 77
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasLab",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 325,
+            "y": 21
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasPlan",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 82.8,
+            "x": 25,
+            "y": 666
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlas3d",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 82.8,
+            "x": 110.8,
+            "y": 666
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasMove",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 82.8,
+            "x": 196.5,
+            "y": 666
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasOrbit",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 82.8,
+            "x": 282.3,
+            "y": 666
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasZoomOut",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 82.8,
+            "x": 25,
+            "y": 713
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasZoomIn",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 82.8,
+            "x": 110.8,
+            "y": 713
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasFit",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 82.8,
+            "x": 196.5,
+            "y": 713
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasLock",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 82.8,
+            "x": 282.3,
+            "y": 713
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "launcher",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 52,
+            "width": 52,
+            "x": 326,
+            "y": 780
+          },
+          "scrollingAncestors": []
+        }
+      ],
+      "location": "#/coven",
+      "overlays": [],
+      "selectedTabs": [],
+      "touchTargets": {
+        "below44": [],
+        "below44Count": 0,
+        "excludes": "SVG map targets, hidden/inert/disabled controls, and controls clipped outside the viewport or scroll region",
+        "occluded": [],
+        "occludedCount": 0,
+        "partiallyOrFullyClippedInScrollers": 0
+      },
+      "viewport": {
+        "height": 844,
+        "requestedHeight": 844,
+        "requestedWidth": 390,
+        "width": 390
+      }
+    },
+    {
+      "activeOverlay": null,
+      "document": {
+        "clientWidth": 320,
+        "horizontalOverflow": false,
+        "scrollWidth": 320
+      },
+      "focus": {
+        "element": "Project: psyche-build / Mission: All4 Ward3 Wardpsyche-build3 waitingPermis",
+        "tag": "BODY",
+        "visible": true
+      },
+      "harness": "Read-only Chrome iframe layout audit; no hardware, Safari, touch, or soft-keyboard certification",
+      "headerOverlaps": [],
+      "inputFonts": [],
+      "keyControls": [
+        {
+          "centerReachable": true,
+          "control": "atlasOverview",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 45.6,
+            "x": 25,
+            "y": 75
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasCastle",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 53.8,
+            "x": 72.6,
+            "y": 75
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasBrowse",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 57.2,
+            "x": 172.6,
+            "y": 75
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasMissions",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 63.2,
+            "x": 235.8,
+            "y": 75
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasLab",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 255,
+            "y": 21
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasPlan",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 65.3,
+            "x": 25,
+            "y": 390
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlas3d",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 65.3,
+            "x": 93.3,
+            "y": 390
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasMove",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 65.3,
+            "x": 161.5,
+            "y": 390
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasOrbit",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 65.3,
+            "x": 229.8,
+            "y": 390
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasZoomOut",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 65.3,
+            "x": 25,
+            "y": 437
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasZoomIn",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 65.3,
+            "x": 93.3,
+            "y": 437
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasFit",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 65.3,
+            "x": 161.5,
+            "y": 437
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasLock",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 65.3,
+            "x": 229.8,
+            "y": 437
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "launcher",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 52,
+            "width": 52,
+            "x": 256,
+            "y": 504
+          },
+          "scrollingAncestors": []
+        }
+      ],
+      "location": "#/coven",
+      "overlays": [],
+      "selectedTabs": [],
+      "touchTargets": {
+        "below44": [],
+        "below44Count": 0,
+        "excludes": "SVG map targets, hidden/inert/disabled controls, and controls clipped outside the viewport or scroll region",
+        "occluded": [],
+        "occludedCount": 0,
+        "partiallyOrFullyClippedInScrollers": 1
+      },
+      "viewport": {
+        "height": 568,
+        "requestedHeight": 568,
+        "requestedWidth": 320,
+        "width": 320
+      }
+    },
+    {
+      "activeOverlay": null,
+      "document": {
+        "clientWidth": 768,
+        "horizontalOverflow": false,
+        "scrollWidth": 768
+      },
+      "focus": {
+        "element": "Project: psyche-build / Mission: All4 Ward3 Wardpsyche-build3 waitingPermis",
+        "tag": "BODY",
+        "visible": true
+      },
+      "harness": "Read-only Chrome iframe layout audit; no hardware, Safari, touch, or soft-keyboard certification",
+      "headerOverlaps": [],
+      "inputFonts": [],
+      "keyControls": [
+        {
+          "centerReachable": true,
+          "control": "atlasOverview",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 54.5,
+            "x": 25,
+            "y": 77
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasCastle",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 88.7,
+            "x": 81.5,
+            "y": 77
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasBrowse",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 87.2,
+            "x": 582.6,
+            "y": 77
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasMissions",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 69.2,
+            "x": 677.8,
+            "y": 77
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasLab",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 703,
+            "y": 21
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasPlan",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 25,
+            "y": 893
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlas3d",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 72,
+            "y": 893
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasMove",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 46.1,
+            "x": 119,
+            "y": 893
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasOrbit",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 168.1,
+            "y": 893
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasZoomOut",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 218.1,
+            "y": 893
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasZoomIn",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 265.1,
+            "y": 893
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasFit",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 315.1,
+            "y": 893
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasLock",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 362.1,
+            "y": 893
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "launcher",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 52,
+            "width": 52,
+            "x": 704,
+            "y": 960
+          },
+          "scrollingAncestors": []
+        }
+      ],
+      "location": "#/coven",
+      "overlays": [],
+      "selectedTabs": [],
+      "touchTargets": {
+        "below44": [],
+        "below44Count": 0,
+        "excludes": "SVG map targets, hidden/inert/disabled controls, and controls clipped outside the viewport or scroll region",
+        "occluded": [],
+        "occludedCount": 0,
+        "partiallyOrFullyClippedInScrollers": 0
+      },
+      "viewport": {
+        "height": 1024,
+        "requestedHeight": 1024,
+        "requestedWidth": 768,
+        "width": 768
+      }
+    },
+    {
+      "activeOverlay": null,
+      "document": {
+        "clientWidth": 1024,
+        "horizontalOverflow": false,
+        "scrollWidth": 1024
+      },
+      "focus": {
+        "element": "Project: psyche-build / Mission: All4 Ward3 Wardpsyche-build3 waitingPermis",
+        "tag": "BODY",
+        "visible": true
+      },
+      "harness": "Read-only Chrome iframe layout audit; no hardware, Safari, touch, or soft-keyboard certification",
+      "headerOverlaps": [],
+      "inputFonts": [],
+      "keyControls": [
+        {
+          "centerReachable": true,
+          "control": "atlasOverview",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 54.5,
+            "x": 156,
+            "y": 27
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasCastle",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 88.7,
+            "x": 212.5,
+            "y": 27
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasBrowse",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 87.2,
+            "x": 680.2,
+            "y": 27
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasMissions",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 69.2,
+            "x": 775.4,
+            "y": 27
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasLab",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 77.5,
+            "x": 852.6,
+            "y": 27
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasPlan",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 25,
+            "y": 637
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlas3d",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 72,
+            "y": 637
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasMove",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 46.1,
+            "x": 119,
+            "y": 637
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasOrbit",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 168.1,
+            "y": 637
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasZoomOut",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 218.1,
+            "y": 637
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasZoomIn",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 265.1,
+            "y": 637
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasFit",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 315.1,
+            "y": 637
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasLock",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 362.1,
+            "y": 637
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "launcher",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 52,
+            "width": 52,
+            "x": 960,
+            "y": 704
+          },
+          "scrollingAncestors": []
+        }
+      ],
+      "location": "#/coven",
+      "overlays": [],
+      "selectedTabs": [],
+      "touchTargets": {
+        "below44": [],
+        "below44Count": 0,
+        "excludes": "SVG map targets, hidden/inert/disabled controls, and controls clipped outside the viewport or scroll region",
+        "occluded": [],
+        "occludedCount": 0,
+        "partiallyOrFullyClippedInScrollers": 0
+      },
+      "viewport": {
+        "height": 768,
+        "requestedHeight": 768,
+        "requestedWidth": 1024,
+        "width": 1024
+      }
+    },
+    {
+      "activeOverlay": null,
+      "document": {
+        "clientWidth": 1280,
+        "horizontalOverflow": false,
+        "scrollWidth": 1280
+      },
+      "focus": {
+        "element": "Project: psyche-build / Mission: All4 Ward3 Wardpsyche-build3 waitingPermis",
+        "tag": "BODY",
+        "visible": true
+      },
+      "harness": "Read-only Chrome iframe layout audit; no hardware, Safari, touch, or soft-keyboard certification",
+      "headerOverlaps": [],
+      "inputFonts": [],
+      "keyControls": [
+        {
+          "centerReachable": true,
+          "control": "atlasOverview",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 30,
+            "width": 54.5,
+            "x": 170,
+            "y": 31
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasCastle",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 30,
+            "width": 88.7,
+            "x": 226.5,
+            "y": 31
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasBrowse",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 36,
+            "width": 87.2,
+            "x": 815.3,
+            "y": 28
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasMissions",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 36,
+            "width": 69.2,
+            "x": 916.4,
+            "y": 28
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasHandoff",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 36,
+            "width": 88.9,
+            "x": 999.7,
+            "y": 28
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasLab",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 36,
+            "width": 77.5,
+            "x": 1102.6,
+            "y": 28
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "launcher",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 54,
+            "width": 54,
+            "x": 1210,
+            "y": 730
+          },
+          "scrollingAncestors": []
+        }
+      ],
+      "location": "#/coven",
+      "overlays": [],
+      "selectedTabs": [],
+      "touchTargets": {
+        "below44": [
+          {
+            "control": "atlasOverview",
+            "size": [
+              54.5,
+              30
+            ],
+            "withinScroller": null
+          },
+          {
+            "control": "atlasCastle",
+            "size": [
+              88.7,
+              30
+            ],
+            "withinScroller": null
+          },
+          {
+            "control": "atlasBrowse",
+            "size": [
+              87.2,
+              36
+            ],
+            "withinScroller": null
+          },
+          {
+            "control": "atlasMissions",
+            "size": [
+              69.2,
+              36
+            ],
+            "withinScroller": null
+          },
+          {
+            "control": "atlasHandoff",
+            "size": [
+              88.9,
+              36
+            ],
+            "withinScroller": null
+          },
+          {
+            "control": "atlasLab",
+            "size": [
+              77.5,
+              36
+            ],
+            "withinScroller": null
+          },
+          {
+            "control": "Astra, 24 delegated agents across 1 Castle. Highlight assignments",
+            "size": [
+              76.7,
+              35
+            ],
+            "withinScroller": null
+          },
+          {
+            "control": "Cody, 54 delegated agents across 3 Castles. Highlight assignments",
+            "size": [
+              76.2,
+              35
+            ],
+            "withinScroller": null
+          },
+          {
+            "control": "Echo, 23 delegated agents across 2 Castles. Highlight assignments",
+            "size": [
+              74.9,
+              35
+            ],
+            "withinScroller": null
+          },
+          {
+            "control": "Charm, 13 delegated agents across 2 Castles. Highlight assignments",
+            "size": [
+              83.4,
+              35
+            ],
+            "withinScroller": null
+          }
+        ],
+        "below44Count": 10,
+        "excludes": "SVG map targets, hidden/inert/disabled controls, and controls clipped outside the viewport or scroll region",
+        "occluded": [],
+        "occludedCount": 0,
+        "partiallyOrFullyClippedInScrollers": 0
+      },
+      "viewport": {
+        "height": 800,
+        "requestedHeight": 800,
+        "requestedWidth": 1280,
+        "width": 1280
+      }
+    },
+    {
+      "activeOverlay": null,
+      "document": {
+        "clientWidth": 852,
+        "horizontalOverflow": false,
+        "scrollWidth": 852
+      },
+      "focus": {
+        "element": "Project: psyche-build / Mission: All4 Ward3 Wardpsyche-build3 waitingPermis",
+        "tag": "BODY",
+        "visible": true
+      },
+      "harness": "Read-only Chrome iframe layout audit; no hardware, Safari, touch, or soft-keyboard certification",
+      "headerOverlaps": [],
+      "inputFonts": [],
+      "keyControls": [
+        {
+          "centerReachable": true,
+          "control": "atlasOverview",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 131.4,
+            "y": 20
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasCastle",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 67.3,
+            "x": 177.4,
+            "y": 20
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasBrowse",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 81.2,
+            "x": 578.5,
+            "y": 20
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasMissions",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 63.2,
+            "x": 665.7,
+            "y": 20
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasLab",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 734.9,
+            "y": 20
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasPlan",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 365.3,
+            "y": 327
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlas3d",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 412.3,
+            "y": 327
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasMove",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 46.1,
+            "x": 459.3,
+            "y": 327
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasOrbit",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 508.3,
+            "y": 327
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasZoomOut",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 558.3,
+            "y": 327
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasZoomIn",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 605.3,
+            "y": 327
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasFit",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 655.3,
+            "y": 327
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasLock",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 702.3,
+            "y": 327
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "launcher",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 52,
+            "width": 52,
+            "x": 788,
+            "y": 329
+          },
+          "scrollingAncestors": []
+        }
+      ],
+      "location": "#/coven",
+      "overlays": [],
+      "selectedTabs": [],
+      "touchTargets": {
+        "below44": [],
+        "below44Count": 0,
+        "excludes": "SVG map targets, hidden/inert/disabled controls, and controls clipped outside the viewport or scroll region",
+        "occluded": [],
+        "occludedCount": 0,
+        "partiallyOrFullyClippedInScrollers": 0
+      },
+      "viewport": {
+        "height": 393,
+        "requestedHeight": 393,
+        "requestedWidth": 852,
+        "width": 852
+      }
+    },
+    {
+      "activeOverlay": null,
+      "document": {
+        "clientWidth": 760,
+        "horizontalOverflow": false,
+        "scrollWidth": 760
+      },
+      "focus": {
+        "element": "Project: psyche-build / Mission: All4 Ward3 Wardpsyche-build3 waitingPermis",
+        "tag": "BODY",
+        "visible": true
+      },
+      "harness": "Read-only Chrome iframe layout audit; no hardware, Safari, touch, or soft-keyboard certification",
+      "headerOverlaps": [],
+      "inputFonts": [],
+      "keyControls": [
+        {
+          "centerReachable": true,
+          "control": "atlasOverview",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 54.5,
+            "x": 25,
+            "y": 77
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasCastle",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 88.7,
+            "x": 81.5,
+            "y": 77
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasBrowse",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 87.2,
+            "x": 574.6,
+            "y": 77
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasMissions",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 69.2,
+            "x": 669.8,
+            "y": 77
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasLab",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 695,
+            "y": 21
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasPlan",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 25,
+            "y": 469
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlas3d",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 72,
+            "y": 469
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasMove",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 46.1,
+            "x": 119,
+            "y": 469
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasOrbit",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 168.1,
+            "y": 469
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasZoomOut",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 218.1,
+            "y": 469
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasZoomIn",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 265.1,
+            "y": 469
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasFit",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 315.1,
+            "y": 469
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "atlasLock",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 44,
+            "x": 362.1,
+            "y": 469
+          },
+          "scrollingAncestors": []
+        },
+        {
+          "centerReachable": true,
+          "control": "launcher",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 52,
+            "width": 52,
+            "x": 696,
+            "y": 536
+          },
+          "scrollingAncestors": []
+        }
+      ],
+      "location": "#/coven",
+      "overlays": [],
+      "selectedTabs": [],
+      "touchTargets": {
+        "below44": [],
+        "below44Count": 0,
+        "excludes": "SVG map targets, hidden/inert/disabled controls, and controls clipped outside the viewport or scroll region",
+        "occluded": [],
+        "occludedCount": 0,
+        "partiallyOrFullyClippedInScrollers": 0
+      },
+      "viewport": {
+        "height": 600,
+        "requestedHeight": 600,
+        "requestedWidth": 760,
+        "width": 760
+      }
+    },
+    {
+      "activeOverlay": "atlasSidebar",
+      "document": {
+        "clientWidth": 390,
+        "horizontalOverflow": false,
+        "scrollWidth": 390
+      },
+      "focus": {
+        "element": "Project: psyche-build / Mission: All4 Ward3 Wardpsyche-build3 waitingPermis",
+        "tag": "BODY",
+        "visible": true
+      },
+      "harness": "Read-only Chrome iframe layout audit; no hardware, Safari, touch, or soft-keyboard certification",
+      "headerOverlaps": [],
+      "inputFonts": [],
+      "keyControls": [
+        {
+          "centerReachable": true,
+          "control": "atlasHandoffDrawer",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 348,
+            "x": 21,
+            "y": 779
+          },
+          "scrollingAncestors": []
+        }
+      ],
+      "location": "#/coven",
+      "overlays": [
+        {
+          "centerReachable": true,
+          "coveredBy": null,
+          "fullyVisible": true,
+          "id": "atlasSidebar",
+          "inViewport": true,
+          "modal": "true",
+          "portaled": true,
+          "rect": {
+            "height": 456,
+            "width": 370,
+            "x": 10,
+            "y": 378
+          },
+          "role": "dialog",
+          "scrollingAncestors": []
+        }
+      ],
+      "selectedTabs": [],
+      "touchTargets": {
+        "below44": [],
+        "below44Count": 0,
+        "excludes": "SVG map targets, hidden/inert/disabled controls, and controls clipped outside the viewport or scroll region",
+        "occluded": [],
+        "occludedCount": 0,
+        "partiallyOrFullyClippedInScrollers": 0
+      },
+      "viewport": {
+        "height": 844,
+        "requestedHeight": 844,
+        "requestedWidth": 390,
+        "width": 390
+      },
+      "scenario": "merged-castles-drawer"
+    },
+    {
+      "activeOverlay": "atlasSidebar",
+      "document": {
+        "clientWidth": 320,
+        "horizontalOverflow": false,
+        "scrollWidth": 320
+      },
+      "focus": {
+        "element": "Project: psyche-build / Mission: All4 Ward3 Wardpsyche-build3 waitingPermis",
+        "tag": "BODY",
+        "visible": true
+      },
+      "harness": "Read-only Chrome iframe layout audit; no hardware, Safari, touch, or soft-keyboard certification",
+      "headerOverlaps": [],
+      "inputFonts": [],
+      "keyControls": [
+        {
+          "centerReachable": true,
+          "control": "atlasHandoffDrawer",
+          "coveredBy": null,
+          "disabled": false,
+          "fullyVisible": true,
+          "inViewport": true,
+          "rect": {
+            "height": 44,
+            "width": 278,
+            "x": 21,
+            "y": 503
+          },
+          "scrollingAncestors": []
+        }
+      ],
+      "location": "#/coven",
+      "overlays": [
+        {
+          "centerReachable": true,
+          "coveredBy": null,
+          "fullyVisible": true,
+          "id": "atlasSidebar",
+          "inViewport": true,
+          "modal": "true",
+          "portaled": true,
+          "rect": {
+            "height": 456,
+            "width": 300,
+            "x": 10,
+            "y": 102
+          },
+          "role": "dialog",
+          "scrollingAncestors": []
+        }
+      ],
+      "selectedTabs": [],
+      "touchTargets": {
+        "below44": [],
+        "below44Count": 0,
+        "excludes": "SVG map targets, hidden/inert/disabled controls, and controls clipped outside the viewport or scroll region",
+        "occluded": [],
+        "occludedCount": 0,
+        "partiallyOrFullyClippedInScrollers": 0
+      },
+      "viewport": {
+        "height": 568,
+        "requestedHeight": 568,
+        "requestedWidth": 320,
+        "width": 320
+      },
+      "scenario": "merged-castles-drawer"
+    },
+    {
+      "activeOverlay": null,
+      "document": {
+        "clientWidth": 305,
+        "horizontalOverflow": false,
+        "scrollWidth": 305
+      },
+      "focus": {
+        "element": "Coven Castles Implementation handoff Return to atlas ↗ Source package · 18 ",
+        "tag": "BODY",
+        "visible": true
+      },
+      "harness": "Read-only Chrome iframe layout audit; no hardware, Safari, touch, or soft-keyboard certification",
+      "headerOverlaps": [],
+      "inputFonts": [],
+      "keyControls": [],
+      "location": "",
+      "overlays": [],
+      "selectedTabs": [],
+      "touchTargets": {
+        "below44": [],
+        "below44Count": 0,
+        "excludes": "SVG map targets, hidden/inert/disabled controls, and controls clipped outside the viewport or scroll region",
+        "occluded": [],
+        "occludedCount": 0,
+        "partiallyOrFullyClippedInScrollers": 0
+      },
+      "viewport": {
+        "height": 568,
+        "requestedHeight": 568,
+        "requestedWidth": 320,
+        "width": 320
+      },
+      "scenario": "handoff-landing-top"
+    },
+    {
+      "activeOverlay": null,
+      "document": {
+        "clientWidth": 305,
+        "horizontalOverflow": false,
+        "scrollWidth": 305
+      },
+      "focus": {
+        "element": "Coven CastlesImplementation handoffReturn to Atlas Chapters Handoff index C",
+        "tag": "BODY",
+        "visible": true
+      },
+      "harness": "Read-only Chrome iframe layout audit; no hardware, Safari, touch, or soft-keyboard certification",
+      "headerOverlaps": [],
+      "inputFonts": [],
+      "keyControls": [],
+      "location": "",
+      "overlays": [],
+      "selectedTabs": [],
+      "touchTargets": {
+        "below44": [],
+        "below44Count": 0,
+        "excludes": "SVG map targets, hidden/inert/disabled controls, and controls clipped outside the viewport or scroll region",
+        "occluded": [],
+        "occludedCount": 0,
+        "partiallyOrFullyClippedInScrollers": 24
+      },
+      "viewport": {
+        "height": 568,
+        "requestedHeight": 568,
+        "requestedWidth": 320,
+        "width": 320
+      },
+      "scenario": "handoff-guide-top"
+    },
+    {
+      "activeOverlay": null,
+      "document": {
+        "clientWidth": 305,
+        "horizontalOverflow": false,
+        "scrollWidth": 305
+      },
+      "focus": {
+        "element": "Coven CastlesImplementation handoffReturn to Atlas Chapters Handoff index C",
+        "tag": "BODY",
+        "visible": true
+      },
+      "harness": "Read-only Chrome iframe layout audit; no hardware, Safari, touch, or soft-keyboard certification",
+      "headerOverlaps": [],
+      "inputFonts": [],
+      "keyControls": [],
+      "location": "#doc-mobilereadiness",
+      "overlays": [],
+      "selectedTabs": [],
+      "touchTargets": {
+        "below44": [],
+        "below44Count": 0,
+        "excludes": "SVG map targets, hidden/inert/disabled controls, and controls clipped outside the viewport or scroll region",
+        "occluded": [],
+        "occludedCount": 0,
+        "partiallyOrFullyClippedInScrollers": 27
+      },
+      "viewport": {
+        "height": 568,
+        "requestedHeight": 568,
+        "requestedWidth": 320,
+        "width": 320
+      },
+      "scenario": "mobile-readiness-chapter"
+    }
+  ],
+  "desktopDockedHeader": {
+    "viewport": {
+      "width": 1280,
+      "height": 800
+    },
+    "stageWidth": 780,
+    "headerOverlaps": [],
+    "primaryControls": [
+      {
+        "centerReachable": true,
+        "control": "atlasOverview",
+        "coveredBy": null,
+        "disabled": false,
+        "fullyVisible": true,
+        "inViewport": true,
+        "rect": {
+          "height": 30,
+          "width": 54.5,
+          "x": 170,
+          "y": 31
+        },
+        "scrollingAncestors": []
+      },
+      {
+        "centerReachable": true,
+        "control": "atlasCastle",
+        "coveredBy": null,
+        "disabled": false,
+        "fullyVisible": true,
+        "inViewport": true,
+        "rect": {
+          "height": 30,
+          "width": 88.7,
+          "x": 226.5,
+          "y": 31
+        },
+        "scrollingAncestors": []
+      },
+      {
+        "centerReachable": true,
+        "control": "atlasBrowse",
+        "coveredBy": null,
+        "disabled": false,
+        "fullyVisible": true,
+        "inViewport": true,
+        "rect": {
+          "height": 36,
+          "width": 87.2,
+          "x": 349.3,
+          "y": 28
+        },
+        "scrollingAncestors": []
+      },
+      {
+        "centerReachable": true,
+        "control": "atlasMissions",
+        "coveredBy": null,
+        "disabled": false,
+        "fullyVisible": true,
+        "inViewport": true,
+        "rect": {
+          "height": 36,
+          "width": 69.2,
+          "x": 450.4,
+          "y": 28
+        },
+        "scrollingAncestors": []
+      },
+      {
+        "centerReachable": true,
+        "control": "atlasHandoff",
+        "coveredBy": null,
+        "disabled": false,
+        "fullyVisible": true,
+        "inViewport": true,
+        "rect": {
+          "height": 36,
+          "width": 88.9,
+          "x": 533.7,
+          "y": 28
+        },
+        "scrollingAncestors": []
+      },
+      {
+        "centerReachable": true,
+        "control": "atlasLab",
+        "coveredBy": null,
+        "disabled": false,
+        "fullyVisible": true,
+        "inViewport": true,
+        "rect": {
+          "height": 36,
+          "width": 77.5,
+          "x": 636.6,
+          "y": 28
+        },
+        "scrollingAncestors": []
+      }
+    ]
+  },
+  "navigationObserved": [
+    "Mobile Castles drawer opens handoff",
+    "Handoff Return to Atlas works",
+    "Browser Back returns through handoff to Atlas",
+    "Guide chapter link opens mobile-readiness section"
+  ]
+}

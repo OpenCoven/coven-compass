@@ -1,0 +1,198 @@
+// Regression fixtures execute the Site's actual fold, scene sync, and seal
+// render functions. The SVG facade supplies no browser layout or visual proof.
+'use strict';
+
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const vm = require('node:vm');
+const test = require('node:test');
+const atlasLayout = require('../dist/atlas-layout.js');
+
+const source = fs.readFileSync(path.join(__dirname, '..', 'dist', 'index.html'), 'utf8');
+
+function extract(name) {
+  const start = source.indexOf(`function ${name}(`);
+  assert.notEqual(start, -1, `${name} must exist in the actual Site`);
+  for (let end = source.indexOf('\n', start); end !== -1; end = source.indexOf('\n', end + 1)) {
+    const candidate = source.slice(start, end).trimEnd();
+    try {
+      new vm.Script(`(${candidate}\n)`);
+      return candidate;
+    } catch (error) {
+      if (!(error instanceof SyntaxError)) throw error;
+    }
+  }
+  throw new Error(`Could not extract ${name}`);
+}
+
+class Element {
+  constructor() {
+    this.children = [];
+    this.parentNode = null;
+    this.attributes = {};
+    this.style = { setProperty(key, value) { this[key] = String(value); } };
+    const classes = new Set();
+    this.classList = {
+      toggle(key, value) {
+        const next = value === undefined ? !classes.has(key) : !!value;
+        if (next) classes.add(key); else classes.delete(key);
+        return next;
+      },
+      add(...keys) { keys.forEach(key => classes.add(key)); },
+      remove(...keys) { keys.forEach(key => classes.delete(key)); },
+    };
+  }
+  setAttribute(key, value) { this.attributes[key] = String(value); }
+  appendChild(child) {
+    child.remove();
+    this.children.push(child);
+    child.parentNode = this;
+    return child;
+  }
+  remove() {
+    if (this.parentNode) {
+      const siblings = this.parentNode.children;
+      siblings.splice(siblings.indexOf(this), 1);
+    }
+    this.parentNode = null;
+  }
+  addEventListener() {}
+  set textContent(value) {
+    this.children.forEach(child => { child.parentNode = null; });
+    this.children = [];
+    this.text = String(value);
+  }
+  get textContent() { return this.text || ''; }
+}
+
+function svgEl(_tag, attributes = {}, parent) {
+  const element = new Element();
+  Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value));
+  if (parent) parent.appendChild(element);
+  return element;
+}
+
+function world() {
+  return { t: -Infinity, missions: new Map(), tasks: new Map(), agents: new Map(),
+    asks: new Map(), rounds: new Map(), items: [], stopped: false };
+}
+
+function fixture(trace = []) {
+  const c = { trace, world: world(), applied: 0, sel: null, fam: null, pick: null,
+    layout: { lead: 100, ang: new Map(), seat: new Map() } };
+  const sc = { missions: new Map(), seats: new Map(), agents: new Map(), colinks: new Map(),
+    lines: new Element(), courts: new Element(), sorted: new Element(), glow: new Element(),
+    gateL: [], ghosts: [], hl: null, layoutSignature: 'replay-render-fixture' };
+  const ghost = { k: 'sample', missions: [], g: new Element(), ox: 100, oy: 100,
+    runs: [], plinths: [], faces: [] };
+  ghost.aggregate = svgEl('text', {}, ghost.g);
+  ghost.more = svgEl('g', {}, ghost.g);
+  ghost.moreLabel = svgEl('text', {}, ghost.more);
+  const elements = new Map();
+  const context = vm.createContext({
+    sc, castles: { sample: c }, active: 'sample', cur: () => c, window: {CovenAtlasLayout: atlasLayout},
+    // Project layout and density are scene boundaries; actual mission packing,
+    // folding, synchronization, seal construction and rendering run below.
+    atlasWorldLayout: () => ({signature: sc.layoutSignature}),
+    stage: {clientWidth: 1000, clientHeight: 700}, cam: {zoom: 1},
+    newWorld: world, svgEl, RAD: Math.PI / 180, ZT: 0, ZPL: 6, RUNZ: [],
+    plural: (count, noun) => `${count} ${noun}${count === 1 ? '' : 's'}`,
+    fam: key => ({ name: key, hue: '#abcdef', roles: [] }),
+    countOf: (w, predicate) => [...w.agents.values()].filter(predicate).length,
+    openAsks: w => [...w.asks.values()].filter(q => q.status === 'open'),
+    normBrief: () => null, briefState: () => null,
+    seatId: (mission, familiar) => `${mission}/${familiar}`,
+    missionXY: () => [80, 40], seatR: () => 30,
+    pol: (radius, degrees) => [radius * Math.cos(degrees * Math.PI / 180), radius * Math.sin(degrees * Math.PI / 180)],
+    unit: (x, y) => { const length = Math.hypot(x, y) || 1; return [x / length, y / length]; },
+    atlasEaseProgress: (_seal, _key, target) => target,
+    atlasFocusable() {}, makeSolid: () => ({}), sigil: () => '', SIGIL: { mission: '' },
+    drawNew() {}, syncCoven() {}, applySel() {}, fxFor() {},
+    $: id => { if (!elements.has(id)) elements.set(id, new Element()); return elements.get(id); },
+  });
+  const constants = source.slice(source.indexOf('const TARGET_ROLES ='), source.indexOf('function sealOf('));
+  const ringStart = source.indexOf('const ring =');
+  const ring = source.slice(ringStart, source.indexOf('\n', ringStart));
+  const names = ['apply', 'seek', 'hullOf', 'sync', 'sealOf', 'buildSeal', 'drawSeal',
+    'atlasSyncOverviewMissions', 'atlasProjectGhost'];
+  new vm.Script(`${constants}\n${ring}\n${names.map(extract).join('\n')}`, {
+    filename: 'actual-replay-render-functions.js',
+  }).runInContext(context);
+  const cp = Math.cos(.65), sp = Math.sin(.65);
+  const P = (x, y, z) => [x, y * cp - z * sp, y * sp + z * cp];
+  const f = number => number.toFixed(4);
+  const pp = points => points.map(point => `${f(point[0])},${f(point[1])}`).join(' ');
+  function renderActive(options = {}) {
+    context.sync();
+    for (const mission of sc.missions.values()) {
+      const bounds = context.drawSeal(mission.seal, mission.seal.data, mission,
+        P(mission.x, mission.y, 0), { P, f, cp, noEase: true, ...options });
+      assert.ok(Array.from(bounds).every(Number.isFinite), 'Seal bounds must be finite');
+      finiteAttributes(mission.seal.g);
+    }
+  }
+  function renderGhost() {
+    context.atlasSyncOverviewMissions(ghost);
+    context.atlasProjectGhost(ghost, P, f, cp, pp);
+    finiteAttributes(ghost.g);
+  }
+  return { c, sc, ghost, context, renderActive, renderGhost };
+}
+
+function finiteAttributes(element) {
+  for (const [key, value] of Object.entries(element.attributes)) {
+    assert.doesNotMatch(value, /NaN|Infinity/, `${key} has finite geometry`);
+  }
+  element.children.forEach(finiteAttributes);
+}
+
+const opened = { t: 1000, type: 'mission.opened', mission: 'm1', name: 'Opening a mission' };
+
+test('an active mission renders before its first council seat at every map tier', () => {
+  const { c, sc, context, renderActive } = fixture([opened]);
+  context.seek(c, 1000, true);
+  assert.equal(c.world.missions.get('m1').seats.length, 0);
+  for (const options of [{}, { far: true }, { sel: true }]) {
+    assert.doesNotThrow(() => renderActive(options));
+  }
+  const seal = sc.missions.get('m1').seal;
+  assert.equal(seal.wedges.length, 0);
+  assert.ok(seal.sgTop.attributes.rx, 'The planned mission has a rendered center');
+});
+
+test('an overview mission renders before its first council seat and gains its wedge later', () => {
+  const trace = [opened, { t: 73000, type: 'council.seated', mission: 'm1', familiar: 'astra' }];
+  const { c, ghost, context, renderGhost } = fixture(trace);
+  context.seek(c, 1000, true);
+  assert.doesNotThrow(renderGhost);
+  assert.equal(ghost.missions[0].seal.wedges.length, 0);
+  context.seek(c, 73000, true);
+  assert.doesNotThrow(renderGhost);
+  assert.equal(ghost.missions[0].seal.wedges.length, 1);
+});
+
+test('replay renders through mission opening, sparse events, seating, closure, and backward seek', () => {
+  const trace = [opened,
+    { t: 1500, type: 'you.said', text: 'Review this work.' },
+    { t: 3000, type: 'mission.progress', mission: 'm1', tests: 2 },
+    { t: 73000, type: 'council.seated', mission: 'm1', familiar: 'astra' },
+    { t: 74000, type: 'familiar.report', mission: 'm1', familiar: 'astra', text: 'Review complete.' },
+    { t: 75000, type: 'mission.closed', mission: 'm1' },
+  ];
+  const { c, sc, ghost, context, renderActive, renderGhost } = fixture(trace);
+  for (const time of [999, 1000, 1100, 1500, 2000, 3000, 72000, 73000, 74000, 75000, 76000]) {
+    context.seek(c, time, true);
+    assert.doesNotThrow(renderActive, `Active render at ${time}`);
+    assert.doesNotThrow(renderGhost, `Overview render at ${time}`);
+    assert.equal(c.world.t, time);
+    assert.equal(c.applied, trace.filter(event => event.t <= time).length);
+  }
+  assert.equal(sc.missions.size, 0, 'Closed mission leaves the active map');
+  assert.equal(ghost.missions.length, 0, 'Closed mission leaves the overview');
+  context.seek(c, 1000, true);
+  assert.doesNotThrow(renderActive, 'Backward replay recreates a planned mission');
+  assert.doesNotThrow(renderGhost, 'Backward replay recreates its overview seal');
+  assert.equal(sc.missions.get('m1').seal.wedges.length, 0);
+  assert.equal(ghost.missions[0].seal.wedges.length, 0);
+});

@@ -1,0 +1,14 @@
+concept,expected_owner,repository,source_revision,canonical_symbol_or_schema,transport_and_version,authentication_and_authorization,receipt_or_revision_evidence,status
+Familiar root and exact revision,Familiar Contract,DISCOVER,UNVERIFIED,DISCOVER,DISCOVER,DISCOVER,DISCOVER,unverified
+Continuity profile query,SPAR,DISCOVER,UNVERIFIED,DISCOVER,DISCOVER,DISCOVER,DISCOVER,unverified
+Protected operation proposal or decision,Coven Threads with Coven commit owner,DISCOVER,UNVERIFIED,DISCOVER,DISCOVER,DISCOVER,DISCOVER,unverified
+Mission task lane lease attempt semantics,Psyche,DISCOVER,UNVERIFIED,DISCOVER,DISCOVER,DISCOVER,DISCOVER,unverified
+Durable authoritative transitions and recovery,Coven daemon,DISCOVER,UNVERIFIED,DISCOVER,DISCOVER,DISCOVER,DISCOVER,unverified
+Public constrained binding,SDK,DISCOVER,UNVERIFIED,DISCOVER,DISCOVER,DISCOVER,DISCOVER,unverified
+Castle workspace identity and ownership,Existing canonical Castles or Coven owner to verify,DISCOVER,UNVERIFIED,DISCOVER,DISCOVER,DISCOVER,DISCOVER,unverified
+Portable Host folder export and import,Existing Coven persistence and Castles owner to verify,DISCOVER,UNVERIFIED,DISCOVER,DISCOVER,DISCOVER,DISCOVER,proposed
+CLI request and receipt display,Coven CLI canonical client,DISCOVER,UNVERIFIED,DISCOVER,DISCOVER,DISCOVER,DISCOVER,unverified
+Coding cockpit projection,Psyche Build,DISCOVER,UNVERIFIED,DISCOVER,DISCOVER,DISCOVER,DISCOVER,unverified
+Human oversight surface,Cave existing approved surface,DISCOVER,UNVERIFIED,DISCOVER,DISCOVER,DISCOVER,DISCOVER,unverified
+Runtime capability and conformance,Coven Runtimes,DISCOVER,UNVERIFIED,DISCOVER,DISCOVER,DISCOVER,DISCOVER,unverified
+Read-only memory view,Coven Memory,DISCOVER,UNVERIFIED,DISCOVER,DISCOVER,DISCOVER,DISCOVER,unverified

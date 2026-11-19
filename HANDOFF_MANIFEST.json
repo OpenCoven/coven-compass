@@ -1,0 +1,340 @@
+{
+  "format_version": 1,
+  "artifact": "Coven_Castles_Atlas_Handoff_2026-11-18",
+  "created_utc": "2026-11-18T16:31:50Z",
+  "baseline_site_version": 3,
+  "baseline_site_version_id": "appgprj_6afd98fc7e5081918f0609d2ebda9324~appgver_54012053f1f88191a2c28ff5b36205af",
+  "baseline_source_commit": "d7b6f1e655140036cca49f31687131352162de13",
+  "baseline_relationship": "The v3 source revision is a provenance reference, not a claim that these exported files equal that commit. This handoff includes new documentation, packaging tools, and Site additions.",
+  "conceptual_documents_are_canonical_contracts": false,
+  "documentation_status": "Implementation proposals and example fixtures require discovery against canonical production repositories; they do not grant authority.",
+  "integrity_notice": "SHA-256 digests detect content changes. They are not authentication signatures and do not establish publisher identity or trust.",
+  "inventory_scope": "All payload files, excluding HANDOFF_MANIFEST.json and CHECKSUMS.sha256. CHECKSUMS.sha256 also includes the manifest hash and excludes itself.",
+  "files": [
+    {
+      "path": ".gitignore",
+      "bytes": 36,
+      "sha256": "3bbd2fc00a3420e3629be47ce4bbd073dd736484eca54a736d626c638a4b33f4"
+    },
+    {
+      "path": ".openai/hosting.json",
+      "bytes": 106,
+      "sha256": "72902ce6af8d776d53cac4e70b8732ca670a95fb3a340f692a37439924d4a065"
+    },
+    {
+      "path": "MOBILE_READINESS.md",
+      "bytes": 27288,
+      "sha256": "eb8e54a87faba4e839715a2cb7364bc8e79f82337699c498d847dd1be93afb38"
+    },
+    {
+      "path": "README.md",
+      "bytes": 14104,
+      "sha256": "d90d677aa845a5784013c85c9a5cf7ce878012c76286da12e523ac7b6ea5e50c"
+    },
+    {
+      "path": "START_HERE.md",
+      "bytes": 9256,
+      "sha256": "48269834abc3dc58d061df83e3faa277a76b034377649b3fe34cf4fcba1ef58a"
+    },
+    {
+      "path": "dist/atlas-crown.js",
+      "bytes": 12980,
+      "sha256": "7028509e270e8d4339739c0f5fae070228ccbea8bbe1b2ad3cfc71c4f05b5416"
+    },
+    {
+      "path": "dist/atlas-layout.js",
+      "bytes": 12466,
+      "sha256": "ac3c1f2756468a4dc5ed4ea11c554e8255c9365b429334eb8b537dbd27eec661"
+    },
+    {
+      "path": "dist/atlas-ui.js",
+      "bytes": 25350,
+      "sha256": "1ade6eca31f50c5bf0b7048d2dfaa115c5180f0c1f12bc5af3db86cc581bf964"
+    },
+    {
+      "path": "dist/atlas-viewport.js",
+      "bytes": 6592,
+      "sha256": "68fff7554e4c8d813c18d68b34bf2bedc27bbea235f83d4e8490f08e2573914b"
+    },
+    {
+      "path": "dist/atlas.css",
+      "bytes": 56552,
+      "sha256": "a9143586a26a0efedbc961a2ff6945260b1883de66e876c2bc9159ced80f6060"
+    },
+    {
+      "path": "dist/handoff/guide.html",
+      "bytes": 287836,
+      "sha256": "d7cb2b8cf3574e751023498528a829a964566f1e0b07f2c8a28052e41a79c2d3"
+    },
+    {
+      "path": "dist/handoff/handoff.css",
+      "bytes": 10666,
+      "sha256": "e90b85ed487c817f8d4266ccf3b82b40de3e3ddb579bf8f0ef8956df6c17a70a"
+    },
+    {
+      "path": "dist/handoff/index.html",
+      "bytes": 11773,
+      "sha256": "bb54544d2f46cbc7fc2334bcc2ad49f363ee9c8878c54b788e861b894d7d8130"
+    },
+    {
+      "path": "dist/index.html",
+      "bytes": 518845,
+      "sha256": "fc8df0f147467a4da99056b82865dd623bd886bf269396e5088c73c5495461e5"
+    },
+    {
+      "path": "dist/mission-navigation.js",
+      "bytes": 5201,
+      "sha256": "fcc803e5149fd66c03ad8fde03e65e570e009ddb9465a0174622da9726c46a16"
+    },
+    {
+      "path": "dist/mobile-interactions.js",
+      "bytes": 7506,
+      "sha256": "7600b2f6d543abff4ccb1fe0abe90fe320c33d1e14746ba623e8fdf11a1454d3"
+    },
+    {
+      "path": "dist/mobile-ui.js",
+      "bytes": 19661,
+      "sha256": "c726a73e3f395c6836df94971ae8b846f3867b214d49f06465a3f42b9b533dca"
+    },
+    {
+      "path": "dist/seal-lab.css",
+      "bytes": 12271,
+      "sha256": "080ec1142ecb294bcfe4bb8b030a9b4c1de6a8dc82d2c239f1b1f048dda88137"
+    },
+    {
+      "path": "dist/seal-lab.js",
+      "bytes": 18015,
+      "sha256": "f73eb5c940f29b7231236b24abfb0f2c4d9625c35310c2e9d8846d5779d1833a"
+    },
+    {
+      "path": "dist/semantic-map.css",
+      "bytes": 8902,
+      "sha256": "393e1f519a4f8821efd1cf688f9c36ae1667698ab3bd06368876b8425c0b8652"
+    },
+    {
+      "path": "docs/handoff/00-handoff-index.md",
+      "bytes": 3434,
+      "sha256": "89ae58417897e30f268fbd25bcdbea18d5caff27a88ac15a25942d04cc4ab7b6"
+    },
+    {
+      "path": "docs/handoff/01-current-state-and-evidence.md",
+      "bytes": 20738,
+      "sha256": "86ecf1e85c6869f80fa3de78daa2904dac122209ef8a6ea2b2983b9d90604a54"
+    },
+    {
+      "path": "docs/handoff/02-architecture-and-ownership.md",
+      "bytes": 13149,
+      "sha256": "7295283a3138b166069ec96cb2a484ee626da60b411bd855931093fc9083b931"
+    },
+    {
+      "path": "docs/handoff/03-integration-proposal.md",
+      "bytes": 13794,
+      "sha256": "a42add3cc95269650f5cb978fc7322a1cfb6d041b700cf8a37bdb0867874a35c"
+    },
+    {
+      "path": "docs/handoff/04-host-folder-sync-and-recovery.md",
+      "bytes": 13099,
+      "sha256": "8a78b3f2cfc58a5326da518645451e4c25684be8d063a7a09f49488bbc4b52da"
+    },
+    {
+      "path": "docs/handoff/05-implementation-plan.md",
+      "bytes": 13951,
+      "sha256": "ccd8543cd7e360096c4d6928fb1bc6ec249b22af1d889f86a0ca1cc024c868ef"
+    },
+    {
+      "path": "docs/handoff/06-execution-playbook.md",
+      "bytes": 8636,
+      "sha256": "59699f29d62969c0d2c1401008e2f1e3bf3c197f5538c8806b5ae5a162c33854"
+    },
+    {
+      "path": "docs/handoff/07-validation-and-acceptance.md",
+      "bytes": 14395,
+      "sha256": "31b6365770b7c55427e47354678d40c0bfc4246f756281ab6a11ee1058f15d4c"
+    },
+    {
+      "path": "docs/handoff/08-visual-and-interaction-contract.md",
+      "bytes": 11250,
+      "sha256": "f81507a58f54f0e9b044b40dc1a9309fa954ae5491b2b9cb259ca298abaaa2d1"
+    },
+    {
+      "path": "docs/handoff/09-security-and-authority.md",
+      "bytes": 12967,
+      "sha256": "95db4b26a56df25af63bef5fa823b35d3555b8215f09b81276328f049931d49a"
+    },
+    {
+      "path": "docs/handoff/10-agent-task-prompts.md",
+      "bytes": 12021,
+      "sha256": "355726bc39189468b5cd3124e1e04f1d4487aaf8e6d5679e261e5f27647492ab"
+    },
+    {
+      "path": "docs/handoff/11-open-decisions.md",
+      "bytes": 9013,
+      "sha256": "c24bd2d8b60eb771e34bba6471def0facf55e169de4995c87429f3b076e48293"
+    },
+    {
+      "path": "docs/handoff/12-source-ledger.md",
+      "bytes": 8338,
+      "sha256": "2b6260b38bd3dd5e5784b446fca3993a35729917c3503e88488bcc7876c069a2"
+    },
+    {
+      "path": "docs/handoff/15-scalable-atlas-layout.md",
+      "bytes": 23044,
+      "sha256": "fff17b49df17d02b26615b5983bd853187f249f16a64aa49a5b101280d3f597c"
+    },
+    {
+      "path": "docs/handoff/source-context/user-architecture-instructions.md",
+      "bytes": 4185,
+      "sha256": "984fd77e3f8e440829be314134868e70e8d6ae807c596c4323e164fecd6bc772"
+    },
+    {
+      "path": "docs/handoff/templates/acceptance-checklist.md",
+      "bytes": 2040,
+      "sha256": "6267bc195fda1b79e42e10411031cdf9906a2351909c102d065c2d91911c8455"
+    },
+    {
+      "path": "docs/handoff/templates/canonical-binding-inventory.csv",
+      "bytes": 1761,
+      "sha256": "18874e9f9108fb1d02fa524bac420acca5ed85f294d9d08de0b917e83f756e6f"
+    },
+    {
+      "path": "docs/handoff/templates/evidence-record.md",
+      "bytes": 1457,
+      "sha256": "c04f85bbb3dcd03d47a25376aac7273ba9a25871b900a6351e6cb36c3345a02e"
+    },
+    {
+      "path": "docs/handoff/templates/implementation-packet.md",
+      "bytes": 1878,
+      "sha256": "eaa2492e41f782389607cc90a323a465a11b182d1dc0190b8029f320333407bb"
+    },
+    {
+      "path": "examples/README.md",
+      "bytes": 2270,
+      "sha256": "c65393db192f6045953f95ad38885b1a74680800b3478a2de3eda80347e37903"
+    },
+    {
+      "path": "examples/proposed-atlas-projection.json",
+      "bytes": 3005,
+      "sha256": "e3084eb212866db03688a9aae75171c160a666f3bf3991101acd9a9e8cd1d329"
+    },
+    {
+      "path": "examples/proposed-command-intent.json",
+      "bytes": 2117,
+      "sha256": "cbb17e177ea562de28af966574c2fbc5e6f95578eedb8624ef6d33447cae0e73"
+    },
+    {
+      "path": "scripts/build-handoff.py",
+      "bytes": 24200,
+      "sha256": "d46b898f82dcd19b72da028bc769295311858391c6c0c0c1d70f356f904f9760"
+    },
+    {
+      "path": "scripts/check-source.mjs",
+      "bytes": 15809,
+      "sha256": "03e704efce3c99a3985aa7ae4bf989205da48a302cd63fc808ca5f98a683cdc6"
+    },
+    {
+      "path": "scripts/test-atlas-crown.mjs",
+      "bytes": 6215,
+      "sha256": "2f107f0e4758edc42ffc8d50632ee162ed883378a0772a6a8a085325f8e57708"
+    },
+    {
+      "path": "scripts/verify-handoff.py",
+      "bytes": 14211,
+      "sha256": "384e12f64e55afc2b195d0024b6d3c2fc52e02d103fe3b3c5b5fda962d42b59c"
+    },
+    {
+      "path": "tests/atlas-integration.test.cjs",
+      "bytes": 31810,
+      "sha256": "c9780522993658dfe02539dd4d11433dcc8e10c7375b4cc46670cc3bbdf1677d"
+    },
+    {
+      "path": "tests/atlas-layout.test.cjs",
+      "bytes": 11369,
+      "sha256": "24a7bf7807cad8d01ec4ec31da7b477be4ffd70b1c95d2cc9c2c66c7265b5819"
+    },
+    {
+      "path": "tests/atlas-viewport.test.cjs",
+      "bytes": 10052,
+      "sha256": "7072c62408d6f5702910f0795a5c1bbec606b552c427b4e8eedeaaffc98f6264"
+    },
+    {
+      "path": "tests/evidence/layout-audits.json",
+      "bytes": 242720,
+      "sha256": "1a6bf7cf2ac8630b6185ccec65c36a12c55ec0d83979196a17f29e3fbf3b24e2"
+    },
+    {
+      "path": "tests/evidence/merged-layout-audits.json",
+      "bytes": 53291,
+      "sha256": "5f112b9d45829f3f62bebdf95667a277c185c5d59d223c4a91c19d0c0ce4d3a3"
+    },
+    {
+      "path": "tests/evidence/replay-mobile-layout-audits.json",
+      "bytes": 349884,
+      "sha256": "f00861e6e2a35e407b09afcadf5c79755dc8a544123dc645d7d63c4b6a095640"
+    },
+    {
+      "path": "tests/evidence/source-fingerprints.json",
+      "bytes": 1503,
+      "sha256": "f4af5b1d450bea8858eea2cd23d4800718541940c2cf7c52675a0d588730c777"
+    },
+    {
+      "path": "tests/fixtures/baseline.json",
+      "bytes": 353,
+      "sha256": "e25634741666c8de8d5ab814e101d4f2fce41a2369aec1fdfe48b6f762ea01e9"
+    },
+    {
+      "path": "tests/fixtures/v2-index.html",
+      "bytes": 486411,
+      "sha256": "36cae7bc08e9c57f2bc250ac4a383edeff052183b91fc8b3cef5fe0e45cbd9d0"
+    },
+    {
+      "path": "tests/mission-interactions.test.cjs",
+      "bytes": 18552,
+      "sha256": "4b70ccc26c5aac82c29f88fbc0fd599b813417602397efadbd0747fdd53af817"
+    },
+    {
+      "path": "tests/mobile-focus.test.cjs",
+      "bytes": 1578,
+      "sha256": "53f13fb53cde1238a26851a040e6362a9be2dca561bbd0311513b6d05d05cf0d"
+    },
+    {
+      "path": "tests/mobile-interactions.test.cjs",
+      "bytes": 9359,
+      "sha256": "d265a986609090fe4ad69f6a4138f2cdb9122cb87ebbf3a999467142103ff979"
+    },
+    {
+      "path": "tests/mobile-qa.html",
+      "bytes": 16732,
+      "sha256": "9341372d5dce1ab57d97915b4b3108a7dd9b15bb035059a894f0691a1c9e0788"
+    },
+    {
+      "path": "tests/mobile-ui.test.cjs",
+      "bytes": 27758,
+      "sha256": "f51022866e6676943faa0443c674a4a0fc862e78a750a8636810b6d3ffbd76a6"
+    },
+    {
+      "path": "tests/navigation.test.cjs",
+      "bytes": 8053,
+      "sha256": "48272490ed61fba3000c0b75ae35f95eb75adb0f2739fd22a30eb97666dd7f85"
+    },
+    {
+      "path": "tests/presentation.test.cjs",
+      "bytes": 18547,
+      "sha256": "31ed86879f55f6b4452c1979f9768c03567b6bb34f7ef8325394cbe0b1920262"
+    },
+    {
+      "path": "tests/replay-clock.test.cjs",
+      "bytes": 7446,
+      "sha256": "d6f0982482073200603166cb296f1b7087a851bebf48281e9e2603525b3d9d29"
+    },
+    {
+      "path": "tests/replay-emission.test.cjs",
+      "bytes": 4061,
+      "sha256": "b97ff83174be355ff1647b1ae3d5512483a079e4a645cf44639aeacde3b297cc"
+    },
+    {
+      "path": "tests/replay-render.test.cjs",
+      "bytes": 9028,
+      "sha256": "965e0ef8eebf674602dc4cf4d8c69afac51f009aa01ec47bde0aab4194b8ca79"
+    }
+  ]
+}

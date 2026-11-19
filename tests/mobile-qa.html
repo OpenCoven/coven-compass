@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Castles · responsive QA</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; color: #eceaf2; background: #0c0c10; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    header { position: sticky; top: 0; z-index: 2; padding: 10px 14px; background: #16151c; border-bottom: 1px solid #393340; }
+    h1 { display: inline; margin: 0 12px 0 0; font-size: 15px; font-weight: 600; }
+    .note { display: inline; margin: 0; color: #c1bacd; font-size: 12px; }
+    .controls { display: flex; flex-wrap: wrap; align-items: end; gap: 8px; margin-top: 9px; }
+    label { display: flex; flex-direction: column; gap: 3px; color: #c1bacd; font-size: 11px; }
+    input, select, button { min-height: 36px; border: 1px solid #4a4058; border-radius: 6px; padding: 6px 10px; color: #eceaf2; background: #24202d; font: inherit; font-size: 13px; }
+    input { width: 88px; }
+    select { width: 265px; max-width: calc(100vw - 28px); }
+    button { cursor: pointer; }
+    button:hover { background: #332a42; }
+    button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid #c4b4ed; outline-offset: 3px; }
+    #audit { background: #49365f; }
+    #sizeStatus { margin: 7px 0 0; font: 12px ui-monospace, monospace; color: #bdb3cc; }
+    .workbench { display: flex; gap: 16px; align-items: flex-start; padding: 14px; overflow: auto; max-width: 100vw; }
+    .device { flex: none; }
+    iframe { display: block; box-sizing: content-box; width: 390px; height: 844px; border: 1px solid #655777; background: #0b0b0e; }
+    aside { flex: 0 0 360px; max-width: calc(100vw - 28px); }
+    aside h2 { margin: 0 0 8px; font-size: 14px; }
+    aside p { margin: 0 0 10px; color: #bdb3cc; font-size: 12px; line-height: 1.5; }
+    #qaResults { display: block; width: 100%; min-height: 560px; resize: vertical; padding: 12px; border: 1px solid #393340; border-radius: 8px; background: #131117; color: #ded8e8; font: 11px/1.5 ui-monospace, monospace; white-space: pre; }
+    @media (max-width: 650px) { .workbench { flex-direction: column; } aside { flex-basis: auto; width: min(100%, 520px); } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Castles · responsive QA</h1>
+    <p class="note">CSS viewport stress tests. This is Chrome rendering, not physical iPhone or Safari verification.</p>
+    <div class="controls">
+      <label>Viewport preset
+        <select id="preset" aria-label="Viewport preset">
+          <option value="320,568">320 × 568 · compact phone</option>
+          <option value="360,640">360 × 640 · small phone</option>
+          <option value="375,667">375 × 667 · phone portrait</option>
+          <option value="390,844" selected>390 × 844 · phone portrait</option>
+          <option value="402,874">402 × 874 · phone portrait</option>
+          <option value="430,932">430 × 932 · large phone</option>
+          <option value="466,678">466 × 678 · Duo outer, approx. @3x</option>
+          <option value="626,890">626 × 890 · Duo inner, approx. @3x</option>
+          <option value="890,626">890 × 626 · Duo inner landscape, approx.</option>
+          <option value="678,466">678 × 466 · Duo outer landscape, approx.</option>
+          <option value="320,626">320 × 626 · narrow Split View</option>
+          <option value="600,800">600 × 800 · wider Split View</option>
+          <option value="768,1024">768 × 1024 · tablet portrait</option>
+          <option value="834,1194">834 × 1194 · larger tablet</option>
+          <option value="1024,768">1024 × 768 · tablet landscape</option>
+          <option value="1280,800">1280 × 800 · desktop reference</option>
+          <option value="852,393">852 × 393 · short landscape</option>
+          <option value="390,360">390 × 360 · keyboard-constrained height</option>
+        </select>
+      </label>
+      <label>Width (CSS px)<input id="qaWidth" aria-label="Viewport width" type="number" min="240" max="2560" step="1" value="390"></label>
+      <label>Height (CSS px)<input id="qaHeight" aria-label="Viewport height" type="number" min="240" max="1600" step="1" value="844"></label>
+      <button id="apply" type="button">Apply size</button>
+      <button id="rotate" type="button">Rotate</button>
+      <button id="audit" type="button">Audit visible layout</button>
+    </div>
+    <p id="sizeStatus" role="status" aria-live="polite">390 × 844 CSS px · loading the Site</p>
+  </header>
+  <main class="workbench">
+    <section class="device" aria-label="Responsive Site viewport">
+      <iframe id="siteFrame" title="OpenCoven Castles responsive test viewport" src="./index.html#/coven"></iframe>
+    </section>
+    <aside aria-labelledby="auditTitle">
+      <h2 id="auditTitle">Read-only layout audit</h2>
+      <p>Resize or rotate while a mission, form, or draft is open. The iframe stays loaded, so its navigation and draft state can be checked directly. This harness never clicks or types inside the Site.</p>
+      <p>Duo presets divide Apple’s published physical pixel dimensions by an assumed 3× ratio. Safari CSS viewport sizes and that ratio are unverified. The short-height preset reduces space; it does not emulate an iOS keyboard.</p>
+      <label for="qaResults">Audit output</label>
+      <textarea id="qaResults" readonly spellcheck="false" aria-label="Layout audit results">Choose a viewport, interact with the Site, then select “Audit visible layout”.</textarea>
+    </aside>
+  </main>
+  <script>
+  (function () {
+    'use strict';
+    var frame = document.getElementById('siteFrame');
+    var widthInput = document.getElementById('qaWidth');
+    var heightInput = document.getElementById('qaHeight');
+    var preset = document.getElementById('preset');
+    var output = document.getElementById('qaResults');
+    var status = document.getElementById('sizeStatus');
+    var loaded = false;
+
+    function bounded(value, min, max, fallback) {
+      var number = Number(value);
+      return Number.isFinite(number) ? Math.min(max, Math.max(min, Math.round(number))) : fallback;
+    }
+    function updateSize() {
+      var width = bounded(widthInput.value, 240, 2560, 390);
+      var height = bounded(heightInput.value, 240, 1600, 844);
+      widthInput.value = width; heightInput.value = height;
+      frame.style.width = width + 'px'; frame.style.height = height + 'px';
+      status.textContent = width + ' × ' + height + ' CSS px · ' + (loaded ? 'Site remains loaded; navigation and drafts retained' : 'loading the Site');
+    }
+    document.getElementById('apply').addEventListener('click', updateSize);
+    document.getElementById('rotate').addEventListener('click', function () {
+      var width = widthInput.value; widthInput.value = heightInput.value; heightInput.value = width; updateSize();
+    });
+    preset.addEventListener('change', function () {
+      var size = preset.value.split(','); widthInput.value = size[0]; heightInput.value = size[1]; updateSize();
+    });
+    [widthInput, heightInput].forEach(function (input) {
+      input.addEventListener('keydown', function (event) { if (event.key === 'Enter') { event.preventDefault(); updateSize(); } });
+    });
+    frame.addEventListener('load', function () { loaded = true; updateSize(); });
+
+    function round(number) { return Math.round(number * 10) / 10; }
+    function rectValue(rect) { return {x: round(rect.x), y: round(rect.y), width: round(rect.width), height: round(rect.height)}; }
+    function label(element) {
+      return element.id || element.getAttribute('aria-label') || element.getAttribute('title') || element.textContent.trim().replace(/\s+/g, ' ').slice(0, 75) || element.tagName.toLowerCase();
+    }
+    function inspectLayout() {
+      try {
+        var win = frame.contentWindow, doc = frame.contentDocument;
+        if (!doc || !doc.body) throw new Error('The Site document is not ready.');
+        var width = win.innerWidth, height = win.innerHeight;
+        var tolerance = 1;
+        function visible(element) {
+          if (!element || element.closest('[hidden], [inert]')) return false;
+          for (var ancestor = element; ancestor; ancestor = ancestor.parentElement) {
+            if (Number(win.getComputedStyle(ancestor).opacity) === 0) return false;
+            if (ancestor.tagName === 'DETAILS' && !ancestor.open && ancestor !== element) {
+              var summary = ancestor.querySelector(':scope > summary');
+              if (!summary || !summary.contains(element)) return false;
+            }
+          }
+          var style = win.getComputedStyle(element);
+          if (style.display === 'none' || style.visibility !== 'visible' || Number(style.opacity) === 0) return false;
+          var rect = element.getBoundingClientRect();
+          return rect.width > 0 && rect.height > 0;
+        }
+        function clippedBounds(element) {
+          var box = {left: 0, top: 0, right: width, bottom: height};
+          var scrolling = [];
+          for (var parent = element.parentElement; parent && parent !== doc.documentElement; parent = parent.parentElement) {
+            var style = win.getComputedStyle(parent), rect = parent.getBoundingClientRect();
+            var clipsX = /auto|scroll|hidden|clip/.test(style.overflowX);
+            var clipsY = /auto|scroll|hidden|clip/.test(style.overflowY);
+            if (clipsX) { box.left = Math.max(box.left, rect.left); box.right = Math.min(box.right, rect.right); }
+            if (clipsY) { box.top = Math.max(box.top, rect.top); box.bottom = Math.min(box.bottom, rect.bottom); }
+            if ((/auto|scroll/.test(style.overflowY) && parent.scrollHeight > parent.clientHeight + 1) || (/auto|scroll/.test(style.overflowX) && parent.scrollWidth > parent.clientWidth + 1)) scrolling.push(label(parent));
+          }
+          return {box: box, scrolling: scrolling};
+        }
+        function geometry(element) {
+          var rect = element.getBoundingClientRect(), clip = clippedBounds(element), b = clip.box;
+          var inViewport = rect.left >= -tolerance && rect.top >= -tolerance && rect.right <= width + tolerance && rect.bottom <= height + tolerance;
+          var fullyVisible = inViewport && rect.left >= b.left - tolerance && rect.top >= b.top - tolerance && rect.right <= b.right + tolerance && rect.bottom <= b.bottom + tolerance;
+          var center = {x: rect.left + rect.width / 2, y: rect.top + rect.height / 2};
+          var inClip = center.x >= b.left && center.x < b.right && center.y >= b.top && center.y < b.bottom;
+          var hit = inClip ? doc.elementFromPoint(center.x, center.y) : null;
+          return {
+            rect: rectValue(rect), inViewport: inViewport, fullyVisible: fullyVisible,
+            centerReachable: !!hit && (hit === element || element.contains(hit)),
+            coveredBy: hit && hit !== element && !element.contains(hit) ? label(hit) : null,
+            scrollingAncestors: clip.scrolling
+          };
+        }
+        var navIds = ['atlasOverview', 'atlasCastle', 'atlasBrowse', 'atlasMissions', 'atlasHandoff', 'atlasHandoffDrawer', 'atlasLab', 'atlasMobileMap', 'atlasMobileMissions', 'atlasMobileActivity', 'atlasMobileView', 'play', 'scrub', 'speed', 'live', 'atlasPlan', 'atlas3d', 'atlasMove', 'atlasOrbit', 'atlasZoomOut', 'atlasZoomIn', 'atlasFit', 'atlasLock', 'launcher', 'atlasMissionClose', 'send'];
+        var keyControls = navIds.map(function (id) { return doc.getElementById(id); }).filter(visible).map(function (el) {
+          return Object.assign({control: label(el), disabled: !!el.disabled}, geometry(el));
+        });
+        var smallTargets = [], occludedTargets = [], skippedScrollable = 0;
+        var controls = Array.from(doc.querySelectorAll('button, a[href], input:not([type="hidden"]), select, textarea, summary, [role="button"], [role="tab"]'));
+        controls.forEach(function (el) {
+          if (!visible(el) || el.closest('svg') || el.disabled) return;
+          var g = geometry(el);
+          if (!g.fullyVisible) { if (g.scrollingAncestors.length) skippedScrollable++; return; }
+          if (!g.centerReachable) { occludedTargets.push({control: label(el), coveredBy: g.coveredBy}); return; }
+          if (g.rect.width < 44 || g.rect.height < 44) smallTargets.push({control: label(el), size: [g.rect.width, g.rect.height], withinScroller: g.scrollingAncestors.length ? g.scrollingAncestors[0] : null});
+        });
+        var visibleInputs = Array.from(doc.querySelectorAll('input:not([type="hidden"]), textarea, select')).filter(visible).map(function (el) {
+          var g = geometry(el); return {control: label(el), fontSize: win.getComputedStyle(el).fontSize, rect: g.rect, fullyVisible: g.fullyVisible, centerReachable: g.centerReachable};
+        }).filter(function (item) { return item.fullyVisible; });
+        var overlayIds = ['atlasSidebar', 'atlasMissionBrowser', 'inspect', 'psyche', 'empty', 'castleForm', 'keyModal', 'cpModal'];
+        var overlays = overlayIds.map(function (id) { return doc.getElementById(id); }).filter(visible).map(function (el) {
+          return Object.assign({id: el.id, role: el.getAttribute('role'), modal: el.getAttribute('aria-modal'), portaled: el.parentElement === doc.body}, geometry(el));
+        });
+        function overlap(first, second) {
+          if (!visible(first) || !visible(second)) return null;
+          var a = first.getBoundingClientRect(), b = second.getBoundingClientRect();
+          var w = Math.min(a.right, b.right) - Math.max(a.left, b.left), h = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+          return w > tolerance && h > tolerance ? {first: label(first), second: label(second), overlap: {width: round(w), height: round(h)}} : null;
+        }
+        var header = doc.getElementById('atlasHeader');
+        var headerOverlaps = [doc.querySelector('.manifest'), doc.querySelector('.hud'), doc.getElementById('inspect'), doc.getElementById('atlasCameraDock')].map(function (element) { return overlap(header, element); }).filter(Boolean);
+        var result = {
+          harness: 'Read-only Chrome iframe layout audit; no hardware, Safari, touch, or soft-keyboard certification',
+          viewport: {width: width, height: height, requestedWidth: Number(widthInput.value), requestedHeight: Number(heightInput.value)},
+          location: win.location.hash,
+          document: {scrollWidth: doc.documentElement.scrollWidth, clientWidth: doc.documentElement.clientWidth, horizontalOverflow: doc.documentElement.scrollWidth > width + tolerance},
+          focus: doc.activeElement ? {element: label(doc.activeElement), tag: doc.activeElement.tagName, visible: visible(doc.activeElement)} : null,
+          activeOverlay: doc.body.dataset.mobileOverlay || null,
+          adaptiveLayout: doc.body.dataset.mobileLayout || null,
+          map: geometry(doc.getElementById('stage')),
+          replay: {label: doc.getElementById('play').getAttribute('aria-label'), position: doc.getElementById('scrub').value, clock: doc.getElementById('clock').textContent},
+          overlays: overlays,
+          headerOverlaps: headerOverlaps,
+          keyControls: keyControls,
+          touchTargets: {below44Count: smallTargets.length, below44: smallTargets.slice(0, 45), occludedCount: occludedTargets.length, occluded: occludedTargets.slice(0, 20), partiallyOrFullyClippedInScrollers: skippedScrollable, excludes: 'SVG map targets, hidden/inert/disabled controls, and controls clipped outside the viewport or scroll region'},
+          inputFonts: visibleInputs,
+          selectedTabs: Array.from(doc.querySelectorAll('[role="tab"][aria-selected="true"]')).filter(visible).map(label)
+        };
+        output.value = JSON.stringify(result, null, 2);
+        status.textContent = width + ' × ' + height + ' CSS px · audit complete · ' + smallTargets.length + ' fully visible targets below 44 × 44';
+      } catch (error) {
+        output.value = JSON.stringify({error: String(error), hint: 'Serve a temporary copy beside dist/index.html so the iframe shares the Site origin.'}, null, 2);
+      }
+    }
+    document.getElementById('audit').addEventListener('click', function () {
+      output.dataset.auditReady = 'false';
+      // Let responsive portals and visual-viewport CSS finish their queued frame
+      // before reading geometry. This does not emulate a keyboard or touch input.
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { inspectLayout(); output.dataset.auditReady = 'true'; });
+      });
+    });
+    updateSize();
+  }());
+  </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "date": "2026-11-18",
+  "base_commit": "d7b6f1e655140036cca49f31687131352162de13",
+  "method": "SHA-256 of final runtime assets; the original 72-audit matrix used mobile_matrix_source_commit, and merged-layout-audits.json records the merged header and handoff checks.",
+  "files": {
+    "dist/atlas-ui.js": "6eb6329ff82fcd1aa082d115da04d31649993943e7b2254accb1d36b6323ea74",
+    "dist/atlas.css": "5707a5ba57466cb8d3bc3f685b31a2747ede26f9408d3743c46a40305e1b811a",
+    "dist/index.html": "cdfbc74fe0e003ea631d5fadf17271228aebddfb85c4ee4c42ba5cca70a95fe5",
+    "dist/mission-navigation.js": "fcc803e5149fd66c03ad8fde03e65e570e009ddb9465a0174622da9726c46a16",
+    "dist/mobile-interactions.js": "9729e3b976592c6b2573645c25f30e71e10b5a39e1948a90766ecabc6f3a54e8",
+    "dist/mobile-ui.js": "8c91d8b55436b34d9754c210632765c1080bc91717a7757146baa9b91ecf283d",
+    "dist/seal-lab.css": "080ec1142ecb294bcfe4bb8b030a9b4c1de6a8dc82d2c239f1b1f048dda88137",
+    "dist/seal-lab.js": "f73eb5c940f29b7231236b24abfb0f2c4d9625c35310c2e9d8846d5779d1833a",
+    "dist/semantic-map.css": "2d1d8fdafb522c2e3d3b5e0b10ae2f67895205d64647f97cf1bf3f1ee79a1706",
+    "dist/handoff/index.html": "a4679be3b675369b159199518922c94cd9fe9c1aa6294a36a8152bdc5c714b33",
+    "dist/handoff/handoff.css": "e90b85ed487c817f8d4266ccf3b82b40de3e3ddb579bf8f0ef8956df6c17a70a"
+  },
+  "mobile_matrix_source_commit": "9c7be88ca6797ef45a95764e2944653a399ee5c4",
+  "concurrent_handoff_source_commit": "8eb108515b45a22bef5826fe2d4888845bace63a"
+}

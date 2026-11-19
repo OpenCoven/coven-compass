@@ -1,0 +1,7 @@
+{
+  "source_commit": "494a08f6bf10c9a0606c82e86821fed8a253f066",
+  "source_path": "dist/index.html",
+  "file": "v2-index.html",
+  "sha256": "36cae7bc08e9c57f2bc250ac4a383edeff052183b91fc8b3cef5fe0e45cbd9d0",
+  "purpose": "Portable reference fixture for the existing seven presentation and seal-regression tests; not a second application entry point."
+}

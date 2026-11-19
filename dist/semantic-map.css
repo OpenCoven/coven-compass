@@ -1,0 +1,220 @@
+/* A small visual vocabulary, shared by the Coven and the project map. */
+body.atlas-enhanced #plan:not(.far) .atlas-overview,
+body.atlas-enhanced #plan.far .atlas-project-detail {
+  display: none;
+}
+
+/* Boundaries carry scope. Unmeasured terraces, pedestals, and halos are omitted. */
+body.atlas-enhanced #plan .atlas-terrain,
+body.atlas-enhanced #plan .atlas-project-detail .faronly,
+body.atlas-enhanced #plan .plinth,
+body.atlas-enhanced #plan .moat,
+body.atlas-enhanced #plan .court-sh,
+body.atlas-enhanced #plan .atlas-gplate,
+body.atlas-enhanced #plan .atlas-gwall,
+body.atlas-enhanced #plan .atlas-court,
+body.atlas-enhanced #plan .atlas-court-mission,
+body.atlas-enhanced #plan .atlas-court-squad,
+body.atlas-enhanced #plan .atlas-floor-glow,
+body.atlas-enhanced #plan .atlas-project-wall .face,
+body.atlas-enhanced #plan .atlas-project-wall .walk,
+body.atlas-enhanced #plan .wall:not(.base),
+body.atlas-enhanced #plan .post,
+body.atlas-enhanced #plan .gate-l,
+body.atlas-enhanced #plan .shadow,
+body.atlas-enhanced #plan .stem,
+body.atlas-enhanced #plan .solid,
+body.atlas-enhanced #plan .so-foot,
+body.atlas-enhanced #plan .hubfam,
+body.atlas-enhanced #plan .harc,
+body.atlas-enhanced #plan .hubring,
+body.atlas-enhanced #plan .beacon,
+body.atlas-enhanced #plan .beacon-d,
+body.atlas-enhanced #plan .gneed,
+body.atlas-enhanced #plan .atlas-local-psyche > .ring,
+body.atlas-enhanced #plan .pulse,
+body.atlas-enhanced #plan .atlas-project-detail .court.psy,
+body.atlas-enhanced #plan .atlas-squad > .task,
+body.atlas-enhanced #plan .atlas-squad > .puck-side,
+body.atlas-enhanced #plan .atlas-squad > .rim,
+body.atlas-enhanced #plan .atlas-squad > .gauge,
+body.atlas-enhanced #plan .seat > .halo,
+body.atlas-enhanced #plan .seat > .disc,
+body.atlas-enhanced #plan .lead-node > .halo,
+body.atlas-enhanced #plan .lead-node > .disc,
+body.atlas-enhanced #plan .lead-node > .sig {
+  display: none;
+}
+body.atlas-enhanced #plan .wall.base {
+  display: inline;
+  stroke: #9c95b2;
+  stroke-width: 1.15;
+  stroke-opacity: .52;
+  vector-effect: non-scaling-stroke;
+}
+body.atlas-enhanced #plan .gfloor,
+body.atlas-enhanced #plan .floor {
+  fill: #19181e;
+  fill-opacity: .68;
+  stroke: none;
+}
+body.atlas-enhanced #plan.far .ghostfort { opacity: 1; }
+body.atlas-enhanced #plan.far .ghostfort.dormant { opacity: .48; }
+body.atlas-enhanced #plan.far .ghostfort:hover .wall.base,
+body.atlas-enhanced #plan.far .ghostfort:focus-visible .wall.base {
+  stroke: var(--primary);
+  stroke-opacity: 1;
+}
+body.atlas-enhanced #plan .gname {
+  fill: #d8d4e1;
+  font-size: calc(14px * var(--u, 1) * var(--fs, 1));
+  font-weight: 500;
+}
+body.atlas-enhanced #plan .gsub {
+  fill: #928c9f;
+  font-size: calc(10.5px * var(--u, 1) * var(--fs, 1));
+}
+body.atlas-enhanced #plan .gname,
+body.atlas-enhanced #plan .gsub { stroke-width: calc(3px * var(--u, 1)); }
+
+/* Connections mean coordination. Familiar color is introduced only by a filter. */
+body.atlas-enhanced #plan .road {
+  stroke: #8e879e;
+  stroke-width: 1.2;
+  stroke-opacity: .34;
+  stroke-dasharray: none;
+}
+body.atlas-enhanced #plan .road.dormant { stroke-dasharray: 2 7; stroke-opacity: .24; }
+body.atlas-enhanced #plan .road.off { opacity: .35; }
+body.atlas-enhanced #plan .lane {
+  stroke-width: 1.8;
+  stroke-opacity: .85;
+  vector-effect: non-scaling-stroke;
+}
+body.atlas-enhanced #plan .hub > .court.psy {
+  fill: #19171f;
+  fill-opacity: 1;
+  stroke: var(--primary);
+  stroke-width: 1.15;
+  stroke-opacity: .46;
+}
+body.atlas-enhanced #plan .huborb { filter: none; stroke-width: 3; }
+body.atlas-enhanced #plan .hub-l { font-size: calc(11px * var(--u, 1) * var(--fs, 1)); }
+body.atlas-enhanced #plan .hub .gsub { font-size: calc(10px * var(--u, 1) * var(--fs, 1)); }
+
+/* A white square at a boundary is a pending human decision, never a completed action. */
+body.atlas-enhanced #plan .atlas-decision { cursor: pointer; }
+body.atlas-enhanced #plan .atlas-decision rect {
+  fill: #23212a;
+  stroke: var(--attention);
+  stroke-width: 1.15;
+  vector-effect: non-scaling-stroke;
+}
+body.atlas-enhanced #plan .atlas-decision text {
+  fill: var(--attention);
+  font-family: var(--f-body);
+  font-size: 11px;
+  font-weight: 600;
+  text-anchor: middle;
+  pointer-events: none;
+  font-variant-numeric: tabular-nums;
+}
+body.atlas-enhanced #plan .atlas-decision:hover rect,
+body.atlas-enhanced #plan .atlas-decision:focus-visible rect { fill: #3b354c; stroke-width: 1.8; }
+
+/* Each familiar keeps the same glyph at every angle. */
+body.atlas-enhanced #plan .seat > .sig { display: inline; }
+body.atlas-enhanced #plan .atlas-glyph-hit { fill: transparent; stroke: transparent; pointer-events: all; }
+body.atlas-enhanced #plan .seat:hover .atlas-glyph-hit,
+body.atlas-enhanced #plan .seat:focus-visible .atlas-glyph-hit,
+body.atlas-enhanced #plan .seat.sel .atlas-glyph-hit {
+  fill: var(--hue);
+  fill-opacity: .06;
+  stroke: var(--hue);
+  stroke-opacity: .5;
+  stroke-width: 1;
+}
+body.atlas-enhanced #plan .atlas-local-psyche { cursor: pointer; }
+body.atlas-enhanced #plan .psy-boundary {
+  fill: #19171f;
+  stroke: var(--primary);
+  stroke-opacity: .5;
+  vector-effect: non-scaling-stroke;
+}
+body.atlas-enhanced #plan .atlas-local-psyche .crown { filter: none; }
+body.atlas-enhanced #plan .atlas-local-psyche .psy-l { font-size: 10px; letter-spacing: 2.5px; }
+body.atlas-enhanced #plan .atlas-mission-lines .thread { stroke: #777183; stroke-width: .9; stroke-opacity: .3; stroke-dasharray: none; }
+body.atlas-enhanced #plan .atlas-squad-lines .link { stroke-width: 1; stroke-opacity: .42; }
+body.atlas-enhanced #plan .atlas-squad > .task-l { fill: var(--hue); font-size: calc(10.5px * var(--u, 1)); }
+body.atlas-enhanced #plan .atlas-squad > .task-l .n { fill: #95909f; font-size: calc(9px * var(--u, 1)); }
+body.atlas-enhanced #plan .atlas-mission-group > .lead-name { font-size: calc(13px * var(--u, 1)); }
+body.atlas-enhanced #plan .atlas-mission-group.dim { opacity: .35; }
+body.atlas-enhanced #plan .atlas-squad.dim { opacity: .2; }
+body.atlas-enhanced #plan .colink { opacity: .4; }
+
+/* Dots are agents. Selection controls their visibility in applySel(). */
+body.atlas-enhanced #plan .agent .core { filter: none; }
+body.atlas-enhanced #plan .agent .hot { pointer-events: all; }
+body.atlas-enhanced #plan .agent.idle .o { fill: #151418; stroke-opacity: .7; }
+body.atlas-enhanced #plan .agent.work .o { animation: none; }
+body.atlas-enhanced #plan .cell-ghost { stroke-opacity: .35; }
+body.atlas-enhanced #plan .pk { filter: none; }
+
+/* One shared opacity keeps overlapping coordination corridors equally quiet. */
+body.atlas-enhanced #plan .atlas-roads { opacity: .4; }
+body.atlas-enhanced #plan .atlas-lanes { opacity: .85; }
+body.atlas-enhanced #plan .road,
+body.atlas-enhanced #plan .lane {
+  fill: none;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  stroke-opacity: 1;
+  vector-effect: non-scaling-stroke;
+}
+body.atlas-enhanced #plan .road.dormant { stroke-opacity: .6; }
+body.atlas-enhanced #plan .hub > .court.psy { stroke-opacity: .24; fill: #17151d; }
+body.atlas-enhanced #plan .atlas-crown-3d { filter: none; }
+
+/* Overview detail follows available pixels; counts and drill-down remain exact. */
+body.atlas-enhanced #plan .atlas-aggregate {
+  fill: #b9b0cf;
+  font-family: var(--f-body);
+  font-size: 110px;
+  font-weight: 500;
+  text-anchor: middle;
+  pointer-events: none;
+  font-variant-numeric: tabular-nums;
+}
+body.atlas-enhanced #plan .ghostfort[data-density="full"] .atlas-aggregate,
+body.atlas-enhanced #plan .ghostfort[data-density="compact"] .atlas-ghost-mission,
+body.atlas-enhanced #plan .ghostfort[data-density="tiny"] .atlas-ghost-mission,
+body.atlas-enhanced #plan .ghostfort[data-density="compact"] .gsub,
+body.atlas-enhanced #plan .ghostfort[data-density="tiny"] .gsub,
+body.atlas-enhanced #plan .ghostfort[data-label-detail="compact"] .gsub { display: none; }
+body.atlas-enhanced #plan .ghostfort[data-density="tiny"] .gname { visibility: hidden; }
+body.atlas-enhanced #plan .ghostfort[data-density="tiny"]:hover .gname,
+body.atlas-enhanced #plan .ghostfort[data-density="tiny"]:focus-visible .gname { visibility: visible; }
+body.atlas-enhanced #plan .atlas-mission-more { cursor: pointer; }
+body.atlas-enhanced #plan .atlas-mission-more circle {
+  fill: #24202e;
+  stroke: #9e91be;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+body.atlas-enhanced #plan .atlas-mission-more text {
+  fill: #e0d7f1;
+  font-family: var(--f-body);
+  font-size: 29px;
+  font-weight: 500;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+}
+body.atlas-enhanced #plan .atlas-mission-more:hover circle,
+body.atlas-enhanced #plan .atlas-mission-more:focus-visible circle { fill: #3b324b; stroke: #dfd3f3; }
+
+@media (prefers-contrast: more) {
+  body.atlas-enhanced #plan .wall.base { stroke-opacity: .9; }
+  body.atlas-enhanced #plan .gsub { fill: #c0b9ce; }
+  body.atlas-enhanced #plan .road { stroke-opacity: .6; }
+}

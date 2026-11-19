@@ -1,0 +1,83 @@
+{
+  "artifact_kind": "documentation-fixture",
+  "contract_status": "proposal-not-canonical",
+  "fixture_id": "fixture:atlas:stale-pending-decision",
+  "canonical_mapping": "UNRESOLVED: discover existing Coven/Psyche/SDK types before implementation",
+  "client_observation": {
+    "connection_state": "disconnected",
+    "projection_quality": "stale",
+    "transport_verification": "not-performed-for-fixture",
+    "last_received_at": "2026-11-18T12:00:00Z",
+    "host_health": "unknown",
+    "ui_hints": {
+      "show_cached_observation": true,
+      "show_pending_as_committed": false,
+      "commit_controls": "disabled"
+    }
+  },
+  "proposed_projection": {
+    "producer_hint": "fixture:host:primary",
+    "scope": {
+      "principal_ref": "fixture:principal:owner",
+      "castle_ref": "fixture:castle:psyche-build"
+    },
+    "snapshot": {
+      "revision_ref": "fixture:snapshot:42",
+      "stream_scope_ref": "fixture:stream:primary-castle",
+      "cursor_ref": "fixture:cursor:42",
+      "complete_for_scope": true,
+      "observed_at": "2026-11-18T11:59:59Z"
+    },
+    "familiars": [
+      {
+        "root_ref": "fixture:familiar:astra",
+        "revision_ref": "fixture:familiar-revision:astra:7",
+        "display_name": "Astra"
+      }
+    ],
+    "missions": [
+      {
+        "mission_ref": "fixture:mission:review-readiness",
+        "castle_ref": "fixture:castle:psyche-build",
+        "display_name": "Review readiness",
+        "orchestration_state": "PROPOSED.awaiting_decision",
+        "state_revision_ref": "fixture:mission-revision:12",
+        "familiar_binding": {
+          "root_ref": "fixture:familiar:astra",
+          "revision_ref": "fixture:familiar-revision:astra:7"
+        },
+        "display_projection": {
+          "seal_state": "needsYou",
+          "target_progress": null,
+          "target_progress_quality": "unknown-canonical-mapping"
+        }
+      }
+    ],
+    "attempts": [
+      {
+        "attempt_ref": "fixture:attempt:3",
+        "mission_ref": "fixture:mission:review-readiness",
+        "task_ref": "fixture:task:check-sources",
+        "lane_ref": "fixture:lane:research",
+        "runtime_ref": "fixture:runtime:bounded-worker",
+        "state": "PROPOSED.suspended_for_decision",
+        "reported_owner_ref": "fixture:host:primary",
+        "lease_generation": 8,
+        "input_commitment_ref": "fixture:immutable-input:source-review:1"
+      }
+    ],
+    "pending_decisions": [
+      {
+        "proposal_ref": "fixture:proposal:limit-change:1",
+        "proposal_revision_ref": "fixture:proposal-revision:2",
+        "mission_ref": "fixture:mission:review-readiness",
+        "attempt_ref": "fixture:attempt:3",
+        "kind": "PROPOSED.resource_limit_change",
+        "state": "pending",
+        "committed_receipt_ref": null
+      }
+    ],
+    "committed_receipts": []
+  },
+  "trust_notice": "This file does not establish transport trust, authority, current state, or permission. Its supplied claims must not enable protected operations."
+}

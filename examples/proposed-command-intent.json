@@ -1,0 +1,50 @@
+{
+  "artifact_kind": "documentation-fixture",
+  "contract_status": "proposal-not-canonical",
+  "fixture_id": "fixture:intent:expired-resource-limit-draft",
+  "canonical_mapping": "UNRESOLVED: not a valid endpoint payload or SDK request",
+  "requires_external_trusted_context": [
+    "authenticated principal resolved by the canonical transport",
+    "operation-specific authorization resolved by the authority owner",
+    "replay, revocation, expiry and concurrency checks at commit",
+    "authoritative result or receipt returned through the canonical protocol"
+  ],
+  "intent": {
+    "operation": "PROPOSED.change_mission_resource_limit",
+    "request_ref": "fixture:request:limit-change:1",
+    "idempotency_key": "fixture:deduplication:limit-change:1",
+    "target": {
+      "host_ref": "fixture:host:primary",
+      "castle_ref": "fixture:castle:psyche-build",
+      "mission_ref": "fixture:mission:review-readiness",
+      "attempt_ref": "fixture:attempt:3",
+      "proposal_ref": "fixture:proposal:limit-change:1"
+    },
+    "familiar_binding": {
+      "root_ref": "fixture:familiar:astra",
+      "revision_ref": "fixture:familiar-revision:astra:7"
+    },
+    "preconditions": {
+      "expected_mission_revision_ref": "fixture:mission-revision:12",
+      "expected_proposal_revision_ref": "fixture:proposal-revision:2",
+      "expected_lease_generation": 8,
+      "expected_input_commitment_ref": "fixture:immutable-input:source-review:1"
+    },
+    "requested_change": {
+      "resource": "tokens",
+      "observed_limit": 600000,
+      "proposed_limit": 800000,
+      "restart_or_retry_requested": false
+    },
+    "reason": "Fixture only: request more source-review budget without implicitly authorizing a retry.",
+    "requested_expiry": "2026-11-18T12:05:00Z"
+  },
+  "local_ui_state": {
+    "status": "draft",
+    "submitted_at": null,
+    "accepted_proposal_ref": null,
+    "committed_receipt_ref": null,
+    "outcome": "not-submitted"
+  },
+  "trust_notice": "Expired inert sample. Client fields do not authenticate a principal, grant authority, renew a lease, raise a limit, or establish acceptance."
+}

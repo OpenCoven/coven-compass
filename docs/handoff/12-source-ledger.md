@@ -1,0 +1,44 @@
+# Source ledger and evidence limits
+
+Prepared 18 November 2026. Links identify sources; their inclusion is not a claim that an external repository was freshly inspected. Preserve the distinction between owner requirements, local implementation, historical context, external technical references, and proposed work.
+
+| ID | Source | Evidence class | Supports | Limit |
+| --- | --- | --- | --- | --- |
+| S1 | [Owner architecture instructions](source-context/user-architecture-instructions.md) | Owner-supplied constraints | Canonical component responsibilities, identity/authority boundaries, evidence rules | Does not prove current implementation |
+| S2 | `dist/index.html` at Site v3 commit `d7b6f1e655140036cca49f31687131352162de13` | Inspected prototype code | Local worlds/events, views, mission seals, synthetic decisions and conversations | Local simulation only |
+| S3 | `dist/atlas-ui.js`, `dist/atlas.css`, `dist/semantic-map.css` at v3 | Inspected prototype code | Simplified chrome, scope layers, glyphs, dots, boundary markers | Browser interaction/layout not accepted |
+| S4 | `tests/presentation.test.cjs` and pinned `494a08f6bf10c9a0606c82e86821fed8a253f066` reference | Executed unit evidence | Seven presentation/geometry fixtures; six states × three tiers after origin normalization | Limited DOM facade; no browser, daemon, or remote runtime |
+| S5 | Native Sites saved version `appgprj_6afd98fc7e5081918f0609d2ebda9324~appgver_54012053f1f88191a2c28ff5b36205af` | Saved-source / publication metadata | v3 source SHA and successful private publication; generated image showed the simplified overview | Static image, not dynamic acceptance |
+| S6 | This ZIP's manifest and checksums | Export provenance | Which source, docs, fixtures, and scripts were delivered | Hashes detect changes relative to the manifest; not a signature or security certification |
+| S7 | [SQLite WAL documentation](https://www.sqlite.org/wal.html) | Primary technical reference, read 18 Nov 2026 | WAL/database lifecycle and same-host constraints | Does not identify Coven's actual storage configuration |
+| S8 | [SQLite Online Backup API](https://sqlite.org/backup.html) | Primary technical reference, read 18 Nov 2026 | Database-aware consistent backup approach | An available mechanism is not evidence of an implemented export path |
+| S9 | [RFC 9110, HTTP Semantics](https://datatracker.ietf.org/doc/html/rfc9110) §§9.2.2, 13.1.1 | Primary protocol reference, read 18 Nov 2026 | Retry/idempotency cautions and conditional-write preconditions | HTTP semantics alone do not provide application authorization, receipt durability, or exactly-once effects |
+| S10 | [MOBILE_READINESS.md](../../MOBILE_READINESS.md) and `tests/evidence/` JSON records | Historical pre-layout Node and Chrome evidence | The earlier 51-test pass, 72 settled layout audits, and observed navigation/mobile flows | Applies to the fingerprinted earlier source, not the newer scalable layout; no native-device or production-runtime acceptance |
+| S11 | `dist/atlas-layout.js`, `dist/atlas-viewport.js`, `dist/atlas-crown.js`, mobile/scene integration, and [guide 15](15-scalable-atlas-layout.md) | Combined source implementation | Compact placement, coordination routes, bounded detail, explicit scope, measured fit, crown relief, adaptive dock, and shared local replay | Implemented; combined source checks passed; no current browser or daemon acceptance |
+| S12 | Pre-combination layout/crown source and package checks recorded in [chapter 01](01-current-state-and-evidence.md) | Historical source/package evidence | 182 passing suite tests; 84 crown combinations and canonical checks; source checks, clean extraction/rebuild, and 62-file archive verification passed | Applies to the layout branch before the replay/mobile merge, not the current combined artifact |
+| S13 | Incoming commit `07919b421df5457e778e1b1c6a73512c8f27ba73` and [replay/mobile audit JSON](../../tests/evidence/replay-mobile-layout-audits.json) | Historical incoming source/Chrome evidence | 71 passing Node tests and 57 settled Chrome audits, with fingerprints and diagnostic/retest records | Pre-this-combined-layout evidence; not browser, native-device, or performance acceptance of the merge |
+| S14 | Combined `tests/*.test.cjs`, crown/source checks, and package validation record | Executed combined source/package evidence | 207 suite tests passed with zero failures/cancellations/skips; 84 crown view/size cases and canonical checks passed; static checker passed | Clean extraction/rebuild and 67-file archive verification passed (65 payload entries, 66 SHA checks); no browser, device, or load acceptance |
+
+## How the sources shape the proposal
+
+The architectural boundary comes from S1: Coven owns authoritative transitions/persistence, Psyche owns orchestration semantics, Threads governs protected surfaces, and clients consume canonical SDK bindings. The source in S2–S4 provides a view and a local reducer that can be reused as a demonstration/fixture; it does not establish a production integration. The recommended first slice is therefore a verified read-only projection before operational commands.
+
+S7–S8 support avoiding generic synchronization of a live database file. The proposed Host folder carries portable project inputs, approved immutable artifacts, and derived views; an authoritative daemon must own export/import and reconciliation. The exact current database, supported export mechanism, and platform recovery behavior remain discovery tasks.
+
+S9 supports distinguishing transport retry behavior and conditional mutation checks. The proposed implementation additionally needs canonical receipt lookup, operation-specific authorization, revocation, idempotency retention, and external-effect reconciliation. Those requirements are design inferences and owner constraints, not features established by the RFC or this prototype.
+
+S10's source fingerprints identify the historical mobile-matrix commit `9c7be88ca6797ef45a95764e2944653a399ee5c4` and handoff merge checkpoint `8eb108515b45a22bef5826fe2d4888845bace63a`. S13 has a separate fingerprint set for the incoming replay/mobile source. Preserve both records as historical; neither establishes that S11 was browser-tested. JSON audits remain in the handoff, while historical browser screenshots are preserved in the repository only and excluded from the export. Current combined browser QA is unavailable because of the prior browser URL-policy block. The current manifest identifies exported bytes, and chapter 01 records current checks; neither substitutes for fresh browser acceptance.
+
+## Historical material reviewed as context
+
+The supplied local RFC titled “Refactoring Local IPC Socket Routing and PTY Process Supervision Across Coven and Psyche Subsystems” and the 30 October 2026 Cave iPhone Duo handoff were consulted for context. They include historical paths, commands, implementation assertions, or blocked checkpoints. This handoff does not import their exact APIs, version claims, limits, or platform statuses as current facts.
+
+The older iPhone handoff is especially a reminder to inspect the current native product contract before adding destinations. The proposal here does not authorize restoration of retired Cave navigation or an unrelated native redesign.
+
+Broader strategy files mentioned in older conversation memory were not supplied or freshly resolved in this task and were not treated as authoritative evidence. The first discovery packet must reconcile current roadmap, ADR, issue, PR, and repository instructions.
+
+## Production repository discovery
+
+The owner named Coven Host, Coven Castles, Coven CLI, Psyche, and Psyche Build. Candidate repository names in the implementation documents are discovery starting points. Record exact repository URL, checkout, branch, revision, instructions, schemas, SDK symbols, and tests before using any binding. A product name is not proof of a dedicated repository or permission to create one.
+
+No production API endpoint or CLI subcommand is asserted merely because it appears in a conceptual example. If a current canonical owner already implements a needed behavior, extend or consume it. If a responsibility is absent, record the gap and proposed owner for review instead of creating a duplicate control plane inside the Atlas.
