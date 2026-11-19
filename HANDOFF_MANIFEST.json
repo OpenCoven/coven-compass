@@ -237,8 +237,8 @@
     },
     {
       "path": "scripts/verify-all.mjs",
-      "bytes": 8794,
-      "sha256": "1f2fc22770fbc6879e5d9e517131d23bff94dbf66f63f87174cdd058b4fbaf14"
+      "bytes": 9889,
+      "sha256": "89e3314efff9e01d541ab50b337012d5866c6e4f205b418d39f694199d15334a"
     },
     {
       "path": "scripts/verify-checkout.sh",
