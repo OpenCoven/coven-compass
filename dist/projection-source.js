@@ -225,9 +225,15 @@
     '.projection-view .pv-status{border:1px solid var(--border-strong,#c9c3b6);border-radius:var(--radius,10px);padding:12px 14px;margin:0 0 16px;background:var(--card,#fff)}',
     '.projection-view .pv-status[data-state=unavailable],.projection-view .pv-status[data-state=stale],.projection-view .pv-status[data-state=reconciling]{border-color:var(--attention,#c2410c)}',
     '.projection-view .pv-badge{display:inline-block;font:500 12px/1 var(--f-mono,ui-monospace,monospace);text-transform:uppercase;letter-spacing:.04em;margin-right:8px}',
-    '.projection-view .pv-table{width:100%;border-collapse:collapse;display:block;overflow-x:auto}',
-    '.projection-view th,.projection-view td{text-align:left;padding:6px 10px 6px 0;border-bottom:1px solid var(--border,#e4dfd4);vertical-align:top}',
-    '.projection-view td code{font:13px var(--f-mono,ui-monospace,monospace);word-break:break-all}',
+    '.projection-view .pv-scroll{overflow-x:auto}',
+    '.projection-view .pv-table{width:100%;border-collapse:collapse}',
+    '.projection-view .pv-table caption{text-align:left;padding:0 0 6px}',
+    '.projection-view th,.projection-view td{text-align:left;padding:6px 12px 6px 0;border-bottom:1px solid var(--border,#e4dfd4);vertical-align:top}',
+    '.projection-view td code{font:13px var(--f-mono,ui-monospace,monospace);overflow-wrap:anywhere}',
+    '@media (max-width:640px){.projection-view .pv-table,.projection-view .pv-table tbody,.projection-view .pv-table tr,.projection-view .pv-table td{display:block}'
+      + '.projection-view .pv-table .pv-head{display:none}.projection-view .pv-table tr{border-bottom:1px solid var(--border,#e4dfd4);padding:8px 0}'
+      + '.projection-view .pv-table td{border:0;padding:2px 0;display:grid;grid-template-columns:7.5em 1fr;gap:8px}'
+      + '.projection-view .pv-table td::before{content:attr(data-label);color:var(--muted-foreground,#6b675e)}}',
     '.projection-view nav{margin:20px 0 0;color:var(--muted-foreground,#6b675e)}',
     '.projection-view nav a{color:inherit;margin-right:12px}',
   ].join('\n');
@@ -252,10 +258,11 @@
     var status = element(doc, 'div', {'class': 'pv-status', role: 'status', 'aria-live': 'polite', 'data-state': 'unavailable'},
       [element(doc, 'span', {'class': 'pv-badge', text: 'Loading'})]);
     var table = element(doc, 'table', {'class': 'pv-table', hidden: ''});
+    var scroll = element(doc, 'div', {'class': 'pv-scroll'}, [table]);
     var view = element(doc, 'main', {'class': 'projection-view', 'aria-labelledby': 'projectionTitle'}, [
       element(doc, 'h1', {id: 'projectionTitle', text: 'Coven Compass · Projects'}),
       element(doc, 'p', {'class': 'pv-source', text: 'Projection source: ' + (selection.requested || selection.mode) + '. The simulation is not running in this mode.'}),
-      status, table,
+      status, scroll,
       element(doc, 'nav', {'aria-label': 'Projection sources'}, ['simulation', 'fixture&scenario=fresh', 'fixture&scenario=stale',
         'fixture&scenario=partial', 'fixture&scenario=disconnected', 'fixture&scenario=unsupported-version'].map(function (q) {
         return element(doc, 'a', {href: '?source=' + q, text: q.replace('fixture&scenario=', 'fixture: ')});
@@ -288,13 +295,16 @@
       if (d.rows.length) {
         table.removeAttribute('hidden');
         table.appendChild(element(doc, 'caption', {'class': 'pv-source', text: d.complete ? 'Projects' : 'Projects (incomplete)'}));
-        table.appendChild(element(doc, 'tr', {}, ['Name', 'Root', 'Cave id', 'Missions', 'Agents', 'Needs you'].map(function (h) {
+        var headings = ['Name', 'Root', 'Cave id', 'Missions', 'Agents', 'Needs you'];
+        table.appendChild(element(doc, 'tr', {'class': 'pv-head'}, headings.map(function (h) {
           return element(doc, 'th', {scope: 'col', text: h});
         })));
         d.rows.forEach(function (r) {
-          table.appendChild(element(doc, 'tr', {}, [element(doc, 'td', {text: r.name}),
-            element(doc, 'td', {}, [element(doc, 'code', {text: r.root})]), element(doc, 'td', {}, [element(doc, 'code', {text: r.id})]),
-            element(doc, 'td', {text: r.missions}), element(doc, 'td', {text: r.agents}), element(doc, 'td', {text: r.needs})]));
+          // data-label lets narrow screens show each row as labelled lines instead of a squeezed table.
+          var cell = function (i, props, children) { props['data-label'] = headings[i]; return element(doc, 'td', props, children); };
+          table.appendChild(element(doc, 'tr', {}, [cell(0, {text: r.name}),
+            cell(1, {}, [element(doc, 'code', {text: r.root})]), cell(2, {}, [element(doc, 'code', {text: r.id})]),
+            cell(3, {text: r.missions}), cell(4, {text: r.agents}), cell(5, {text: r.needs})]));
         });
       } else {
         table.setAttribute('hidden', '');

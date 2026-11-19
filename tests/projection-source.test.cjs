@@ -169,6 +169,11 @@ test('the standalone view hides the simulation app and renders the state explici
     const table = find(doc.body, n => n.tagName === 'TABLE');
     assert.equal(table.children.filter(c => c.tagName === 'TR').length, rows ? rows + 1 : 0, scenario);
     assert.equal(rows ? table.getAttribute('hidden') : '', rows ? undefined : '');
+    assert.equal(find(doc.body, n => n.attributes && n.attributes.class === 'pv-scroll').children[0], table, 'the table scrolls inside its own wrapper');
+    for (const tr of table.children.filter(c => c.tagName === 'TR' && c.attributes.class !== 'pv-head')) {
+      assert.deepEqual(tr.children.map(td => td.attributes['data-label']), ['Name', 'Root', 'Cave id', 'Missions', 'Agents', 'Needs you'],
+        'every cell carries its column label for the narrow layout');
+    }
     assert.equal(P.current().kind, 'fixture');
   }
 });
