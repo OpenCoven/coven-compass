@@ -330,6 +330,27 @@ test('one top bar contains navigation and project actions at desktop and phone w
         assert.ok(r.x >= bounds.x && r.x + r.width <= bounds.x + bounds.width + 1);
         assert.ok(r.y >= bounds.y && r.y + r.height <= bounds.y + bounds.height);
       }
+      const brand = bar.getByRole('img', {name: 'Compass', exact: true});
+      assert.equal(await brand.textContent(), '');
+      assert.equal(await brand.locator('svg').count(), 1);
+      const scope = bar.getByRole('navigation', {name: 'Workspace scope'});
+      if (await scope.isVisible()) {
+        const coven = scope.locator('#atlasOverview'), project = scope.locator('#atlasProject');
+        assert.deepEqual(await scope.getByRole('button').allTextContents(), ['Coven', 'Project']);
+        const left = await coven.boundingBox(), right = await project.boundingBox();
+        const mark = await brand.boundingBox();
+        assert.equal(left.width, right.width);
+        assert.equal(left.y, mark.y);
+        assert.equal(left.height, mark.height);
+        assert.ok(left.height >= (width < 1100 ? 44 : 36));
+        await coven.focus(); await coven.press('Enter');
+        assert.equal(await coven.getAttribute('aria-pressed'), 'true');
+        assert.equal(await project.getAttribute('aria-pressed'), 'false');
+        assert.equal((await project.boundingBox()).width, right.width);
+        await project.click();
+        assert.equal(await project.getAttribute('aria-pressed'), 'true');
+        assert.match(await project.getAttribute('aria-label'), /psyche-build/);
+      }
       await menu.focus();
       await page.keyboard.press('Enter');
       const ward = page.locator('#ward > summary');

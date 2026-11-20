@@ -204,7 +204,7 @@
     var head = node('header', 'atlas-header'); head.id = 'atlasHeader';
     var brand = node('div', 'atlas-brand');
     brand.innerHTML = '<svg viewBox="0 0 2048 1889" aria-hidden="true"><use href="#crown" width="2048" height="1889"/></svg>';
-    brand.append(node('b', '', 'Compass'));
+    brand.title = 'Compass';
     brand.setAttribute('role', 'img'); brand.setAttribute('aria-label', 'Compass');
     var nav = node('nav', 'atlas-nav'); nav.setAttribute('aria-label', 'Workspace scope');
     nav.append(
@@ -416,7 +416,6 @@
     document.body.dataset.atlasScope = s.scope;
     $('atlasOverview').setAttribute('aria-pressed', String(s.scope === 'coven'));
     $('atlasProject').setAttribute('aria-pressed', String(s.scope !== 'coven'));
-    $('atlasProject').textContent = s.scope === 'project' ? s.active : 'Project';
     $('atlasProject').title = 'Project view · ' + s.active;
     $('atlasProject').setAttribute('aria-label', 'Open current project, ' + s.active);
     $('atlasMissions').setAttribute('aria-label', 'Browse ' + s.missions + ' missions');
