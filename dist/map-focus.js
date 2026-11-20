@@ -39,8 +39,7 @@ function create(container, options) {
   function sync() {
     queued = false;
     const all = Array.prototype.slice.call(container.querySelectorAll(ITEM));
-    const live = all.filter(ok);
-    if (!current || live.indexOf(current) < 0) current = live[0] || null;
+    if (!current || !all.includes(current) || !ok(current)) current = all.find(ok) || null;
     all.forEach(el => set(el, el === current ? '0' : '-1'));
     return current;
   }

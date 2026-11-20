@@ -2276,10 +2276,10 @@ function atlasViewportFrame(selection) {
   }
   return window.CovenAtlasViewport.safeFrame({width, height, occluders, padding: sideControls ? 10 : width < 600 ? 16 : 28});
 }
-function atlasWorldLayout(remeasure) {
+function atlasWorldLayout(remeasure, measuredFrame) {
   const keys = Object.keys(projects), key = JSON.stringify(keys);
   if (atlasLayoutCache && atlasLayoutCache.key === key && !remeasure) return atlasLayoutCache;
-  const frame = atlasViewportFrame(false);
+  const frame = measuredFrame || atlasViewportFrame(false);
   const aspect = Math.round(clamp(frame.width / frame.height, .25, 4) * 20) / 20;
   const options = {aspect, nodeWidth: 1000, nodeHeight: 1150, gap: 200, hubRadius: 360, gateOffset: 280, padding: 80};
   const signature = key + '|' + JSON.stringify(options);
@@ -2300,12 +2300,13 @@ function atlasWorldLayout(remeasure) {
 }
 function atlasFitScene(remeasure) {
   const width = Math.max(1, stage.clientWidth), height = Math.max(1, stage.clientHeight);
-  let bounds;
+  let bounds, frame;
   if (atlasScope === 'coven') {
-    const layout = atlasWorldLayout(remeasure), origin = worldOf(active, layout);
+    frame = atlasViewportFrame(false);
+    const layout = atlasWorldLayout(remeasure, frame), origin = worldOf(active, layout);
     // The viewport supplies the outer margin. Fit the occupied geometry to keep narrow Project labels legible.
     bounds = window.CovenAtlasViewport.projectedBounds([layout.contentBounds], {originX: origin[0], originY: origin[1]});
-    if (sc && sc.layoutSignature !== layout.signature) { buildScene(); sync(); }
+    if (sc && sc.layoutSignature !== layout.signature) { buildScene(); sync(); frame = atlasViewportFrame(false); }
   } else if (cur().sel) {
     const target = fitTarget(cur()); if (target) Object.assign(camT, target);
     atlasAutoFit = true; saveView(); kick(); return;
@@ -2317,7 +2318,7 @@ function atlasFitScene(remeasure) {
     sc.gateL.forEach(gate => { if (gate.asks.length) include(gate.x, gate.y, 14, 14, 14); });
     bounds = window.CovenAtlasViewport.projectedBounds(footprints);
   }
-  const target = window.CovenAtlasViewport.fit(bounds, {width, height, frame: atlasViewportFrame(false), fill: .94, minZoom: ZMIN, maxZoom: 6});
+  const target = window.CovenAtlasViewport.fit(bounds, {width, height, frame: frame || atlasViewportFrame(false), fill: .94, minZoom: ZMIN, maxZoom: 6});
   Object.assign(camT, {zoom: target.zoom, px: target.px, py: target.py});
   atlasAutoFit = true; saveView(); kick();
 }
@@ -2381,11 +2382,11 @@ function buildScene() {
     const ox = x - here[0], oy = y - here[1];
     const points = run => run.map(([px, py]) => (ox + px).toFixed(1) + ',' + (oy + py).toFixed(1)).join(' ');
     svgEl('polygon', {class: 'gfloor', points: points(outline)}, g);
-    overviewBoundary.forEach(run => svgEl('polyline', {class: 'wall base', points: points(run)}, g));
+    svgEl('path', {class: 'wall base', d: overviewBoundary.map(run => 'M' + points(run)).join(' ')}, g);
     const rec = {k, ox, oy, g, boundaryY: oy + bottom + 5};
-    rec.name = svgEl('text', {class: 'lead-name gname'}, g); rec.name.textContent = k;
-    rec.sub = svgEl('text', {class: 'task-l gsub show'}, g);
-    rec.aggregate = svgEl('text', {class: 'atlas-aggregate', 'aria-hidden': 'true'}, g);
+    rec.name = svgEl('text', {class: 'lead-name gname', x: ox.toFixed(1)}, g); rec.name.textContent = k;
+    rec.sub = svgEl('text', {class: 'task-l gsub show', x: ox.toFixed(1)}, g);
+    rec.aggregate = svgEl('text', {class: 'atlas-aggregate', x: ox.toFixed(1), 'aria-hidden': 'true'}, g);
     rec.title = svgEl('title', {}, g);
     g.addEventListener('click', ev => { ev.stopPropagation(); atlasOpenProject(k); });
     atlasFocusable(g, k + ', Project', () => {
@@ -2689,7 +2690,7 @@ function sync() {
   sc.ghosts.forEach(gh => {
     const project = projects[gh.k], w = project.world;
     const count = w.missions.size, summary = plural(count, 'mission') + ' · ' + plural(w.agents.size, 'agent');
-    gh.sub.textContent = summary;
+    if (gh.sub.textContent !== summary) gh.sub.textContent = summary;
     gh.g.classList.toggle('dormant', !count);
     const names = [];
     for (const mission of w.missions.values()) {
@@ -2697,7 +2698,8 @@ function sync() {
       names.push(mission.name);
     }
     if (count > names.length) names.push('+' + (count - names.length) + ' more');
-    gh.title.textContent = 'Open ' + gh.k + (count ? ' · ' + names.join(', ') : ' · No missions');
+    const title = 'Open ' + gh.k + (count ? ' · ' + names.join(', ') : ' · No missions');
+    if (gh.title.textContent !== title) gh.title.textContent = title;
   });
   applySel();
 }
@@ -2722,7 +2724,7 @@ function syncCoven() {
     need += q; working += busy; waiting += waitingMissions; missions += w2.missions.size;
     if (L.k === active) window.CovenAtlasCrown.update(sc.psy.marker, 'coordination for ' + active, busy, w2.agents.size, waitingMissions, w2.missions.size);
     L.decision.style.display = q ? '' : 'none';
-    L.decisionCount.textContent = String(q);
+    if (L.decisionCount.textContent !== String(q)) L.decisionCount.textContent = String(q);
     L.decision.setAttribute('aria-label', L.k + ': ' + plural(q, 'pending decision') + '. Review in the simulated Inbox');
   });
   window.CovenAtlasCrown.update(cv.marker, 'coordination across all Projects', working, agents, waiting, missions);
@@ -2784,17 +2786,20 @@ function setMissionName(el, name) {
   });
   return el;
 }
-function labelMission(s, name, scale, reference, side = 1) {
+function prepareMissionLabel(s, name, scale) {
   const pixels = 10.5 * fsz;
   const units = Math.ceil(10 * Math.max(13 / 3, pixels / Math.max(scale, .01))) / 10;
-  if (s.labelName === name && s.labelUnits === units && s.reference === reference && s.labelSide === side) return;
+  if (s.labelName === name && s.labelUnits === units && s.labelFit) return null;
   s.name.style.fontSize = units + 'px';
   s.name.textContent = '';
   const first = svgEl('tspan', {x: 0}, s.name);
-  // Measure one shaped SVG run. Word and line offsets use the same UTF-16
-  // units as getSubStringLength; whitespace is normalized before indexing.
   const text = name.trim().replace(/\s+/gu, ' ');
   first.textContent = text;
+  return {s, name, text, units, first};
+}
+function measureMissionLabel({s, name, text, units, first}) {
+  // Measure one shaped SVG run. Word and line offsets use the same UTF-16
+  // units as getSubStringLength; whitespace is normalized before indexing.
   const width = first.getComputedTextLength();
   const addressable = first.getNumberOfChars() === text.length;
   const fits = (line, start) => {
@@ -2811,7 +2816,17 @@ function labelMission(s, name, scale, reference, side = 1) {
     start += line.length + 1;
     return !ok;
   }));
+  s.labelFit = {first, lines, leading, units};
+  // Hidden SVG text can report zero until its scope is visible.
+  s.labelName = !name || width > 0 ? name : null;
+  s.labelUnits = units;
+  s.labelSide = null;
+}
+function drawMissionLabel(s, reference, side) {
+  if (s.reference === reference && s.labelSide === side) return;
+  const {first, lines, leading, units} = s.labelFit;
   const display = s.needsCaption && reference ? [String(reference)] : lines;
+  while (first.nextSibling) first.nextSibling.remove();
   const height = leading * display.length;
   const gap = units * .5;
   s.labelDepth = gap + height;
@@ -2821,9 +2836,12 @@ function labelMission(s, name, scale, reference, side = 1) {
     span.setAttribute('y', center + (i - (display.length - 1) / 2) * leading + units * .32);
     span.textContent = line;
   });
-  if (!name || width > 0) {
-    s.labelName = name; s.labelUnits = units; s.reference = reference; s.labelSide = side;
-  }
+  s.reference = reference; s.labelSide = side;
+}
+function labelMission(s, name, scale, reference, side = 1) {
+  const run = prepareMissionLabel(s, name, scale);
+  if (run) measureMissionLabel(run);
+  drawMissionLabel(s, reference, side);
 }
 
 // A caption stays readable when its ring has room only for a reference number.
@@ -2857,15 +2875,20 @@ function project() {
   const seg = (el, a, b, ox, oy) => { el.setAttribute('x1', f(a[0] + (ox || 0))); el.setAttribute('y1', f(a[1] + (oy || 0))); el.setAttribute('x2', f(b[0] + (ox || 0))); el.setAttribute('y2', f(b[1] + (oy || 0))); };
   const width = stage.clientWidth, height = stage.clientHeight;
   const vw = 784 / cam.zoom, screenScale = Math.max(.001, Math.min(width, height) / vw), kpx = Math.max(.05, screenScale), U = clamp(Math.pow(kpx, .35), .8, 1.2) / kpx;
+  // The root SVG fills the stage with a square, rounded viewBox and uniform scaling.
+  // Read its fractional CSS size before the overview writes geometry.
+  const far = atlasScope === 'coven';
+  const viewport = far && 560 * screenScale >= 320 ? plan.getBoundingClientRect() : null;
+  const previewScale = viewport ? Math.min(viewport.width, viewport.height) / Number(f(vw)) : screenScale;
   const minHit = (narrow.matches ? 44 : 24) / screenScale;
   const squareHit = el => {
     el.setAttribute('x', f(-minHit / 2)); el.setAttribute('y', f(-minHit / 2));
     el.setAttribute('width', f(minHit)); el.setAttribute('height', f(minHit));
   };
-  if (Math.abs(U - (sc.u || 0)) > .002) { sc.u = U; plan.style.setProperty('--u', U.toFixed(4)); }
+  if (atlasScope !== 'coven' && Math.abs(U - (sc.u || 0)) > .002) { sc.u = U; sc.detail.style.setProperty('--u', U.toFixed(4)); }
   plan.setAttribute('viewBox', `${f(cam.px - vw / 2)} ${f(cam.py - vw / 2)} ${f(vw)} ${f(vw)}`);
 
-  const far = atlasScope === 'coven'; if (far !== sc.far) { sc.far = far; plan.classList.toggle('far', far); $('vAll').setAttribute('aria-pressed', String(far)); $('vProject').setAttribute('aria-pressed', String(!far)); if (window.CovenAtlas) window.CovenAtlas.update(); }
+  if (far !== sc.far) { sc.far = far; plan.classList.toggle('far', far); $('vAll').setAttribute('aria-pressed', String(far)); $('vProject').setAttribute('aria-pressed', String(!far)); if (window.CovenAtlas) window.CovenAtlas.update(); }
   const cv = sc.cov;
   // Panning moves the viewBox. The overview's local geometry changes only
   // with scale, font size, input target size, or a synchronized world update.
@@ -2891,23 +2914,26 @@ function project() {
         const clear = (pixels < 35 ? 8 : 11) / screenScale - Math.hypot(dx, dy);
         if (clear > 0) { gate[0] += ux * clear; gate[1] += uy * clear; }
       }
-      if (expanded) squareHit(L.decisionHit);
-      L.decision.setAttribute('transform', `translate(${f(gate[0])},${f(gate[1])})`);
-      L.decisionBox.setAttribute('x', f(-side / 2)); L.decisionBox.setAttribute('y', f(-side / 2));
-      L.decisionBox.setAttribute('width', f(side)); L.decisionBox.setAttribute('height', f(side));
-      L.decisionBox.setAttribute('rx', f(side * .10)); L.decisionCount.setAttribute('y', f(side * .18));
-      L.decisionCount.style.fontSize = (side * .54).toFixed(1) + 'px';
+      if (L.decision.style.display !== 'none') {
+        if (expanded) squareHit(L.decisionHit);
+        L.decision.setAttribute('transform', `translate(${f(gate[0])},${f(gate[1])})`);
+        L.decisionBox.setAttribute('x', f(-side / 2)); L.decisionBox.setAttribute('y', f(-side / 2));
+        L.decisionBox.setAttribute('width', f(side)); L.decisionBox.setAttribute('height', f(side));
+        L.decisionBox.setAttribute('rx', f(side * .10)); L.decisionCount.setAttribute('y', f(side * .18));
+        L.decisionCount.style.fontSize = (side * .54).toFixed(1) + 'px';
+      }
       const edge = L.decision.style.display === 'none' ? gh.boundaryY : Math.max(gh.boundaryY, gate[1] + side / 2);
       const labelU = Math.min(U, gh.density === 'full' ? 9 : 6), fontWidth = 14 * labelU * .58 * fsz;
       const maxChars = Math.max(7, Math.floor(850 / fontWidth)), name = L.k.length > maxChars ? L.k.slice(0, maxChars - 1) + '…' : L.k;
       if (gh.name.textContent !== name) gh.name.textContent = name;
       gh.g.style.setProperty('--u', labelU.toFixed(3));
-      set(gh.name, [center[0], edge], 14 * labelU); set(gh.sub, [center[0], edge], 30 * labelU);
+      gh.name.setAttribute('y', f(edge + 14 * labelU)); gh.sub.setAttribute('y', f(edge + 30 * labelU));
     });
   }
+  if (packets.length) positionPackets(P, f);
   if (far) {
     if (overviewChanged || cv.px !== cam.px || cv.py !== cam.py || cv.width !== width || cv.height !== height) {
-      showMissionCaptions(updateVisibleProjectPreviews(sc.ghosts, cam, screenScale, width, height));
+      showMissionCaptions(updateVisibleProjectPreviews(sc.ghosts, cam, screenScale, width, height, previewScale));
       let totalRadius = 0, count = 0;
       for (const gh of sc.ghosts) {
         if (!gh.preview?.missions.size) continue;
@@ -2925,9 +2951,10 @@ function project() {
       }
       cv.px = cam.px; cv.py = cam.py; cv.width = width; cv.height = height;
     }
-  } else {
-    cv.scale = null;
+    placePop(); placeCard();
+    return;
   }
+  cv.scale = null;
   sc.gateL.forEach(g => {
     const q = P(g.x, g.y); g.t.setAttribute('x', f(q[0])); g.t.setAttribute('y', f(q[1] - 17 * U));
     const badgeSize = clamp(20 * Math.max(.8, U) * screenScale, 20, 28) / screenScale;
@@ -2956,7 +2983,7 @@ function project() {
   window.CovenAtlasCrown.draw(sc.psy.marker, {x: 0, y: 0, screenScale, radius: hubRadius, point});
   sc.psy.sx = pc[0]; sc.psy.sy = pc[1];
   const captions = [];
-  const lowWideMap = !far && width >= 700 && height < 440 && sc.missions.size <= 4;
+  const lowWideMap = width >= 700 && height < 440 && sc.missions.size <= 4;
   let missionNumber = 0;
   sc.missions.forEach(s => {
     missionNumber++;
@@ -2975,7 +3002,7 @@ function project() {
     const side = s.y > 0 ? -1 : 1;
     const captionScale = s.readable ? faceScale : reveal;
     const lateral = lowWideMap && s.readable && Math.abs(q[1]) * screenScale < s.diameter / 2 + 45 && Math.abs(q[0]) > radius;
-    if (!far && mission) {
+    if (mission) {
       labelMission(s, mission.name, screenScale * captionScale, missionNumber, lateral ? 0 : side);
       if (s.needsCaption || !s.readable) {
         s.referenceMark.textContent = String(missionNumber);
@@ -3035,24 +3062,24 @@ function project() {
     s.sx = q[0]; s.sy = q[1];
   });
   sc.colinks.forEach(r => { const A2 = sc.seats.get(r.a), B2 = sc.seats.get(r.b); if (!A2 || !B2) return; const pa = P(A2.bx, A2.by), pb = P(B2.bx, B2.by); seg(r.l1, pa, pb); seg(r.l2, pa, pb); });
-  if (packets.length) {
-    const now = performance.now();
-    packets = packets.filter(pk => {
-      const M = sc.missions.get(pk.m), st = sc.seats.get(pk.seat), u = (now - pk.t0) / pk.dur;
-      if (!M || u >= 1) { pk.el.remove(); return false; }
-      if (u < 0) return true;
-      const path = [[0, 0], [M.x, M.y]];
-      if (st) path.push([st.bx, st.by]);
-      const e = u < .5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2, w = pk.dir === 'out' ? e : 1 - e, n = path.length - 1;
-      const at = Math.min(n - 1e-6, w * n), i = Math.floor(at), tt = at - i, A = path[i], B2 = path[i + 1];
-      const g = P(A[0] + (B2[0] - A[0]) * tt, A[1] + (B2[1] - A[1]) * tt);
-      pk.el.setAttribute('cx', f(g[0])); pk.el.setAttribute('cy', f(g[1])); pk.el.setAttribute('opacity', Math.min(1, Math.sin(Math.PI * u) * 2.2).toFixed(2));
-      return true;
-    });
-  }
 
-  if (!far) { showMissionCaptions(captions); layoutMapLabels(); }
+  showMissionCaptions(captions); layoutMapLabels();
   placePop(); placeCard();
+}
+function positionPackets(P, f) {
+  const now = performance.now();
+  packets = packets.filter(pk => {
+    const M = sc.missions.get(pk.m), st = sc.seats.get(pk.seat), u = (now - pk.t0) / pk.dur;
+    if (!M || u >= 1) { pk.el.remove(); return false; }
+    if (u < 0) return true;
+    const path = [[0, 0], [M.x, M.y]];
+    if (st) path.push([st.bx, st.by]);
+    const e = u < .5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2, w = pk.dir === 'out' ? e : 1 - e, n = path.length - 1;
+    const at = Math.min(n - 1e-6, w * n), i = Math.floor(at), tt = at - i, A = path[i], B2 = path[i + 1];
+    const g = P(A[0] + (B2[0] - A[0]) * tt, A[1] + (B2[1] - A[1]) * tt);
+    pk.el.setAttribute('cx', f(g[0])); pk.el.setAttribute('cy', f(g[1])); pk.el.setAttribute('opacity', Math.min(1, Math.sin(Math.PI * u) * 2.2).toFixed(2));
+    return true;
+  });
 }
 function layoutMapLabels() {
   const matrix = plan.getScreenCTM();
@@ -3193,6 +3220,7 @@ $('vAll').addEventListener('click', () => {
   if (cur().sel) select(null, null, null, {history: false, focus: false});
   atlasScope = 'coven'; document.body.dataset.atlasScope = 'coven';
   drawNew();
+  window.CovenMobileUI?.settleMapViewport();
   atlasFitScene(true);
   if (window.CovenAtlas) window.CovenAtlas.update();
   atlasWriteRoute();
@@ -5637,7 +5665,7 @@ function syncProjectPreview(preview, project, compact = false) {
     item.captionSide = y > 0 ? -1 : 1;
     if (item.compact !== compact) {
       item.node.textContent = '';
-      item.compact = compact; item.labelName = null;
+      item.compact = compact; item.labelName = null; item.labelFit = null;
       item.members = new Map();
       if (compact) {
         item.disc = svgEl('circle', {class: 'preview-compact-ring'}, item.node);
@@ -5662,7 +5690,8 @@ function syncProjectPreview(preview, project, compact = false) {
     const d = sealOf(w, mission);
     if (!item.seal.wedges || item.seal.wedges.length !== d.wedges.length) buildSeal(item.seal, d);
     drawSeal(item.seal, d);
-    item.face.setAttribute('transform', `scale(${radius / 43})`);
+    item.faceScale = radius / 43;
+    item.face.setAttribute('transform', `scale(${item.faceScale})`);
     const members = mission.seats.slice(0, 4);
     for (const [key, mark] of item.members) if (!members.includes(key)) { mark.group.remove(); item.members.delete(key); }
     for (const [i, k] of members.entries()) {
@@ -5691,8 +5720,8 @@ function syncProjectPreview(preview, project, compact = false) {
   }
 }
 
-function updateVisibleProjectPreviews(ghosts, camera, scale, width, height) {
-  const captions = [];
+function updateVisibleProjectPreviews(ghosts, camera, scale, width, height, previewScale = scale) {
+  const labels = [];
   const halfWidth = width / (2 * scale) + 280, halfHeight = height / (2 * scale) + 280;
   for (const gh of ghosts) {
     const visible = 560 * scale >= 20 && Math.abs(gh.ox - camera.px) <= halfWidth && Math.abs(gh.oy - camera.py) <= halfHeight;
@@ -5704,11 +5733,18 @@ function updateVisibleProjectPreviews(ghosts, camera, scale, width, height) {
     syncProjectPreview(gh.preview, projects[gh.k], 560 * scale < 40);
     if (560 * scale >= 320) {
       for (const [id, item] of gh.preview.missions) {
-        const reference = captions.length + 1;
-        labelMission(item, item.fullName, item.name.getScreenCTM().a, reference, item.captionSide);
-        if (item.needsCaption) captions.push([gh.k, id, item.fullName, reference]);
+        labels.push({project: gh.k, id, item});
       }
     }
+  }
+  // Preview ancestors only translate. The mission face supplies the one local scale.
+  for (const label of labels) label.run = prepareMissionLabel(label.item, label.item.fullName, previewScale * label.item.faceScale);
+  for (const label of labels) if (label.run) measureMissionLabel(label.run);
+  const captions = [];
+  for (const {project, id, item} of labels) {
+    const reference = captions.length + 1;
+    drawMissionLabel(item, reference, item.captionSide);
+    if (item.needsCaption) captions.push([project, id, item.fullName, reference]);
   }
   return captions;
 }
@@ -5718,15 +5754,15 @@ function atlasProjectGhost(gh, P, f, scale) {
   const pixels = 560 * scale;
   gh.named = detailVisible(gh.named, pixels, 50, 44);
   gh.density = gh.named ? 'full' : 'tiny';
-  gh.g.setAttribute('data-density', gh.density);
+  if (gh.g.getAttribute('data-density') !== gh.density) gh.g.setAttribute('data-density', gh.density);
   gh.g.setAttribute('data-preview-size', pixels >= 90 ? 'detail' : pixels >= 40 ? 'map' : pixels >= 20 ? 'mini' : 'number');
   gh.g.setAttribute('data-preview-names', String(pixels >= 320));
   const pending = openAsks(w).length;
-  gh.g.setAttribute('aria-label', gh.k + ', ' + plural(w.missions.size, 'mission') + ', ' + plural(w.agents.size, 'agent') +
-    (pending ? ', ' + plural(pending, 'pending decision') : '') + '. Open project');
+  const label = gh.k + ', ' + plural(w.missions.size, 'mission') + ', ' + plural(w.agents.size, 'agent') +
+    (pending ? ', ' + plural(pending, 'pending decision') : '') + '. Open project';
+  if (gh.g.getAttribute('aria-label') !== label) gh.g.setAttribute('aria-label', label);
   const center = P(gh.ox, gh.oy);
-  gh.aggregate.textContent = String(w.missions.size);
-  gh.aggregate.setAttribute('x', f(center[0]));
+  if (gh.aggregate.textContent !== String(w.missions.size)) gh.aggregate.textContent = String(w.missions.size);
   const underPreview = pixels >= 20 && !gh.named;
   gh.aggregate.setAttribute('y', f(center[1] + (underPreview ? 280 + 10 / scale : 4 / scale)));
   gh.aggregate.style.fontSize = f(clamp(pixels * .28, 8, 16) / scale) + 'px';
@@ -5807,9 +5843,11 @@ function atlasOverview() {
   if (locked) setLock(false);
   document.body.dataset.atlasScope = 'coven'; document.body.classList.remove('atlas-browse-open');
   $('vAll').click();
-  if (locked) setLock(true);
+  if (locked) {
+    setLock(true);
+    if (window.CovenAtlas) window.CovenAtlas.update();
+  }
   atlasRestoringRoute = restoring;
-  if (window.CovenAtlas) window.CovenAtlas.update();
   atlasWriteRoute();
 }
 function atlasCamera(action) {
@@ -5878,18 +5916,20 @@ function atlasRestoreRoute(initial) {
 }
 function atlasSnapshot(includeMissions) {
   const ps = [], missionItems = [], fs = new Map(Object.keys(FAM).map(k => [k, {key: k, name: fam(k).name, color: fam(k).hue, avatar: avatar(k), projects: 0, agents: 0}]));
+  const missionBrowser = $('atlasMissionBrowser');
+  const showMissions = includeMissions || (missionBrowser && !missionBrowser.hidden);
   let missions = 0, agents = 0, needs = 0;
   Object.keys(projects).forEach(k => {
-    const w = projects[k].world, q = openAsks(w).length, by = new Map();
+    const w = projects[k].world, requests = openAsks(w), q = requests.length, by = new Map();
     const previewNames = [];
     for (const mission of w.missions.values()) {
       previewNames.push(mission.name);
       if (previewNames.length === 2) break;
     }
     ps.push({key: k, missions: w.missions.size, agents: w.agents.size, needs: q, previewNames});
-    if (includeMissions || ($('atlasMissionBrowser') && !$('atlasMissionBrowser').hidden)) w.missions.forEach(M => {
+    if (showMissions) w.missions.forEach(M => {
       const seal = sealOf(w, M);
-      missionItems.push({project: k, id: M.id, name: M.name, state: seal.state, stateLabel: SEAL_STATE[seal.state][0], agents: countOf(w, a => a.mission === M.id), needs: openAsks(w).filter(q => q.mission === M.id).length, council: M.seats.map(f => fam(f).name).join(', '), seal: sealSvg(seal, 30)});
+      missionItems.push({project: k, id: M.id, name: M.name, state: seal.state, stateLabel: SEAL_STATE[seal.state][0], agents: countOf(w, a => a.mission === M.id), needs: requests.filter(q => q.mission === M.id).length, council: M.seats.map(f => fam(f).name).join(', '), seal: sealSvg(seal, 30)});
     });
     missions += w.missions.size; agents += w.agents.size; needs += q;
     w.agents.forEach(a => by.set(a.fam, (by.get(a.fam) || 0) + 1));

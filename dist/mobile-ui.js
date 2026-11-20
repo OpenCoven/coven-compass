@@ -332,6 +332,14 @@
     if (typeof settings.onViewport === 'function' && JSON.stringify(geometry) !== JSON.stringify(previous)) settings.onViewport(geometry, previous);
   }
 
+  // A scope switch changes the header and dock before the next animation frame.
+  // Settle their new stage height before the overview chooses its world layout.
+  function settleMapViewport() {
+    if (!mounted || !mobile) return;
+    if (frame) window.cancelAnimationFrame(frame);
+    updateViewport();
+  }
+
   function scheduleViewport() {
     if (frame || !mounted) return;
     frame = window.requestAnimationFrame(updateViewport);
@@ -396,5 +404,5 @@
     updateViewport();
   }
 
-  window.CovenMobileUI = Object.freeze({mount: mount, sync: sync, activate: activate});
+  window.CovenMobileUI = Object.freeze({mount: mount, sync: sync, activate: activate, settleMapViewport: settleMapViewport});
 }());

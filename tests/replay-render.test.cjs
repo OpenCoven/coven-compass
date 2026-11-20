@@ -28,6 +28,7 @@ function extract(name) {
 }
 
 class Element {
+  getAttribute(key) { return this.attributes[key] ?? null; }
   constructor() {
     this.children = [];
     this.parentNode = null;
