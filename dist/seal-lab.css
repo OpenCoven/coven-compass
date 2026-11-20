@@ -153,7 +153,7 @@ body.csl-open { overflow: hidden; }
   background: #18171c;
 }
 
-.csl-mission-name { font: 500 13px var(--f-body, system-ui, sans-serif); text-anchor: middle; fill: #d3cfdb; }
+.csl-mission-name { font: 500 4.333px var(--f-body, system-ui, sans-serif); text-anchor: middle; fill: #d3cfdb; }
 .csl-scene { display: block; width: 100%; height: clamp(175px, 24vh, 250px); }
 
 

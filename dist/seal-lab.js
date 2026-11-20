@@ -178,6 +178,11 @@
     api.buildSeal(seal, data());
     ui.mission = {name: api.svgEl('text', {class: 'csl-mission-name', 'aria-hidden': 'true'}, ui.scene)};
     specimen.append(ui.scene);
+    if (typeof ResizeObserver === 'function') {
+      new ResizeObserver(() => {
+        if (dialog.open) api.labelMission(ui.mission, MISSION_NAME, ui.scene.getScreenCTM().a);
+      }).observe(ui.scene);
+    }
     preview.append(specimen);
 
     ui.stateCard = el('div', 'csl-state-card');
@@ -309,7 +314,7 @@
     if (dialog.open) return;
     returnFocus = invoker || document.activeElement;
     dialog.showModal();
-    api.labelMission(ui.mission, MISSION_NAME);
+    api.labelMission(ui.mission, MISSION_NAME, ui.scene.getScreenCTM().a);
     document.body.classList.add('csl-open');
     refresh();
     dialog.scrollTop = 0;

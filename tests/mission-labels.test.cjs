@@ -27,30 +27,41 @@ test('mission names wrap at word boundaries within the ring and retain short nam
   assert.deepEqual(lines('Release', 7), ['Release']);
 });
 
-test('a token too wide for the ring stays on one line and leaves the next line for the next word', () => {
-  assert.deepEqual(lines('OpenCovenCompass', 8), ['OpenCov…']);
-  assert.deepEqual(lines('OpenCovenCompass review', 8), ['OpenCov…', 'review']);
-  assert.deepEqual(lines('release-candidate integration', 8), ['release…', 'integra…']);
-  assert.deepEqual(lines('One two three four five', 7), ['One two', 'three…']);
-  assert.deepEqual(lines('one two six five', 6), ['one', 'two…']);
-  assert.deepEqual(lines('one public survey', 6), ['one', 'publi…']);
-  assert.deepEqual(lines('', 7), []);
+test('long words and unlimited rows retain every word in the source name', () => {
+  for (const name of ['OpenCovenCompass review', 'one two three four five six', 'release-candidate integration', '👩🏽‍💻'.repeat(10) + ' café 日本語', 'x…y']) {
+    assert.equal(lines(name, 6).join(' '), name);
+  }
+  assert.deepEqual(lines('one two six five', 6), ['one', 'two', 'six', 'five']);
+  assert.deepEqual(lines('', 6), []);
 });
 
-test('truncation keeps combining marks, emoji modifiers, ZWJ sequences and flags intact', () => {
-  const segmenter = new Intl.Segmenter(undefined, {granularity: 'grapheme'});
-  for (const grapheme of ['e\u0301', '👩🏽‍💻', '🇨🇦', '家']) {
-    const fit = text => Array.from(segmenter.segment(text)).length <= 4;
-    const label = ctx.missionNameLines(grapheme.repeat(6) + ' lab', fit);
-    assert.deepEqual(Array.from(label), [grapheme.repeat(3) + '…', 'lab']);
-  }
-  assert.deepEqual(lines('🔬'.repeat(4), 1), ['…']);
+test('seal labels use one-third design size, a screen-pixel floor and a caption for unfit text', () => {
+  const ctx = vm.createContext({
+    fsz: 1,
+    svgEl(_tag, _attrs, parent) {
+      const span = {setAttribute() {}, getComputedTextLength() { return this.textContent.length * parseFloat(parent.style.fontSize) / 2; }};
+      parent.lines.push(span);
+      return span;
+    },
+  });
+  new vm.Script(extract('missionNameLines') + '\n' + extract('labelMission')).runInContext(ctx);
+  const s = {name: {style: {}, set textContent(_) { this.lines = []; }}};
+  ctx.labelMission(s, 'Source survey', 3, 2);
+  assert.ok(Math.abs(s.labelUnits - 13 / 3) < .1);
+  assert.equal(s.name.lines[0].textContent, 'Source survey');
+  ctx.labelMission(s, 'x'.repeat(90), .85, 2);
+  assert.ok(s.labelUnits * .85 >= 10.5);
+  assert.equal(s.needsCaption, true);
+  assert.equal(s.name.lines[0].textContent, '2');
+  ctx.labelMission(s, 'Review', .85, 2);
+  assert.equal(s.needsCaption, false);
+  assert.equal(s.name.lines[0].textContent, 'Review');
 });
 
 test('ring text sits on the interactive face while its accessible name retains the full mission name and state', () => {
   assert.match(source, /s\.name = svgEl\('text', \{class: 'lead-name', 'aria-hidden': 'true'\}, s\.face\)/);
   assert.match(source, /ms\.node\.setAttribute\('aria-label', M2\.name \+ ', ' \+ stateName/);
-  assert.match(source, /labelMission\(s, mission\.name\)/);
+  assert.match(source, /labelMission\(s, mission\.name,/);
 });
 
 test('HTML name elements keep original text and render each whitespace-delimited token in a single box', () => {

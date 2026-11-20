@@ -137,7 +137,7 @@ body.atlas-enhanced #plan .road.dormant { stroke-opacity: 1; }
 .preview-empty-mark { display: none; stroke: #aca6b6; stroke-width: 13; stroke-linecap: round; }
 .ghostfort:is([data-preview-size="mini"], [data-preview-size="map"]) .preview-empty-mark { display: inline; }
 .ghostfort:is([data-preview-size="mini"], [data-preview-size="map"]) .preview-empty { display: none; }
-.preview-name { display: none; fill: #eeeaf2; text-anchor: middle; font: 500 11px var(--f-body); }
+.preview-name { display: none; fill: #eeeaf2; text-anchor: middle; font: 500 4.333px var(--f-body); }
 .ghostfort[data-preview-names="true"] .preview-name { display: inline; }
 .ghostfort:not([data-preview-size="detail"]) :is(.preview-task, .preview-group) { display: none; }
 .ghostfort[data-preview-size="mini"] .preview-members { display: none; }
@@ -190,7 +190,7 @@ body.atlas-enhanced #plan .ghostfort[data-density="tiny"]:focus-visible .gname {
 .lead-node.sel .se-selection, .lead-node:hover .se-selection, .lead-node:focus-visible .se-selection { display: inline; }
 .lead-node:focus-visible .se-selection { stroke: #fff; }
 .mission-face { transform: scale(var(--mission-size, 1)); }
-body.atlas-enhanced #plan .mission-face .lead-name { font: 500 13px var(--f-body); text-anchor: middle; stroke: none; fill: #d3cfdb; pointer-events: none; }
+body.atlas-enhanced #plan .mission-face .lead-name { font: 500 4.333px var(--f-body); text-anchor: middle; stroke: none; fill: #d3cfdb; pointer-events: none; }
 body.atlas-enhanced #plan .lead-node:is(:focus-visible, :hover, .sel) .mission-face .lead-name { fill: #f5f3f8; }
 body.atlas-enhanced #plan .atlas-compact-seal .lead-name { visibility: hidden; }
 body.atlas-enhanced #plan .atlas-compact-seal .lead-node:is(:hover, .sel) .lead-name,
@@ -292,3 +292,6 @@ body.atlas-enhanced #plan .agent.co .agent-task { fill: var(--hue2); }
 .task-caption { fill: #c6c1cf; font: 500 9px var(--f-body); }
 .task-overflow { fill: #dfdbe6; font: 500 9px var(--f-body); text-anchor: end; }
 .mission-tasks:is(:hover, :focus-visible) .task-tray-bg { stroke: var(--attention); stroke-width: 1.6; }
+
+.seal-reference { display: none; fill: #d3cfdb; text-anchor: middle; font: 500 13px var(--f-body); }
+.atlas-compact-seal .lead-node:not(:hover, :focus-visible, .sel) .seal-reference { display: inline; }

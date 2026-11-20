@@ -50,7 +50,9 @@ for (const [width, height] of [[1440, 900], [390, 844]]) {
       await page.locator('#traceLoad > summary').click();
       const names = ['Brief', 'Review', 'Copy', 'Layout', 'Polish'];
       const event = (type, props) => JSON.stringify({t:'2026-11-18T06:20:00Z', type, mission:'solo', ...props});
-      const records = [event('mission.opened', {name: 'Unstaffed mission'}), ...names.map((name, i) =>
+      const token = 'Release/candidate-'.repeat(26) + '👩🏽‍💻';
+      const missionName = token + ' review across all release channels Unstaffed mission';
+      const records = [event('mission.opened', {name: missionName}), ...names.map((name, i) =>
         event('task.opened', {task: 'task-' + i, name, familiar: 'cody'}))];
       const chooser = page.waitForEvent('filechooser');
       await page.locator('#traceDrop').click();
@@ -58,6 +60,22 @@ for (const [width, height] of [[1440, 900], [390, 844]]) {
       const unstaffed = page.locator('.atlas-mission-group[data-m="solo"] .mission-tasks');
       await unstaffed.waitFor();
       await page.setViewportSize({width, height});
+      const caption = page.locator('#missionCaptions .mission-caption').filter({hasText: token});
+      await caption.waitFor();
+      assert.equal(await caption.locator(':scope > span').textContent(), missionName);
+      if (width < 500) {
+        const bounds = await page.locator('#missionCaptions').boundingBox();
+        const dock = await page.locator('#atlasMobileChrome').boundingBox();
+        assert.ok(bounds.y >= 0 && bounds.y + bounds.height <= dock.y, 'full captions clear the mobile controls');
+      }
+      const reference = await caption.locator('b').textContent();
+      assert.equal(await unstaffed.locator('..').locator('.lead-name').textContent(), reference);
+      const word = caption.locator('.mission-word').first();
+      assert.ok(await word.evaluate(el => {
+        el.scrollLeft = el.scrollWidth;
+        return getComputedStyle(el).whiteSpace === 'nowrap' && el.scrollLeft > 0 &&
+          getComputedStyle(el).textOverflow !== 'ellipsis' && el.scrollLeft + el.clientWidth >= el.scrollWidth - 1;
+      }), 'the last grapheme of an oversized word can be read without breaking it');
       assert.equal(await unstaffed.locator('.task-cog').count(), 3);
       assert.equal(await unstaffed.locator('.task-overflow').textContent(), '+2');
       // Start from the overview again, this time with a Project containing only unstaffed tasks.
@@ -89,6 +107,9 @@ for (const [width, height] of [[1440, 900], [390, 844]]) {
       assert.ok(await unstaffed.evaluate(el => el.matches(':focus')), 'arrow keys reach the unstaffed task group');
       await page.keyboard.press('Space');
       assert.deepEqual(await page.locator('#inspect .tname').allTextContents(), names);
+      const heading = page.locator('#missionDetailTitle');
+      assert.equal(await heading.textContent(), missionName);
+      assert.ok(await heading.evaluate(el => el.scrollHeight <= el.clientHeight + 1), 'all lines of the inspector name are available');
       await page.locator('[data-focus="close-details"]').click();
       await page.keyboard.press('Escape');
       assert.ok(await unstaffed.evaluate(el => el.matches(':focus')), 'deselecting the mission returns to its task group');
@@ -101,7 +122,7 @@ for (const [width, height] of [[1440, 900], [390, 844]]) {
       const row = page.getByRole('button', {name: /Unstaffed mission, psyche-build/});
       assert.ok(await row.evaluate(el => el.matches(':focus')));
       await page.keyboard.press('Enter');
-      await page.getByRole('heading', {name: 'Unstaffed mission', exact: true}).waitFor();
+      await page.getByRole('heading', {name: missionName, exact: true}).waitFor();
       await page.locator('[data-focus="close-details"]').click();
       assert.equal(await search.inputValue(), 'Unstaffed');
       assert.ok(await row.evaluate(el => el.matches(':focus')), 'close returns to the filtered mission');

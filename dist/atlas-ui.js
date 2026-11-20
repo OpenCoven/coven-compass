@@ -407,7 +407,7 @@
         var names = p.previewNames || [], remaining = p.missions - names.length;
         var preview = b.querySelector('.atlas-project-preview-names');
         preview.hidden = !names.length;
-        preview.textContent = names.join(' · ') + (names.length && remaining > 0 ? ' · +' + remaining : '');
+        api.setMissionName(preview, names.join(' · ') + (names.length && remaining > 0 ? ' · +' + remaining : ''));
         if (names.length) projectLabel += '. Missions: ' + names.join(', ') + (remaining ? ', and ' + remaining + ' more' : '');
         b.setAttribute('aria-label', projectLabel); b.title = projectLabel;
       });

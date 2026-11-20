@@ -175,7 +175,7 @@ function agentFixture() {
     agents: new Map([[a.id, a]]), missions: new Map([['m1', {name: 'Research'}]]),
     asks: new Map([[q.id, q]]), tasks: new Map([['t1', {name: 'Draft brief', leads: ['echo']}]]),
   }};
-  const context = load(['agentInfo', 'pick', 'clearPick', 'showPick'], {
+  const context = load(['setMissionName', 'agentInfo', 'pick', 'clearPick', 'showPick'], {
     ...f, cur: () => c, fam: () => ({name: 'Echo', hue: '#c5a7ff'}),
     STATE: {gate: 'At a gate', work: 'Working', idle: 'Idle'}, GATE_NAME: {N: 'North'}, ago: () => '1 min',
     flashAsk: id => f.calls.push({kind: 'review', id}),

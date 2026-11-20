@@ -1618,6 +1618,7 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
           </div>
           <aside class="inspect" id="inspect" aria-label="Familiar details" hidden></aside>
         </div>
+        <div id="missionCaptions" class="mission-captions" role="group" aria-label="Mission names on the map" hidden></div>
         <div class="timeline" id="timeline">
           <button class="btn icon" type="button" id="play" aria-label="Replay from the start"></button>
           <div class="scrub"><div class="marks" id="marks"></div><input id="scrub" type="range" min="0" max="1000" value="1000" aria-label="Replay position"></div>
@@ -2481,6 +2482,7 @@ function sync() {
       s.node.addEventListener('click', ev => { ev.stopPropagation(); select(id); });
       atlasFocusable(s.node, M.name + ', mission. Show its agents and tasks', () => select(id));
       s.name = svgEl('text', {class: 'lead-name', 'aria-hidden': 'true'}, s.face);
+      s.referenceMark = svgEl('text', {class: 'seal-reference', 'aria-hidden': 'true', y: 4}, s.face);
       s.stateLabel = svgEl('text', {class: 'atlas-mission-state', 'aria-hidden': 'true'}, s.g);
       sc.missions.set(id, s);
     }
@@ -2643,41 +2645,16 @@ function applySel() {
 
 // ------------------------------------------------------------ map coordinates and placement
 let popAt = null;
-// Fit at most two lines to the circular opening. Keep the full source name on the focusable node.
+// Wrap only at whitespace. A word wider than the seal moves to a full caption.
 function missionNameLines(name, fits) {
-  const words = name.trim().split(/\s+/u).filter(Boolean);
-  const ellipsize = word => {
-    if (!fits('…')) return '';
-    let prefix = '';
-    if (typeof Intl.Segmenter === 'function') {
-      for (const {segment} of new Intl.Segmenter(undefined, {granularity: 'grapheme'}).segment(word)) {
-        if (!fits(prefix + segment + '…')) break;
-        prefix += segment;
-      }
-    }
-    return prefix + '…';
-  };
   const lines = [];
-  let next = 0;
-  while (next < words.length && lines.length < 2) {
-    const first = words[next++];
-    if (!fits(first)) { lines.push(ellipsize(first)); continue; }
-    const lastLine = lines.length === 1;
-    let line = first;
-    while (next < words.length) {
-      const candidate = line + ' ' + words[next];
-      const hasMore = next + 1 < words.length;
-      if (!fits(candidate + (lastLine && hasMore ? '…' : ''))) break;
-      line = candidate;
-      next++;
-    }
-    if (lastLine && next < words.length) line = fits(line + '…') ? line + '…' : ellipsize(first);
-    lines.push(line);
+  for (const word of name.trim().split(/\s+/u).filter(Boolean)) {
+    const last = lines.length - 1;
+    if (last >= 0 && fits(lines[last] + ' ' + word)) lines[last] += ' ' + word;
+    else lines.push(word);
   }
   return lines;
 }
-// Inline boxes keep a token together even when it contains punctuation, a soft hyphen or CJK characters.
-// CSS ellipsizes a token wider than its container and leaves the full text in the accessibility tree.
 function setMissionName(el, name) {
   if (el.title === name && el.childElementCount) return el;
   el.textContent = '';
@@ -2688,21 +2665,55 @@ function setMissionName(el, name) {
   });
   return el;
 }
-function labelMission(s, name) {
-  if (s.labelName === name) return;
+function labelMission(s, name, scale, reference) {
+  const pixels = 10.5 * fsz;
+  const units = Math.ceil(10 * Math.max(13 / 3, pixels / Math.max(scale, .01))) / 10;
+  if (s.labelName === name && s.labelUnits === units && s.reference === reference) return;
+  s.name.style.fontSize = units + 'px';
   s.name.textContent = '';
   const first = svgEl('tspan', {x: 0}, s.name);
-  const lines = missionNameLines(name, text => {
+  const fits = text => {
     first.textContent = text;
-    return first.getComputedTextLength() <= 61;
-  });
-  lines.forEach((line, i) => {
+    return first.getComputedTextLength() <= 65;
+  };
+  const lines = missionNameLines(name, fits);
+  const leading = units * 1.13;
+  s.needsCaption = lines.length * leading > 49 || lines.some(line => !fits(line));
+  const display = s.needsCaption && reference ? [String(reference)] : lines;
+  display.forEach((line, i) => {
     const span = i ? svgEl('tspan', {x: 0}, s.name) : first;
-    span.setAttribute('y', (i - (lines.length - 1) / 2) * 14 + 4.3);
+    span.setAttribute('y', (i - (display.length - 1) / 2) * leading + units * .32);
     span.textContent = line;
   });
-  // A hidden SVG has no text metrics. Measure it again when its Project opens.
-  if (!name || first.getComputedTextLength() > 0) s.labelName = name;
+  if (!name || first.getComputedTextLength() > 0) {
+    s.labelName = name; s.labelUnits = units; s.reference = reference;
+  }
+}
+
+// A caption stays readable when its ring has room only for a reference number.
+function showMissionCaptions(entries) {
+  const list = $('missionCaptions');
+  const signature = JSON.stringify(entries);
+  if (signature === list.dataset.signature) return;
+  list.dataset.signature = signature;
+  list.hidden = !entries.length;
+  const nodes = new Map(Array.from(list.children, child => [child.dataset.key, child]));
+  let anchor = list.firstElementChild;
+  for (const [project, id, name, reference] of entries) {
+    const key = JSON.stringify([project, id]);
+    let row = nodes.get(key);
+    if (!row) {
+      row = html('button', 'mission-caption'); row.type = 'button'; row.dataset.key = key;
+      row.append(html('b'), html('span'));
+      row.addEventListener('click', () => atlasOpenMission(project, id, 'side'));
+    }
+    row.firstElementChild.textContent = String(reference);
+    setMissionName(row.lastElementChild, name);
+    nodes.delete(key);
+    if (row !== anchor) list.insertBefore(row, anchor);
+    anchor = row.nextElementSibling;
+  }
+  for (const row of nodes.values()) row.remove();
 }
 function project() {
   const P = (x, y) => [x, y];
@@ -2765,7 +2776,7 @@ function project() {
   if (far) {
     const width = stage.clientWidth, height = stage.clientHeight;
     if (overviewChanged || cv.px !== cam.px || cv.py !== cam.py || cv.width !== width || cv.height !== height) {
-      updateVisibleProjectPreviews(sc.ghosts, cam, screenScale, width, height);
+      showMissionCaptions(updateVisibleProjectPreviews(sc.ghosts, cam, screenScale, width, height));
       cv.px = cam.px; cv.py = cam.py; cv.width = width; cv.height = height;
     }
   } else {
@@ -2793,14 +2804,16 @@ function project() {
   const pc = P(0, 0);
   drawMarker(sc.psy.marker, 0, 0, 49);
   sc.psy.sx = pc[0]; sc.psy.sy = pc[1];
+  const captions = [];
+  let missionNumber = 0;
   sc.missions.forEach(s => {
+    missionNumber++;
     const q = P(s.x, s.y);
     const mission = cur().world.missions.get(s.id);
     s.seal.g.style.opacity = sc.hl && mission && !mission.seats.includes(sc.hl) ? '.76' : '1';
     s.node.setAttribute('transform', `translate(${f(q[0])},${f(q[1])})`);
     const selected = cur().sel === s.id;
     s.hit.setAttribute('r', f(minHit / 2));
-    if (!far && mission) labelMission(s, mission.name);
     const radius = 43, diameter = 2 * radius * screenScale;
     const faceScale = clamp(68 / diameter, 1, sc.missions.size <= 4 ? 1.44 : 1.16);
     s.face.style.setProperty('--mission-size', faceScale);
@@ -2809,6 +2822,13 @@ function project() {
     s.g.classList.toggle('atlas-compact-seal', !s.readable);
     const reveal = Math.max(faceScale, 34 / (radius * screenScale));
     s.face.style.setProperty('--mission-reveal', reveal);
+    if (!far && mission) {
+      labelMission(s, mission.name, screenScale * (s.readable ? faceScale : reveal), missionNumber);
+      if (s.needsCaption || !s.readable) {
+        s.referenceMark.textContent = String(missionNumber);
+        captions.push([active, s.id, mission.name, missionNumber]);
+      }
+    }
     if (s.tray) {
       const size = clamp(1 / screenScale, .75, 1.9);
       const direction = s.y > 0 ? -1 : 1;
@@ -2868,7 +2888,7 @@ function project() {
     });
   }
 
-  if (!far) layoutMapLabels();
+  if (!far) { showMissionCaptions(captions); layoutMapLabels(); }
   placePop(); placeCard();
 }
 function layoutMapLabels() {
@@ -3084,7 +3104,7 @@ function drawCrumb() {
   const c = cur(), w = c.world, M = c.sel ? w.missions.get(c.sel) : null, none = w.missions.size === 0, need = openAsks(w).length;
   $('projName').textContent = active;
   $('mis').hidden = $('crumbSep').hidden = $('wardCtl').hidden = none;
-  $('misName').textContent = M ? M.name : 'All'; $('mis').firstElementChild.title = M ? M.name : 'All missions'; $('ward').firstElementChild.title = need ? `Ward · ${need} waiting on you` : 'Ward'; $('traceBox').firstElementChild.title = 'Trace'; $('misN').textContent = M ? '' : String(w.missions.size);
+  setMissionName($('misName'), M ? M.name : 'All'); $('mis').firstElementChild.title = M ? M.name : 'All missions'; $('ward').firstElementChild.title = need ? `Ward · ${need} waiting on you` : 'Ward'; $('traceBox').firstElementChild.title = 'Trace'; $('misN').textContent = M ? '' : String(w.missions.size);
   const seats = M ? M.seats : [...new Set([...w.missions.values()].flatMap(m => m.seats))], sig = seats.join('+');   // who is in scope
   if (sig !== dotSig) { dotSig = sig; const box = $('misDots'); box.textContent = ''; seats.forEach(k => { const d = html('i'); d.style.setProperty('--hue', fam(k).hue); box.appendChild(d); }); }
   $('wardN').textContent = need ? String(need) : ''; $('ward').firstElementChild.classList.toggle('q', need > 0); $('wardCtl').classList.toggle('q', need > 0);
@@ -3123,7 +3143,7 @@ function drawMissions() {
   ms.forEach(M => {
     const on = c.sel === M.id, b = optRow('', on), dots = html('span', 'opt-dots'), need = openAsks(w).filter(q => q.mission === M.id).length, n = countOf(w, a => a.mission === M.id);
     { const d = sealOf(w, M); dots.className = 'opt-seal'; dots.innerHTML = sealSvg(d, 20); dots.title = sealLabel(d); }
-    b.append(dots, html('span', 'opt-n', M.name)); optEnd(b, String(n), need, on);
+    b.append(dots, setMissionName(html('span', 'opt-n'), M.name)); optEnd(b, String(n), need, on);
     b.setAttribute('aria-label', `${M.name}. Council: ${M.seats.map(k => fam(k).name).join(', ')}. ${plural(n, 'agent')}${need ? `, ${need} waiting on you` : ''}`);
     b.addEventListener('click', () => { $('mis').open = false; select(M.id); });
     list.appendChild(b);
@@ -3245,11 +3265,10 @@ function syncLeads() {
     const id = b.dataset.mission, M = w.missions.get(id); if (!M) return;
     const preview = b.querySelector('.lc-task-names'), names = sc.missions.get(id)?.taskSummary || '';
     if (preview.textContent !== names) { preview.textContent = names; preview.title = names; }
-    b.querySelector('.who').textContent = M.name;
+    setMissionName(b.querySelector('.who'), M.name);
     { const sl = b.querySelector('.lc-seal'), d = sealOf(w, M); if (sl && sl.dataset.sig !== d.sig) { sl.dataset.sig = d.sig; sl.innerHTML = sealSvg(d, 22); sl.title = sealLabel(d); } }
     const tot = countOf(w, a => a.mission === id), wk = countOf(w, a => a.mission === id && a.state === 'work'), g = countOf(w, a => a.mission === id && a.state === 'gate');
     b.setAttribute('aria-pressed', String(c.sel === id));
-    b.querySelector('.who').textContent = M.name;
     b.setAttribute('aria-label', `${M.name}. Council: ${M.seats.map(k => fam(k).name).join(', ')}. ${plural(tot, 'agent')}, ${wk} working` + (g ? `, ${g} at gate` : ''));
     const n = b.querySelector('.n'); n.textContent = ''; if (g) n.appendChild(html('i')); n.append(String(tot));
     b.querySelectorAll('.bar b').forEach(sg => sg.style.flexGrow = countOf(w, a => a.seat === sg.dataset.seat) || .001);
@@ -3626,7 +3645,7 @@ function agentInfo(a, previous) {
   const state = e.querySelector('.st'); state.className = 'st ' + a.state; state.textContent = STATE[a.state];
   e.querySelector('.agent-elapsed').textContent = ago(a) + ' in this state';
   field('task').textContent = task ? task.name : 'Unassigned';
-  field('mission').textContent = mission ? mission.name : 'No mission';
+  setMissionName(field('mission'), mission ? mission.name : 'No mission');
   field('leads').textContent = (task && task.leads.length ? task.leads : [a.fam]).map(k => fam(k).name).join(' and ');
   const gate = field('gate'); gate.parentNode.hidden = !request;
   if (request) gate.textContent = (GATE_NAME[request.gate] || request.gate) + ' gate';
@@ -3959,7 +3978,7 @@ function drawNeeds() {
     const M = w.missions.get(q.mission), f = fam(q.fam), on = c.expanded.has(q.id), x = capOf(q);
     const wrap = html('div', 'nitem' + (on ? ' open' : '')), e = html('button', 'nrow'), ic = html('span', 'n-ic'), m = html('span', 'n-m');
     wrap.style.setProperty('--hue', f.hue); e.type = 'button'; ic.innerHTML = ICON[kindOf(q.title)]; e.setAttribute('aria-expanded', String(on));
-    m.append(html('b', null, f.name), ` · ${M ? M.name : 'No mission'}`);
+    m.append(html('b', null, f.name), ' · ', setMissionName(html('span'), M ? M.name : 'No mission'));
     e.append(ic, html('span', 'n-t', x ? `Go past ${capText(x.k, x.max)}` : q.title), html('span', 'n-age', age(q)), m);
     if (x) e.appendChild(html('span', 'n-v', `${fmtN(x.k, x.used)} used`));
     e.insertAdjacentHTML('beforeend', CHEV);
@@ -4565,7 +4584,7 @@ function drawProject() {
   const mb = sec('flag', 'Missions', ms.length ? '' : 'None yet', ms.length);
   ms.forEach(M => { const row = html('button', 'cs-m'), dots = html('span', 'opt-dots'), n = countOf(w, a => a.mission === M.id), wk = countOf(w, a => a.mission === M.id && a.state === 'work'), q = open.filter(x => x.mission === M.id).length, tx = html('span', 'cs-mt');
     const sd = sealOf(w, M); row.type = 'button'; row.dataset.id = 'cs-m-' + M.id; dots.className = 'opt-seal'; dots.innerHTML = sealSvg(sd, 24);
-    tx.append(html('b', null, M.name), html('span', null, sealLabel(sd) + ' · ' + wk + ' of ' + n + ' working' + (M.paused === 'you' ? ' · paused by you' : '')));
+    tx.append(setMissionName(html('b'), M.name), html('span', null, sealLabel(sd) + ' · ' + wk + ' of ' + n + ' working' + (M.paused === 'you' ? ' · paused by you' : '')));
     row.append(dots, tx); if (q) row.appendChild(html('span', 'opt-q', q + ' waiting')); row.title = M.tpl || 'Custom brief'; row.insertAdjacentHTML('beforeend', CHEV);
     row.addEventListener('click', () => select(M.id)); mb.appendChild(row); });
   { const add = html('button', 'cs-m add', '+ New mission'); add.type = 'button'; add.dataset.id = 'cs-new'; add.disabled = !canAct(); add.addEventListener('click', () => openNew()); mb.appendChild(add); }
@@ -5287,6 +5306,7 @@ function syncProjectPreview(preview, project, compact = false) {
 }
 
 function updateVisibleProjectPreviews(ghosts, camera, scale, width, height) {
+  const captions = [];
   const halfWidth = width / (2 * scale) + 280, halfHeight = height / (2 * scale) + 280;
   for (const gh of ghosts) {
     const visible = 560 * scale >= 20 && Math.abs(gh.ox - camera.px) <= halfWidth && Math.abs(gh.oy - camera.py) <= halfHeight;
@@ -5297,9 +5317,14 @@ function updateVisibleProjectPreviews(ghosts, camera, scale, width, height) {
     if (!gh.preview) gh.preview = createProjectPreview(gh);
     syncProjectPreview(gh.preview, projects[gh.k], 560 * scale < 40);
     if (560 * scale >= 320) {
-      for (const item of gh.preview.missions.values()) labelMission(item, item.fullName);
+      for (const [id, item] of gh.preview.missions) {
+        const reference = captions.length + 1;
+        labelMission(item, item.fullName, item.name.getScreenCTM().a, reference);
+        if (item.needsCaption) captions.push([gh.k, id, item.fullName, reference]);
+      }
     }
   }
+  return captions;
 }
 
 function atlasProjectGhost(gh, P, f) {
