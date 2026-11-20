@@ -2648,10 +2648,12 @@ let popAt = null;
 // Wrap only at whitespace. A word wider than the seal moves to a full caption.
 function missionNameLines(name, fits) {
   const lines = [];
+  let lineStart = 0, wordStart = 0;
   for (const word of name.trim().split(/\s+/u).filter(Boolean)) {
     const last = lines.length - 1;
-    if (last >= 0 && fits(lines[last] + ' ' + word)) lines[last] += ' ' + word;
-    else lines.push(word);
+    if (last >= 0 && fits(lines[last] + ' ' + word, lineStart)) lines[last] += ' ' + word;
+    else { lines.push(word); lineStart = wordStart; }
+    wordStart += word.length + 1;
   }
   return lines;
 }
@@ -2672,13 +2674,26 @@ function labelMission(s, name, scale, reference, side = 1) {
   s.name.style.fontSize = units + 'px';
   s.name.textContent = '';
   const first = svgEl('tspan', {x: 0}, s.name);
-  const fits = text => {
-    first.textContent = text;
+  // Measure one shaped SVG run. Word and line offsets use the same UTF-16
+  // units as getSubStringLength; whitespace is normalized before indexing.
+  const text = name.trim().replace(/\s+/gu, ' ');
+  first.textContent = text;
+  const width = first.getComputedTextLength();
+  const addressable = first.getNumberOfChars() === text.length;
+  const fits = (line, start) => {
+    if (addressable) return first.getSubStringLength(start, line.length) <= 112;
+    // Some characters can be discarded by SVG layout. Measure that line directly.
+    first.textContent = line;
     return first.getComputedTextLength() <= 112;
   };
-  const lines = missionNameLines(name, fits);
+  const lines = width > 112 ? missionNameLines(text, fits) : text ? [text] : [];
   const leading = units * 1.13;
-  s.needsCaption = lines.length * leading > 49 || lines.some(line => !fits(line));
+  let start = 0;
+  s.needsCaption = lines.length * leading > 49 || (width > 112 && lines.some(line => {
+    const ok = fits(line, start);
+    start += line.length + 1;
+    return !ok;
+  }));
   const display = s.needsCaption && reference ? [String(reference)] : lines;
   const height = leading * display.length;
   const gap = units * .5;
@@ -2689,7 +2704,7 @@ function labelMission(s, name, scale, reference, side = 1) {
     span.setAttribute('y', center + (i - (display.length - 1) / 2) * leading + units * .32);
     span.textContent = line;
   });
-  if (!name || first.getComputedTextLength() > 0) {
+  if (!name || width > 0) {
     s.labelName = name; s.labelUnits = units; s.reference = reference; s.labelSide = side;
   }
 }

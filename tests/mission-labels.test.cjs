@@ -39,7 +39,15 @@ test('seal labels use one-third design size, a screen-pixel floor and a caption 
   const ctx = vm.createContext({
     fsz: 1,
     svgEl(_tag, _attrs, parent) {
-      const span = {setAttribute(key, value) { this[key] = value; }, getComputedTextLength() { return this.textContent.length * parseFloat(parent.style.fontSize) / 2; }};
+      const span = {
+        setAttribute(key, value) { this[key] = value; },
+        getComputedTextLength() { return this.textContent.length * parseFloat(parent.style.fontSize) / 2; },
+        getNumberOfChars() { return this.textContent.length; },
+        getSubStringLength(start, length) {
+          assert.ok(start >= 0 && start + length <= this.textContent.length);
+          return this.textContent.slice(start, start + length).length * parseFloat(parent.style.fontSize) / 2;
+        },
+      };
       parent.lines.push(span);
       return span;
     },
