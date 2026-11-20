@@ -107,9 +107,9 @@ for (const [name, width, height, mobile] of [['desktop', 1440, 900, false], ['ph
       await page.goto(new URL('#/coven', base).href);
       const overview = page.locator('.hub');
       await overview.locator('.coord-name').waitFor();
-      assert.equal(Math.round((await overview.locator('.coord-crown').boundingBox()).width), 32);
       await page.reload();
       await overview.locator('.coord-name').waitFor();
+      await page.waitForFunction(() => Math.round(document.querySelector('.hub .coord-crown')?.getBoundingClientRect().width) === 32);
       if (mobile && !(await select.isVisible())) await page.locator('#atlasMobileView').click();
       assert.equal(await select.inputValue(), 'labeled');
       await overview.focus();
