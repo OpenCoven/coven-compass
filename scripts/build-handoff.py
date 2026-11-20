@@ -14,6 +14,7 @@ from pathlib import Path, PurePosixPath
 import re
 import stat
 import sys
+from string import Template
 import tempfile
 from datetime import date
 import unicodedata
@@ -255,7 +256,7 @@ class Markdown:
                 number = self.heading_counts.get(name, 0)
                 self.heading_counts[name] = number + 1
                 anchor = f"{self.chapter_id}--{name}" + (f"-{number}" if number else "")
-                level = min(4, len(heading[1]) + 1)
+                level = len(heading[1])
                 out.append(f'<h{level} id="{html.escape(anchor)}">{self.inline(heading[2])}</h{level}>')
                 i += 1
                 continue
@@ -347,7 +348,7 @@ def write_guide() -> int:
             raise BuildError(f"Duplicate guide chapter ID: {relative}")
         used.add(chapter_id)
         chapter_ids[relative] = chapter_id
-    toc: list[str] = []
+    groups: dict[str, list[str]] = {}
     chapters: list[str] = []
     for path in paths:
         text = source_bytes(path).decode("utf-8")
@@ -355,24 +356,34 @@ def write_guide() -> int:
         chapter_id = chapter_ids[relative]
         title_match = re.search(r"^#\s+(.+)$", text, re.MULTILINE)
         title = title_match[1] if title_match else path.stem.replace("-", " ").capitalize()
-        toc.append(f'<li><a href="#{chapter_id}">{html.escape(title)}</a></li>')
+        if path in numbered:
+            group = "Implementation"
+        elif path in root_readmes:
+            group = "Project"
+        else:
+            group = "Reference"
+        label = title.split(": ", 1)[0] if path in numbered else title
+        if path.name in ("README.md", "START_HERE.md", "MOBILE_READINESS.md"):
+            label = {"README.md": "Compass overview", "START_HERE.md": "Start here", "MOBILE_READINESS.md": "Mobile readiness"}[path.name]
+            if path == example_readme:
+                label = "Example records"
+        groups.setdefault(group, []).append(f'<li><a href="#{chapter_id}">{html.escape(label)}</a></li>')
         if path.suffix == ".csv":
             rows = list(csv.reader(io.StringIO(text)))
-            content = f"<h2>{html.escape(title)}</h2><table>"
+            content = f"<h1>{html.escape(title)}</h1><table>"
             for row_number, row in enumerate(rows):
                 tag = "th" if row_number == 0 else "td"
                 content += "<tr>" + "".join(f"<{tag}>{html.escape(c)}</{tag}>" for c in row) + "</tr>"
             content += "</table>"
         else:
             content = Markdown(path, chapter_id, chapter_ids).render(text)
-        chapters.append(f'<article class="chapter" id="{chapter_id}"><p class="chapter-source"><code>{html.escape(relative)}</code></p>\n{content}\n</article>')
-    page = """<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Coven Compass · Complete implementation guide</title><link rel="stylesheet" href="handoff.css"></head>
-<body><header class="page-header"><a class="wordmark" href="index.html">Coven Compass</a><span class="header-context">Implementation handoff</span><a class="text-link" href="../">Return to Compass</a></header>
-<div class="guide-layout">
-<nav class="guide-toc" aria-label="Guide chapters"><h2>Chapters</h2><ol>
-""" + "\n".join(toc) + "\n</ol></nav><main class=\"guide-main\" id=\"guide-main\"><h1>Complete implementation guide</h1><p>Source-backed prototype evidence and proposed implementation work. Conceptual documents and examples are not canonical production contracts.</p>\n" + "\n".join(chapters) + "\n</main></div></body></html>\n"
+        chapters.append(f'<article class="chapter" id="{chapter_id}" data-group="{group}" tabindex="-1">\n{content}\n</article>')
+    navigation = "\n".join(
+        f'<h2>{group}</h2><ul>{"".join(groups[group])}</ul>'
+        for group in ("Project", "Implementation", "Reference") if group in groups
+    )
+    template = Template(source_bytes(ROOT / "scripts/guide-template.html").decode("utf-8"))
+    page = template.substitute(navigation=navigation, chapters="\n".join(chapters))
     guide_path = ROOT / "dist/handoff/guide.html"
     plain_source_parents(guide_path)
     atomic_write(guide_path, page.encode("utf-8"))
@@ -491,9 +502,18 @@ def build(output: Path) -> tuple[int, str, int]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, epilog="No Git, npm, network, or third-party packages are required. Digests provide integrity checks, not authenticated signatures.")
-    parser.add_argument("--output", type=Path, default=ROOT / "dist/downloads" / f"{ARCHIVE_ROOT}.zip", help="ZIP output path (default: dist/downloads/Coven_Compass_Handoff_2026-11-19.zip)")
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--guide-only", action="store_true", help="Build the public reader without creating an archive")
+    mode.add_argument("--output", type=Path, default=ROOT / "artifacts" / f"{ARCHIVE_ROOT}.zip", help="ZIP output path (default: artifacts/Coven_Compass_Handoff_2026-11-19.zip)")
     args = parser.parse_args()
     try:
+        if args.guide_only:
+            downloads = ROOT / "dist/downloads"
+            if downloads.exists():
+                raise BuildError("Move legacy dist/downloads outside the public directory before building the site.")
+            chapters = write_guide()
+            print(f"PASS: built the {chapters}-chapter public guide")
+            return 0
         output = args.output.absolute()
         count, digest, chapters = build(output)
         print(f"PASS: built {count} files and a {chapters}-chapter static guide")

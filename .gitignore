@@ -29,3 +29,4 @@ id_ed25519
 *.tfstate
 *.tfstate.backup
 .vercel/
+/artifacts/

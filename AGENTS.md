@@ -29,7 +29,7 @@ The table comes from #6. Run its focused check while you work, then `verify-all`
 | Map keyboard focus (one Tab stop, arrow keys inside) | `dist/map-focus.js`, `atlasFocusable` in `dist/index.html` | `node --test tests/map-focus.test.cjs`, then Tab through the map in a browser |
 | Simulation fold (what an event does to the world) | `dist/simulation-model.js` | `node --test tests/simulation-model.test.cjs tests/replay-*.test.cjs` |
 | Projection sources (`?source=`) | `dist/projection-source.js`, `dist/fixtures/`, the guard at the top of the inline script in `dist/index.html` | `node --test tests/projection-source.test.cjs` |
-| Handoff | Chapters in `docs/handoff/`, or the landing page `dist/handoff/index.html`. The builder generates `dist/handoff/guide.html`. | `node scripts/verify-all.mjs`, then follow Handoff in the preview |
+| Handoff | Chapters in `docs/handoff/`, or the reader template `scripts/guide-template.html`. The builder generates `dist/handoff/guide.html`. | `node scripts/verify-all.mjs`, then follow Handoff in the preview |
 
 Keep `tests/fixtures/` (the pinned baseline) and the dated audits in `tests/evidence/` as historical evidence. If you're working from an extracted delivery rather than a checkout, run `python3 scripts/verify-handoff.py .` before editing it.
 
@@ -51,7 +51,7 @@ Keep `tests/fixtures/` (the pinned baseline) and the dated audits in `tests/evid
 | `dist/handoff/guide.html` | `scripts/build-handoff.py` (via verify-all) | `docs/handoff/*.md`, `docs/handoff/templates/*.csv`, README, START_HERE, MOBILE_READINESS, `examples/README.md` |
 | `tests/evidence/current.json` | `scripts/verify-all.mjs` | the test, crown, and package runs |
 | `HANDOFF_MANIFEST.json`, `CHECKSUMS.sha256` | `scripts/build-handoff.py`, **inside the ZIP only** | not committed; `.gitignore`d |
-| `dist/downloads/*.zip` | `scripts/build-handoff.py` | not committed |
+| `artifacts/*.zip` | `scripts/build-handoff.py` | not committed |
 
 **Counts live in one place.** Current numbers belong only in `current.json`. Dated historical numbers belong only in [chapter 01](docs/handoff/01-current-state-and-evidence.md) and [MOBILE_READINESS.md](MOBILE_READINESS.md). `check-source` fails if a count of tests, audits, crown combinations, or package files appears anywhere else, so link to those files instead.
 
@@ -72,7 +72,7 @@ Keep `tests/fixtures/` (the pinned baseline) and the dated audits in `tests/evid
 | `dist/mobile-ui.js`, `dist/mobile-interactions.js` | Adaptive dock, portals, focus, gestures, visual viewport |
 | `dist/map-focus.js` | Roving tabindex for map items: the map is one Tab stop, and arrow keys, Home and End move between Projects, gates, familiars, missions and agents |
 | `dist/seal-lab.js`, `dist/semantic-map.css` | Isolated seal explorer; scope-specific scene visibility |
-| `dist/handoff/` | Handoff landing page (hand-written `index.html`) and generated `guide.html` |
+| `dist/handoff/` | Compatibility entry page and generated documentation reader |
 | `tests/*.test.cjs` | Node tests using DOM facades; `tests/fixtures/` pins the v2 reference source |
 | `tests/evidence/` | `current.json` (generated) and historical JSON audits |
 | `scripts/` | `verify-all.mjs`, `check-source.mjs`, `test-atlas-crown.mjs`, `build-handoff.py`, `verify-handoff.py` |

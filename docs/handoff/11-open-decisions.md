@@ -4,7 +4,7 @@
 
 ## Decisions that can proceed as reversible implementation work
 
-During a separately assigned implementation task, the team can inspect repositories, map existing contracts, create isolated adapters and fixtures, prepare draft issues/PRs, and gather evidence within that task's authorization. This handoff request itself covers the source package, documentation, and Site download surface; it does not dispatch the proposed production work. Once implementation is assigned, carry authorized work far enough to make a policy choice concrete instead of stopping at a generic approval note.
+During a separately assigned implementation task, the team can inspect repositories, map existing contracts, create isolated adapters and fixtures, prepare draft issues/PRs, and gather evidence within that task's authorization. This handoff request itself covers the source package and documentation reader; it does not dispatch the proposed production work. Once implementation is assigned, carry authorized work far enough to make a policy choice concrete instead of stopping at a generic approval note.
 
 Record a decision as **proposed**, **accepted by owner**, **implemented**, and **verified** separately. A checked-in proposal is not an owner decision; a merged patch is not proof of packaged or remote behavior. Superseded proposals remain linked to the decision that replaced them.
 

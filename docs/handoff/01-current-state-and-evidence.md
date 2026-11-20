@@ -158,7 +158,7 @@ The archive was extracted into a fresh directory with no `.git` metadata. The fo
 | `python3 scripts/build-handoff.py --output /workspace/scratch/c8f0b8aaa2a0/handoff-qa-initial-rebuilt.zip` | Exit 0; the extracted source rebuilt a complete handoff ZIP and static guide. |
 | `python3 scripts/verify-handoff.py /workspace/scratch/c8f0b8aaa2a0/handoff-qa-initial-rebuilt.zip` | Exit 0; the rebuilt archive passed CRC, path, inventory, and digest checks. |
 
-In the Site checkout, `git diff --check` passed. A separate static HTML pass resolved all local handoff navigation, download, and chapter-anchor targets in the deployable tree. The archive intentionally excludes itself and its download sidecar; the local Download button becomes available after rebuilding the package. The guide and Atlas remain included and usable without that rebuild.
+In the Site checkout, `git diff --check` passed. A separate static HTML pass resolved all local handoff navigation, download, and chapter-anchor targets in the deployable tree. The archive intentionally excludes itself and its download sidecar; that edition made the local Download button available after rebuilding the package. The guide and Atlas remain included and usable without that rebuild.
 
 The package verifier checks integrity relative to the supplied manifest; it does not authenticate the publisher. Source checks parse code and references; they are not a browser or security assessment. The final archive carries its own exact file inventory and checksums. A fresh export timestamp means a rebuild can have a different ZIP digest without a source-content change.
 

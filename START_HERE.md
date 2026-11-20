@@ -16,7 +16,7 @@ The scalable overview and crown refinement now incorporates adaptive-mobile repl
 4. Preview Compass locally. Enter a Project, select a mission, inspect its agents and pending decisions, and try familiar filters and Seal lab. In Projects, use project search and **Try a larger Coven** to explore the 8/16/32/64/128 sample presets; **Remove extra samples** preserves baseline and user-created Projects. Start replay and switch Projects while it plays; on mobile, explore the Map, Missions, Activity, and View dock.
 5. Read [architecture and ownership](docs/handoff/02-architecture-and-ownership.md), then take the discovery packet in the [implementation plan](docs/handoff/05-implementation-plan.md).
 
-The handoff HTML is also available at `dist/handoff/guide.html`. Markdown chapters are the editable documentation source. The Site's Handoff entry links to the same package and reader.
+The handoff HTML is also available at `dist/handoff/guide.html`. Markdown chapters are the editable documentation source. The Site's Handoff entry opens the guide.
 
 ## Where to make a change
 
@@ -27,7 +27,7 @@ The handoff HTML is also available at `dist/handoff/guide.html`. Markdown chapte
 | Mobile controls and focus | `dist/mobile-ui.js`, `dist/mobile-interactions.js`, `dist/atlas.css` | `node --test tests/mobile-*.test.cjs` |
 | Handoff chapter | Markdown under `docs/handoff/` | Rebuild the guide and ZIP below, then follow the Handoff link in the preview. |
 
-The application in `dist/` is editable browser source. The builder generates `dist/handoff/guide.html` and the downloadable archive. Preserve the baseline under `tests/fixtures/` and dated audits under `tests/evidence/` as historical evidence.
+The application in `dist/` is editable browser source. The builder generates `dist/handoff/guide.html` and a local verification archive. Preserve the baseline under `tests/fixtures/` and dated audits under `tests/evidence/` as historical evidence.
 
 ## Run and check
 
@@ -54,14 +54,14 @@ The checksum verifier validates the delivered snapshot. After intentionally edit
 
 ```bash
 python3 scripts/build-handoff.py
-python3 scripts/verify-handoff.py dist/downloads/Coven_Compass_Handoff_2026-11-19.zip
+python3 scripts/verify-handoff.py artifacts/Coven_Compass_Handoff_2026-11-19.zip
 ```
 
 To check the extracted delivery independently, run these commands from the checkout.
 
 ```bash
 export_check=$(mktemp -d)
-python3 -m zipfile -e dist/downloads/Coven_Compass_Handoff_2026-11-19.zip "$export_check"
+python3 -m zipfile -e artifacts/Coven_Compass_Handoff_2026-11-19.zip "$export_check"
 python3 scripts/verify-handoff.py "$export_check/Coven_Compass_Handoff_2026-11-19"
 ```
 

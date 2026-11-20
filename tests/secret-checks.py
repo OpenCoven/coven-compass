@@ -85,8 +85,16 @@ class SecretChecks(unittest.TestCase):
         p.write_bytes(CANARY)
         out = self.call(sys.executable, "scripts/build-handoff.py", fails=True)
         self.assertIn(b"Export secret check failed", out)
-        self.assertFalse((self.repo / "dist/downloads").exists())
+        self.assertFalse((self.repo / "artifacts").exists())
         p.unlink()
+        self.call(sys.executable, "scripts/build-handoff.py", "--guide-only")
+        self.assertTrue((self.repo / "dist/handoff/guide.html").is_file())
+        self.assertFalse((self.repo / "artifacts").exists())
+        self.assertFalse((self.repo / "dist/downloads").exists())
+        downloads = self.repo / "dist/downloads"
+        downloads.mkdir()
+        (downloads / "legacy.zip").touch()
+        self.assertIn(b"legacy dist/downloads", self.call(sys.executable, "scripts/build-handoff.py", "--guide-only", fails=True))
         (self.repo / "dist/.env.local").write_text("harmless")
         self.assertIn(b"restricted credential filename", self.call(sys.executable, SCANNER, "source", ".", fails=True))
 

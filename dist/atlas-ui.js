@@ -217,8 +217,8 @@
     missions.setAttribute('aria-expanded', 'false'); missions.setAttribute('aria-controls', 'atlasMissionBrowser');
     missions.title = 'Find a mission and explore its details';
     var handoff = headerAction(node('a', 'atlas-button'), 'Handoff', '<path d="M5 2.5h7l3 3v12H5Z M12 2.5v4h3 M7.5 10h5 M7.5 13h5"/>');
-    handoff.id = 'atlasHandoff'; handoff.href = 'handoff/'; handoff.title = 'Source ZIP and implementation handoff';
-    handoff.setAttribute('aria-label', 'Open the source ZIP and implementation handoff');
+    handoff.id = 'atlasHandoff'; handoff.href = 'handoff/guide.html'; handoff.title = 'Complete implementation guide';
+    handoff.setAttribute('aria-label', 'Open the complete implementation guide');
     var lab = headerAction(button('atlasLab', '', function () {
       closeBrowse(false); closeMissions(false);
       if (window.CovenSealLab) window.CovenSealLab.open(lab);
@@ -271,9 +271,9 @@
     var reset = button('atlasResetLayout', 'Remove extra samples', function () { populate(0); });
     simulation.append(simulationTitle, node('p', '', 'Adds sample Projects to explore the layout. Your own projects stay intact.'), presets, custom, reset, progress);
     var legend = button('atlasLegend', 'Legend', function () { closeBrowse(true); api.legend(); });
-    var mobileHandoff = node('a', 'atlas-button atlas-handoff-link', 'Source and implementation handoff');
-    mobileHandoff.id = 'atlasHandoffDrawer'; mobileHandoff.href = 'handoff/';
-    mobileHandoff.setAttribute('aria-label', 'Open the source ZIP and implementation handoff');
+    var mobileHandoff = node('a', 'atlas-button atlas-handoff-link', 'Complete implementation guide');
+    mobileHandoff.id = 'atlasHandoffDrawer'; mobileHandoff.href = 'handoff/guide.html';
+    mobileHandoff.setAttribute('aria-label', 'Open the complete implementation guide');
     legend.title = 'Read the shapes, colors, and mission states';
     aside.append(heading, projectSearchLabel, projectCount, projects, newProject, simulation, legend, mobileHandoff);
     aside.addEventListener('keydown', function (ev) {

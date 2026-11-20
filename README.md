@@ -4,7 +4,7 @@ A private, interactive Site exploration of the supplied Coven Castles v27 protot
 
 ## Full source and implementation handoff
 
-Open [START_HERE.md](START_HERE.md) for the runnable ZIP workflow and [the handoff index](docs/handoff/00-handoff-index.md) for the complete proposed architecture, ownership, synchronization/recovery plan, execution packets, agent prompts, acceptance matrix, and evidence ledger. The in-app **Handoff** entry opens a readable guide and downloads the complete source package. The implementation proposal covers Coven Host, Compass, Coven CLI, Psyche, Psyche Build, SDK, Threads, Cave, familiar identity, runtimes, and read-only memory/continuity views.
+Open [START_HERE.md](START_HERE.md) for local setup and verification and [the handoff index](docs/handoff/00-handoff-index.md) for the complete proposed architecture, ownership, synchronization/recovery plan, execution packets, agent prompts, acceptance matrix, and evidence ledger. The in-app **Handoff** entry opens the complete implementation guide. The implementation proposal covers Coven Host, Compass, Coven CLI, Psyche, Psyche Build, SDK, Threads, Cave, familiar identity, runtimes, and read-only memory/continuity views.
 
 The handoff preserves the prototype as a simulation. Production APIs, schemas, and command paths require current-repository discovery and acceptance; conceptual JSON examples are inert documentation fixtures.
 
@@ -21,7 +21,7 @@ node scripts/check-source.mjs
 node --test tests/*.test.cjs
 node scripts/test-atlas-crown.mjs
 python3 scripts/build-handoff.py
-python3 scripts/verify-handoff.py dist/downloads/Coven_Compass_Handoff_2026-11-19.zip
+python3 scripts/verify-handoff.py artifacts/Coven_Compass_Handoff_2026-11-19.zip
 ```
 
 The tests include their exact reference fixture and work without Git history. The generated export includes the mobile-readiness report, source harness, historical JSON evidence, and its own inventory and checksums. Historical browser screenshots remain in the repository only and are excluded from the handoff, along with credentials, runtime data, and previous ZIPs. Historical fingerprints describe their recorded checkpoint; they are not verification of the current layout source.
