@@ -41,7 +41,7 @@ Coven/project scope is explicit and separate from camera zoom. Fit uses measured
 - **Uniform four-corner enclosure:** one project's scope. Every project uses the same overview treatment, including the currently active project.
 - **Circular mission seal:** one mission. Wedge angle is the share of its agents led by each familiar; wedge height is progress on that familiar's role-owned targets; the central signet expresses mission state.
 - **Stable familiar glyph and hue:** identity across projects, councils, and delegated agents. Changing the camera angle does not change the familiar's mark.
-- **Agent marks:** circles indicate unassigned agents and tiles indicate task assignments in the selected mission. Their state and familiar affiliation remain available in the detail views.
+- **Agent marks:** cogs represent agents and square hubs indicate task assignments in the selected mission. Their state and familiar affiliation remain available in the detail views.
 - **Near-white boundary square:** a pending permission or resource-limit decision. Selecting it opens that project's pending decisions; its presence does not mean the requested operation was approved.
 - **Central Psyche crown:** coordination within the current scope. Its relief is decorative, while project connections remain neutral until a familiar filter highlights that familiar's assignments.
 - **Coral seal rim:** the tightest time, token, or budget limit has reached 85%, or the mission is broken after stopping at a limit.

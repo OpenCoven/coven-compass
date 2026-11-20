@@ -11,7 +11,7 @@ The [scalable layout and crown guide](15-scalable-atlas-layout.md) supersedes ea
 | Uniform four-corner Project enclosure | One project's work scope | A runtime sandbox, filesystem permission, authorized execution grant, or four-project limit |
 | Circular divided seal | One mission and its council | A task, familiar identity, or approval token |
 | Familiar glyph and stable hue | Familiar identity within the active binding | That a display name or color is a globally unique identity |
-| Agent circle or task tile | One delegated agent in the selected mission | A second familiar identity root |
+| Agent cog | One delegated agent in the selected mission | A second familiar identity root |
 | Near-white boundary square | A count of pending decisions | An approved or completed operation |
 | Psyche crown at the center | Coordination within the displayed scope | That the model or UI owns daemon authority |
 | Neutral connection | A project participates in this coordination scope | Network reachability or active execution by itself |
@@ -36,7 +36,7 @@ At Coven scale, project enclosures surround Psyche. All projects use the same ov
 
 Overview positions come from an aspect-aware compact lattice with opposite pairs, reserved Project/label rectangles, and shared routing corridors. The inward-facing gate terminates the route for that Project. Location is presentation structure, not priority or execution topology. Preserve stable caller ordering; at unchanged geometry options, appending projects retains existing positions. Resizing or explicitly reordering the collection can change placement and must not imply that canonical ownership changed. [Current positioning contract](15-scalable-atlas-layout.md)
 
-Inside a project, mission seals connect to familiar groups. Selecting a mission reveals its individual agents, reserved positions, task detail, and relevant requests. Circles identify unassigned agents and tiles identify agents assigned to a task. Working marks are larger and filled. Idle marks are smaller and hollow. In orbit, the task tile has a shallow edge that rises for working agents. Dashed outlines reserve places for agents at gates. Waiting agents remain inside the boundary. The boundary marker invites review; it does not depict an operation already crossing the boundary.
+Inside a project, mission seals connect to familiar groups. Selecting a mission reveals its individual agents, reserved positions, task detail, and relevant requests. A round hub identifies an unassigned agent. A square hub identifies an assigned task. Working marks are larger and filled. Idle marks are smaller and hollow. In orbit, cogs have a shallow edge. Working cogs counter-rotate during playback unless reduced motion is enabled. Dashed outlines reserve places for agents at gates. Waiting agents remain inside the boundary. The boundary marker invites review; it does not depict an operation already crossing the boundary.
 
 Within the overview, a boundary marker aggregates pending decisions for that project at its coordination-facing gate. Within a project, markers correspond to the simulation's gate locations and selected-mission scope. A future implementation must map this deliberately from canonical decision data; do not assign a new permission category based on north/east/south/west placement.
 
