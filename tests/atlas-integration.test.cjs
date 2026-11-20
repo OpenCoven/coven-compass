@@ -148,18 +148,17 @@ test('overview keeps an exact accessible mission total across preview densities'
   const world = {missions: new Map(), agents: new Map()};
   const gh = {k: 'demo', g: svgEl('g'), ox: 0, oy: 0};
   const aggregate = gh.aggregate = svgEl('text', {}, gh.g);
-  const cam = {zoom: 1};
   const context = load(['atlasProjectGhost'], {
-    projects: {demo: {world}}, stage: {clientWidth: 1000, clientHeight: 700}, cam,
+    projects: {demo: {world}},
     ZPL: 14, ZT: 0, clamp, openAsks: () => [],
     detailVisible: require('../dist/atlas-presentation.js').detailVisible,
     plural: (n, noun) => n + ' ' + noun + (n === 1 ? '' : 's'),
   });
-  const project = () => context.atlasProjectGhost(gh, (x, y, z) => [x, y, z], n => n.toFixed(2));
+  const project = scale => context.atlasProjectGhost(gh, (x, y) => [x, y], n => n.toFixed(2), scale);
   for (const count of [...Array.from({length: 129}, (_, i) => i), 2, 0, 128]) {
     world.missions = new Map(Array.from({length: count}, (_, i) => [i, {}]));
-    for (const [zoom, density] of [[1, 'full'], [0.04, 'tiny']]) {
-      cam.zoom = zoom; project();
+    for (const [scale, density] of [[1, 'full'], [0.04, 'tiny']]) {
+      project(scale);
       assert.equal(gh.density, density);
       assert.equal(aggregate.textContent, String(count));
       assert.equal(gh.g.getAttribute('aria-label'), `demo, ${count} mission${count === 1 ? '' : 's'}, 0 agents. Open project`);
