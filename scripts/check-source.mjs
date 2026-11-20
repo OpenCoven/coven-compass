@@ -340,7 +340,7 @@ function checkMarkdown(file) {
 }
 
 const dist = walk(path.join(root, 'dist'));
-const support = ['scripts', 'tests', 'examples', 'docs/handoff'].flatMap(directory => walk(path.join(root, directory)));
+const support = ['scripts', 'tests', 'examples', 'docs/handoff', 'docs/discovery'].flatMap(directory => walk(path.join(root, directory)));
 const rootMarkdown = fs.readdirSync(root, { withFileTypes: true })
   .filter(entry => entry.isFile() && entry.name.endsWith('.md')).map(entry => path.join(root, entry.name));
 const files = [...new Set([...dist, ...support, ...rootMarkdown])].sort();
@@ -389,7 +389,8 @@ const countLiteral = new RegExp([
 ].join('|'), 'gi');
 for (const file of files) {
   const rel = relative(file);
-  if (countHomes.has(rel) || generatedHtml.has(rel) || rel.startsWith('tests/')) continue;
+  // docs/discovery holds digest-pinned imports that must stay byte-identical.
+  if (countHomes.has(rel) || generatedHtml.has(rel) || rel.startsWith('tests/') || rel.startsWith('docs/discovery/')) continue;
   if (!rel.endsWith('.md') && !/^dist\/handoff\/.*\.html?$/i.test(rel)) continue;
   const source = read(file);
   if (source === null) continue;

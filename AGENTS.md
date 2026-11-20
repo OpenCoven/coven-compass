@@ -69,6 +69,7 @@ Keep `tests/fixtures/` (the pinned baseline) and the dated audits in `tests/evid
 | `tests/evidence/` | `current.json` (generated) and historical JSON audits |
 | `scripts/` | `verify-all.mjs`, `check-source.mjs`, `test-atlas-crown.mjs`, `build-handoff.py`, `verify-handoff.py` |
 | `docs/handoff/` | Architecture, plan, acceptance, security, decisions: the editable doc source |
+| `docs/discovery/` | Read-only discovery deliverables imported byte-for-byte from familiar lanes, with pins and `SHA256SUMS`. Never edit them; add a new dated folder instead. |
 | `examples/` | Inert conceptual JSON, not wire schemas |
 
 For a function-level map of `dist/index.html`, see [chapter 01 §4](docs/handoff/01-current-state-and-evidence.md#4-source-map-for-an-implementer).
