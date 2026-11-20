@@ -167,7 +167,7 @@
       cameraExpanded = !cameraExpanded; updateCameraChoice(); scheduleViewport();
     });
     view.setAttribute('aria-controls', 'atlasCameraDock');
-    chrome.appendChild(nav); document.body.appendChild(chrome);
+    chrome.appendChild(nav); document.body.insertBefore(chrome, document.body.firstChild);
     ['timeline', 'atlasCameraDock', 'live'].forEach(function (id) {
       var el = document.getElementById(id);
       if (el) chromePortals.push({el: el, anchor: null, destination: id === 'live' ? document.getElementById('timeline') : chrome});
@@ -208,7 +208,7 @@
       if (mobile && item.el.parentNode !== item.destination) {
         item.anchor = document.createComment('mobile workspace: ' + item.el.id);
         item.el.parentNode.insertBefore(item.anchor, item.el);
-        item.destination.insertBefore(item.el, item.destination === chrome ? chrome.firstChild || chrome.childNodes[0] || null : null);
+        item.destination.appendChild(item.el);
       } else if (!mobile && item.anchor) {
         if (item.anchor.parentNode) item.anchor.parentNode.insertBefore(item.el, item.anchor);
         item.anchor.remove(); item.anchor = null;

@@ -1,7 +1,7 @@
 'use strict';
 // Mission names in project scope sit between each seal and Psyche, anchored away from the centre
 // line so they clear the crown and the name across from them; when seals sit too close on screen,
-// names hide (#plan.tight) and return on hover or selection. These run the page's own functions.
+// names hide (#plan.tight) and return on keyboard focus, hover or selection. These run the page's own functions.
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -54,10 +54,11 @@ test('names hide when seals crowd each other or the crown on screen', () => {
   assert.equal(missionNamesTight([], pc, 1), false);
 });
 
-test('the scene applies both rules, and #plan.tight hides names except on hover or selection', () => {
+test('the scene applies both rules, and #plan.tight hides names except on keyboard focus, hover or selection', () => {
   assert.match(source, /const lab = missionLabelAt\(q, pc, ext, U\);\n\s+s\.name\.setAttribute\('x', f\(lab\.x\)\); s\.name\.setAttribute\('y', f\(lab\.y\)\); s\.name\.style\.textAnchor = lab\.anchor;/);
   assert.match(source, /const tight = missionNamesTight\(\[\.\.\.sc\.missions\.values\(\)\]\.map\(s => \[s\.sx, s\.sy\]\), pc, kpx\);\n\s+if \(tight !== sc\.tight\) \{ sc\.tight = tight; plan\.classList\.toggle\('tight', tight\); \}/);
   assert.match(source, /,#plan\.tight \.lead-name:not\(\.gname\)\{opacity:0\}/);
+  assert.match(source, /#plan\.many \.lead-node:focus-visible\+\.lead-name,#plan\.tight \.lead-node:focus-visible\+\.lead-name,[^{}]+\{opacity:1\}/);
   assert.match(source, /#plan\.tight \.lead-node:hover\+\.lead-name,#plan\.tight \.lead-node\.sel\+\.lead-name\{opacity:1\}/);
   assert.match(source, /\n#plan\.tight \.atlas-squad>\.task-l,#plan\.tight \.atlas-local-psyche \.psy-l\{opacity:0\}\n/, 'familiar labels and the PSYCHE caption hide too');
   assert.match(source, /\n#plan\.tight \.atlas-squad:hover>\.task-l\{opacity:1\}\n/, 'a squad label returns on hover');

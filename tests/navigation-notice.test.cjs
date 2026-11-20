@@ -38,6 +38,14 @@ class Element {
   getAttribute(key) { return this.attributes[key] ?? null; }
   hasAttribute(key) { return key in this.attributes; }
   append(...nodes) { nodes.forEach(n => { if (n.parent) n.parent.children.splice(n.parent.children.indexOf(n), 1); n.parent = this; this.children.push(n); }); }
+  get firstChild() { return this.children[0] || null; }
+  insertBefore(child, reference) {
+    if (!reference) { this.append(child); return child; }
+    child.remove();
+    this.children.splice(this.children.indexOf(reference), 0, child);
+    child.parent = this;
+    return child;
+  }
   remove() { if (this.parent) this.parent.children.splice(this.parent.children.indexOf(this), 1); this.parent = null; }
   set innerHTML(value) { this.children = []; this._text = ''; }
   set textContent(value) { this.children = []; this._text = String(value); }

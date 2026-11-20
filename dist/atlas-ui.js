@@ -91,13 +91,16 @@
     drawer.hidden = true;
     setMissionModal(false);
     $('atlasMissions').setAttribute('aria-expanded', 'false');
-    if (restoreFocus) $('atlasMissions').focus({ preventScroll: true });
+    if (restoreFocus) {
+      var mobileEntry = $('atlasMobileMissions');
+      (mobileEntry && mobileEntry.getClientRects().length ? mobileEntry : $('atlasMissions')).focus({ preventScroll: true });
+    }
   }
   function setMissionModal(on) {
     if (!window.CovenMobileUI) return;
     if (on) window.CovenMobileUI.activate('atlasMissionBrowser'); else window.CovenMobileUI.sync();
   }
-  function openMissions(restoreSelection) {
+  function openMissions(restoreSelection, returnRow) {
     closeBrowse(false);
     var s = api.snapshot(true);
     if (!missionBrowserUsed) {
@@ -111,7 +114,7 @@
     updateMissions(s);
     $('atlasMissionList').scrollTop = missionScroll;
     var selected = restoreSelection && drawer.querySelector('.atlas-mission-row[aria-current="true"]:not([hidden])');
-    (selected || $('atlasMissionSearch')).focus({ preventScroll: true });
+    (returnRow && drawer.contains(returnRow) && !returnRow.hidden ? returnRow : selected || $('atlasMissionSearch')).focus({ preventScroll: true });
   }
   function updateMissions(s) {
     var filter = $('atlasMissionProject'), items = s.missionItems || [];
@@ -132,7 +135,7 @@
       if (!row) {
         row = button('', '', function () {
           closeMissions(false);
-          if (!api.openMission(m.project, m.id, 'side')) {
+          if (!api.openMission(m.project, m.id, 'side', row)) {
             announce('That mission is no longer available. Choose another mission.');
             openMissions(false);
           }
@@ -322,7 +325,8 @@
       control.setAttribute('aria-label', item[3]); control.title = item[3]; cameraDock.append(control);
     });
     shield(cameraDock);
-    stage.append(head, buildNotice(), aside, missionBrowser, familiars, cameraDock, navigationStatus);
+    stage.insertBefore(head, stage.firstChild);
+    stage.append(buildNotice(), aside, missionBrowser, familiars, cameraDock, navigationStatus);
     document.addEventListener('pointerdown', function (ev) {
       if (!aside.hidden && !aside.contains(ev.target) && !browse.contains(ev.target)) closeBrowse(false);
       if (!missionBrowser.hidden && !missionBrowser.contains(ev.target) && !missions.contains(ev.target)) closeMissions(false);

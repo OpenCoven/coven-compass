@@ -1013,7 +1013,7 @@ body{letter-spacing:-.006em;font-feature-settings:"ss01","cv11";text-rendering:o
 #plan .gate-l.on{opacity:1;fill:var(--attention)}
 #plan.far .gate-l.on{opacity:0}
 #plan.many .lead-name:not(.gname),#plan.tight .lead-name:not(.gname){opacity:0}
-#plan.many .lead-node:hover+.lead-name,#plan.many .lead-node.sel+.lead-name,#plan.tight .lead-node:hover+.lead-name,#plan.tight .lead-node.sel+.lead-name{opacity:1}
+#plan.many .lead-node:focus-visible+.lead-name,#plan.tight .lead-node:focus-visible+.lead-name,#plan.many .lead-node:hover+.lead-name,#plan.many .lead-node.sel+.lead-name,#plan.tight .lead-node:hover+.lead-name,#plan.tight .lead-node.sel+.lead-name{opacity:1}
 #plan.tight .atlas-squad>.task-l,#plan.tight .atlas-local-psyche .psy-l{opacity:0}
 #plan.tight .atlas-squad:hover>.task-l{opacity:1}
 .key{margin:0;padding:10px 14px 14px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:7px 12px;font-size:calc(12.5px * var(--fs,1) * var(--fsl,1))}
@@ -3523,6 +3523,7 @@ function select(m, k, mode, options) {
   const c = cur(), was = c.sel, priorMode = c.detail, priorFam = c.fam, origin = document.activeElement, priorAutoFit = atlasAutoFit;
   const mission = m && c.world.missions.get(m);
   if (m && !mission) return false;
+  if (m !== was || mode === 'card') c.missionBrowserOrigin = null;
   if (m && atlasScope === 'coven') { atlasScope = 'project'; atlasFitScene(false); }
   if (m) atlasAutoFit = true;
   if (k && (!mission || !mission.seats.includes(k))) k = null;
@@ -3741,13 +3742,14 @@ function syncInspect(force) {
     const back = html('button', 'btn sm', c.fam ? '← Back to mission' : '← All missions'); back.type = 'button'; back.dataset.focus = 'mission-back';
     back.addEventListener('click', () => {
       if (c.fam) select(M.id, null, 'side');
+      else if (c.missionBrowserOrigin) closeMissionDetails();
       else if (window.CovenAtlas) window.CovenAtlas.openMissions(true);
     });
     backRow.append(back);
     const head = selHead(c), toCard = html('button', 'btn x'); toCard.type = 'button'; toCard.innerHTML = ICON.card; toCard.setAttribute('aria-label', 'Show as a card');
     toCard.dataset.focus = 'show-card';
     toCard.addEventListener('click', () => select(c.sel, c.fam, 'card'));
-    const close = xBtn('Close details', () => select(c.sel, c.fam, 'card')); close.dataset.focus = 'close-details';
+    const close = xBtn('Close details', closeMissionDetails); close.dataset.focus = 'close-details';
     head.append(toCard, close);
     const missionOrder = [...w.missions.values()], position = missionOrder.findIndex(m => m.id === M.id);
     const stepper = html('div', 'mission-stepper');
@@ -3952,7 +3954,7 @@ document.addEventListener('keydown', ev => {
   if (ev.target === $('say') && psy.mode === 'float') return setMode('closed', true);
   if (cz.open && !open) return closeProjectForm();
   if (!$('empty').hidden && !open && !cur().pick) return closeNew();
-  if (cur().pick) clearPick(); else if (open) { open.open = false; open.firstElementChild.focus(); } else if (cur().sel && cur().fam) select(cur().sel, null, cur().detail); else if (cur().sel && cur().detail === 'side') select(cur().sel, null, 'card'); else if (cur().sel) select(null); else if (psy.mode === 'float') setMode('closed', true);
+  if (cur().pick) clearPick(); else if (open) { open.open = false; open.firstElementChild.focus(); } else if (cur().sel && cur().fam) select(cur().sel, null, cur().detail); else if (cur().sel && cur().detail === 'side') closeMissionDetails(); else if (cur().sel) select(null); else if (psy.mode === 'float') setMode('closed', true);
 });
 document.addEventListener('click', ev => {
   if (!ev.target.isConnected) return;               // the thing clicked redrew itself; nothing was clicked away from
@@ -5472,13 +5474,22 @@ function atlasOpenProject(k) {
   if (window.CovenAtlas) window.CovenAtlas.update();
   atlasWriteRoute(); return true;
 }
-function atlasOpenMission(k, id, mode) {
+function closeMissionDetails() {
+  const c = cur(), origin = c.missionBrowserOrigin;
+  if (!origin) return select(c.sel, c.fam, 'card');
+  select(null, null, null, {history: false, focus: false});
+  if (origin.scope === 'coven') atlasOverview();
+  else atlasOpenProject(origin.project);
+  window.CovenAtlas.openMissions(false, origin.row);
+}
+function atlasOpenMission(k, id, mode, row) {
   if (!projects[k] || !projects[k].world.missions.has(id)) return false;
   const restoring = atlasRestoringRoute, locked = cam.locked; atlasRestoringRoute = true;
   if (locked) setLock(false);
+  const origin = row && {row, project: active, scope: atlasScope};
   if (k !== active || atlasScope === 'coven') atlasOpenProject(k);
   const opened = select(id, null, mode || (narrow.matches ? 'side' : 'card'));
-  if (opened) atlasFitScene(false);
+  if (opened) { cur().missionBrowserOrigin = origin; atlasFitScene(false); }
   if (locked) setLock(true);
   atlasRestoringRoute = restoring; atlasWriteRoute();
   return opened;
@@ -5604,7 +5615,7 @@ if (window.CovenSealLab) window.CovenSealLab.mount({svgEl, html, fam, sigil, sea
 if (window.CovenMobileUI) window.CovenMobileUI.mount({
   openActivity: () => { openPsyche(); setTab('chat', false); },
   close: {
-    inspect: () => { if (cur().pick) clearPick(); else if (cur().fam) select(cur().sel, null, 'side'); else select(cur().sel, null, 'card'); },
+    inspect: () => { if (cur().pick) clearPick(); else if (cur().fam) select(cur().sel, null, 'side'); else closeMissionDetails(); },
     psyche: () => setMode('closed', true), empty: closeNew, projectForm: closeProjectForm,
     atlasMissionBrowser: () => window.CovenAtlas.closeMissions(true), atlasSidebar: () => window.CovenAtlas.closeBrowse(true),
     keyModal: closeKey, cpModal: closeWheel,

@@ -660,7 +660,7 @@ body.atlas-enhanced.atlas-adaptive-mobile #atlasMobileChrome #timeline {
   container-type: inline-size;
   container-name: mobile-replay;
   border: 0;
-  border-radius: 12px 12px 0 0;
+  border-radius: 0 0 12px 12px;
   background: transparent;
   box-shadow: none;
 }
@@ -694,7 +694,7 @@ body.atlas-enhanced.atlas-adaptive-mobile .atlas-mobile-views {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 4px;
   padding: 5px;
-  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
 body.atlas-enhanced.atlas-adaptive-mobile .atlas-mobile-views button {
   display: inline-flex;
@@ -741,9 +741,9 @@ body.atlas-enhanced.atlas-adaptive-mobile .manifest { bottom: 70px; }
 body.atlas-enhanced.atlas-adaptive-mobile[data-mobile-layout="landscape"] #atlasFamiliars { max-width: calc(100% - 20px); }
 body.atlas-enhanced.atlas-adaptive-mobile[data-mobile-layout="landscape"] .atlas-mobile-chrome {
   display: grid;
-  grid-template-columns: minmax(240px, 1fr) minmax(280px, .85fr);
+  grid-template-columns: minmax(280px, .85fr) minmax(240px, 1fr);
 }
-body.atlas-enhanced.atlas-adaptive-mobile[data-mobile-layout="landscape"] .atlas-mobile-views { border-top: 0; border-left: 1px solid var(--border); }
+body.atlas-enhanced.atlas-adaptive-mobile[data-mobile-layout="landscape"] .atlas-mobile-views { border-bottom: 0; border-right: 1px solid var(--border); }
 body.atlas-enhanced.atlas-adaptive-mobile[data-mobile-layout="tablet"] .atlas-mobile-chrome {
   left: calc(var(--viewport-left, 0px) + var(--viewport-width, 100vw) / 2);
   transform: translateX(-50%);

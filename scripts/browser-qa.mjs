@@ -8,11 +8,15 @@
 //   python3 -m http.server 18433 --bind 127.0.0.1 --directory <repo>/dist   # any free port except 8765
 //   cp <repo>/scripts/browser-qa.mjs . && node browser-qa.mjs http://127.0.0.1:18433/ ./shots ./qa.json $(git -C <repo> rev-parse HEAD)
 //
+// Append --keyboard-only for mission discovery, inspector return, route reload and the compact-label control.
+// The desktop compact check imports eight mission.opened JSON Lines via Trace > Load a recording.
+// Its negative control removes only the two keyboard-focus selectors from this browser page.
 // It checks simulation mode (default and ?source=simulation) at 1440x900, 390x844 and 844x390,
 // and every ?source=fixture scenario plus ?source=live. It writes a JSON report and screenshots.
 // Keep screenshots out of the repository; commit the dated JSON to tests/evidence/.
 import { chromium } from 'playwright';
 import fs from 'node:fs';
+import { createRequire } from 'node:module';
 import path from 'node:path';
 
 const [base, shotDir, outJson, commit] = process.argv.slice(2);
@@ -54,7 +58,7 @@ const missionNameClashes = () => {
 
 const browser = await chromium.launch();
 const report = { generated_utc: new Date().toISOString(), commit, browser: `chromium ${browser.version()}`,
-  tool: 'playwright 1.48.2 (installed outside the repository)', base, evidence_level: 'browser (headless Chromium; not Safari, not a physical device)',
+  tool: 'playwright ' + createRequire(import.meta.url)('playwright/package.json').version, base, evidence_level: 'browser (headless Chromium; not Safari, not a physical device)',
   screenshot_dir: 'kept outside the repository; see the pull request', checks: [], screenshots: [] };
 const check = (mode, viewport, name, pass, detail = '') => report.checks.push({ mode, viewport, name, pass: Boolean(pass), detail: String(detail) });
 
@@ -76,7 +80,170 @@ const shot = async (page, name) => {
 };
 const visible = (page, sel) => page.locator(sel).first().isVisible().catch(() => false);
 
+// Navigate the native tab order. DOM and accessibility reads observe the journey;
+// every interaction after the initial navigation goes through the keyboard.
+async function keyboardJourney(vp) {
+  const { context, page, errors } = await open(vp, '');
+  const mode = 'keyboard';
+  let step = 'overview';
+  let keys = 0;
+  const press = key => { keys++; return page.keyboard.press(key); };
+  const type = text => { keys += text.length; return page.keyboard.type(text); };
+  async function tabTo(selector, key = 'Tab') {
+    for (let i = 0; i < 100; i++) {
+      if (await page.locator(selector + ':focus').count()) return i;
+      await press(key);
+    }
+    throw new Error('Could not reach ' + selector + ' using ' + key);
+  }
+  async function observe(selector, role, name) {
+    const target = page.locator(selector);
+    const named = page.getByRole(role, { name });
+    const indicator = await target.evaluate(el => {
+      const style = getComputedStyle(el), rect = el.getBoundingClientRect();
+      const name = el.getAttribute('aria-label') || el.labels?.[0]?.innerText || el.innerText;
+      return { element: el.id || el.className, name: name.trim(), focused: el === document.activeElement,
+        visible: el.matches(':focus-visible') && rect.bottom > 0 && rect.top < innerHeight &&
+          rect.right > 0 && rect.left < innerWidth && style.outlineStyle !== 'none' &&
+          parseFloat(style.outlineWidth) > 0 && style.outlineColor !== 'rgba(0, 0, 0, 0)',
+        outline: style.outline, route: location.hash };
+    });
+    const pass = indicator.focused && indicator.visible && await named.and(target).count() === 1;
+    check(mode, vp.name, step, pass, JSON.stringify({...indicator, keys}));
+    if (!pass) throw new Error('Expected visible keyboard focus and accessible name at ' + selector);
+  }
+  async function mission(title, project, id) {
+    step = 'find ' + title;
+    await type(title);
+    await press('ArrowDown');
+    const row = '.atlas-mission-row:focus';
+    await observe(row, 'button', new RegExp(title + ', ' + project));
+    if (!(await page.locator(row).innerText()).includes(project)) throw new Error('Project missing from visible result');
+    await press('Enter');
+    step = 'inspect ' + title;
+    await page.locator('#missionDetailTitle').waitFor();
+    await observe('#missionDetailTitle', 'heading', title);
+    const route = page.url().split('#')[1]?.split('?')[0];
+    if (route !== '/project/' + project + '/mission/' + id ||
+        !(await page.locator('#inspect .mission-context').innerText()).includes(project)) throw new Error('Inspector Project or mission route mismatch');
+    await shot(page, vp.name + '-keyboard-' + id + '-' + project);
+  }
+  try {
+    const entry = vp.mobile ? '#atlasMobileMissions' : '#atlasMissions';
+    step = 'reach Missions from overview';
+    if (new URL(page.url()).hash !== '#/coven') throw new Error('Expected the Coven overview');
+    const tabs = await tabTo(entry);
+    check(mode, vp.name, 'Missions within five Tabs', tabs <= 5, tabs + ' Tabs to ' + entry);
+    await observe(entry, 'button', /mission/i);
+    await press('Enter');
+    step = 'search from the Missions entry';
+    await observe('#atlasMissionSearch', 'searchbox', 'Find a mission');
+    await mission('Board cards', 'coven-cave', 'm-1');
+    step = 'return to matching row';
+    await tabTo('[data-focus="mission-back"]', vp.mobile ? 'Tab' : 'Shift+Tab');
+    await observe('[data-focus="mission-back"]', 'button', /All missions/);
+    await press('Enter');
+    await observe('.atlas-mission-row:focus', 'button', /Board cards, coven-cave/);
+    await tabTo('#atlasMissionSearch', 'Shift+Tab');
+    step = 'recover from an empty search';
+    await press('ControlOrMeta+a');
+    await type('no matching mission xyz');
+    if (!await visible(page, '#atlasMissionEmpty') || await page.locator('.atlas-mission-row:visible').count()) throw new Error('Expected visible empty results');
+    await observe('#atlasMissionSearch', 'searchbox', 'Find a mission');
+    await tabTo('#atlasMissionReset');
+    await press('Enter');
+    await observe('#atlasMissionSearch', 'searchbox', 'Find a mission');
+    if (await page.locator('#atlasMissionSearch').inputValue() !== '') throw new Error('Clear filters retained search text');
+    await mission('Source survey', 'psyche-build', 'm-2');
+    step = 'close details and return to the invoking row';
+    await tabTo('[data-focus="close-details"]');
+    await press('Enter');
+    await observe('.atlas-mission-row:focus', 'button', /Source survey, psyche-build/);
+    step = 'dismiss Missions and return to its launcher';
+    await press('Escape');
+    await observe(entry, 'button', /mission/i);
+    check(mode, vp.name, 'original overview restored', new URL(page.url()).hash === '#/coven', page.url());
+    await press('Enter');
+    await press('ArrowDown');
+    await press('Enter');
+    step = 'reload mission permalink';
+    const permalink = page.url();
+    if (!permalink.includes('/project/psyche-build/mission/m-2')) throw new Error('Expected Source survey before reloading');
+    await page.reload();
+    await page.getByRole('heading', {name: 'Source survey', exact: true}).waitFor();
+    check(mode, vp.name, step, page.url() === permalink, permalink);
+    check(mode, vp.name, 'no console errors', !errors.length, errors.join(' | '));
+  } catch (error) {
+    check(mode, vp.name, step, false, error.message);
+    await shot(page, vp.name + '-keyboard-failure');
+  } finally {
+    await context.close();
+  }
+}
+
+async function compactMissionLabel() {
+  const vp = {name: 'desktop-1920x1080', width: 1920, height: 1080, mobile: false}, mode = 'compact map';
+  const { context, page, errors } = await open(vp, '');
+  try {
+    await page.locator('#atlasBrowse').click();
+    await page.locator('.atlas-project[data-project="psyche-build"]').click();
+    await page.locator('#traceBox > summary').click();
+    await page.locator('#traceLoad > summary').click();
+    const fileChoice = page.waitForEvent('filechooser');
+    await page.locator('#traceDrop').click();
+    const recording = Array.from({length: 8}, (_, i) => JSON.stringify({
+      t: '2026-11-18T06:20:00Z', type: 'mission.opened', mission: 'm-' + (i + 1), name: 'Mission ' + (i + 1)
+    })).join('\n');
+    await (await fileChoice).setFiles({name: 'eight-missions.jsonl', mimeType: 'text/plain', buffer: Buffer.from(recording)});
+    await page.waitForFunction(() => document.getElementById('traceKind').textContent === 'loaded' &&
+      document.querySelectorAll('#plan.many .lead-node').length === 8);
+    // Zoom until individual seals have room. The eight-mission density rule still hides their names.
+    for (let i = 0; i < 3; i++) await page.locator('#zIn').click();
+    await page.waitForSelector('#plan.many .atlas-mission-group:not(.atlas-compact-seal) .lead-node');
+    await page.mouse.move(0, 0);
+    const target = page.locator('#plan.many .lead-node:focus-visible');
+    for (let i = 0; i < 100 && !(await target.count()); i++) await page.keyboard.press('Tab');
+    await target.waitFor({timeout: 3000});
+    const label = target.locator('xpath=following-sibling::*[1]');
+    const name = await label.textContent();
+    if (!/^Mission [1-8]$/.test(name) || !await target.evaluate(el => !el.matches(':hover,.sel'))) throw new Error('Expected an unselected, keyboard-focused recording mission');
+    const visibleLabel = () => label.evaluate(el => {
+      const box = el.getBoundingClientRect(), style = getComputedStyle(el);
+      return Number(style.opacity) > .9 && style.visibility === 'visible' && box.width > 0 && box.height > 0 &&
+        box.bottom > 0 && box.right > 0 && box.top < innerHeight && box.left < innerWidth;
+    });
+    await page.waitForFunction(() => Number(getComputedStyle(document.activeElement.nextElementSibling).opacity) > .9, null, {timeout: 3000});
+    check(mode, vp.name, 'focused compact label visible', await visibleLabel(), name);
+    await shot(page, 'desktop-compact-keyboard-label');
+    // Mutate the two selectors in this disposable page, keeping the node, focus, zoom and all other CSS identical.
+    await page.evaluate(() => {
+      const selectors = ['#plan.many .lead-node:focus-visible+.lead-name', '#plan.tight .lead-node:focus-visible+.lead-name'];
+      for (const sheet of document.styleSheets) {
+        if (sheet.href) continue;
+        for (const rule of sheet.cssRules) {
+          if (!rule.selectorText) continue;
+          const parts = rule.selectorText.split(',').map(s => s.trim());
+          const kept = parts.filter(s => !selectors.includes(s.replace(/\s*\+\s*/g, '+')));
+          if (parts.length - kept.length !== selectors.length) continue;
+          rule.selectorText = kept.join(', ');
+          return;
+        }
+      }
+      throw new Error('Both compact focus selectors must exist before running the control');
+    });
+    await page.waitForFunction(() => Number(getComputedStyle(document.activeElement.nextElementSibling).opacity) < .05, null, {timeout: 3000});
+    check(mode, vp.name, 'same focused label fails visibility without its focus selectors', await target.count() === 1 && !await visibleLabel(), name);
+    check(mode, vp.name, 'no console errors', !errors.length, errors.join(' | '));
+  } catch (error) {
+    check(mode, vp.name, 'recording import and focus control', false, error.message);
+    await shot(page, 'desktop-compact-failure');
+  } finally { await context.close(); }
+}
+
+await compactMissionLabel();
 for (const vp of VIEWPORTS) {
+  await keyboardJourney(vp);
+  if (process.argv.includes('--keyboard-only')) continue;
   for (const query of ['', '?source=simulation']) {
     const mode = query ? 'simulation (?source=simulation)' : 'simulation (default)';
     const { context, page, errors } = await open(vp, query);
@@ -131,6 +298,8 @@ for (const vp of VIEWPORTS) {
       if (!query) await shot(page, `${tag}-mission`);
       await page.keyboard.press('Escape');
       await page.waitForTimeout(300);
+
+      if (await visible(page, '#atlasMissionBrowser')) await page.keyboard.press('Escape');
 
       // Replay from the start and confirm the cursor moves.
       const before = await page.evaluate(() => ({ clock: document.getElementById('clock')?.textContent, scrub: document.getElementById('scrub')?.value }));
