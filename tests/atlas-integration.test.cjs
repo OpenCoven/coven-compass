@@ -308,10 +308,37 @@ test('Coven fit caps an incoming 78-degree orbit and contains the screen-facing 
       assert.ok(x >= frame.x - EPS && x <= frame.x + frame.width + EPS, 'uncompressed hub horizontal bounds');
       assert.ok(y >= frame.y - EPS && y <= frame.y + frame.height + EPS, 'uncompressed crown and label vertical bounds');
     }
-    context.atlasScope = 'project'; context.camT.pitch = 78; context.fortExt = () => 362;
+    context.atlasScope = 'project'; context.camT.pitch = 78;
     context.atlasFitScene(false);
     assert.equal(context.camT.pitch, 78, 'project detail may keep its steeper orbit');
   }
+});
+
+test('packed agents keep distinct stable slots beyond the original three rings', () => {
+  const constants = source.slice(source.indexOf('const hexDirections'), source.indexOf('const seatR'));
+  const context = load(['slotXY'], {HEX_D:13.6, RAD:Math.PI / 180}, constants);
+  const seat = {x:30, y:40, rot:25};
+  const positions = Array.from({length:128}, (_,i) => context.slotXY(seat, i));
+  assert.deepEqual(Array.from(positions[0]), [30,40]);
+  assert.equal(new Set(positions.map(p => p.map(n => n.toFixed(4)).join(','))).size, positions.length);
+  for (const [index,p] of positions.entries()) assert.deepEqual(context.slotXY(seat, index), p);
+});
+
+test('Project fit follows visible content and reserves only gates with pending requests', () => {
+  const {context} = fitFixture(1200, 800, 1);
+  context.atlasScope = 'project';
+  context.camT.yaw = context.camT.pitch = 0;
+  const gate = {x: 560, y: 0, asks: []};
+  context.sc = {missions: new Map(), seats: new Map(), gateL: [gate]};
+  context.atlasFitScene(false);
+  const emptyZoom = context.camT.zoom;
+  context.sc.seats.set('a', {bx:-280, by:0});
+  context.atlasFitScene(false);
+  assert.ok(context.camT.px < 0);
+  gate.asks.push({id:'q1'});
+  context.atlasFitScene(false);
+  assert.ok(context.camT.px > 0);
+  assert.ok(context.camT.zoom < emptyZoom);
 });
 
 test('layout cache retains mission-only changes and rebuilds the scene on topology changes', () => {

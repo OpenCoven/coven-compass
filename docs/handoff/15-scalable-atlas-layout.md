@@ -8,20 +8,20 @@ The inspected implementation surfaces are [`atlas-layout.js`](../../dist/atlas-l
 
 | Representation | Meaning | Constraint |
 | --- | --- | --- |
-| Castle courtyard | One project within the displayed Coven scope | Corner towers and curtain walls frame the Project. Openings align with route gates. |
+| Numbered Project disc | One Project and its mission count | Select the disc to open its missions on the brick plane. |
 | Mission count inside a Project | Exact known mission total in that Project | Enter the Project or use the searchable mission browser for individual seals and details. |
 | Central canonical crown | Psyche coordination in the displayed scope | Its relief does not encode priority, progress, authority, or a separate identity. |
 | Shared branch corridor | A readable coordination connection from Psyche to a project | Shared segments do not assert execution order, dependencies, network connectivity, or shared permissions. |
-| Inward-facing Project gate | Where that project's coordination route meets its enclosure | The direction is geometric. North, east, south, and west do not create authorization categories. |
+| Inward-facing Project gate | Where that project's coordination route meets its disc | The direction is geometric. North, east, south, and west do not create authorization categories. |
 | Position in the lattice | A stable presentation slot | Nearness to Psyche does not imply importance, ownership, scheduling priority, or stronger authority. |
 
-All overview Projects use the same enclosure vocabulary, including the currently selected project. Selecting a project elsewhere must not unexpectedly substitute its full internal scene into the overview. Familiar colors and glyphs retain their existing identity-recognition role; selection and urgency remain separate signals. Exact familiar roots and revisions belong to the verified data binding, never to color or shape. [Visual contract](08-visual-and-interaction-contract.md)
+All overview Projects use the same disc, including the currently selected project. Selecting a project elsewhere must not unexpectedly substitute its full internal scene into the overview. Familiar colors and glyphs retain their existing identity-recognition role; selection and urgency remain separate signals. Exact familiar roots and revisions belong to the verified data binding, never to color or shape. [Visual contract](08-visual-and-interaction-contract.md)
 
 ## 2. Compact placement for a changing project count
 
 The layout helper accepts an ordered collection of unique project keys. It reserves a central hub and fills nearby lattice cells in opposite pairs. This produces a compact arrangement with balanced space around Psyche, including when the project count is odd. It avoids enlarging a single ring every time a project is added. The usable aspect ratio influences which nearby cells are selected: a wide canvas favors horizontal space, while a narrow canvas makes greater use of vertical space. [Layout source](../../dist/atlas-layout.js)
 
-The Coven is drawn as a kingdom of Project castles. Plan and orbit project the same courtyard, curtain walls and towers. The footprint is shared across the overview, with roof and battlement detail revealed at larger scales. This architectural metaphor represents Project scope. Hosted Castle records retain their separate meaning in D01. Inside a Project the boundary can grow additional sides as missions accumulate. Psyche occupies a circular coordination disc with the upright crown in both scopes. Routes meet the overview disc at its edge. Plan view shows the face alone, and orbit reveals a shallow base proportional to its radius.
+Plan and orbit share one brick plane. Project discs occupy stable slots on the Coven overview. Inside a Project, Fit frames the crown, mission seals, visible familiar positions and pending decisions. Selecting a mission frames its squads and waiting agents. Psyche occupies a circular coordination disc with the upright crown in both scopes. Routes meet the overview disc at its edge. Plan view shows the face alone, and orbit reveals a shallow base proportional to its radius.
 
 Each cell reserves the complete Project-and-label rectangle, not just the outline. The gaps between those rectangles are routing corridors. Routes leave the hub boundary, share suitable corridor segments, and make their final approach through the destination's inward-facing cardinal gate. A route may enter its own destination rectangle; it must not pass through another project's reserved space. The renderer must respect the helper's `maxCornerRadius` when rounding a branch, because excessive rounding can consume the reserved clearance.
 
@@ -29,7 +29,7 @@ At unchanged geometric options, appending keys preserves existing node positions
 
 “N-many” means that placement is data-driven and has no hardcoded four-project or sixteen-project scenario. It does **not** promise unlimited rendering performance. Finite geometry, DOM cost, text legibility, interaction targets, and device limits still constrain useful detail. At dense counts, favor compact summaries, search, and project drilldown. Introducing viewport culling or list virtualization later requires measured evidence and must preserve the full accessible collection; it is not established by this geometry helper alone.
 
-The overview uses a single count per Project. Project names appear when the projected enclosure is wide enough and remain available to assistive technology, the Projects drawer, and hover or focus. Density uses separate entry and exit thresholds to reduce flicker during zoom. At compact sizes, the boundary square marks a pending decision and the Project label and drawer provide the exact count. The larger badge has its own review target when there is room.
+The overview uses a single count per Project. Project names appear when the projected Project slot is wide enough and remain available to assistive technology, the Projects drawer, and hover or focus. Density uses separate entry and exit thresholds to reduce flicker during zoom. At compact sizes, the boundary square marks a pending decision and the Project label and drawer provide the exact count. The larger badge has its own review target when there is room.
 
 ### Explore larger Covens without removing user projects
 
@@ -98,7 +98,7 @@ Load the renderer before creating the scene crown. Coordinates are already proje
 
 ### Map materials
 
-Project courtyards use staggered flagstones. Paving follows the ground plane through orbit, and masonry joints follow the projected tower and wall faces. Fine paving and path borders drop out when projected courses become too small to resolve. The shapes and colors of decision markers, working agents and mission states carry their own meanings at every scale.
+Staggered bricks follow the ground plane through orbit. The repeating tile scales in steps at distant zoom levels. Selected squads have a recessed metal tray and each cog has a socket. Cog diameter decreases with the current agent count in that squad. Packed slots extend to additional rings as agents join.
 
 Psyche’s mount and mission seals use a graphite metal finish. Familiar faces and cog hubs retain their identity colors. An engraved groove follows each detailed seal wedge inside the separate resource rim. Seal Lab uses the same geometry as the map, and small inline seals use a single bevel around the face.
 
@@ -123,7 +123,7 @@ Before connecting live data, inspect the owning repositories and map their exist
 
 1. **Preserve stable inputs.** Resolve project keys, caller order, complete or qualified totals, familiar bindings, and scope through the existing adapter. Keep operational state out of geometry functions.
 2. **Compute one layout snapshot.** Call `CovenAtlasLayout.layout(keys, options)` with measured available aspect and reserved Project/label dimensions. Cache by ordered keys and normalized geometric options, not by every mission-progress tick.
-3. **Render one overview vocabulary.** Use the uniform four-corner Project for each project. Place routes from the returned points and gate metadata, respecting corridor clearance and maximum corner radius.
+3. **Render one overview vocabulary.** Use a numbered disc for each Project. Place routes from the returned points and gate metadata, respecting corridor clearance and maximum corner radius.
 4. **Bound map detail.** Show Project totals on the overview. Use projected scale and spacing to reveal seal relief and selected agents within the Project. Preserve the selected mission and keep the full collection accessible through the mission browser.
 5. **Keep scope explicit.** Connect project opening, Coven return, and search results to navigation. Connect Fit and camera gestures to camera state. Avoid zoom-based scope switching.
 6. **Fit the measured safe area.** Include projected geometry and screen-space labels, observe relevant chrome changes, and refit on resize only in auto-fit mode.

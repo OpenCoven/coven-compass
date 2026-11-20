@@ -1850,11 +1850,11 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
     <header class="hd"><span class="hd-i" id="keyIc"></span><h2 class="hd-t" id="keyTitle">Map key</h2><button class="btn x" type="button" id="keyX" aria-label="Close">×</button></header>
     <div class="key-reader">
       <p class="key-context">Local simulation · Decisions and chat affect sample data only.</p>
-<div class="kz-r"><span class="kz-m"><svg viewBox="0 0 20 20" aria-hidden="true"><path class="kl" d="M3 4v13h5v-4a2 2 0 0 1 4 0v4h5V4h-3v3h-3V4H9v3H6V4Z"/></svg></span><div><b>Project</b><p>Each castle on the Coven kingdom map represents a Project. Open its courtyard to explore missions.</p></div></div>
+<div class="kz-r"><span class="kz-m"><svg viewBox="0 0 20 20" aria-hidden="true"><path class="kl" d="M10 2a8 8 0 1 1 0 16a8 8 0 1 1 0-16Z"/></svg></span><div><b>Project</b><p>Each numbered disc is a Project. Its count shows how many missions you can explore.</p></div></div>
 <div class="kz-r"><span class="kz-m"><svg viewBox="-9 -9 18 18" aria-hidden="true" style="color:var(--primary)"><use href="#psyche-crown" x="-8.4" y="-8.1" width="16.8" height="15.5" fill="currentColor"/></svg></span><div><b>Psyche</b><p>Open the crown to talk to Psyche.</p></div></div>
 <div class="kz-r"><span class="kz-m" id="kzSealMark"></span><div><b>Mission</b><p>Select a seal to see its familiars, tasks and agents.</p></div></div>
 <div class="kz-r"><span class="kz-m"><svg viewBox="0 0 18 18" aria-hidden="true"><rect x="3" y="3" width="12" height="12" rx="1" fill="none" stroke="var(--attention)"/><path d="M9 6v6" stroke="var(--attention)"/></svg></span><div><b>Decision</b><p>Open a numbered gate to review pending requests.</p></div></div>
-<details class="key-topic" name="map-key-topic"><summary>Familiars, tasks and agents</summary><div><div id="kzFams" class="kz-fams"></div><div class="kz-r"><span class="kz-m" id="kzDots"></span><div><b>Familiar color</b><p>Connects the familiar to its mission and agents. Moving highlights indicate working agents.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="-1.2 -1.2 2.4 2.4" aria-hidden="true"><use href="#agent-cog-profile" fill="var(--fam-astra)"/><rect x="-.28" y="-.28" width=".56" height=".56" fill="var(--card)"/></svg></span><div><b>Agent and assignment</b><p>Each cog is an agent. A square hub means it has a task. Working cogs turn together. Idle cogs are smaller and hollow.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 14 14" aria-hidden="true"><circle class="kc on" cx="7" cy="7" r="4.5"/><circle cx="7" cy="7" r="2" fill="var(--fam-cody)"/></svg></span><div><b>Shared task</b><p>A second hub color identifies a co-leading familiar. A dashed spot reserves a waiting agent’s place.</p></div></div></div></details>
+<details class="key-topic" name="map-key-topic"><summary>Familiars, tasks and agents</summary><div><div id="kzFams" class="kz-fams"></div><div class="kz-r"><span class="kz-m" id="kzDots"></span><div><b>Familiar color</b><p>Connects the familiar to its mission and agents. Moving highlights indicate working agents.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="-1.2 -1.2 2.4 2.4" aria-hidden="true"><use href="#agent-cog-profile" fill="var(--fam-astra)"/><rect x="-.28" y="-.28" width=".56" height=".56" fill="var(--card)"/></svg></span><div><b>Agent and assignment</b><p>Each cog is an agent. Gears share a tray with their squad and get smaller as the squad grows. A square hub means it has a task. Working cogs turn together. Idle cogs are smaller and hollow.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 14 14" aria-hidden="true"><circle class="kc on" cx="7" cy="7" r="4.5"/><circle cx="7" cy="7" r="2" fill="var(--fam-cody)"/></svg></span><div><b>Shared task</b><p>A second hub color identifies a co-leading familiar. A dashed spot reserves a waiting agent’s place.</p></div></div></div></details>
 <details class="key-topic" name="map-key-topic"><summary>Mission progress and limits</summary><div><div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><path d="M0,0L0,-10A10,10 0 0 1 9.5,3.1Z" fill="var(--fam-astra)"/><path d="M0,0L9.5,3.1A10,10 0 0 1 -8.7,5Z" fill="var(--fam-cody)" opacity=".45"/><path d="M0,0L-8.7,5A10,10 0 0 1 0,-10Z" fill="var(--fam-echo)" opacity=".45"/></svg></span><div><b>Wedge</b><p>Width shows a familiar’s share of agents. Height shows progress on its targets.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><circle r="10" fill="none" stroke="var(--border-strong)"/><circle r="3.2" fill="var(--primary)"/></svg></span><div><b>Center mark</b><p>Shows the mission state.</p></div></div><div class="kz-states" id="kzStates"></div><div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><circle r="9" fill="none" stroke="var(--primary)" stroke-opacity=".2" stroke-width="2"/><path d="M0,-9A9,9 0 1 1 -8.6,2.8" fill="none" stroke="var(--warn)" stroke-width="2" stroke-linecap="round"/></svg></span><div><b>Resource rim</b><p>Coral marks a limit at or above 85% of time, tokens or budget.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><path d="M0,0L0,-10A10,10 0 0 1 9.5,3.1Z" fill="var(--fam-astra)"/><circle cx="3.6" cy="-4.4" r="1.5" fill="#4B4390"/></svg></span><div><b>Lead familiar</b><p>The dot marks the lead familiar’s wedge.</p></div></div></div></details>
 <details class="key-topic" name="map-key-topic"><summary>Connections and messages</summary><div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M2 7h22" stroke="var(--muted-foreground)" stroke-width="1.3"/></svg></span><div><b>Project connection</b><p>Psyche coordinates this Project. Filter by familiar to highlight its missions.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M2 7h22" stroke="var(--muted-foreground)" stroke-width="1.3" stroke-dasharray="2 4"/></svg></span><div><b>Dormant connection</b><p>No agents are assigned to this Project.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 26 14" aria-hidden="true"><path class="kl dim" d="M2 7h14" stroke-dasharray="1.5 3"/><circle cx="20" cy="7" r="2.6" fill="var(--primary)"/></svg></span><div><b>Message in transit</b><p>Lavender goes out from Psyche. Familiar colors come back. White marks a request for you.</p></div></div></div></details>
 <details class="key-topic" name="map-key-topic"><summary>Keyboard and text size</summary><div><div class="kz-k"><kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd><span>Move</span></div>
@@ -1901,7 +1901,6 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
 <script src="seal-lab.js"></script>
 <script src="atlas-layout.js"></script>
 <script src="atlas-viewport.js"></script>
-<script src="castle-map.js"></script>
 <script src="atlas-crown.js"></script>
 <script src="atlas-presentation.js"></script>
 <script src="simulation-model.js"></script>
@@ -1925,28 +1924,17 @@ if (requestedSource !== null && requestedSource.trim().toLowerCase() !== 'simula
 const {detailVisible, primaryRequest, placeAnnotation, sealDepth} = window.CovenAtlasPresentation;
 const NS = 'http://www.w3.org/2000/svg', RAD = Math.PI / 180;
 let sealAnimating = false;
-const S = 280, G = 22, LEAD_R = 118, C = 10.5;
+const S = 280, LEAD_R = 118, C = 10.5;
 // A Project grows with its mission layout. Each side keeps a gap for its gate.
 const fortN = m => Math.max(4, m), fortG = n => n / 4, fortA = n => S * n / 4;
 const cornerAngle = (n, k) => -135 + k * 360 / n, gateAng = (n, k) => cornerAngle(n, k) + 180 / n;
-const fortExt = n => fortA(n) / Math.cos(Math.PI / n);
-function projectBoundary(n) {
-  const radius = fortA(n), halfSide = radius * Math.tan(Math.PI / n);
-  const shoulder = halfSide - Math.min(32, halfSide / 4);
-  const onSide = (angle, along) => {
-    const cos = Math.cos(angle * RAD), sin = Math.sin(angle * RAD);
-    return [radius * cos - along * sin, radius * sin + along * cos];
-  };
-  return Array.from({length: n}, (_, k) => {
-    const before = gateAng(n, k - 1), after = gateAng(n, k);
-    return [onSide(before, G), onSide(before, shoulder), onSide(after, -shoulder), onSide(after, -G)];
-  });
-}
 const nearestGate = (n, deg) => { let best = 0, bd = 999; for (let k = 0; k < n; k++) { const d = Math.abs(((gateAng(n, k) - deg + 540) % 360) - 180); if (d < bd) { bd = d; best = k; } } return best; };
 const COMPASS = {N: -90, E: 0, S: 90, W: 180};
-function gatePos(L, letter, i) {                     // where an agent stands at a gate: just inside it, one each side of the opening
+const decisionRadius = layout => layout.lead + 42;
+function gatePos(L, letter, i) {
   const ga = gateAng(L.n, nearestGate(L.n, COMPASS[letter] != null ? COMPASS[letter] : -90)) * Math.PI / 180, nx = Math.cos(ga), ny = Math.sin(ga), o = i ? 14 : -14;
-  return [nx * (L.a - 26) - ny * o, ny * (L.a - 26) + nx * o];
+  const radius = decisionRadius(L) - 24;
+  return [nx * radius - ny * o, ny * radius + nx * o];
 }
 const ZT = 0, ZS = 0, ZL = 0, ZP = 0;            // one ground plane; only seal progress adds elevation
 const $ = id => document.getElementById(id);
@@ -2367,7 +2355,7 @@ const coLead = (w, a) => { const t = a.task ? w.tasks.get(a.task) : null; return
 
 // ------------------------------------------------------------ scene
 const plan = $('plan'), stage = $('stage');
-const PAN = 1000000, ZMIN = .00001, ZPL = 14, MAC = /Mac|iPhone|iPad/.test(navigator.platform || '');
+const PAN = 1000000, ZMIN = .00001, MAC = /Mac|iPhone|iPad/.test(navigator.platform || '');
 // every project has its own ground; together they are the Coven, a project of projects
 // A measured, compact arrangement around Psyche; branch aisles carry coordination.
 const HUB_R = 330, HUB_M = 520;
@@ -2400,7 +2388,7 @@ function atlasWorldLayout(remeasure) {
   if (atlasLayoutCache && atlasLayoutCache.key === key && !remeasure) return atlasLayoutCache;
   const frame = atlasViewportFrame(false), pitch = typeof camT === 'object' ? camT.pitch : 24;
   const aspect = Math.round(clamp(frame.width / frame.height * Math.cos(pitch * RAD), .25, 4) * 20) / 20;
-  const options = {aspect, nodeWidth: 1000, nodeHeight: 1150, gap: 200, hubRadius: 360, gateOffset: 280, padding: 80};
+  const options = {aspect, nodeWidth: 740, nodeHeight: 600, gap: 150, hubRadius: 280, gateOffset: 100, padding: 80};
   const signature = key + '|' + JSON.stringify(options);
   if (atlasLayoutCache && atlasLayoutCache.signature === signature) return atlasLayoutCache;
   const layout = window.CovenAtlasLayout.layout(keys, options);
@@ -2425,11 +2413,19 @@ function atlasFitScene(remeasure) {
     const target = fitTarget(cur()); if (target) Object.assign(camT, target);
     atlasAutoFit = true; saveView(); kick(); return;
   } else {
-    const e = fortExt(cur().layout.n);
-    bounds = window.CovenAtlasViewport.projectedBounds([{x0: -e, y0: -e, x1: e, y1: e + 80}], {yaw: camT.yaw, pitch: camT.pitch});
+    const footprints = [];
+    const include = (x,y,r) => footprints.push({x0:x-r, y0:y-r, x1:x+r, y1:y+r});
+    include(0, 0, 38);
+    sc?.missions.forEach(mission => include(mission.x, mission.y, 32));
+    sc?.seats.forEach(seat => include(seat.bx, seat.by, 18));
+    sc?.gateL.forEach(gate => { if (gate.asks.length) include(gate.x, gate.y, 16); });
+    bounds = window.CovenAtlasViewport.projectedBounds(footprints, camT);
   }
-  const target = window.CovenAtlasViewport.fit(bounds, {width, height, frame: atlasViewportFrame(false), fill: .94});
-  Object.assign(camT, {zoom: clamp(target.zoom, ZMIN, 6), px: target.px, py: target.py});
+  const frame = atlasViewportFrame(false);
+  const target = window.CovenAtlasViewport.fit(bounds, {width, height, frame, padding: atlasScope === 'project' ? 20 : 0, fill: .94});
+  const zoom = clamp(target.zoom, ZMIN, atlasScope === 'project' ? 2.3 : 6);
+  const scale = zoom * Math.min(width, height) / 784;
+  Object.assign(camT, {zoom, px:(bounds.x0+bounds.x1)/2 - (frame.cx-width/2)/scale, py:(bounds.y0+bounds.y1)/2 - (frame.cy-height/2)/scale});
   atlasAutoFit = true; saveView(); kick();
 }
 function atlasQueueFit() {
@@ -2530,17 +2526,16 @@ function buildScene() {
   plan.textContent = '';
   const highlight = sc && sc.hl;
   sc = {missions: new Map(), seats: new Map(), agents: new Map(), colinks: new Map(), orderEls: null, dirty: true, plated: null, hl: highlight || null};
-  { const L0 = cur().layout; sc.n = L0.n; sc.g = L0.g; sc.a = L0.a; sc.fort = projectBoundary(L0.n); sc.outline = sc.fort.flat(); }
+  sc.n = cur().layout.n;
   const defs = svgEl('defs', {}, plan);
   svgEl('polygon', {id: 'agent-cog-profile', points: cogOutline}, defs);
   sc.paving = svgEl('pattern', {id:'atlas-flagstones', patternUnits:'userSpaceOnUse', width:72, height:48}, defs);
   svgEl('rect', {width:72, height:48, fill:'#201f25'}, sc.paving);
-  svgEl('path', {d:'M0 0H72V24H0Z', fill:'#232127'}, sc.paving);
-  svgEl('path', {d:'M0 1H72M0 25H72M1 0V24M37 24V48', fill:'none', stroke:'#37343c', 'stroke-width':1.1}, sc.paving);
-  const glow = svgEl('radialGradient', {id: 'glow'}, defs);
-  [['0', '.2'], ['.4', '.05'], ['1', '0']].forEach(([o, op]) => svgEl('stop', {offset: o, class: 's-glow', 'stop-opacity': op}, glow));
+  svgEl('path', {d:'M0 0H72V24H0Z', fill:'#222026'}, sc.paving);
+  svgEl('path', {d:'M0 1H72M0 25H72M1 0V24M37 24V48', fill:'none', stroke:'#322f38', 'stroke-width':1.1}, sc.paving);
   const disc = svgEl('linearGradient', {id: 'disc', x1: 0, y1: 0, x2: 0, y2: 1}, defs);
   svgEl('stop', {offset: '0', class: 's-hi'}, disc); svgEl('stop', {offset: '1', class: 's-lo'}, disc);
+  sc.floor = svgEl('rect', {class:'brick-plane', 'aria-hidden':'true', 'pointer-events':'none'}, plan);
   sc.world = svgEl('g', {class: 'atlas-overview'}, plan);
   const layout = atlasWorldLayout(), here = worldOf(active); sc.layoutSignature = layout.signature;
   // Every project has the same overview representation. Position expresses containment and coordination.
@@ -2553,14 +2548,11 @@ function buildScene() {
   atlasFocusable(cv.g, 'Psyche, coordination across all Projects. Open simulated conversation', () => openPsyche());
   cv.arcG = svgEl('g', {}, sc.world); cv.roadG = svgEl('g', {class: 'atlas-roads'}, sc.world); cv.laneG = svgEl('g', {class: 'atlas-lanes'}, sc.world);
   Object.keys(projects).forEach(k => { const o = worldOf(k); cv.links.push({k, ox: o[0] - here[0], oy: o[1] - here[1], bed: svgEl('path', {class:'route-bed'}, cv.roadG), road: svgEl('path', {class: 'road'}, cv.roadG), lanes: [], sig: null}); });
-  const overviewBoundary = projectBoundary(4);
-  const kit = svgEl('g', {id:'overview-castle'}, defs);
-  sc.overviewCastle = window.CovenCastleMap.create(kit, overviewBoundary, svgEl, true);
   sc.ghosts = Object.keys(projects).map(k => {
     const o = worldOf(k), c2 = projects[k], g = svgEl('g', {class: 'ghostfort' + (c2.world.agents.size ? '' : ' dormant')}, sc.world);
-    const rec = {k, ox: o[0] - here[0], oy: o[1] - here[1], g, floor: svgEl('polygon', {class: 'gfloor'}, g), runs: overviewBoundary};
-    rec.base = rec.runs.map(() => svgEl('polyline', {class: 'wall base'}, g));
-    rec.castle = svgEl('use', {href:'#overview-castle', 'aria-hidden':'true', 'pointer-events':'none'}, g);
+    const rec = {k, ox:o[0]-here[0], oy:o[1]-here[1], g};
+    rec.hit = svgEl('circle', {class:'atlas-map-hit'}, g);
+    rec.marker = svgEl('ellipse', {class:'project-count-disc'}, g);
     rec.name = svgEl('text', {class: 'lead-name gname'}, g); rec.name.textContent = k;
     rec.sub = svgEl('text', {class: 'task-l gsub show'}, g);
     rec.aggregate = svgEl('text', {class: 'atlas-aggregate', 'aria-hidden': 'true'}, g);
@@ -2594,19 +2586,8 @@ function buildScene() {
     L.decision.addEventListener('click', ev => { ev.stopPropagation(); review(); });
   });
   const detail = sc.detail = svgEl('g', {class: 'atlas-project-detail'}, plan);
-  sc.moat = svgEl('polygon', {class: 'moat'}, detail);
-  sc.plinth = sc.outline.map(() => svgEl('polygon', {class: 'plinth'}, detail));
-  sc.floor = svgEl('polygon', {class: 'floor'}, detail);
-  sc.glow = svgEl('ellipse', {class: 'atlas-floor-glow', fill: 'url(#glow)'}, detail);
-  sc.home = svgEl('text', {class: 'lead-name gname faronly'}, detail); sc.home.textContent = active;
-  atlasFocusable(sc.home, active + ', enter this Project', () => atlasOpenProject(active));
-  sc.home.addEventListener('click', ev => { ev.stopPropagation(); atlasOpenProject(active); });
-  plan.classList.toggle('many', sc.n > 5);
-  const walls = svgEl('g', {class: 'atlas-project-wall'}, detail);
-  sc.runs = sc.fort.map(points => ({points, edge: svgEl('polyline', {class: 'wall base'}, walls)}));
-  sc.projectCastle = window.CovenCastleMap.create(walls, sc.fort, svgEl);
   sc.gateL = Object.keys(COMPASS).map(l => {
-    const k = nearestGate(sc.n, COMPASS[l]), [x, y] = pol(sc.a, gateAng(sc.n, k)), t = svgEl('text', {class: 'gate-l'}, detail);
+    const k = nearestGate(sc.n, COMPASS[l]), [x, y] = pol(decisionRadius(cur().layout), gateAng(sc.n, k)), t = svgEl('text', {class: 'gate-l'}, detail);
     t.textContent = l;
     const mark = svgEl('g', {class: 'atlas-decision atlas-project-decision'}, detail), hit = svgEl('rect', {class: 'atlas-map-hit'}, mark), box = svgEl('rect', {x: -10, y: -10, width: 20, height: 20, rx: 2}, mark), count = svgEl('text', {y: 4}, mark);
     const rec = {t, x, y, k, mark, box, hit, count, asks: []};
@@ -2629,14 +2610,20 @@ function buildScene() {
 }
 // Stable packed positions keep each agent in its familiar's group throughout replay.
 const HEX_D = 13.6, HEX_H = 7, TH = 7;
-const HEX = (() => { const d = [[1, 0], [1, -1], [0, -1], [-1, 0], [-1, 1], [0, 1]], out = [[0, 0]];
-  for (let k = 1; k <= 3; k++) { let q = d[4][0] * k, r = d[4][1] * k; for (let i = 0; i < 6; i++) for (let j = 0; j < k; j++) { out.push([q, r]); q += d[i][0]; r += d[i][1]; } }
-  return out; })();
-const ringsFor = n => n <= 1 ? 0 : n <= 7 ? 1 : n <= 19 ? 2 : 3;
+const hexDirections = [[1,0], [1,-1], [0,-1], [-1,0], [-1,1], [0,1]];
+const ringsFor = count => Math.ceil((Math.sqrt(12 * Math.max(1,count) - 3) - 3) / 6);
 const seatR = (c, id) => HEX_D * ringsFor(c.layout.size.get(id) || 1) + HEX_H + 8;
 const missionXY = (c, m) => pol(c.layout.lead, c.layout.ang.get(m) || 0);
 function slotXY(t, i) {
-  const [q, r] = HEX[i % HEX.length], lx = HEX_D * (q + r / 2), ly = HEX_D * .8660254 * r, cs = Math.cos(t.rot * RAD), sn = Math.sin(t.rot * RAD);
+  const shell = ringsFor(i + 1);
+  let q = -shell, r = shell;
+  let offset = shell ? i - (1 + 3 * shell * (shell - 1)) : 0;
+  for (const [dq,dr] of hexDirections) {
+    const steps = Math.min(offset, shell);
+    q += steps*dq; r += steps*dr; offset -= steps;
+    if (!offset) break;
+  }
+  const lx = HEX_D * (q + r / 2), ly = HEX_D * .8660254 * r, cs = Math.cos(t.rot * RAD), sn = Math.sin(t.rot * RAD);
   return [t.x + lx * cs - ly * sn, t.y + lx * sn + ly * cs];
 }
 function targetOf(c, a) {
@@ -2725,6 +2712,7 @@ function sync() {
         sc.seats.set(id, s);
       }
       const tl = tally.get(id) || {tot: 0, work: 0}, txt = String(tl.tot), mp = missionXY(c, M.id);
+      s.cogRadius = tl.tot <= 1 ? 8.2 : clamp(7.8 / Math.pow(tl.tot, .23), 3.2, 5.5);
       s.R = seatR(c, id); s.frac = tl.tot ? tl.work / tl.tot : 0; s.ln.classList.toggle('working', tl.work > 0);
       const [ux, uy] = unit(mp[0] - s.x, mp[1] - s.y); s.bx = s.x + ux * (s.R + 7); s.by = s.y + uy * (s.R + 7);   // the familiar sits at the head of its squad, facing the mission
       if (s.lnum.textContent !== txt) s.lnum.textContent = txt;
@@ -2757,6 +2745,7 @@ function sync() {
       e.style.setProperty('--hue', fam(a.fam).hue);
       const halo = svgEl('ellipse', {class: 'hot'}, e);
       const cog = svgEl('g', {class: 'agent-cog'}, e);
+      svgEl('circle', {class:'cog-socket', r:1.16}, cog);
       const side = svgEl('g', {class: 'cog-side'}, cog);
       svgEl('use', {href: '#agent-cog-profile', class: 'cog-rotor'}, side);
       svgEl('use', {href: '#agent-cog-profile', class: 'cog-rotor cog-face'}, cog);
@@ -2800,13 +2789,13 @@ function sync() {
   sc.colinks.forEach((r, key) => { if (!pairs.has(key)) { r.g.remove(); sc.colinks.delete(key); } });
   drawNew();
   $('ward').hidden = w.missions.size === 0;
-  { const tot = w.agents.size, hot = new Set(openAsks(w).map(q => nearestGate(sc.n, COMPASS[q.gate] != null ? COMPASS[q.gate] : -90)));
-    sc.glow.style.opacity = tot ? (.2 + .8 * countOf(w, a => a.state === 'work') / tot).toFixed(2) : '0';
-    sc.gateL.forEach(g => g.t.classList.toggle('on', hot.has(g.k))); }
   syncCoven();
   sc.ghosts.forEach(gh => { const g2 = projects[gh.k].world, t = g2.agents.size ? `${plural(g2.missions.size, 'mission')} · ${g2.agents.size} agents` : g2.missions.size ? plural(g2.missions.size, 'planned mission') : 'dormant'; if (gh.sub.textContent !== t) gh.sub.textContent = t; gh.g.classList.toggle('dormant', !g2.missions.size); });
   sc.dirty = true;
   applySel();
+  const fitKey = [sc.missions.size, sc.seats.size, ...sc.gateL.map(g => g.asks.length > 0)].join('/');
+  if (sc.fitKey !== fitKey && atlasAutoFit && atlasScope === 'project' && !c.sel) atlasQueueFit();
+  sc.fitKey = fitKey;
 }
 // a selected mission lights its council; a selected familiar lights every seat it holds, across councils
 // the Coven's own figures: who works where and how much, and which projects are waiting on you
@@ -2896,7 +2885,6 @@ function project() {
   const cy = Math.cos(cam.yaw * RAD), sy = Math.sin(cam.yaw * RAD), cp = Math.cos(cam.pitch * RAD), sp = Math.sin(cam.pitch * RAD);
   const P = (x, y, z) => { const xr = x * cy - y * sy, yr = x * sy + y * cy; return [xr, yr * cp - z * sp, yr * sp + z * cp]; };
   const f = v => v.toFixed(1);
-  const pts = (arr, z) => arr.map(p => { const q = P(p[0], p[1], z); return f(q[0]) + ',' + f(q[1]); }).join(' ');
   const ell = (el, x, y, z, r) => { const q = P(x, y, z); el.setAttribute('cx', f(q[0])); el.setAttribute('cy', f(q[1])); el.setAttribute('rx', f(r)); el.setAttribute('ry', f(Math.max(.01, r * cp))); return q; };
   const drawMarker = (marker, x, y, radius) => {
     ell(marker.base, x, y, 0, radius);
@@ -2907,7 +2895,9 @@ function project() {
   const seg = (el, a, b, ox, oy) => { el.setAttribute('x1', f(a[0] + (ox || 0))); el.setAttribute('y1', f(a[1] + (oy || 0))); el.setAttribute('x2', f(b[0] + (ox || 0))); el.setAttribute('y2', f(b[1] + (oy || 0))); };
   const hex = (el, p, rot, h) => { let d = ''; for (let i = 0; i < 6; i++) { const a = (rot + 30 + 60 * i) * RAD, v = P(p[0] + h * Math.cos(a), p[1] + h * Math.sin(a), p[2]); d += f(v[0]) + ',' + f(v[1]) + ' '; } el.setAttribute('points', d); };
   const vw = 784 / cam.zoom, screenScale = Math.max(.001, Math.min(stage.clientWidth, stage.clientHeight) / vw), kpx = Math.max(.05, screenScale), U = clamp(Math.pow(kpx, .35), .8, 1.2) / kpx;
-  const pavingTransform = `matrix(${cy} ${sy*cp} ${-sy} ${cy*cp} 0 0)`;
+  // Choose a coarser bond for distant views and keep mortar readable at high zoom.
+  const tileScale = 2 ** Math.round(Math.log2(1 / screenScale));
+  const pavingTransform = `matrix(${cy} ${sy*cp} ${-sy} ${cy*cp} 0 0) scale(${tileScale})`;
   if (sc.paving.getAttribute('patternTransform') !== pavingTransform) sc.paving.setAttribute('patternTransform', pavingTransform);
   plan.classList.toggle('atlas-material-detail', 24 * screenScale * cp >= 5);
   const minHit = (narrow.matches ? 44 : 24) / screenScale;
@@ -2942,21 +2932,13 @@ function project() {
     });
   };
   const far = atlasScope === 'coven'; if (far !== sc.far) { sc.far = far; plan.classList.toggle('far', far); $('vAll').setAttribute('aria-pressed', String(far)); if (window.CovenAtlas) window.CovenAtlas.update(); }
-  const hi = sc.outline.map(p => P(p[0], p[1], 0)), lo = sc.outline.map(p => P(p[0], p[1], -ZPL));
-  sc.plinth.forEach((el, i) => { const j = (i + 1) % hi.length; el.setAttribute('points', pp([hi[i], hi[j], lo[j], lo[i]])); });   // the slab the fort stands on
-  { const mk = 1 + .1 / sc.g; sc.moat.setAttribute('points', pp(sc.outline.map(p => P(p[0] * mk, p[1] * mk, -ZPL)))); }
-  sc.floor.setAttribute('points', pp(hi));
-  ell(sc.glow, 0, 0, 0, 260 * sc.g);
-  { const q = P(0, sc.a + 44, -ZPL); sc.home.setAttribute('x', f(q[0])); sc.home.setAttribute('y', f(q[1] + 14 * U)); }
-  sc.runs.forEach(run => run.edge.setAttribute('points', pts(run.points, 0)));
-  const castle = far ? sc.overviewCastle : sc.projectCastle;
-  window.CovenCastleMap.draw(castle, P, cam.yaw, cam.pitch, 560 * screenScale > 100);
+  const planeWidth = stage.clientWidth / screenScale + 4, planeHeight = stage.clientHeight / screenScale + 4;
+  sc.floor.setAttribute('x', f(cam.px - planeWidth/2)); sc.floor.setAttribute('y', f(cam.py - planeHeight/2));
+  sc.floor.setAttribute('width', f(planeWidth)); sc.floor.setAttribute('height', f(planeHeight));
   sc.ghosts.forEach(gh => {
-    const origin = P(gh.ox, gh.oy, 0);
-    gh.castle.setAttribute('transform', `translate(${f(origin[0])},${f(origin[1])})`);
-    const at = (x, y, z) => P(gh.ox + x, gh.oy + y, z);
-    gh.floor.setAttribute('points', pp(gh.runs.flat().map(p => at(p[0], p[1], 0))));
-    gh.runs.forEach((rp, i) => gh.base[i].setAttribute('points', pp(rp.map(q => at(q[0], q[1], 0)))));
+    const center = ell(gh.marker, gh.ox, gh.oy, 0, Math.max(100, 6 / screenScale));
+    gh.hit.setAttribute('cx', f(center[0])); gh.hit.setAttribute('cy', f(center[1]));
+    gh.hit.setAttribute('r', f(Math.max(100, Math.min(minHit/2, 365))));
     atlasProjectGhost(gh, P, f);
   });
   { const cv = sc.cov, layout = atlasWorldLayout(), origin = worldOf(active);
@@ -2995,10 +2977,10 @@ function project() {
       L.decisionBox.setAttribute('width', f(side)); L.decisionBox.setAttribute('height', f(side));
       L.decisionBox.setAttribute('rx', f(side * .10)); L.decisionCount.setAttribute('y', f(side * .18));
       L.decisionCount.style.fontSize = (side * .54).toFixed(1) + 'px';
-      const boundaryY = Math.max(...gh.runs.flat().map(p => P(L.ox + p[0], L.oy + p[1], 0)[1])) + 30 * cp;
-      const edge = L.decision.style.display === 'none' ? boundaryY : Math.max(boundaryY, gate[1] + side / 2);
+      const markerBottom = center[1] + Math.max(100, 6 / screenScale) * cp;
+      const edge = L.decision.style.display === 'none' ? markerBottom : Math.max(markerBottom, gate[1] + side / 2);
       const labelU = Math.min(U, gh.density === 'full' ? 9 : 6), fontWidth = 14 * labelU * .58 * fsz;
-      const maxChars = Math.max(7, Math.floor(850 / fontWidth)), name = L.k.length > maxChars ? L.k.slice(0, maxChars - 1) + '…' : L.k;
+      const maxChars = Math.max(7, Math.floor(700 / fontWidth)), name = L.k.length > maxChars ? L.k.slice(0, maxChars - 1) + '…' : L.k;
       if (gh.name.textContent !== name) gh.name.textContent = name;
       gh.g.style.setProperty('--u', labelU.toFixed(3));
       set(gh.name, [center[0], edge], 14 * labelU); set(gh.sub, [center[0], edge], 30 * labelU);
@@ -3061,6 +3043,7 @@ function project() {
   if (tight !== sc.tight) { sc.tight = tight; plan.classList.toggle('tight', tight); }
   const cc = cur();
   sc.seats.forEach(s => {
+    s.g.classList.toggle('show-tray', cc.sel === s.m && sc.agentDetail);
     s.pad.setAttribute('d', outline(s.hull, ZT - .5));
     const q = ell(s.disc, s.x, s.y, ZT, s.R), b = P(s.x, s.y, ZT - TH), ry = Math.max(.01, s.R * cp), M = sc.missions.get(s.m), R = f(s.R), Ry = f(ry);
     s.side.setAttribute('d', `M${f(q[0] - s.R)},${f(q[1])}L${f(b[0] - s.R)},${f(b[1])}A${R},${Ry} 0 0 0 ${f(b[0] + s.R)},${f(b[1])}L${f(q[0] + s.R)},${f(q[1])}A${R},${Ry} 0 0 1 ${f(q[0] - s.R)},${f(q[1])}Z`);
@@ -3083,7 +3066,7 @@ function project() {
   });
   sc.agents.forEach(s => {
     const q = P(s.p[0], s.p[1], s.p[2]);
-    const radius = Math.min(HEX_D * .44, (s.state === 'idle' ? 4.5 : 6) / screenScale);
+    const radius = Math.min(sc.seats.get(s.seat)?.cogRadius ?? 5, 14 / screenScale) * (s.state === 'idle' ? .84 : 1);
     const hit = Math.max(radius, Math.min(10 / screenScale, HEX_D * .4 * cp));
     s.halo.setAttribute('cx', f(q[0])); s.halo.setAttribute('cy', f(q[1]));
     s.halo.setAttribute('rx', f(hit)); s.halo.setAttribute('ry', f(hit));
@@ -5491,7 +5474,7 @@ function atlasProjectGhost(gh, P, f) {
   const pending = openAsks(w).length;
   gh.g.setAttribute('aria-label', gh.k + ', ' + plural(w.missions.size, 'mission') + ', ' + plural(w.agents.size, 'agent') +
     (pending ? ', ' + plural(pending, 'pending decision') : '') + '. Open project');
-  const center = P(gh.ox, gh.oy, 51);
+  const center = P(gh.ox, gh.oy, 0);
   gh.aggregate.textContent = String(w.missions.size);
   gh.aggregate.setAttribute('x', f(center[0]));
   gh.aggregate.setAttribute('y', f(center[1] + 4 / scale));

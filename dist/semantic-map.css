@@ -43,26 +43,7 @@ body.atlas-enhanced #plan .lead-node > .disc,
 body.atlas-enhanced #plan .lead-node > .sig {
   display: none;
 }
-body.atlas-enhanced #plan .wall.base {
-  display: inline;
-  stroke: #797487;
-  stroke-width: 1.25;
-  stroke-opacity: 1;
-  vector-effect: non-scaling-stroke;
-}
-body.atlas-enhanced #plan .gfloor,
-body.atlas-enhanced #plan .floor {
-  fill: #19181e;
-  fill-opacity: .68;
-  stroke: none;
-}
 body.atlas-enhanced #plan.far .ghostfort { opacity: 1; }
-body.atlas-enhanced #plan.far .ghostfort.dormant .wall.base { stroke-dasharray: 2 4; }
-body.atlas-enhanced #plan.far .ghostfort:hover .wall.base,
-body.atlas-enhanced #plan.far .ghostfort:focus-visible .wall.base {
-  stroke: var(--primary);
-  stroke-opacity: 1;
-}
 body.atlas-enhanced #plan .gname {
   fill: #d8d4e1;
   font-size: calc(14px * var(--u, 1) * var(--fs, 1));
@@ -189,7 +170,7 @@ body.atlas-enhanced #plan .ghostfort[data-density="tiny"]:hover .gname,
 body.atlas-enhanced #plan .ghostfort[data-density="tiny"]:focus-visible .gname { visibility: visible; }
 
 @media (prefers-contrast: more) {
-  body.atlas-enhanced #plan .wall.base { stroke-opacity: .9; }
+  .project-count-disc { stroke-width: 1.8; }
   body.atlas-enhanced #plan .gsub { fill: #c0b9ce; }
   body.atlas-enhanced #plan .road { stroke-opacity: .6; }
 }
@@ -323,24 +304,16 @@ body.atlas-enhanced #plan:not(.flat) .seat > .sig { display: none; }
   #plan.atlas-agent-detail .agent.work.reverse-cog .cog-rotor { animation-direction: reverse; }
 }
 
-/* Cool slate walls sit below the richer familiar colors and mission seals. */
-.castle-stonework { stroke-linejoin: round; }
-.castle-side { fill: #393643; stroke: #605c6b; }
-.castle-face { fill: #696574; stroke: #a09aaa; }
-.castle-stonework path { stroke-width: .75; vector-effect: non-scaling-stroke; }
-.castle-tower .castle-side { fill: #45404d; }
-.castle-rim .castle-face { fill: #817989; }
-.castle-cap .castle-face { fill: #aba2af; }
-.castle-roof .castle-face { fill: #494450; }
-.ghostfort.dormant .castle-stonework, .ghostfort.dormant use[href="#overview-castle"] { opacity: .6; }
-
-/* Architectural detail appears once a course of paving occupies several pixels. */
-body.atlas-enhanced #plan.atlas-material-detail :is(.floor,.gfloor) { fill: url(#atlas-flagstones); fill-opacity: 1; }
-.castle-stonework .castle-shade { fill: #211f29; fill-opacity: .52; stroke: none; }
-.castle-stonework .castle-joints { fill: none; stroke: #292630; stroke-opacity: .68; stroke-width: .85; }
-.castle-roof .castle-joints { stroke: #a59da9; stroke-opacity: .52; }
-.castle-tower .castle-face, .castle-roof .castle-face { fill: url(#atlas-gunmetal); }
-
+/* A continuous ground plane and raised metal markers keep scope readable at any zoom. */
+.brick-plane { fill: url(#atlas-flagstones); }
+.project-count-disc { fill: url(#atlas-gunmetal); stroke: #9a91ab; stroke-width: 1.25; vector-effect: non-scaling-stroke; }
+.ghostfort.dormant .project-count-disc { stroke-dasharray: 2 3; }
+.ghostfort:is(:focus-visible,:hover) .project-count-disc { stroke: var(--attention); stroke-width: 2; }
+body.atlas-enhanced #plan .atlas-squad.show-tray > .task {
+  display: inline; fill: url(#atlas-gunmetal); stroke: color-mix(in srgb, var(--hue) 50%, #4c4754);
+  fill-opacity: .92; stroke-width: 1; stroke-opacity: .85; vector-effect: non-scaling-stroke; pointer-events: none;
+}
+.cog-socket { fill: #26232c; stroke: color-mix(in srgb, var(--hue) 48%, #686172); stroke-width: .11; }
 body.atlas-enhanced #plan .coord-face, .se-base-top { fill: url(#atlas-gunmetal); stroke: url(#atlas-bevel); }
 .coord-inset { fill: none; stroke: #aca4b7; stroke-opacity: .48; stroke-width: .8; vector-effect: non-scaling-stroke; }
 #plan:not(.atlas-material-detail) .coord-inset { display: none; }

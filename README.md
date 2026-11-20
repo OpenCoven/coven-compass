@@ -28,7 +28,7 @@ The tests include their exact reference fixture and work without Git history. Th
 
 ## Scalable overview refinement
 
-**Implemented; combined source-level verification passed.** The current refinement uses castle courtyards for Projects in an aspect-aware compact lattice, paired positions, and shared branch corridors that meet each project's inward-facing gate. Routes show coordination, not execution dependencies or authority. Read [the scalable layout and crown guide](docs/handoff/15-scalable-atlas-layout.md) for implementation and integration details.
+**Implemented; combined source-level verification passed.** The current refinement uses numbered Project discs on a shared brick plane in an aspect-aware compact lattice, paired positions, and shared branch corridors that meet each project's inward-facing gate. Routes show coordination, not execution dependencies or authority. Read [the scalable layout and crown guide](docs/handoff/15-scalable-atlas-layout.md) for implementation and integration details.
 
 The Coven overview shows an exact mission count within each Project enclosure and a separate badge for pending decisions. The mission browser and Project drilldown retain all known missions. The map reduces detail based on projected spacing while preserving the underlying collection.
 
@@ -38,15 +38,15 @@ Coven/project scope is explicit and separate from camera zoom. Fit uses measured
 
 ## Visual language
 
-- **Castle courtyard:** one project's scope. Every project uses the same overview treatment, including the currently active project.
+- **Numbered Project disc:** one project and its mission count. Every project uses the same overview treatment, including the currently active project.
 - **Circular mission seal:** one mission. Wedge angle is the share of its agents led by each familiar; wedge height is progress on that familiar's role-owned targets; the central signet expresses mission state.
 - **Stable familiar glyph and hue:** identity across projects, councils, and delegated agents. Changing the camera angle does not change the familiar's mark.
-- **Agent marks:** cogs represent agents and square hubs indicate task assignments in the selected mission. Their state and familiar affiliation remain available in the detail views.
-- **Near-white boundary square:** a pending permission or resource-limit decision. Selecting it opens that project's pending decisions; its presence does not mean the requested operation was approved.
+- **Agent marks:** cogs represent agents and square hubs indicate task assignments in the selected mission. Each squad shares a metal tray. Smaller squads use larger gears. Their state and familiar affiliation remain available in the detail views.
+- **Near-white gate square:** a pending permission or resource-limit decision. Selecting it opens that project's pending decisions; its presence does not mean the requested operation was approved.
 - **Central Psyche crown:** coordination within the current scope. Its relief is decorative, while project connections remain neutral until a familiar filter highlights that familiar's assignments.
 - **Coral seal rim:** the tightest time, token, or budget limit has reached 85%, or the mission is broken after stopping at a limit.
 
-The Coven overview shows Project boundaries, exact mission counts, and pending-decision badges. Entering a Project reveals mission seals and familiar glyphs. Selecting a mission shows its state, one decision preview, and individual agent marks when spacing allows. The Inbox holds all pending decisions, and mission details retain exact counts. Zoom changes presentation density while preserving the current scope.
+The Coven overview shows Project markers, exact mission counts, and pending-decision badges. Entering a Project reveals mission seals and familiar glyphs. Selecting a mission shows its state, one decision preview, and individual agent marks when spacing allows. The Inbox holds all pending decisions, and mission details retain exact counts. Zoom changes presentation density while preserving the current scope.
 
 The v27 seal constraints remain: a 12-degree minimum wedge angle, at most eight rendered council wedges, and at most twelve working pips per familiar. The minimum angle can enlarge very small shares; exact agent counts remain available in detail views.
 
@@ -54,7 +54,7 @@ The v27 seal constraints remain: a 12-degree minimum wedge angle, at most eight 
 
 1. Browse the Coven map or open Projects to search project names and explore the larger-Coven sample presets. Use Missions to search across Projects and filter by Project or mission state; an overview overflow marker opens all missions for its Project.
 2. Use the familiar chips along the bottom to follow a familiar across Projects. Select the same chip again to clear the filter.
-3. Select a near-white square on a project boundary to open its pending decisions.
+3. Select a near-white square on a Project route to open its pending decisions.
 4. Open mission details for Brief, Council, Tasks, and Agents. Previous/Next explores the current Project; Back to mission leaves a familiar view; All missions restores the search and selected row.
 5. Use Seal lab to explore Planned, Active, Needs you, Stalled, Sealed, and Broken, plus target progress, working counts, and resource limits.
 6. Replay the shared live timeline, pause or scrub to a moment, and change the focused Project without restarting playback. Go live returns to the current sample state. Imported recordings keep their own extent and finish paused.

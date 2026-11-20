@@ -95,7 +95,7 @@ function fixture(trace = []) {
     sc, projects: { sample: c }, active: 'sample', cur: () => c, window: {CovenAtlasLayout: atlasLayout},
     // Project layout and density are scene boundaries; actual mission packing,
     // folding, synchronization, seal construction and rendering run below.
-    atlasWorldLayout: () => ({signature: sc.layoutSignature}),
+    atlasAutoFit: false, atlasWorldLayout: () => ({signature: sc.layoutSignature}),
     stage: {clientWidth: 1000, clientHeight: 700}, cam: {zoom: 1},
     newWorld: world, svgEl, RAD: Math.PI / 180, ZT: 0, ZPL: 6, RUNZ: [],
     plural: (count, noun) => `${count} ${noun}${count === 1 ? '' : 's'}`,
