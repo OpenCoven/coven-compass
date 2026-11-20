@@ -1731,6 +1731,7 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
 <script src="simulation-model.js"></script>
 <script src="brief-policy.js"></script>
 <script src="brief-policy-view.js"></script>
+<script src="brief-policy-editor.js"></script>
 <script src="projection-source.js"></script>
 <script>
 (() => {
@@ -1955,7 +1956,11 @@ function normBrief(b) {
   if (!b || typeof b !== 'object') return null;
   const pos = (o, keys) => { const r = {}; keys.forEach(k => { const v = o && o[k]; if (typeof v === 'number' && isFinite(v) && v > 0) r[k] = v; }); return r; };
   const strs = a => (Array.isArray(a) ? a : []).map(x => String(x).slice(0, 16)).slice(0, 6);
-  return closeBrief({deliver: (Array.isArray(b.deliver) ? b.deliver : []).filter(a => a && KIND[a.kind]).map(a => ({kind: a.kind, formats: strs(a.formats), langs: strs(a.langs)})),
+  // Success criteria from the editor (#35) are kept when they validate. Anything else is kept as invalid, so the
+  // derived policy fails closed rather than silently dropping a gate.
+  const policyApi = window.CovenBriefPolicy, sc = b.success === undefined ? null : policyApi && policyApi.normalizeSuccess(b.success);
+  return closeBrief({...(sc ? {success: sc.ok ? sc.success : {invalid: true}} : b.success !== undefined ? {success: {invalid: true}} : {}),
+    deliver: (Array.isArray(b.deliver) ? b.deliver : []).filter(a => a && KIND[a.kind]).map(a => ({kind: a.kind, formats: strs(a.formats), langs: strs(a.langs)})),
     atLeast: pos(b.atLeast, Object.keys(FLOOR)), atMost: pos(b.atMost, Object.keys(CAP)), measure: (Array.isArray(b.measure) ? b.measure : []).filter(k => MEASURE[k])});
 }
 // Some choices bring others with them, and every brief is kept in one standard form: a website is built from a codebase,
@@ -3350,7 +3355,7 @@ const xBtn = (label, fn) => { const x = html('button', 'btn x', '×'); x.type = 
 // with that familiar's tasks, each tied to its squad in the project by a leader line. Anything of the mission's waiting
 // at a gate is tagged where it stands. On a narrow stage the seats carry small tags instead.
 let lcSig = '', notes = [], hud = null;
-const briefSig = (st, M) => st ? (M && M.paused ? 'P' : '') + (M && M.tpl || '') + (M ? sealOf(cur().world, M).sig : '') + JSON.stringify([st.deliver.map(x => x.state), st.floors.map(x => [Math.round(x.have), x.need]), st.caps.map(x => [Math.round(x.used * (x.k === 'usd' ? 100 : 1)), x.max]), st.measures.map(x => x.k)]) : 'none';
+const briefSig = (st, M) => st ? (M && M.paused ? 'P' : '') + (M && M.tpl || '') + (M ? sealOf(cur().world, M).sig : '') + JSON.stringify([M && M.brief && M.brief.success || null, st.deliver.map(x => x.state), st.floors.map(x => [Math.round(x.have), x.need]), st.caps.map(x => [Math.round(x.used * (x.k === 'usd' ? 100 : 1)), x.max]), st.measures.map(x => x.k)]) : 'none';
 function fillHudBrief() {
   if (!hud || !hud.bf || !hud.bf.isConnected) return;
   const c = cur(), M = c.world.missions.get(hud.m), st = M && briefState(c.world, M), sig = briefSig(st, M);
@@ -4449,7 +4454,7 @@ function drawBriefForm(focusId) {
       x.addEventListener('click', () => { userTpl = userTpl.filter(u => u !== t); saveTpl(); if (nm.tpl === t.id) nm.tpl = null; drawBriefForm(); drawNew(); }); return x; });
     if (owns.length) body.push(tgs('Delete', owns));
     const sv = html('div', 'tp-save'), inp = html('input'), sb = html('button', 'btn sm', 'Save as template'); inp.type = 'text'; inp.maxLength = 28; inp.placeholder = 'Name this brief'; inp.setAttribute('aria-label', 'Template name'); inp.dataset.id = 'tp-name'; sb.type = 'button';
-    const full = userTpl.length >= TPL_MAX, okName = () => { const v = inp.value.trim(); return v.length >= 2 && !allTpl().some(t => t.name.toLowerCase() === v.toLowerCase()); };
+    const full = userTpl.length >= TPL_MAX, okName = () => { const v = inp.value.trim(); return successOk(nm.brief) && v.length >= 2 && !allTpl().some(t => t.name.toLowerCase() === v.toLowerCase()); };
     sb.disabled = true; inp.disabled = full; if (full) inp.placeholder = `You have ${TPL_MAX} templates. Delete one first.`;
     inp.addEventListener('input', () => { sb.disabled = full || !okName(); }); inp.addEventListener('keydown', ev => { if (composingInput(ev)) return; if (ev.key === 'Enter') { ev.preventDefault(); sb.click(); } });
     sb.addEventListener('click', () => { if (full || !okName()) return; const name = inp.value.trim(), t = {id: 'u-' + Date.now().toString(36), name, brief: normBrief(clone(nm.brief)), own: true};
@@ -4471,11 +4476,18 @@ function drawBriefForm(focusId) {
   row('floor', 'floor', '', 'At least', fl.length ? fl.join(', ') : 'Nothing required', Object.keys(FLOOR).map(k => { const by = floorBy(b, k), min = by ? REQUIRES[by.kind].atLeast[k] : 0, r = step('fl-' + k, FLOOR[k][0] + (by ? ' · required' : ''), k, b.atLeast[k] || 0, FLOOR[k][1], min, v => { if (v) b.atLeast[k] = v; else delete b.atLeast[k]; }); if (by) r.title = `Required: ${REQUIRES[by.kind].why}`; return r; }));
   row('cap', 'cap', 'q', 'At most', Object.keys(b.atMost).map(k => capText(k, b.atMost[k])).join(' · '), Object.keys(CAP).map(k => step('cp-' + k, CAP[k][0], k, b.atMost[k], CAP[k][1], CAP[k][2], v => { b.atMost[k] = v; })));
   row('measure', 'gauge', '', 'Measured by', b.measure.length ? b.measure.map(k => MEASURE[k].toLowerCase()).join(', ') : 'Nothing', [tgs('', Object.keys(MEASURE).map(k => tog('m-' + k, MEASURE[k], b.measure.includes(k), () => flip(b.measure, k))))]);
-  // The plain-language completion rule this Brief implies (#35 proposal), shown before it is saved.
-  if (window.CovenBriefPolicy) { const done = html('p', 'bp-form-summary'); done.id = 'nmDone'; done.setAttribute('aria-live', 'polite');
-    done.append(html('b', null, 'When is it done? '), window.CovenBriefPolicy.summarize(window.CovenBriefPolicy.fromBrief(b, {deliver: artText, floor: floorText}))); box.appendChild(done); }
+  // Success criteria (#35, the editor ported from #42), then the plain-language completion rule this Brief
+  // implies, shown before it is saved. Editing a criterion refreshes only the rule and the Save state.
+  if (window.CovenBriefPolicyEditor) box.appendChild(window.CovenBriefPolicyEditor.render(document, b, () => { nm.briefTouched = true; nm.tplEdited = true; drawDone(); drawNew(); }));
+  if (window.CovenBriefPolicy) { const done = html('p', 'bp-form-summary'); done.id = 'nmDone'; done.setAttribute('aria-live', 'polite'); box.appendChild(done); drawDone(); }
   if (focusId) { const el = box.querySelector(`[data-id="${focusId}"]`); if (el && !el.disabled) el.focus(); }
 }
+function drawDone() {
+  const done = $('nmDone'), BP = window.CovenBriefPolicy; if (!done || !BP) return;
+  done.textContent = ''; done.append(html('b', null, 'When is it done? '), BP.summarize(BP.fromBrief(nm.brief, {deliver: artText, floor: floorText})));
+}
+// Criteria the editor can't validate block Save, Open mission and Save as template.
+function successOk(b) { return !b || b.success === undefined || !window.CovenBriefPolicy || window.CovenBriefPolicy.normalizeSuccess(b.success).ok; }
 function setLead(k, focus) {
   nm.lead = k;
   $('nmLeads').querySelectorAll('.nm-lead').forEach(b => { const on = b.dataset.k === k; b.setAttribute('aria-checked', String(on)); b.tabIndex = on ? 0 : -1; if (on && focus) b.focus(); });
@@ -4507,7 +4519,7 @@ function drawNew() {
   setMissionName($('emptyName'), EM ? EM.name : active); $('emptyState').textContent = EM ? '' : n ? `${n} open` : 'Dormant'; $('emptyState').className = 'hd-s ' + (n ? 'on' : 'off'); $('emptyState').hidden = !!EM;
   $('emptyX').hidden = false;
   $('nmFoot').textContent = !canAct() ? 'Replaying. Go live first.' : EM ? 'Psyche tells the council.' : `Starts with 6 of up to ${nm.brief.atMost.agents} agents.`;
-  $('raise').disabled = !ok || !$('nmName').value.trim(); $('nmName').disabled = !ok || !!EM;
+  $('raise').disabled = !ok || !$('nmName').value.trim() || !successOk(nm.brief); $('nmName').disabled = !ok || !!EM;
 }
 function openNew(editId) {
   const c = cur(), M = editId ? c.world.missions.get(editId) : null;
@@ -4545,6 +4557,7 @@ $('empty').addEventListener('submit', ev => {
   ev.preventDefault();
   if (composingText.has(document.activeElement)) return;
   const c = cur(), w = c.world, name = $('nmName').value.trim().slice(0, 60), k = nm.lead, f = fam(k), brief = normBrief(nm.brief);
+  if (!successOk(nm.brief)) return;
   if (nm.edit) {                                    // a changed brief is said to Psyche, who tells the council
     const M = w.missions.get(nm.edit); if (!M || !canAct()) return;
     c.composing = false; nm.edit = null; nm.briefTouched = false; nm.open = null;

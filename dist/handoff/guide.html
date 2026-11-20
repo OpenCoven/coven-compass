@@ -1013,6 +1013,7 @@ node scripts/check-source.mjs</code></pre>
 <li><p><strong>Limits are cumulative.</strong> Attempt count, cost and time are summed over every recorded attempt, and a retry never resets them. With no attempt limit set, no revision can be requested.</p></li>
 <li><p><strong>Ambiguity blocks retries.</strong> An attempt with unresolved external effects stops iteration until it is resolved.</p></li>
 <li><p><strong>Authorization is resolved, not retried.</strong> Denied, expired, revoked or uncertain authorization stops and escalates.</p></li>
+<li><p><strong>No gate is never met.</strong> A policy with no required condition, rubric or target stops and escalates (<code>no-gates</code>) instead of being eligible by default.</p></li>
 <li><p><strong>Grading is not acceptance.</strong> The strongest result the model can return is <em>eligible</em>, with the next action <em>request authorized acceptance</em>. Acceptance is always reported as not recorded.</p></li>
 </ol>
 <p>The next permitted action is one of: <code>wait-for-evidence</code>, <code>request-bounded-revision</code>, <code>request-authorized-acceptance</code> or <code>stop-escalate</code>. None of these is a command. Compass has no transport for any of them (D03).</p>
@@ -1025,12 +1026,24 @@ node scripts/check-source.mjs</code></pre>
 <li><p><strong>Accepted completion:</strong> always <em>not recorded</em>. Only an authorized Coven transition can record it.</p></li>
 </ol>
 <p>In the simulation, the Brief&#x27;s progress counters are sample data, not sealed evidence. That&#x27;s why every condition shows as unknown even when its counter reads above the floor.</p>
+<h3 id="doc-16-brief-success-profile--success-criteria-in-new-mission-and-edit-brief">Success criteria in New mission and Edit brief</h3>
+<p>The editor (<code>dist/brief-policy-editor.js</code>, ported from #42) sets the Brief&#x27;s optional success criteria, <code>brief.success</code>. <code>fromBrief</code> merges them into the policy the Brief already implies, and they only add gates. The Brief&#x27;s deliverables and floors stay required. The editor adds:</p>
+<table><thead><tr><th>Editor control</th><th>Policy field</th></tr></thead><tbody>
+<tr><td>Independent review passes, Artifact checks pass</td><td>required conditions <code>success:review</code>, <code>success:checks</code></td></tr>
+<tr><td>Additional required evidence (up to 12 lines of up to 160 characters)</td><td>one required condition each, <code>custom:&lt;digest&gt;</code></td></tr>
+<tr><td>Optional quality rubric: minimum weighted score and, for Accuracy and Clarity, weight and floor</td><td><code>rubric</code> on a 0–100 scale, <code>weighted-mean/1</code>, anchors at 0, 50 and 100</td></tr>
+<tr><td>Total attempts</td><td><code>limits.maxAttempts</code> (required, 1–100)</td></tr>
+<tr><td>Deadline (UTC, optional)</td><td><code>limits.deadline</code> (<code>YYYY-MM-DDTHH:MMZ</code>)</td></tr>
+<tr><td>Require verified examples</td><td>one entry in <code>targets</code>. It&#x27;s inert (#37) and stays unknown.</td></tr>
+</tbody></table>
+<p>As in #42, every condition the editor adds can be revised within the attempt limit. Cost and time across attempts stay the Brief&#x27;s own <em>at most</em> ceilings, so the editor doesn&#x27;t duplicate them. Changed criteria derive a new <code>sim-…</code> revision. Criteria that don&#x27;t validate block Save, Open mission and Save as template, and the editor lists each error. A trace with malformed criteria derives no policy, so the inspector fails closed (<code>invalid-policy</code>). The preview is the existing <em>When is it done?</em> summary.</p>
+<p>#42 also had other parts, which were left out on purpose. Its inspector buttons for candidate A/B and &quot;reveal evidence&quot;, and its <em>Simulate cancelled / denied / expired / revoked / uncertain</em> holds, graded attempts inside the live simulation. So did the <code>brief.fixture</code> and <code>brief.hold</code> events behind them. Those parts contradict the rule that the simulation records no attempts. The synthetic <code>?source=fixture&amp;scenario=brief-*</code> cases cover the same outcomes.</p>
 <h3 id="doc-16-brief-success-profile--not-in-this-slice">Not in this slice</h3>
 <ul>
 <li><p>No owner has reviewed the mapping, so the first acceptance box of #35 stays open.</p></li>
 <li><p>There are no live receipts. A source fixture can&#x27;t close live acceptance.</p></li>
 <li><p>No scheduler, executor, accounting store, identity root or transport has been added.</p></li>
-<li><p>The Brief form doesn&#x27;t yet edit required conditions, a rubric, or attempt limits. It shows the completion summary of the policy derived from the Brief.</p></li>
+<li><p>The simulation records no attempts or evaluations, so a Brief&#x27;s success criteria can be set and previewed but never become eligible there.</p></li>
 </ul>
 </article>
 <article class="chapter" id="doc-user-architecture-instructions"><p class="chapter-source"><code>docs/handoff/source-context/user-architecture-instructions.md</code></p>

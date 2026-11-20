@@ -50,6 +50,7 @@ const REASONS = Object.freeze({
   'remediable-failure': 'A quality gate failed and the limits allow another attempt.',
   'deadline-passed': 'The deadline passed before the conditions were shown to be met.',
   'evidence-missing': 'Some conditions have no current, evidence-backed evaluation yet. Unknown never counts as met.',
+  'no-gates': 'The policy names no required condition, rubric or target, so there is nothing to show it met. It never counts as met.',
   'outcome-targets-not-supported': 'The policy names outcome targets, which this slice can\'t evaluate (#37), so they stay unknown.',
   eligible: 'Every configured gate is met by current evidence. Acceptance is still a separate, authorized step.',
 });
@@ -280,6 +281,8 @@ function evaluate(policyInput, recordInput, now) {
   if (record.cancelled === true) return result(base, 'stop-escalate', 'cancelled');
   if (limits.unresolved.length) return result(base, 'stop-escalate', 'unresolved-prior-effects');
   if (auth && AUTH_STOPS.has(auth.state)) return result(base, 'stop-escalate', 'authorization-needs-resolution');
+  // Fail closed: a policy with no gate at all is never "met" by default.
+  if (!policy.required.length && !policy.rubric && !policy.targets.length) return result(Object.assign(base, {qualification: 'unknown'}), 'stop-escalate', 'no-gates');
   if (qualification === 'met') return result(Object.assign(base, {eligible: true}), 'request-authorized-acceptance', 'eligible');
   if (failed) {
     if (conditions.some(c => c.state === 'fail' && !c.remediable)) return result(base, 'stop-escalate', 'hard-failure');
@@ -293,11 +296,77 @@ function evaluate(policyInput, recordInput, now) {
   return result(base, 'wait-for-evidence', onlyTargets ? 'outcome-targets-not-supported' : 'evidence-missing');
 }
 
+/*
+ * Author-chosen success criteria on a Brief (`brief.success`), set in New mission and Edit brief.
+ * This is the editor ported from #42. The catalog is the editor's own, not a wire schema.
+ *   {conditions: ['review'|'checks'], custom: [text], rubric: {minScore, criteria: [{id, weight, floor}]} | null,
+ *    maxAttempts, deadline: 'YYYY-MM-DDTHH:MMZ' | null, examples: count | null}
+ * Percentages are whole numbers on a 0–100 scale. Cost and time stay the Brief's own "at most" ceilings.
+ */
+const SUCCESS_CONDITIONS = Object.freeze({review: 'Independent review passes', checks: 'Artifact checks pass'});
+const SUCCESS_CRITERIA = Object.freeze({
+  accuracy: Object.freeze({label: 'Accuracy', anchors: Object.freeze({0: 'Unsupported', 50: 'Partly supported', 100: 'Fully supported'})}),
+  clarity: Object.freeze({label: 'Clarity', anchors: Object.freeze({0: 'Unusable', 50: 'Needs explanation', 100: 'Reproducible'})}),
+});
+const SUCCESS_BOUNDS = Object.freeze({custom: 12, customLength: 160, attempts: 100, weight: 100, examples: 1000000});
+const whole = (v, min, max) => Number.isSafeInteger(v) && v >= min && v <= max;
+const DEADLINE = /^\d{4}-\d\d-\d\dT\d\d:\d\dZ$/;
+
+/** The criteria a new editor starts from: both conditions, both criteria and three attempts. */
+function draftSuccess() {
+  return {conditions: ['review', 'checks'], custom: [], rubric: {minScore: 80, criteria: [{id: 'accuracy', weight: 2, floor: 50}, {id: 'clarity', weight: 1, floor: 50}]},
+    maxAttempts: 3, deadline: null, examples: null};
+}
+
+/** Validates the editor's criteria. Fails closed: each problem is an error a person can read, never a default. */
+function normalizeSuccess(input) {
+  const errors = [], fail = m => { errors.push(m); };
+  if (!isRecord(input)) return {ok: false, errors: ['The success criteria must be an object.']};
+  const conditions = Array.isArray(input.conditions) ? input.conditions : (fail('conditions must be a list.'), []);
+  conditions.forEach(k => { if (!Object.prototype.hasOwnProperty.call(SUCCESS_CONDITIONS, k)) fail('Unknown condition ' + JSON.stringify(k) + '.'); });
+  if (new Set(conditions).size !== conditions.length) fail('A condition is listed twice.');
+  const custom = input.custom === undefined ? [] : input.custom;
+  if (!Array.isArray(custom)) fail('Additional evidence must be a list.');
+  else {
+    if (custom.length > SUCCESS_BOUNDS.custom) fail('Use at most ' + SUCCESS_BOUNDS.custom + ' additional conditions.');
+    custom.forEach(t => { if (!text(t) || t.trim() !== t || t.length > SUCCESS_BOUNDS.customLength) fail('Each additional condition needs 1 to ' + SUCCESS_BOUNDS.customLength + ' characters.'); });
+    if (new Set(custom).size !== custom.length) fail('An additional condition is listed twice.');
+  }
+  let rubric = null;
+  if (input.rubric !== null && input.rubric !== undefined) {
+    const rb = input.rubric;
+    if (!isRecord(rb)) fail('rubric must be an object or null.');
+    else {
+      if (!whole(rb.minScore, 0, 100)) fail('The minimum weighted score must be a whole percentage from 0 to 100.');
+      const rows = Array.isArray(rb.criteria) && rb.criteria.length ? rb.criteria : (fail('The rubric needs at least one criterion.'), []);
+      rows.forEach(c => {
+        if (!isRecord(c) || !Object.prototype.hasOwnProperty.call(SUCCESS_CRITERIA, c.id)) return fail('Unknown rubric criterion.');
+        const name = SUCCESS_CRITERIA[c.id].label;
+        if (!whole(c.weight, 1, SUCCESS_BOUNDS.weight)) fail(name + ' needs a whole-number weight from 1 to ' + SUCCESS_BOUNDS.weight + '.');
+        if (!whole(c.floor, 0, 100)) fail(name + ' needs a floor from 0 to 100%.');
+      });
+      if (new Set(rows.filter(isRecord).map(c => c.id)).size !== rows.length) fail('A rubric criterion is listed twice.');
+      rubric = {minScore: rb.minScore, criteria: rows.filter(isRecord).map(c => ({id: c.id, weight: c.weight, floor: c.floor}))};
+    }
+  }
+  if (!whole(input.maxAttempts, 1, SUCCESS_BOUNDS.attempts)) fail('Total attempts must be a whole number from 1 to ' + SUCCESS_BOUNDS.attempts + '.');
+  const deadline = input.deadline === undefined || input.deadline === '' ? null : input.deadline;
+  if (deadline !== null && !(typeof deadline === 'string' && DEADLINE.test(deadline) && Number.isFinite(Date.parse(deadline))
+    && new Date(deadline).toISOString().slice(0, 16) + 'Z' === deadline)) fail('The deadline must be a UTC date and time (YYYY-MM-DDTHH:MMZ).');
+  const examples = input.examples === undefined ? null : input.examples;
+  if (examples !== null && !whole(examples, 1, SUCCESS_BOUNDS.examples)) fail('Verified examples must be a whole number from 1 to ' + SUCCESS_BOUNDS.examples.toLocaleString('en-US') + '.');
+  if (errors.length) return {ok: false, errors};
+  return {ok: true, success: {conditions: conditions.slice(), custom: custom.slice(), rubric, maxAttempts: input.maxAttempts, deadline, examples}};
+}
+
 /**
  * The success policy the simulation's Brief implies: each deliverable and "at least" floor is a required
  * condition, and the cumulative "at most" ceilings are limits. The subagent ceiling is concurrency, not a
- * cumulative limit, so it isn't carried over. There is no rubric and no attempt limit. The revision is
- * derived from the content (`sim-…`), so editing the Brief yields a new one.
+ * cumulative limit, so it isn't carried over. Without `brief.success` there is no rubric and no attempt
+ * limit. Criteria the author added in the editor (`brief.success`) only add gates: extra required
+ * conditions, a rubric, an attempt limit, a deadline and an inert outcome target. Malformed criteria
+ * yield no policy (null), which fails closed downstream. The revision is derived from the content
+ * (`sim-…`), so editing the Brief or its criteria yields a new one.
  */
 function fromBrief(brief, labels) {
   if (!isRecord(brief)) return null;
@@ -308,6 +377,19 @@ function fromBrief(brief, labels) {
   const resources = {};
   RESOURCES.forEach(k => { if (isRecord(brief.atMost) && positive(brief.atMost[k])) resources[k] = brief.atMost[k]; });
   const policy = {revision: 'pending', required, rubric: null, limits: {maxAttempts: null, resources, deadline: null}, onExhausted: 'escalate', targets: []};
+  if (brief.success !== undefined) {
+    const s = normalizeSuccess(brief.success);
+    if (!s.ok) return null;
+    const x = s.success;
+    // As in #42, a failed condition may be revised within the attempt limit.
+    x.conditions.forEach(k => required.push({id: 'success:' + k, label: SUCCESS_CONDITIONS[k], remediable: true}));
+    x.custom.forEach(t => required.push({id: 'custom:' + shortDigest(t), label: t, remediable: true}));
+    if (x.rubric) policy.rubric = {scale: {min: 0, max: 100}, aggregation: 'weighted-mean/1', minScore: x.rubric.minScore,
+      criteria: x.rubric.criteria.map(c => ({id: c.id, label: SUCCESS_CRITERIA[c.id].label, weight: c.weight, floor: c.floor, anchors: Object.assign({}, SUCCESS_CRITERIA[c.id].anchors)}))};
+    policy.limits.maxAttempts = x.maxAttempts;
+    policy.limits.deadline = x.deadline;
+    if (x.examples !== null) policy.targets.push({id: 'verified-examples', label: 'At least ' + x.examples.toLocaleString('en-US') + ' verified examples', count: x.examples});
+  }
   policy.revision = derivedRevision(policy);
   const n = normalizePolicy(policy);
   return n.ok ? n.policy : null;
@@ -338,5 +420,6 @@ function summarize(policyInput) {
 }
 
 return Object.freeze({PROFILE, ACTIONS, ACTION_LABELS, REASONS, EVALUATION_REASONS, ACCEPTANCE, AGGREGATIONS,
-  normalizePolicy, revise, evaluate, fromBrief, summarize, canonical, shortDigest});
+  SUCCESS_CONDITIONS, SUCCESS_CRITERIA, SUCCESS_BOUNDS,
+  normalizePolicy, revise, evaluate, fromBrief, normalizeSuccess, draftSuccess, summarize, canonical, shortDigest});
 }));

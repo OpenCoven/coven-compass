@@ -249,3 +249,113 @@ test('the completion summary states the gates, the limits and that acceptance is
   assert.match(B.summarize(policy({limits: {}})), /No attempt limit is set/);
   assert.match(B.summarize({}), /incomplete/);
 });
+
+// Success criteria from the New mission / Edit brief editor (ported from #42) on this model.
+const BRIEF = {deliver: [{kind: 'report', formats: ['md'], langs: []}], atLeast: {reviews: 1}, atMost: {minutes: 30, usd: 1, agents: 6}, measure: []};
+const withSuccess = (extra = {}) => ({...BRIEF, success: {...B.draftSuccess(), ...extra}});
+
+test('a Brief with no gate at all is never met by default: it stops and escalates', () => {
+  const p = B.fromBrief({deliver: [], atLeast: {}, atMost: {minutes: 30}, measure: []});
+  assert.deepEqual(p.required, []);
+  const r = B.evaluate(p, {candidate: null, attempts: [], evaluations: []}, NOW);
+  assert.equal(r.eligible, false);
+  assert.equal(r.qualification, 'unknown');
+  assert.equal(r.next.action, 'stop-escalate');
+  assert.equal(r.next.reason, 'no-gates');
+  assert.match(B.summarize(p), /No gate is configured/);
+});
+
+test('editor criteria validate with readable errors and fail closed on anything out of bounds', () => {
+  assert.equal(B.normalizeSuccess(B.draftSuccess()).ok, true);
+  const bad = extra => B.normalizeSuccess({...B.draftSuccess(), ...extra});
+  const cases = [
+    [{conditions: ['review', 'review']}, /twice/], [{conditions: ['deploy']}, /Unknown condition/],
+    [{custom: Array.from({length: 13}, (_, i) => 'c' + i)}, /at most 12/], [{custom: ['x'.repeat(161)]}, /1 to 160/], [{custom: ['a', 'a']}, /twice/],
+    [{rubric: {minScore: 101, criteria: [{id: 'accuracy', weight: 1, floor: 0}]}}, /minimum weighted score/],
+    [{rubric: {minScore: 80, criteria: [{id: 'accuracy', weight: 0, floor: 0}]}}, /weight/],
+    [{rubric: {minScore: 80, criteria: [{id: 'accuracy', weight: 1, floor: -1}]}}, /floor/],
+    [{rubric: {minScore: 80, criteria: []}}, /at least one criterion/],
+    [{maxAttempts: 0}, /Total attempts/], [{maxAttempts: 2.5}, /Total attempts/], [{maxAttempts: NaN}, /Total attempts/],
+    [{deadline: '2026-12-01T00:00:00Z'}, /deadline/], [{deadline: '2026-02-30T10:00Z'}, /deadline/], [{deadline: 'soon'}, /deadline/],
+    [{examples: 0}, /Verified examples/],
+  ];
+  for (const [extra, message] of cases) {
+    const n = bad(extra);
+    assert.equal(n.ok, false, JSON.stringify(extra));
+    assert.ok(n.errors.some(e => message.test(e)), JSON.stringify(extra) + ' → ' + n.errors.join(' | '));
+  }
+  // Malformed criteria give no policy, which fails closed in the inspector and the preview.
+  assert.equal(B.fromBrief(withSuccess({maxAttempts: 0})), null);
+  assert.equal(B.fromBrief({...BRIEF, success: {invalid: true}}), null);
+  assert.equal(B.evaluate(null, {}, NOW).next.reason, 'invalid-policy');
+  assert.match(B.summarize(null), /incomplete/);
+});
+
+test('editor criteria only add gates to the Brief: deliverables and floors stay required', () => {
+  const p = B.fromBrief(withSuccess({custom: ['Changelog updated'], deadline: '2026-12-01T09:30Z', examples: 4}));
+  assert.deepEqual(p.required.map(c => c.id).slice(0, 4), ['deliver:report', 'floor:reviews', 'success:review', 'success:checks']);
+  assert.equal(p.required[4].label, 'Changelog updated');
+  assert.ok(p.required.every(c => c.remediable), 'as in #42, a failed condition may be revised within the attempt limit');
+  assert.deepEqual(p.rubric.scale, {min: 0, max: 100});
+  assert.equal(p.rubric.aggregation, 'weighted-mean/1');
+  assert.equal(p.rubric.minScore, 80);
+  assert.deepEqual(p.rubric.criteria.map(c => [c.id, c.weight, c.floor]), [['accuracy', 2, 50], ['clarity', 1, 50]]);
+  assert.equal(p.rubric.criteria[0].anchors[0], 'Unsupported');
+  assert.equal(p.limits.maxAttempts, 3);
+  assert.equal(p.limits.deadline, '2026-12-01T09:30Z');
+  assert.deepEqual(p.limits.resources, {usd: 1, minutes: 30}, 'cost and time stay the Brief\'s own ceilings');
+  assert.equal(p.targets.length, 1);
+  // The simulation records nothing, so the authored policy waits for evidence and never becomes eligible.
+  const r = B.evaluate(p, {candidate: null, attempts: [], evaluations: [], authorization: null, cancelled: false}, null);
+  assert.equal(r.eligible, false);
+  assert.equal(r.next.action, 'wait-for-evidence');
+  assert.equal(r.acceptance.state, 'not-recorded');
+  const s = B.summarize(p);
+  assert.match(s, /all 5 required conditions pass/);
+  assert.match(s, /scores at least 80 of 100, with no criterion below its floor/);
+  assert.match(s, /3 attempts/);
+  assert.match(s, /\$1, 30 minutes, before 2026-12-01T09:30Z/);
+  assert.match(s, /not supported yet, so they stay unknown/);
+});
+
+test('an outcome target from the editor stays inert: it never gates or grants eligibility (#37)', () => {
+  const p = B.fromBrief(withSuccess({examples: 4}));
+  const cand = {digest: 'sha256:c', attempt: 'att_1'};
+  const conditions = Object.fromEntries(p.required.map(c => [c.id, 'pass']));
+  const ev = {id: 'ev-1', policyRevision: p.revision, candidate: cand, evaluator: {id: 'reviewer'}, evidence: [{id: 'e1', digest: 'sha256:e'}], conditions, scores: {accuracy: 100, clarity: 100}};
+  const r = B.evaluate(p, {candidate: cand, attempts: [{id: 'att_1', state: 'completed', usd: .2, minutes: 2, effects: 'settled'}], evaluations: [ev]}, NOW);
+  assert.equal(r.targets.state, 'unknown');
+  assert.equal(r.eligible, false);
+  assert.equal(r.next.reason, 'outcome-targets-not-supported');
+  // Without the target the same evidence makes it eligible, which is still only a request for acceptance.
+  const q = B.fromBrief(withSuccess());
+  const ok = B.evaluate(q, {candidate: cand, attempts: [{id: 'att_1', state: 'completed', usd: .2, minutes: 2, effects: 'settled'}], evaluations: [{...ev, policyRevision: q.revision}]}, NOW);
+  assert.equal(ok.next.action, 'request-authorized-acceptance');
+  assert.equal(ok.acceptance.state, 'not-recorded');
+});
+
+test('changing a criterion is a new revision, so an evaluation of the old criteria no longer counts', () => {
+  const before = B.fromBrief(withSuccess()), after = B.fromBrief(withSuccess({rubric: {minScore: 90, criteria: [{id: 'accuracy', weight: 2, floor: 50}]}}));
+  assert.notEqual(after.revision, before.revision);
+  assert.equal(B.fromBrief(withSuccess()).revision, before.revision, 'the same criteria derive the same revision');
+  const cand = {digest: 'sha256:c', attempt: 'att_1'};
+  const ev = {id: 'ev-old', policyRevision: before.revision, candidate: cand, evaluator: {id: 'reviewer'}, evidence: [{id: 'e1', digest: 'sha256:e'}],
+    conditions: Object.fromEntries(before.required.map(c => [c.id, 'pass'])), scores: {accuracy: 100, clarity: 100}};
+  const r = B.evaluate(after, {candidate: cand, attempts: [{id: 'att_1', state: 'completed', usd: .2, minutes: 2, effects: 'settled'}], evaluations: [ev]}, NOW);
+  assert.equal(r.evaluations[0].status, 'stale');
+  assert.equal(r.evaluations[0].reason, 'policy-revision');
+  assert.equal(r.next.action, 'wait-for-evidence');
+});
+
+test('a failed editor condition asks for a bounded revision until the attempt limit is used, then escalates', () => {
+  const p = B.fromBrief(withSuccess({maxAttempts: 2}));
+  const cand = {digest: 'sha256:c', attempt: 'att_1'};
+  const conditions = Object.fromEntries(p.required.map(c => [c.id, c.id === 'success:review' ? 'fail' : 'pass']));
+  const ev = {id: 'ev-1', policyRevision: p.revision, candidate: cand, evaluator: {id: 'reviewer'}, evidence: [{id: 'e1', digest: 'sha256:e'}], conditions, scores: {accuracy: 100, clarity: 100}};
+  const one = [{id: 'att_1', state: 'completed', usd: .2, minutes: 2, effects: 'settled'}];
+  assert.equal(B.evaluate(p, {candidate: cand, attempts: one, evaluations: [ev]}, NOW).next.action, 'request-bounded-revision');
+  const two = one.concat({id: 'att_2', state: 'completed', usd: .2, minutes: 2, effects: 'settled'});
+  const r = B.evaluate(p, {candidate: {...cand, attempt: 'att_2'}, attempts: two, evaluations: [{...ev, candidate: {...cand, attempt: 'att_2'}}]}, NOW);
+  assert.equal(r.next.action, 'stop-escalate');
+  assert.equal(r.next.reason, 'limits-exhausted');
+});

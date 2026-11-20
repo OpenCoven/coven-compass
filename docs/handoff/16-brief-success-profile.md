@@ -61,7 +61,8 @@ The model applies these rules to synthetic input only. Each one has a test in `t
 5. **Limits are cumulative.** Attempt count, cost and time are summed over every recorded attempt, and a retry never resets them. With no attempt limit set, no revision can be requested.
 6. **Ambiguity blocks retries.** An attempt with unresolved external effects stops iteration until it is resolved.
 7. **Authorization is resolved, not retried.** Denied, expired, revoked or uncertain authorization stops and escalates.
-8. **Grading is not acceptance.** The strongest result the model can return is *eligible*, with the next action *request authorized acceptance*. Acceptance is always reported as not recorded.
+8. **No gate is never met.** A policy with no required condition, rubric or target stops and escalates (`no-gates`) instead of being eligible by default.
+9. **Grading is not acceptance.** The strongest result the model can return is *eligible*, with the next action *request authorized acceptance*. Acceptance is always reported as not recorded.
 
 The next permitted action is one of: `wait-for-evidence`, `request-bounded-revision`, `request-authorized-acceptance` or `stop-escalate`. None of these is a command. Compass has no transport for any of them (D03).
 
@@ -76,9 +77,26 @@ The mission inspector keeps four states apart, in this order:
 
 In the simulation, the Brief's progress counters are sample data, not sealed evidence. That's why every condition shows as unknown even when its counter reads above the floor.
 
+## Success criteria in New mission and Edit brief
+
+The editor (`dist/brief-policy-editor.js`, ported from #42) sets the Brief's optional success criteria, `brief.success`. `fromBrief` merges them into the policy the Brief already implies, and they only add gates. The Brief's deliverables and floors stay required. The editor adds:
+
+| Editor control | Policy field |
+| --- | --- |
+| Independent review passes, Artifact checks pass | required conditions `success:review`, `success:checks` |
+| Additional required evidence (up to 12 lines of up to 160 characters) | one required condition each, `custom:<digest>` |
+| Optional quality rubric: minimum weighted score and, for Accuracy and Clarity, weight and floor | `rubric` on a 0–100 scale, `weighted-mean/1`, anchors at 0, 50 and 100 |
+| Total attempts | `limits.maxAttempts` (required, 1–100) |
+| Deadline (UTC, optional) | `limits.deadline` (`YYYY-MM-DDTHH:MMZ`) |
+| Require verified examples | one entry in `targets`. It's inert (#37) and stays unknown. |
+
+As in #42, every condition the editor adds can be revised within the attempt limit. Cost and time across attempts stay the Brief's own *at most* ceilings, so the editor doesn't duplicate them. Changed criteria derive a new `sim-…` revision. Criteria that don't validate block Save, Open mission and Save as template, and the editor lists each error. A trace with malformed criteria derives no policy, so the inspector fails closed (`invalid-policy`). The preview is the existing *When is it done?* summary.
+
+#42 also had other parts, which were left out on purpose. Its inspector buttons for candidate A/B and "reveal evidence", and its *Simulate cancelled / denied / expired / revoked / uncertain* holds, graded attempts inside the live simulation. So did the `brief.fixture` and `brief.hold` events behind them. Those parts contradict the rule that the simulation records no attempts. The synthetic `?source=fixture&scenario=brief-*` cases cover the same outcomes.
+
 ## Not in this slice
 
 - No owner has reviewed the mapping, so the first acceptance box of #35 stays open.
 - There are no live receipts. A source fixture can't close live acceptance.
 - No scheduler, executor, accounting store, identity root or transport has been added.
-- The Brief form doesn't yet edit required conditions, a rubric, or attempt limits. It shows the completion summary of the policy derived from the Brief.
+- The simulation records no attempts or evaluations, so a Brief's success criteria can be set and previewed but never become eligible there.

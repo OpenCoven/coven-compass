@@ -12,7 +12,8 @@
 // The desktop compact check imports eight mission.opened JSON Lines via Trace > Load a recording.
 // Its negative control removes the keyboard-focus visibility selector from the disposable page.
 // It checks simulation mode (default and ?source=simulation) at 1440x900, 390x844 and 844x390,
-// and every ?source=fixture scenario plus ?source=live. It writes a JSON report and screenshots.
+// and every ?source=fixture scenario plus ?source=live. At each viewport it also exercises the success criteria
+// editor in New mission and Edit brief. It writes a JSON report and screenshots.
 // Keep screenshots out of the repository; commit the dated JSON to tests/evidence/.
 import { chromium } from 'playwright';
 import fs from 'node:fs';
@@ -269,10 +270,77 @@ async function compactMissionLabel() {
   } finally { await context.close(); }
 }
 
+// The success criteria editor in New mission and Edit brief (#35, ported from #42): it previews the rule before
+// Save, blocks Save while the criteria are invalid, and an edit derives a new policy revision. Nothing is accepted.
+async function briefEditor(vp) {
+  const mode = 'brief editor';
+  const { context, page, errors } = await open(vp, '#/project/psyche-build');
+  const done = () => page.locator('#nmDone').textContent();
+  const panel = () => page.evaluate(() => { const bp = document.querySelector('#inspect .bp'); return bp && { text: bp.textContent.replace(/\s+/g, ' '),
+    rev: (bp.textContent.match(/sim-[0-9a-f]{8}/) || [])[0], next: bp.querySelector('.bp-action')?.textContent, accepted: bp.querySelectorAll('.bp-step')[3]?.textContent }; });
+  try {
+    await page.waitForTimeout(1200);
+    await page.locator('#mis > summary').click();
+    await page.locator('#mis button.opt', { hasText: 'New mission' }).first().click();
+    await page.locator('[data-id="bp-add"]').click();
+    const added = await done();
+    check(mode, vp.name, 'adding success criteria previews the completion rule before Save',
+      /all 4 required conditions pass/.test(added) && /at least 80 of 100/.test(added) && /3 attempts/.test(added) && /acceptance is a separate, authorized step/.test(added), added);
+    await page.locator('[data-id="bp-min"]').fill('101');
+    const blocked = await page.locator('#raise').isDisabled(), why = await page.locator('#nmSuccessErrors').textContent();
+    check(mode, vp.name, 'invalid criteria block Open mission and say why', blocked && /minimum weighted score/.test(why) && /incomplete/.test(await done()), why);
+    await page.locator('[data-id="bp-min"]').fill('85');
+    await page.locator('[data-id="bp-attempts"]').fill('4');
+    await page.locator('#nmName').fill('Criteria check');
+    // Measure once the sheet has settled: the editor's box is unchanged across two animation frames.
+    await page.waitForFunction(() => new Promise(r => { const box = () => JSON.stringify(document.querySelector('.bp-editor').getBoundingClientRect());
+      const a = box(); requestAnimationFrame(() => requestAnimationFrame(() => r(box() === a))); }), null, { timeout: 5000 }).catch(() => {});
+    const fit = await page.evaluate(() => { const e = document.querySelector('.bp-editor').getBoundingClientRect(), f = document.getElementById('empty');
+      return { width: e.width, right: e.right, viewport: innerWidth, scroll: f.scrollWidth, client: f.clientWidth }; });
+    const fits = fit.width > 0 && fit.right <= fit.viewport + 1 && fit.scroll <= fit.client + 1;
+    check(mode, vp.name, 'valid criteria re-enable Open mission, and the editor fits', !(await page.locator('#raise').isDisabled()) && fits, JSON.stringify(fit));
+    await page.locator('.bp-editor').scrollIntoViewIfNeeded();
+    await shot(page, `${vp.name}-brief-editor`);
+    // After Save the page selects the mission; on a phone it opens its details. Otherwise open it from Missions.
+    const reopen = async () => {
+      if (!(await visible(page, '#mission-tab-brief'))) {
+        await page.click(vp.mobile && await visible(page, '#atlasMobileMissions') ? '#atlasMobileMissions' : '#atlasMissions');
+        await page.locator('.atlas-mission-row:not([hidden])', { hasText: 'Criteria check' }).first().click();
+        await page.waitForTimeout(800);
+      }
+      await page.click('#mission-tab-brief');
+      await page.waitForTimeout(400);
+    };
+    await page.locator('#raise').click();
+    await page.waitForTimeout(2600);
+    await reopen();
+    const first = await panel();
+    check(mode, vp.name, 'the saved criteria reach the inspector, waiting for evidence, not accepted',
+      first && /at least 85 of 100/.test(first.text) && /4 attempts/.test(first.text) && first.next === 'Wait for evidence' && /Not recorded/.test(first.accepted) && !!first.rev,
+      first ? `${first.rev}; next "${first.next}"` : 'no .bp panel');
+    await page.locator('#inspect .bfg button').click();
+    const kept = await page.locator('[data-id="bp-attempts"]').inputValue();
+    await page.locator('[data-id="bp-attempts"]').fill('6');
+    const preview = await done();
+    await page.locator('#raise').click();
+    await page.waitForTimeout(1800);
+    await reopen();
+    const second = await panel();
+    check(mode, vp.name, 'Edit brief keeps the criteria, previews the edit, and saving derives a new revision',
+      kept === '4' && /6 attempts/.test(preview) && second && /6 attempts/.test(second.text) && second.rev && first && second.rev !== first.rev && /Not recorded/.test(second.accepted),
+      `kept ${kept}; ${first && first.rev} → ${second && second.rev}`);
+    check(mode, vp.name, 'no console errors', !errors.length, errors.join(' | '));
+  } catch (error) {
+    check(mode, vp.name, 'brief editor journey', false, error.message.split('\n')[0]);
+    await shot(page, `${vp.name}-brief-editor-failure`);
+  } finally { await context.close(); }
+}
+
 await compactMissionLabel();
 for (const vp of VIEWPORTS) {
   await keyboardJourney(vp);
   if (process.argv.includes('--keyboard-only')) continue;
+  await briefEditor(vp);
   for (const query of ['', '?source=simulation']) {
     const mode = query ? 'simulation (?source=simulation)' : 'simulation (default)';
     const { context, page, errors } = await open(vp, query);

@@ -40,3 +40,18 @@
 .projection-view .bp-case{margin:0 0 6px}
 .projection-view .bp-case h2{margin:0 0 4px;font:500 18px/1.3 var(--f-display,Georgia,serif)}
 .projection-view .bp-case p{margin:0;color:var(--muted-foreground,#6b675e)}
+/* Success criteria editor in New mission and Edit brief (#35, ported from #42). */
+.bp-editor{display:flex;flex-direction:column;gap:8px;margin:10px 0 0;padding:10px 12px;border:1px dashed var(--border-strong,#c9c3b6);border-radius:var(--radius,10px);min-width:0;overflow-wrap:anywhere;font-size:13px}
+.bp-editor-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 10px}
+.bp-editor-head h4{margin:0;font:600 13px/1.3 var(--f-body,system-ui,sans-serif)}
+.bp-editor fieldset{min-width:0;margin:0;padding:8px 10px;border:1px solid var(--border,#e4dfd4);border-radius:var(--radius,10px)}
+.bp-editor legend{font-weight:600;padding:0 4px}
+.bp-editor label{display:flex;align-items:center;flex-wrap:wrap;gap:6px 8px;margin:4px 0}
+.bp-editor label > span{flex:1 1 10em;min-width:0}
+.bp-editor input:not([type="checkbox"]),.bp-editor textarea{min-width:0;max-width:100%;font:inherit;color:inherit;background:var(--background,#fff);border:1px solid var(--border,#e4dfd4);border-radius:6px;padding:4px 6px}
+.bp-editor input[type="number"]{width:6.5em}
+.bp-editor .bp-editor-custom{align-items:stretch;flex-direction:column}
+.bp-editor .bp-editor-custom > span{flex:none}
+.bp-editor textarea{width:100%;box-sizing:border-box;resize:vertical}
+.bp-editor-errors{margin:0;padding-left:1.2em;color:var(--attention,#b4572e)}
+.bp-editor-errors:empty{display:none}
