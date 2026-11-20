@@ -319,6 +319,22 @@ test('resolving the focused gate action moves to Close without scrolling or rebu
   assert.equal(f.calls.filter(call => call.kind === 'focus' || call.kind === 'scroll').length, 0);
 });
 
+test('agent facts keep task ownership distinct from state and gate context', () => {
+  const f = agentFixture();
+  f.context.pick(f.a.id, 'panel');
+  const info = f.details().info;
+  const field = key => info.querySelector(`[data-agent-field="${key}"]`);
+  assert.equal(field('gate').textContent, 'North gate');
+  assert.equal(field('task').textContent, 'Draft brief');
+  assert.equal(field('mission').textContent, 'Research');
+  f.a.state = 'idle'; f.a.task = null; f.a.ask = null;
+  f.context.showPick();
+  assert.equal(field('gate').parentNode.hidden, true);
+  assert.equal(field('task').textContent, 'Unassigned');
+  assert.equal(field('leads').textContent, 'Echo');
+  assert.equal(field('work').textContent, 'Waiting for work');
+});
+
 test('clearing focused agent details or toggling the same row returns to that row', () => {
   const f = agentFixture(); f.context.pick(f.a.id, 'panel');
   f.context.clearPick();
