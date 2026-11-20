@@ -92,6 +92,7 @@ For a function-level map of `dist/index.html`, see [chapter 01 §4](docs/handoff
 - **Check the 2D restriction in a browser.** With the external Playwright install described in `scripts/browser-qa.mjs`, copy `scripts/plan-qa.mjs` to the same directory and run `node plan-qa.mjs http://127.0.0.1:18433/` against the local preview. This exercises legacy preferences, input, camera controls and the Seal lab.
 - **Reproduce mission discovery.** Use Node 24 and the external Playwright 1.48.2 Chromium installation described at the top of `scripts/browser-qa.mjs`. Serve the candidate’s `dist/`, copy that runner into the Playwright directory, and run `node browser-qa.mjs http://127.0.0.1:18433/ ./shots ./qa.json <candidate-sha> --keyboard-only`. The report records Tab counts, focused controls, inspector return and permalink reload. The runner opens Trace → Load a recording and supplies its own eight-mission JSON Lines file. It tests the focused label at the same zoom before and after removing its two focus selectors in a disposable page. Omit `--keyboard-only` to exercise projection fixtures and replay as well.
 - **Verify a served revision.** From the checkout, run `node scripts/verify-served.mjs https://coven-compass.vercel.app/ <deployed-sha>` to compare the public root and every tracked file under `dist/` with Git. Then use that URL and SHA in the browser command above and omit `--keyboard-only` for the full journey.
+- **Measure map performance.** Use the [browser workload and rerun instructions](docs/map-performance.md) for first-load timings, verified interaction traces and repeated navigation at a pinned revision.
 - **Packet status:** `implemented` | `verified` | `proposed` | `blocked` | `unknown`.
 - **Completion record:** every PR or handoff ends with the exact record in [document 10](docs/handoff/10-agent-task-prompts.md#required-completion-record).
 
@@ -112,3 +113,7 @@ For a function-level map of `dist/index.html`, see [chapter 01 §4](docs/handoff
 - [docs/handoff/15-scalable-atlas-layout.md](docs/handoff/15-scalable-atlas-layout.md): layout, crown, and presentation contract
 
 Run `scripts/project-preview-qa.mjs` using the same external Playwright installation as `scripts/browser-qa.mjs`. Serve `dist/`, copy the script beside that installation, and run `node project-preview-qa.mjs http://127.0.0.1:8000/` to exercise Coven previews and task inspection on desktop and portrait layouts. The test imports its own recording with unstaffed tasks. It follows a Project from the overview through its task inspector, filtered mission search and focus return, then opens an invalid permalink.
+
+## Secret checks
+
+Install the clone-local hooks with `python3 scripts/install-secret-hooks.py` before working on branches. See [SECURITY.md](SECURITY.md) for the staged-index, full-history, production build and regression commands. Review a suspected exposure privately and report only the rule and object identifier.

@@ -96,7 +96,6 @@ function fixture(trace = []) {
     // Project layout and density are scene boundaries; actual mission packing,
     // folding, synchronization, seal construction and rendering run below.
     atlasWorldLayout: () => ({signature: sc.layoutSignature}),
-    stage: {clientWidth: 1000, clientHeight: 700}, cam: {zoom: 1},
     newWorld: world, svgEl, RAD: Math.PI / 180, ZT: 0, ZPL: 6, RUNZ: [],
     plural: (count, noun) => `${count} ${noun}${count === 1 ? '' : 's'}`,
     fam: key => ({ name: key, hue: '#abcdef', roles: [] }),
@@ -127,7 +126,7 @@ function fixture(trace = []) {
     for (const mission of sc.missions.values()) finiteAttributes(mission.seal.g);
   }
   function renderGhost() {
-    context.atlasProjectGhost(ghost, P, f);
+    context.atlasProjectGhost(ghost, P, f, 700 / 784);
     finiteAttributes(ghost.g);
   }
   return { c, sc, ghost, context, renderActive, renderGhost };
