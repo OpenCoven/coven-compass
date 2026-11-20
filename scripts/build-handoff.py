@@ -20,6 +20,8 @@ import unicodedata
 from urllib.parse import unquote, urlsplit
 import zipfile
 
+from secret_guard import SecretError, check_content, check_name
+
 
 ROOT = Path(__file__).resolve().parents[1]
 EDITION = date(2026, 11, 19)
@@ -27,7 +29,7 @@ ARCHIVE_ROOT = f"Coven_Compass_Handoff_{EDITION.isoformat()}"
 BASELINE_COMMIT = "d7b6f1e655140036cca49f31687131352162de13"
 MANIFEST = "HANDOFF_MANIFEST.json"
 CHECKSUMS = "CHECKSUMS.sha256"
-ALLOW_FILES = ("AGENTS.md", "README.md", "START_HERE.md", "MOBILE_READINESS.md", ".gitignore")
+ALLOW_FILES = ("SECURITY.md", "AGENTS.md", "README.md", "START_HERE.md", "MOBILE_READINESS.md", ".gitignore")
 ALLOW_DIRS = ("dist", "docs/handoff", "docs/discovery", "examples", "tests", "scripts")
 REQUIRED = (
     "README.md", "START_HERE.md", "MOBILE_READINESS.md", "dist/index.html",
@@ -402,6 +404,11 @@ def collect_files() -> dict[str, bytes]:
                 raise BuildError(f"Portable filename collision: {spelling}, {portable_names[key]}")
             portable_names[key] = spelling
         data = source_bytes(path)
+        try:
+            check_name(relative)
+            check_content(data)
+        except SecretError as error:
+            raise BuildError(f"Export secret check failed in file {hashlib.sha256(data).hexdigest()[:16]} ({error})") from None
         if total_bytes + len(data) > MAX_TOTAL_BYTES:
             raise BuildError("Export exceeds the supported total size limit")
         files[relative] = data
