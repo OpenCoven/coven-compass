@@ -45,11 +45,15 @@ const missionNameClashes = () => {
   const hit = (a, b) => a.x < b.x2 - 1 && b.x < a.x2 - 1 && a.y < b.y2 - 1 && b.y < a.y2 - 1;
   const psy = document.querySelector('#plan .atlas-local-psyche');
   const crownParts = psy ? [...psy.querySelectorAll('path, polygon, text')].filter(shown).map(box) : [];
+  const trays = [...document.querySelectorAll('#plan .mission-tasks .task-tray-bg')].filter(shown).map(box);
   const labels = [...document.querySelectorAll('#plan .atlas-mission-group .lead-name')];
   const names = labels.filter(shown).map(el => {
     const face = box(el.closest('.mission-face').querySelector('.se-face')), text = box(el);
-    const centered = Math.abs((text.x + text.x2 - face.x - face.x2) / 2) < 1;
-    const outside = text.y2 <= face.y - 1 || text.y >= face.y2 + 1;
+    const vertical = text.y2 <= face.y - 1 || text.y >= face.y2 + 1;
+    const horizontal = text.x2 <= face.x - 1 || text.x >= face.x2 + 1;
+    const centered = vertical && Math.abs((text.x + text.x2 - face.x - face.x2) / 2) < 1 ||
+      horizontal && Math.abs((text.y + text.y2 - face.y - face.y2) / 2) < 2;
+    const outside = (vertical || horizontal) && !trays.some(tray => hit(text, tray));
     const pixels = parseFloat(getComputedStyle(el).fontSize) * el.getScreenCTM().a;
     return { t: [...el.children].map(line => line.textContent).join(' '), centered, outside, pixels, ...text };
   });

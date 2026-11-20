@@ -2809,6 +2809,7 @@ function project() {
   drawMarker(sc.psy.marker, 0, 0, 49);
   sc.psy.sx = pc[0]; sc.psy.sy = pc[1];
   const captions = [];
+  const lowWideMap = !far && stage.clientWidth >= 700 && stage.clientHeight < 440 && sc.missions.size <= 4;
   let missionNumber = 0;
   sc.missions.forEach(s => {
     missionNumber++;
@@ -2828,23 +2829,28 @@ function project() {
     s.face.style.setProperty('--mission-reveal', reveal);
     const side = s.y > 0 ? -1 : 1;
     const captionScale = s.readable ? faceScale : reveal;
+    const lateral = lowWideMap && s.readable && Math.abs(q[1]) * screenScale < s.diameter / 2 + 45 && Math.abs(q[0]) > radius;
     if (!far && mission) {
-      labelMission(s, mission.name, screenScale * captionScale, missionNumber, side);
+      labelMission(s, mission.name, screenScale * captionScale, missionNumber, lateral ? 0 : side);
       if (s.needsCaption || !s.readable) {
         s.referenceMark.textContent = String(missionNumber);
         captions.push([active, s.id, mission.name, missionNumber]);
       }
     }
     const nameDepth = (s.labelDepth || 0) * captionScale;
+    const size = clamp(1 / screenScale, .75, 1.9);
+    // On a shallow map, keep the central lane free for Psyche and the gate controls.
+    const column = lateral ? Math.sign(s.x) * (radius * captionScale + 42 / screenScale + Math.max(56 * captionScale, (s.trayWidth || 0) * size / 2)) : 0;
+    s.name.setAttribute('transform', `translate(${f(column / captionScale)} 0)`);
     if (s.tray) {
-      const size = clamp(1 / screenScale, .75, 1.9);
       const stateGap = selected && side > 0 ? 15 * U : 0;
-      const y = q[1] + side * (radius * captionScale + nameDepth + 13 * size + stateGap);
-      s.trayBox = {x: q[0], y, width: s.trayWidth * size, height: 16 * size};
-      s.tray.setAttribute('transform', `translate(${f(q[0])} ${f(y)}) scale(${size})`);
+      const y = lateral ? q[1] + nameDepth / 2 + 13 * size : q[1] + side * (radius * captionScale + nameDepth + 13 * size + stateGap);
+      const x = q[0] + column;
+      s.trayBox = {x, y, width: s.trayWidth * size, height: 16 * size};
+      s.tray.setAttribute('transform', `translate(${f(x)} ${f(y)}) scale(${size})`);
     }
     s.stateLabel.setAttribute('x', f(q[0]));
-    s.stateLabel.setAttribute('y', f(q[1] + radius * captionScale + (side > 0 ? nameDepth : 0) + 12 * U));
+    s.stateLabel.setAttribute('y', f(q[1] + radius * captionScale + (!lateral && side > 0 ? nameDepth : 0) + 12 * U));
     s.g.classList.toggle('atlas-mission-current', selected);
     const a = pc, b = q, [nx, ny] = unit(-(b[1] - a[1]), b[0] - a[0]);
     seg(s.thread, a, b); seg(s.out, a, b); seg(s.inn, a, b, -nx * 2.2, -ny * 2.2);   // instructions go out on one lane, reports come back on the other
