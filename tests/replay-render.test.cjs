@@ -28,6 +28,7 @@ function extract(name) {
 }
 
 class Element {
+  getAttribute(key) { return this.attributes[key] ?? null; }
   constructor() {
     this.children = [];
     this.parentNode = null;
@@ -45,6 +46,7 @@ class Element {
     };
   }
   setAttribute(key, value) { this.attributes[key] = String(value); }
+  removeAttribute(key) { delete this.attributes[key]; }
   appendChild(child) {
     child.remove();
     this.children.push(child);
@@ -103,7 +105,7 @@ function fixture(trace = []) {
     openAsks: w => [...w.asks.values()].filter(q => q.status === 'open'),
     briefState: () => null,
     seatId: (mission, familiar) => `${mission}/${familiar}`,
-    missionXY: () => [80, 40], seatR: () => 30,
+    missionXY: () => [80, 40],
     pol: (radius, degrees) => [radius * Math.cos(degrees * Math.PI / 180), radius * Math.sin(degrees * Math.PI / 180)],
     unit: (x, y) => { const length = Math.hypot(x, y) || 1; return [x / length, y / length]; },
     ...require('../dist/atlas-presentation.js'),
@@ -114,7 +116,7 @@ function fixture(trace = []) {
   });
   const constants = source.slice(source.indexOf('const TARGET_ROLES ='), source.indexOf('function sealOf('));
   context.SimModel = loadSimulationModel({ normBrief: () => null, fam: context.fam });
-  const names = ['seek', 'sync', 'syncTaskTray', 'sealOf', 'buildSeal', 'drawSeal',
+  const names = ['seek', 'sync', 'syncTaskPlane', 'syncTaskTray', 'sealOf', 'buildSeal', 'drawSeal',
     'atlasProjectGhost'];
   new vm.Script(`${constants}\n${names.map(extract).join('\n')}`, {
     filename: 'actual-replay-render-functions.js',

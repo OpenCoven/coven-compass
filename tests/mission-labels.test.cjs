@@ -66,7 +66,7 @@ test('seal labels use one-third design size, a screen-pixel floor and a caption 
       return span;
     },
   });
-  new vm.Script(extract('missionNameLines') + '\n' + extract('labelMission')).runInContext(ctx);
+  new vm.Script(['missionNameLines', 'prepareMissionLabel', 'measureMissionLabel', 'drawMissionLabel', 'labelMission'].map(extract).join('\n')).runInContext(ctx);
   const s = {name: {style: {}, set textContent(_) { this.lines = []; }}};
   ctx.labelMission(s, 'Source survey', 3, 2);
   assert.ok(Math.abs(s.labelUnits - 13 / 3) < .1);

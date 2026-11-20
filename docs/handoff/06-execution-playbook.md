@@ -2,31 +2,15 @@
 
 ## Establish a reproducible starting point
 
-The historical design/prototype reference is v3 revision `d7b6f1e655140036cca49f31687131352162de13`. The handoff adds documentation, portable validation, packaging, later mobile/navigation work, and the [scalable layout/crown refinement](15-scalable-atlas-layout.md). The latter is implemented and source-level verified. Consult the source ledger and final export provenance; do not describe the entire export as byte-identical to v3.
-
-From the extracted bundle root, inspect `README.md`, the source ledger, `docs/handoff/source-context/user-architecture-instructions.md`, and the package manifest before running anything. The Site needs no npm installation or bundler. Record the actual runtime versions and run these source/package checks:
+Start in the repository root. The [source ledger](12-source-ledger.md) records the historical prototype revisions. Use the README to preview the static site and run the following check before editing.
 
 ```sh
-node --version
-python3 --version
-node scripts/check-source.mjs
-node --test tests/*.test.cjs
-node scripts/test-atlas-crown.mjs
-python3 scripts/verify-handoff.py .
+node scripts/verify-all.mjs --check
 ```
 
-Record the actual current test count and outcomes. The suite uses extracted functions and shared modules with DOM facades and numeric inputs; it has no browser layout engine or native-device emulation. The separate crown check preserves the canonical path and aperture. The export includes the presentation comparison baseline with provenance so these tests can run outside Git. Confirm that behavior in a clean extraction; an earlier Git-backed run alone is insufficient evidence for portable packaging.
+Record the Node and Python versions and the verification results. The suite uses DOM facades for unit tests. Browser and device acceptance require separate runs.
 
-For archive inspection or rebuilding, discover the supported arguments before use:
-
-```sh
-python3 scripts/build-handoff.py --help
-python3 scripts/verify-handoff.py --help
-```
-
-The standard output is `dist/downloads/Coven_Compass_Handoff_2026-11-19.zip`. Verify a generated ZIP by passing its path to the verifier. Keep generated archives, `.git`, environment files, credentials, and runtime data outside archive contents. A successful source check is neither a security audit nor a production build result.
-
-For a recipient’s local preview, where local browser access is permitted:
+To preview the site locally:
 
 ```sh
 python3 -m http.server 8000 --bind 127.0.0.1 --directory dist

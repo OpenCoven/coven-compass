@@ -49,6 +49,21 @@ test('arrow keys, Home and End move focus and carry the single Tab stop', () => 
   assert.deepEqual(stops(w.items), ['i0']);
 });
 
+test('sync retains a visible Tab stop without measuring unrelated SVG items', () => {
+  const w = world(128);
+  const visited = [];
+  const focus = F.create(w.container, {eligible(el) { visited.push(el.id); return F.eligible(el); }});
+  focus.sync();
+  w.focusin(w.items[93]);
+  visited.length = 0;
+  focus.sync();
+  assert.deepEqual(visited, ['i93']);
+  assert.deepEqual(stops(w.items), ['i93']);
+  w.items[93].hidden = true;
+  focus.sync();
+  assert.deepEqual(stops(w.items), ['i0']);
+});
+
 test('modifier arrows and other keys are left to the stage and the item', () => {
   const w = world(3);
   const f = F.create(w.container); f.sync();
