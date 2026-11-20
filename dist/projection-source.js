@@ -98,8 +98,12 @@
   }
 
   function versionParts(value) {
-    var m = /^(\d+)\.(\d+)(?:\.(\d+))?/.exec(String(value || ''));
-    return m ? [Number(m[1]), Number(m[2]), Number(m[3] || 0)] : null;
+    if (typeof value !== 'string') return null;
+    var m = /^(0|[1-9]\d*)\.(0|[1-9]\d*)(?:\.(0|[1-9]\d*))?$/.exec(value);
+    // Require the whole string (including no final newline) and exact numeric components.
+    if (!m || m[0] !== value) return null;
+    var parts = [Number(m[1]), Number(m[2]), Number(m[3] || 0)];
+    return parts.every(Number.isSafeInteger) ? parts : null;
   }
   function versionAtMost(a, b) {
     for (var i = 0; i < 3; i++) { if (a[i] !== b[i]) return a[i] < b[i]; }
@@ -110,25 +114,43 @@
     return item && typeof item.id === 'string' && item.id && typeof item.name === 'string'
       && typeof item.root === 'string' && item.root;
   }
+  function isRecord(value) { return value !== null && typeof value === 'object' && !Array.isArray(value); }
+  function hasOwn(value, key) { return Object.prototype.hasOwnProperty.call(value, key); }
+  function validTime(value) { return Number.isFinite(value) && Math.abs(value) <= 8640000000000000; }
+  function validDuration(value) { return Number.isFinite(value) && value >= 0; }
 
   /** Reduces projects.list pages into a Projection. Pure: time and connection come from options. */
   function fromProjectsList(pagesByCursor, options) {
     var label = 'Fixture shaped after Cave Client v1 projects.list';
     var o = options || {};
     if (o.connection === 'disconnected') return unavailable('fixture', label, 'disconnected');
-    if (!pagesByCursor || typeof pagesByCursor !== 'object' || !pagesByCursor['']) {
+    if (o.connection !== undefined && o.connection !== 'connected') {
+      return unavailable('fixture', label, 'fixture_invalid', 'Connection must be connected or disconnected.');
+    }
+    var now = o.now, observedAt = o.observedAt, staleAfterMs = o.staleAfterMs;
+    if ((now != null && !validTime(now)) || (observedAt != null && !validTime(observedAt))) {
+      return unavailable('fixture', label, 'fixture_invalid', 'Observation and current times must be finite, valid Date timestamps.');
+    }
+    if (staleAfterMs != null && !validDuration(staleAfterMs)) {
+      return unavailable('fixture', label, 'fixture_invalid', 'The freshness window must be a finite, non-negative duration.');
+    }
+    if (!isRecord(pagesByCursor) || !hasOwn(pagesByCursor, '')) {
       return unavailable('fixture', label, 'fixture_invalid', 'There is no first page.');
     }
-    var projects = [], ids = {}, cursor = '', seen = {}, complete = false;
+    var projects = [], ids = new Set(), cursor = '', seen = new Set(), complete = false;
     for (var n = 0; n < MAX_PAGES; n++) {
+      if (!hasOwn(pagesByCursor, cursor)) break;
       var page = pagesByCursor[cursor];
-      if (!page || typeof page !== 'object') break;
+      if (!isRecord(page)) return unavailable('fixture', label, 'fixture_invalid', 'Each page must be an object.');
       var version = versionParts(page.apiVersion);
       if (!version || version[0] !== SUPPORTED_API_MAJOR) {
         return unavailable('fixture', label, 'unsupported_version',
           'Reported apiVersion ' + JSON.stringify(page.apiVersion) + '; supported major version ' + SUPPORTED_API_MAJOR + '.');
       }
       var minimum = versionParts(page.minimumClientVersion);
+      if (page.minimumClientVersion !== undefined && !minimum) {
+        return unavailable('fixture', label, 'fixture_invalid', 'minimumClientVersion must be a complete numeric version.');
+      }
       if (minimum && !versionAtMost(minimum, versionParts(CLIENT_VERSION))) {
         return unavailable('fixture', label, 'incompatible_version',
           'Requires client ' + page.minimumClientVersion + '; this client is ' + CLIENT_VERSION + '.');
@@ -138,28 +160,29 @@
       }
       for (var i = 0; i < page.projects.length; i++) {
         var item = page.projects[i];
-        if (ids[item.id]) return unavailable('fixture', label, 'fixture_invalid', 'Duplicate project id ' + item.id + '.');
-        ids[item.id] = true;
+        if (ids.has(item.id)) return unavailable('fixture', label, 'fixture_invalid', 'Duplicate project id ' + item.id + '.');
+        ids.add(item.id);
         // projects.list has no mission or agent data, so those counts are unknown.
         projects.push({id: item.id, name: item.name, root: item.root, missions: null, agents: null, needs: null});
       }
-      seen[cursor] = true;
+      seen.add(cursor);
       if (page.nextCursor === null || page.nextCursor === undefined) { complete = true; break; }
-      cursor = String(page.nextCursor);
-      if (seen[cursor]) break;
+      if (typeof page.nextCursor !== 'string') return unavailable('fixture', label, 'fixture_invalid', 'A page cursor must be a string or null.');
+      cursor = page.nextCursor;
+      if (seen.has(cursor)) break;
     }
-    var p = base('fixture', label), now = o.now, observedAt = o.observedAt, staleAfterMs = o.staleAfterMs;
-    var ageMs = typeof now === 'number' && typeof observedAt === 'number' ? Math.max(0, now - observedAt) : null;
+    var p = base('fixture', label);
+    var ageMs = now != null && observedAt != null ? Math.max(0, now - observedAt) : null;
     p.projects = projects;
     p.complete = complete;
-    p.freshness = {observedAt: typeof observedAt === 'number' ? new Date(observedAt).toISOString() : null, ageMs: ageMs,
-      staleAfterMs: typeof staleAfterMs === 'number' ? staleAfterMs : null};
+    p.freshness = {observedAt: observedAt != null ? new Date(observedAt).toISOString() : null, ageMs: ageMs,
+      staleAfterMs: staleAfterMs != null ? staleAfterMs : null};
     if (!complete) {
       p.availability = {state: 'reconciling', reason: 'incomplete', message: 'A page cursor could not be followed, so this list is incomplete. '
         + projects.length + ' Project' + (projects.length === 1 ? ' is' : 's are') + ' shown; the total is unknown.'};
     } else if (ageMs === null || p.freshness.staleAfterMs === null || ageMs > p.freshness.staleAfterMs) {
-      p.availability = {state: 'stale', reason: ageMs === null ? 'unknown_age' : 'aged',
-        message: (ageMs === null ? 'The observation time is unknown.' : 'Last observed ' + formatAge(ageMs) + ' ago, outside the '
+      p.availability = {state: 'stale', reason: ageMs === null ? 'unknown_age' : p.freshness.staleAfterMs === null ? 'unknown_window' : 'aged',
+        message: (ageMs === null ? 'The observation time is unknown.' : p.freshness.staleAfterMs === null ? 'The freshness window is unknown.' : 'Last observed ' + formatAge(ageMs) + ' ago, outside the '
           + formatAge(p.freshness.staleAfterMs) + ' freshness window.') + ' Shown as last known, not current.'};
     } else {
       p.availability = {state: 'fresh', reason: null, message: 'Observed ' + formatAge(ageMs) + ' ago. This is static fixture data, not live Coven data.'};
@@ -169,27 +192,34 @@
 
   function createFixtureSource(options) {
     var o = options || {}, label = 'Fixture shaped after Cave Client v1 projects.list';
-    var load = o.load, now = o.now || Date.now, scenario = o.scenario || DEFAULT_SCENARIO;
+    var load = o.load, now = o.now === undefined ? Date.now : o.now, scenario = o.scenario || DEFAULT_SCENARIO;
     if (typeof load !== 'function') throw new TypeError('createFixtureSource needs a load function');
     return {
       kind: 'fixture',
       scenario: scenario,
       read: function () {
         return Promise.resolve().then(load).then(function (fixture) {
-          if (!fixture || typeof fixture !== 'object' || !fixture.scenarios || typeof fixture.scenarios !== 'object') {
+          if (!isRecord(fixture) || !isRecord(fixture.scenarios)) {
             return unavailable('fixture', label, 'fixture_invalid', 'There is no scenarios object.');
           }
-          if (!Object.prototype.hasOwnProperty.call(fixture.scenarios, scenario)) {
+          if (!hasOwn(fixture.scenarios, scenario)) {
             return unavailable('fixture', label, 'unknown_scenario', 'Known scenarios: ' + Object.keys(fixture.scenarios).join(', ') + '.');
           }
-          var s = fixture.scenarios[scenario], t = now();
+          var s = fixture.scenarios[scenario];
+          if (!isRecord(s)) return unavailable('fixture', label, 'fixture_invalid', 'Each scenario must be an object.');
+          if (s.observedAgoMs != null && !validDuration(s.observedAgoMs)) {
+            return unavailable('fixture', label, 'fixture_invalid', 'The observation age must be a finite, non-negative duration.');
+          }
+          var t = now();
           return fromProjectsList(s.pages, {
             connection: s.connection, now: t,
-            observedAt: typeof s.observedAgoMs === 'number' ? t - s.observedAgoMs : undefined,
-            staleAfterMs: typeof fixture.staleAfterMs === 'number' ? fixture.staleAfterMs : undefined,
+            observedAt: t != null && s.observedAgoMs != null ? t - s.observedAgoMs : undefined,
+            staleAfterMs: fixture.staleAfterMs,
           });
         }, function (error) {
           return unavailable('fixture', label, 'fixture_unreadable', error && error.message ? '(' + error.message + ')' : '');
+        }).catch(function (error) {
+          return unavailable('fixture', label, 'fixture_invalid', error && error.message ? '(' + error.message + ')' : '');
         });
       },
     };
