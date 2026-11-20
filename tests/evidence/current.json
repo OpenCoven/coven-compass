@@ -14,9 +14,9 @@
     "view_size_combinations": 12
   },
   "package": {
-    "files": 142,
-    "payload_entries": 140,
-    "sha256_checks": 141
+    "files": 143,
+    "payload_entries": 141,
+    "sha256_checks": 142
   },
   "extracted_copy": "Source, tests, crown, and manifest checks repeated in a clean extraction of the built ZIP."
 }
