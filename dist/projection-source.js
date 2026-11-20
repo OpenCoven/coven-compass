@@ -223,6 +223,65 @@
     };
   }
 
+  // --- Castle → Project join (proposed in #20; blocked on D01) ---------------------------
+  //
+  // A Castle may carry an optional, opaque `project: {source, ref}`. `source` names the issuer
+  // and `ref` is its ID. The join compares the pair exactly and never guesses: no match by
+  // name, root, folder, label, owner, or a bare `ref`. A Castle never becomes a Project, and
+  // nothing here is authority. D01 hasn't chosen an issuer, so no adapter supplies
+  // references yet, and no live source calls this.
+  //
+  //   joinCastles(projects, castles, {complete})
+  //     projects: [{id, reference?: {source, ref}}]  (reference from the D01-approved adapter)
+  //     castles:  [{backend, id, project?: {source, ref}}]
+  //     complete: every Project page was read (default false)
+  //   → {castles: [{key, status, projectId}], byProject: {projectId: [key]}}
+  //     key is `backend:id`, so a coven-host `demo` can't collide with a sandbox ID.
+  //     status: 'linked' | 'unlinked' (no reference) | 'invalid' (malformed reference)
+  //           | 'ambiguous' (several Projects share it) | 'unresolved' (no match in a complete read)
+  //           | 'unknown' (no match, but the read was partial, so it can't be called orphaned)
+  var REFERENCE_MAX_BYTES = 512;
+
+  function referenceString(value) {
+    return typeof value === 'string' && value.length > 0 && !/[\u0000-\u001f\u007f]/.test(value)
+      && new TextEncoder().encode(value).length <= REFERENCE_MAX_BYTES;
+  }
+
+  function referenceKey(reference) {
+    if (reference === undefined) return {state: 'absent'};
+    if (reference === null || typeof reference !== 'object' || Array.isArray(reference)
+        || !referenceString(reference.source) || !referenceString(reference.ref)) return {state: 'invalid'};
+    return {state: 'valid', key: JSON.stringify([reference.source, reference.ref])};
+  }
+
+  function joinCastles(projects, castles, options) {
+    var complete = !!(options && options.complete);
+    var issued = new Map();
+    (projects || []).forEach(function (p) {
+      var r = referenceKey(p && p.reference);
+      if (r.state !== 'valid') return;
+      if (!issued.has(r.key)) issued.set(r.key, []);
+      if (issued.get(r.key).indexOf(p.id) < 0) issued.get(r.key).push(p.id);
+    });
+    var byProject = {};
+    var out = (castles || []).map(function (c) {
+      var key = String(c.backend) + ':' + String(c.id);
+      var r = referenceKey(c.project);
+      var status, projectId = null;
+      if (r.state === 'absent') status = 'unlinked';
+      else if (r.state === 'invalid') status = 'invalid';
+      else {
+        var ids = issued.get(r.key) || [];
+        if (ids.length > 1) status = 'ambiguous';
+        else if (ids.length === 1) { status = 'linked'; projectId = ids[0]; }
+        else status = complete ? 'unresolved' : 'unknown';
+      }
+      if (projectId !== null) (byProject[projectId] = byProject[projectId] || []).push(key);
+      return {key: key, status: status, projectId: projectId};
+    });
+    return {castles: out, byProject: byProject};
+  }
+
   var registered = null;
   function register(source) { registered = source; return source; }
   function current() { return registered; }
@@ -327,6 +386,6 @@
     SCHEMA: SCHEMA, MODES: MODES.slice(), FIXTURE_URL: FIXTURE_URL, CLIENT_VERSION: CLIENT_VERSION,
     selectMode: selectMode, createSimulationSource: createSimulationSource, createFixtureSource: createFixtureSource,
     fromProjectsList: fromProjectsList, describe: describe, register: register, current: current,
-    renderStandalone: renderStandalone,
+    renderStandalone: renderStandalone, joinCastles: joinCastles, REFERENCE_MAX_BYTES: REFERENCE_MAX_BYTES,
   });
 }));

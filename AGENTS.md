@@ -27,7 +27,7 @@ The table comes from #6. Run its focused check while you work, then `verify-all`
 | Map and camera | `dist/atlas-layout.js`, `dist/atlas-viewport.js` | `node --test tests/atlas-layout.test.cjs tests/atlas-viewport.test.cjs` |
 | Mobile controls and focus | `dist/mobile-ui.js`, `dist/mobile-interactions.js`, `dist/atlas.css` | `node --test tests/mobile-*.test.cjs` |
 | Simulation fold (what an event does to the world) | `dist/simulation-model.js` | `node --test tests/simulation-model.test.cjs tests/replay-*.test.cjs` |
-| Projection sources (`?source=`) | `dist/projection-source.js`, `dist/fixtures/`, the guard at the top of the inline script in `dist/index.html` | `node --test tests/projection-source.test.cjs` |
+| Projection sources (`?source=`) | `dist/projection-source.js`, `dist/fixtures/`, the guard at the top of the inline script in `dist/index.html` | `node --test tests/projection-source.test.cjs tests/castle-join.test.cjs` |
 | Handoff | Chapters in `docs/handoff/`, or the landing page `dist/handoff/index.html`. The builder generates `dist/handoff/guide.html`. | `node scripts/verify-all.mjs`, then follow Handoff in the preview |
 
 Keep `tests/fixtures/` (the pinned baseline) and the dated audits in `tests/evidence/` as historical evidence. If you're working from an extracted delivery rather than a checkout, run `python3 scripts/verify-handoff.py .` before editing it.
