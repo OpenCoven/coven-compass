@@ -2,6 +2,16 @@
 
 Mobile, replay, and layout checkpoints recorded November 18, 2026; combined-source verification tracked separately below.
 
+## November 20 physical Safari qualification
+
+Val exercised the public mission journey on an iPhone Duo running iOS 27.2 and Safari 27.2. The production alias served revision `c15823626a073540c3a8a5bff08f018eb360a091`. [Served-file hashes](tests/evidence/served-2026-11-20-c158236.json) · [Device observations and capture digests](tests/evidence/safari-duo-2026-11-20-c158236.json)
+
+On the outer portrait screen, Safari displayed the Missions drawer and its search field above the standard iOS keyboard. VoiceOver announced the Source survey result and the mission heading when Val opened it. Activating Close details returned the highlight and speech to the same row. Reloading the mission permalink restored Source survey and the Brief tab. Unfolding to the inner landscape display kept both visible. [Public mission permalink](https://coven-compass.vercel.app/#/project/psyche-build/mission/m-2?view=brief&detail=side)
+
+With Source survey open, Safari Web Inspector measured both the layout and visual viewport at 373×580 CSS pixels on the outer display. Visual offsets were (0, 0), visual scale was 1, device pixel ratio was 3, and all four CSS safe-area insets were zero. Reduce Motion was active. The Close details control measured 44×44 CSS pixels and fit inside the visual viewport. The inner landscape capture measured 2853×2007 image pixels. Its CSS dimensions still need a separate measurement.
+
+The physical acceptance matrix below remains open for draft and caret retention, Split View, typing and composition, multi-touch, Back and Forward gestures, additional VoiceOver and display settings, and sustained use. Val owns human usability acceptance. [Current observations and remaining checks](https://github.com/OpenCoven/coven-compass/issues/39#issuecomment-7036702576)
+
 ## Current status and historical boundary
 
 **Current source and package counts are generated** by `node scripts/verify-all.mjs` into [`tests/evidence/current.json`](tests/evidence/current.json) and checked by CI. Everything below is a dated record and is not updated with later changes.
