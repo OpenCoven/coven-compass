@@ -154,14 +154,12 @@
     var head = node('header', 'atlas-header'); head.id = 'atlasHeader';
     var brand = node('div', 'atlas-brand');
     brand.innerHTML = '<svg viewBox="0 0 2048 1889" aria-hidden="true"><use href="#crown" width="2048" height="1889"/></svg>';
-    brand.append(node('b', '', 'Coven Compass'));
+    brand.append(node('b', '', 'Compass'));
     var nav = node('nav', 'atlas-nav'); nav.setAttribute('aria-label', 'Workspace scope');
     nav.append(
       button('atlasOverview', 'Coven', function () { closeBrowse(false); closeMissions(false); api.overview(); }),
       button('atlasProject', 'Project', function () { closeBrowse(false); closeMissions(false); api.openProject(api.snapshot().active); })
     );
-    var sim = node('span', 'atlas-simulation', 'Simulation');
-    sim.title = 'An interactive local simulation. Decisions and chat affect sample data only.';
     var browse = headerAction(button('atlasBrowse', '', function () {
       if ($('atlasSidebar').hidden) openBrowse(); else closeBrowse(false);
     }), 'Projects', '<path d="M8 3H6L3 6v8l3 3h8l3-3V6l-3-3h-2"/>');
@@ -182,7 +180,7 @@
     lab.title = 'Explore the mission seals'; lab.setAttribute('aria-label', 'Open the seal lab');
     lab.setAttribute('aria-haspopup', 'dialog');
     var actions = node('div', 'atlas-actions'); actions.append(browse, missions, handoff, lab);
-    head.append(brand, nav, actions, sim); shield(head);
+    head.append(brand, nav, actions); shield(head);
 
     var aside = node('aside', 'atlas-sidebar'); aside.id = 'atlasSidebar'; aside.hidden = true;
     aside.setAttribute('aria-labelledby', 'atlasProjectsTitle');
@@ -303,8 +301,7 @@
     document.body.dataset.atlasScope = s.scope;
     $('atlasOverview').setAttribute('aria-pressed', String(s.scope === 'coven'));
     $('atlasProject').setAttribute('aria-pressed', String(s.scope !== 'coven'));
-    $('atlasProject').textContent = s.active;
-    $('atlasProject').title = 'Back to ' + s.active;
+    $('atlasProject').title = 'Project view · ' + s.active;
     $('atlasProject').setAttribute('aria-label', 'Open current project, ' + s.active);
     $('atlasMissions').setAttribute('aria-label', 'Browse ' + s.missions + ' missions');
     if (s.camera) {
