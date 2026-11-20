@@ -594,10 +594,21 @@ test('agent popover keeps the selected task group visible and follows keyboard s
       card.x >= plane.x + plane.width || plane.x >= card.x + card.width);
     const selected = group.locator('.agent.picked');
     assert.equal(await selected.count(), 1);
-    assert.equal(await selected.locator('.hot').evaluate(el => getComputedStyle(el).strokeWidth), '2px');
+    const assertHalo = async () => {
+      assert.equal(await selected.evaluate(el => getComputedStyle(el).outlineStyle), 'none');
+      assert.deepEqual(await selected.locator('.agent-halo').evaluate(el => {
+        const style = getComputedStyle(el);
+        return [el.localName, style.strokeWidth, style.strokeOpacity, style.vectorEffect, style.pointerEvents];
+      }), ['circle', '1.5px', '1', 'non-scaling-stroke', 'none']);
+      assert.equal(await selected.locator('.hot').evaluate(el => getComputedStyle(el).stroke), 'none');
+    };
+    await assertHalo();
     await pop.getByRole('button', {name: 'Close agent details'}).click();
     await pop.waitFor({state: 'hidden'});
     assert.ok(await agent.evaluate(el => el === document.activeElement));
+    await agent.click();
+    await pop.waitFor();
+    await assertHalo();
   } finally { await page.close(); }
 });
 
@@ -653,6 +664,9 @@ test('a narrow overview return fits the settled stage without rebuilding for the
   const page = await browser.newPage({viewport: {width: 390, height: 844}, reducedMotion: 'reduce', hasTouch: true});
   try {
     await page.goto(new URL('#/project/psyche-build', base).href);
+    // Both scopes normally share a one-row header. Reserve a second Project row
+    // to exercise an actual height change during the same scope transition.
+    await page.addStyleTag({content: 'body[data-atlas-scope="project"] .plan-head:has(#atlasHeader) { min-height: 96px; }'});
     const map = page.locator('#atlasMobileMap');
     const tile = page.locator('.ghostfort[aria-label^="psyche-build,"]');
     await map.click();

@@ -98,7 +98,6 @@ body.atlas-enhanced #plan.atlas-selected .colink:not(.dim) { display: inline; op
 
 /* Dots are agents. Selection controls their visibility in applySel(). */
 body.atlas-enhanced #plan .agent .core { filter: none; }
-body.atlas-enhanced #plan .agent .hot { pointer-events: all; }
 body.atlas-enhanced #plan .agent.idle .o { fill: #151418; stroke-opacity: .7; }
 body.atlas-enhanced #plan .agent.work .o { animation: none; }
 body.atlas-enhanced #plan .cell-ghost { stroke-opacity: .35; }
@@ -323,7 +322,6 @@ body.atlas-enhanced #plan .agent.co .agent-task { fill: var(--hue2); }
 .squad-plane .task-region { overflow: hidden; }
 .squad-plane .task-region line { stroke: var(--hue); stroke-opacity: .48; stroke-width: 2; }
 .squad-plane .task-region text { fill: var(--foreground); font-family: var(--f-body); font-weight: 550; text-anchor: start; }
-body.atlas-enhanced #plan .agent.picked .hot { stroke: var(--foreground); stroke-opacity: 1; stroke-width: 2; vector-effect: non-scaling-stroke; }
 .squad-plane line { stroke: var(--hue); stroke-opacity: .45; }
 body.atlas-enhanced #plan:not(.atlas-agent-detail) .squad-plane { display: none; }
 .task-cog { fill: var(--hue); }
@@ -339,7 +337,7 @@ body.atlas-enhanced #plan :is(.lead-node, .seat, .agent, .mission-tasks, .hub, .
 body.atlas-enhanced #plan .se-selection { vector-effect: non-scaling-stroke; stroke-width: 1.6; stroke-dasharray: 14 11; stroke-dashoffset: 7; stroke-linecap: round; }
 body.atlas-enhanced #plan .lead-node:focus-visible .se-selection { stroke: var(--attention); stroke-width: 2; }
 body.atlas-enhanced #plan .agent:focus-visible { opacity: 1; }
-body.atlas-enhanced #plan .agent:focus-visible .hot { stroke: var(--attention); stroke-opacity: 1; stroke-width: 2; vector-effect: non-scaling-stroke; }
+body.atlas-enhanced #plan .agent:focus { outline: none; box-shadow: none; }
 body.atlas-enhanced #plan .ghostfort:focus-visible .wall.base,
 body.atlas-enhanced #plan .seat:focus-visible .familiar-disc,
 body.atlas-enhanced #plan .mission-tasks:focus-visible .task-tray-bg { stroke-width: 2.5; vector-effect: non-scaling-stroke; }
@@ -351,7 +349,8 @@ body.atlas-enhanced #plan.atlas-selected :is(.atlas-mission-lines, .atlas-squad-
 }
 
 @media (forced-colors: active) {
-  body.atlas-enhanced #plan [data-map-item]:focus-visible :is(.se-selection, .familiar-disc, .hot, .task-tray-bg, .coord-face, .coord-point, .wall.base, rect:not(.atlas-map-hit)) { stroke: Highlight; }
+  body.atlas-enhanced #plan .agent:is(.picked, :focus-visible) .agent-halo { stroke: Highlight; forced-color-adjust: none; }
+  body.atlas-enhanced #plan [data-map-item]:focus-visible :is(.se-selection, .familiar-disc, .agent-halo, .task-tray-bg, .coord-face, .coord-point, .wall.base, rect:not(.atlas-map-hit)) { stroke: Highlight; }
 }
 @media (prefers-reduced-motion: reduce) {
   #plan :is(.atlas-mission-group, .atlas-squad) { transition: none; }
