@@ -26,6 +26,7 @@ The table comes from #6. Run its focused check while you work, then `verify-all`
 | Routes and mission browser | `dist/mission-navigation.js`, `dist/atlas-ui.js`, and their bindings in `dist/index.html` | `node --test tests/navigation.test.cjs tests/navigation-notice.test.cjs tests/mission-interactions.test.cjs` |
 | Map and camera | `dist/atlas-layout.js`, `dist/atlas-viewport.js` | `node --test tests/atlas-layout.test.cjs tests/atlas-viewport.test.cjs` |
 | Mobile controls and focus | `dist/mobile-ui.js`, `dist/mobile-interactions.js`, `dist/atlas.css` | `node --test tests/mobile-*.test.cjs` |
+| Map keyboard focus (one Tab stop, arrow keys inside) | `dist/map-focus.js`, `atlasFocusable` in `dist/index.html` | `node --test tests/map-focus.test.cjs`, then Tab through the map in a browser |
 | Simulation fold (what an event does to the world) | `dist/simulation-model.js` | `node --test tests/simulation-model.test.cjs tests/replay-*.test.cjs` |
 | Projection sources (`?source=`) | `dist/projection-source.js`, `dist/fixtures/`, the guard at the top of the inline script in `dist/index.html` | `node --test tests/projection-source.test.cjs` |
 | Handoff | Chapters in `docs/handoff/`, or the landing page `dist/handoff/index.html`. The builder generates `dist/handoff/guide.html`. | `node scripts/verify-all.mjs`, then follow Handoff in the preview |
@@ -69,6 +70,7 @@ Keep `tests/fixtures/` (the pinned baseline) and the dated audits in `tests/evid
 | `dist/mission-navigation.js` | Route codec (`#/project/<name>[/mission/<id>…]`), replay selection reconciliation |
 | `dist/projection-source.js`, `dist/fixtures/` | **The projection seam.** `?source=simulation` (the default) or `?source=fixture&scenario=…`. Every source implements `read() → Projection`. Add a live adapter here, never inside the simulation. |
 | `dist/mobile-ui.js`, `dist/mobile-interactions.js` | Adaptive dock, portals, focus, gestures, visual viewport |
+| `dist/map-focus.js` | Roving tabindex for map items: the map is one Tab stop, and arrow keys, Home and End move between Projects, gates, familiars, missions and agents |
 | `dist/seal-lab.js`, `dist/semantic-map.css` | Isolated seal explorer; scope-specific scene visibility |
 | `dist/handoff/` | Handoff landing page (hand-written `index.html`) and generated `guide.html` |
 | `tests/*.test.cjs` | Node tests using DOM facades; `tests/fixtures/` pins the v2 reference source |

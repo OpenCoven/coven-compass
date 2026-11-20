@@ -212,7 +212,10 @@ async function compactMissionLabel() {
     await page.locator(compact).first().waitFor();
     await page.mouse.move(0, 0);
     const target = page.locator(compact + ':focus-visible');
-    for (let i = 0; i < 100 && !(await target.count()); i++) await page.keyboard.press('Tab');
+    // The map is one Tab stop (dist/map-focus.js): Tab enters it, then the arrow keys move between its items.
+    const inMap = () => page.evaluate(() => !!document.activeElement?.closest('#plan [data-map-item]'));
+    for (let i = 0; i < 100 && !(await inMap()); i++) await page.keyboard.press('Tab');
+    for (let i = 0; i < 400 && await inMap() && !(await target.count()); i++) await page.keyboard.press('ArrowRight');
     await target.waitFor({timeout: 3000});
     const label = target.locator('.lead-name');
     const name = (await target.getAttribute('aria-label')).split(',')[0];
