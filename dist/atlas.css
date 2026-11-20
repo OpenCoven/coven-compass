@@ -967,3 +967,35 @@ body.atlas-enhanced .mission-header .i-view { position: static; box-shadow: none
   body.atlas-enhanced .inspect .mission-header { position: static; }
   body.atlas-enhanced .inspect { scroll-padding-block: 14px; }
 }
+
+/* Details anchor the left edge. An open browser can share a desktop map. */
+body.atlas-enhanced:not(.atlas-adaptive-mobile) .inspect {
+  left: 0; right: auto;
+  border-left: 0; border-right: 1px solid var(--border-strong);
+  box-shadow: none; animation: none;
+}
+body.atlas-enhanced:not(.atlas-adaptive-mobile):has(#inspect:not([hidden])) :is(.atlas-mission-browser, .atlas-sidebar, #notes > .manifest, #notes > .hud) {
+  left: auto; right: 16px;
+}
+body.atlas-enhanced.atlas-adaptive-mobile #inspect {
+  left: calc(var(--viewport-left, 0px) + max(10px, env(safe-area-inset-left, 0px))); right: auto; transform: none;
+  width: min(420px, calc(var(--viewport-width, 100vw) - max(10px, env(safe-area-inset-left, 0px)) - max(10px, env(safe-area-inset-right, 0px))));
+}
+body.atlas-enhanced .mission-header :is(.mission-identity, .mission-stepper) button {
+  background: transparent; border-color: transparent; box-shadow: none; color: var(--muted-foreground);
+}
+body.atlas-enhanced .mission-header :is(.mission-identity, .mission-stepper) button:enabled:hover {
+  color: var(--foreground); background: var(--card-raised);
+}
+body.atlas-enhanced .mission-header .i-view {
+  gap: 0; padding: 0; border: 0; border-bottom: 1px solid var(--border); border-radius: 0; background: transparent;
+}
+body.atlas-enhanced .mission-header .i-view button {
+  position: relative; background: transparent; border: 0; box-shadow: none;
+}
+body.atlas-enhanced .mission-header .i-view button[aria-selected="true"] {
+  color: var(--foreground); background: transparent; border: 0;
+}
+body.atlas-enhanced .mission-header .i-view button[aria-selected="true"]::after {
+  content: ''; position: absolute; inset: auto 14% 0; height: 2px; border-radius: 2px; background: var(--primary);
+}

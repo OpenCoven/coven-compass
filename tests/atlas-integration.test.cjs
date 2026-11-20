@@ -258,7 +258,7 @@ function frameFixture(width = 1000, height = 700) {
     atlasHeader: box(16, 14, width - 32, 44),
     atlasFamiliars: box(16, height - 80, width - 32, 60),
     atlasCameraDock: box(Math.max(16, width - 480), height - 152, Math.min(width - 32, 464), 62),
-    inspect: box(width - 320, 80, 308, height - 180, true),
+    inspect: box(12, 80, 308, height - 180, true),
   };
   const queries = {'#notes .manifest': box(12, 70, 344, height - 230, true), '#notes > .hud': box(80, 70, 240, 90, true)};
   const globals = {stage, $: id => elements[id] || null,
@@ -273,7 +273,8 @@ test('actual viewport measurement reserves visible header, chips, dock, manifest
   f.queries['#notes .manifest'].hidden = false;
   assert.deepEqual(plain(context.atlasViewportFrame(true)), {x: 384, y: 86, width: 588, height: 434, cx: 678, cy: 303});
   f.elements.inspect.hidden = false;
-  assert.deepEqual(plain(context.atlasViewportFrame(true)), {x: 384, y: 86, width: 268, height: 434, cx: 518, cy: 303});
+  f.queries['#notes .manifest'] = f.box(644, 70, 344, 470, false);
+  assert.deepEqual(plain(context.atlasViewportFrame(true)), {x: 348, y: 86, width: 268, height: 434, cx: 482, cy: 303});
   f.queries['#notes > .hud'].hidden = false;
   assert.equal(context.atlasViewportFrame(true).y, 188, 'the measured HUD lower edge is reserved');
   f.elements.atlasCameraDock.hidden = true;
@@ -324,7 +325,7 @@ test('a mobile modal inspector does not collapse the inert map frame; desktop in
   const desktop = frameFixture(); desktop.elements.inspect.hidden = false;
   desktop.globals.document.body.classList.contains = name => name === 'atlas-mobile-overlay';
   const wide = load(['atlasViewportFrame'], desktop.globals).atlasViewportFrame(true);
-  assert.equal(wide.x + wide.width, 652, 'desktop inspection still reserves the right-hand column');
+  assert.equal(wide.x, 348, 'desktop inspection reserves the left-hand column');
 });
 
 function fitFixture(width, height, count) {

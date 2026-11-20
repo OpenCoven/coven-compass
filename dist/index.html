@@ -2219,7 +2219,7 @@ function atlasViewportFrame(selection) {
     if (style && (style.display === 'none' || style.visibility === 'hidden' || style.visibility === 'collapse')) return;
     const r = el.getBoundingClientRect();
     if (r.right <= rect.left || r.left >= rect.right || r.bottom <= rect.top || r.top >= rect.bottom) return;
-    occluders.push({x: r.left - rect.left, y: r.top - rect.top, width: r.width, height: r.height, edge});
+    occluders.push({x: r.left - rect.left, y: r.top - rect.top, width: r.width, height: r.height, edge: edge === 'side' ? (r.left + r.right <= rect.left + rect.right ? 'left' : 'right') : edge});
   };
   const chrome = document.body?.dataset;
   const sideControls = chrome?.mobileLayout === 'landscape' && chrome.atlasScope === 'project' && !selection;
@@ -2228,15 +2228,15 @@ function atlasViewportFrame(selection) {
   reserve($('atlasCameraDock'), 'bottom');
   const mobile = document.body && document.body.classList.contains('atlas-adaptive-mobile');
   if (!mobile) {
-    reserve($('atlasMissionBrowser'), 'left');
-    reserve($('atlasSidebar'), 'left');
+    reserve($('atlasMissionBrowser'), 'side');
+    reserve($('atlasSidebar'), 'side');
   }
   if (selection) {
     const manifest = document.querySelector('#notes .manifest'), hud = document.querySelector(mobile ? '#notes .hud' : '#notes > .hud');
-    reserve(manifest, 'left'); reserve(hud, mobile ? 'bottom' : 'top');
+    reserve(manifest, 'side'); reserve(hud, mobile ? 'bottom' : 'top');
     const inspect = $('inspect');
     const modal = mobile && document.body.classList.contains('atlas-mobile-overlay');
-    if (inspect && !inspect.hidden && !modal) reserve(inspect, inspect.getBoundingClientRect().width > width * .65 ? 'bottom' : 'right');
+    if (inspect && !inspect.hidden && !modal) reserve(inspect, inspect.getBoundingClientRect().width > width * .65 ? 'bottom' : 'side');
   }
   return window.CovenAtlasViewport.safeFrame({width, height, occluders, padding: sideControls ? 10 : width < 600 ? 16 : 28});
 }

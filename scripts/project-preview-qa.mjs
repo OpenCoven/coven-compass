@@ -180,7 +180,7 @@ test('mission browsing leaves space for the selected seal and the open Inbox rev
       const seal = document.querySelector('.lead-node.sel .se-face')?.getBoundingClientRect();
       const drawer = document.querySelector('#atlasMissionBrowser').getBoundingClientRect();
       const inspector = document.querySelector('#inspect').getBoundingClientRect();
-      return seal && seal.left > drawer.right && seal.right < inspector.left;
+      return seal && seal.left > inspector.right && seal.right < drawer.left;
     });
     await page.keyboard.press('Escape');
     await page.locator('#tabChat').click();
@@ -240,6 +240,8 @@ test('mission inspector keeps identity, activity and tabs in three rows', async 
       assert.equal(rows.length, 3);
       const bounds = await header.boundingBox();
       assert.ok(bounds.height <= (width > 1100 ? 120 : 155));
+      const rail = await page.locator('#inspect').boundingBox();
+      assert.ok(rail.x <= 32, 'mission details open on the left');
       let previousBottom = bounds.y;
       for (const row of rows) {
         const rect = await row.boundingBox();
