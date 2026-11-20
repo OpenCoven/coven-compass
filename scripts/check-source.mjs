@@ -351,11 +351,7 @@ const spatialRendering = [
 for (const file of dist.filter(file => /\.(?:html?|css|svg|m?js)$/i.test(file))) {
   const raw = read(file);
   if (raw === null) continue;
-  // Handoff includes historical prose and code specimens. Check its executable/style surfaces only.
-  const runtime = relative(file).startsWith('dist/handoff/') && /\.html?$/.test(file)
-    ? htmlTags(raw, file).filter(tag => ['script', 'style'].includes(tag.name)).map(tag => tag.body).join('\n')
-    : raw;
-  const match = spatialRendering.map(rule => rule.exec(runtime)).find(Boolean);
+  const match = spatialRendering.map(rule => rule.exec(raw)).find(Boolean);
   if (match) fail(file, '2D-only presentation restriction: ' + match[0] + '. See AGENTS.md for the owner override process.');
 }
 const support = ['scripts', 'tests', 'examples', 'docs/handoff', 'docs/discovery'].flatMap(directory => walk(path.join(root, directory)));
@@ -396,7 +392,6 @@ for (const file of stylesheets) {
  * goes stale on the next change, so link to those instead.
  */
 const countHomes = new Set(['docs/handoff/01-current-state-and-evidence.md', 'MOBILE_READINESS.md']);
-const generatedHtml = new Set(['dist/handoff/guide.html']);
 const countLiteral = new RegExp([
   String.raw`\b\d+(?:\/\d+)?[- ](?:(?:passing|node|source|suite|unit)\s+)*tests?\b`,
   String.raw`\b\d+[- ](?:(?:settled|chrome|layout|mobile)\s+)*audits?\b`,
@@ -408,11 +403,11 @@ const countLiteral = new RegExp([
 for (const file of files) {
   const rel = relative(file);
   // docs/discovery holds digest-pinned imports that must stay byte-identical.
-  if (countHomes.has(rel) || generatedHtml.has(rel) || rel.startsWith('tests/') || rel.startsWith('docs/discovery/')) continue;
-  if (!rel.endsWith('.md') && !/^dist\/handoff\/.*\.html?$/i.test(rel)) continue;
+  if (countHomes.has(rel) || rel.startsWith('tests/') || rel.startsWith('docs/discovery/')) continue;
+  if (!rel.endsWith('.md')) continue;
   const source = read(file);
   if (source === null) continue;
-  const text = rel.endsWith('.md') ? withoutMarkdownCode(source) : source;
+  const text = withoutMarkdownCode(source);
   for (const match of text.matchAll(countLiteral)) {
     const line = text.slice(0, match.index).split('\n').length;
     fail(file, `evidence count literal "${match[0]}" on line ${line}; link tests/evidence/current.json `

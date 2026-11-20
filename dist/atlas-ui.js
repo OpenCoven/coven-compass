@@ -216,16 +216,13 @@
     }), 'Missions', '<circle cx="10" cy="6" r="3"/><circle cx="6" cy="13.5" r="3"/><circle cx="14" cy="13.5" r="3"/>');
     missions.setAttribute('aria-expanded', 'false'); missions.setAttribute('aria-controls', 'atlasMissionBrowser');
     missions.title = 'Find a mission and explore its details';
-    var handoff = headerAction(node('a', 'atlas-button'), 'Handoff', '<path d="M5 2.5h7l3 3v12H5Z M12 2.5v4h3 M7.5 10h5 M7.5 13h5"/>');
-    handoff.id = 'atlasHandoff'; handoff.href = 'handoff/'; handoff.title = 'Source ZIP and implementation handoff';
-    handoff.setAttribute('aria-label', 'Open the source ZIP and implementation handoff');
     var lab = headerAction(button('atlasLab', '', function () {
       closeBrowse(false); closeMissions(false);
       if (window.CovenSealLab) window.CovenSealLab.open(lab);
     }), 'Seal lab', '<circle cx="10" cy="10" r="7"/><circle cx="10" cy="10" r="2" fill="currentColor" stroke="none"/><path d="M10 3v5 M12 11l4 2.5 M8 11l-4 2.5"/>');
     lab.title = 'Explore the mission seals'; lab.setAttribute('aria-label', 'Open the seal lab');
     lab.setAttribute('aria-haspopup', 'dialog');
-    var actions = node('div', 'atlas-actions'); actions.append(browse, missions, handoff, lab);
+    var actions = node('div', 'atlas-actions'); actions.append(browse, missions, lab);
     head.append(brand, nav, actions); shield(head);
 
     var aside = node('aside', 'atlas-sidebar'); aside.id = 'atlasSidebar'; aside.hidden = true;
@@ -271,11 +268,8 @@
     var reset = button('atlasResetLayout', 'Remove extra samples', function () { populate(0); });
     simulation.append(simulationTitle, node('p', '', 'Adds sample Projects to explore the layout. Your own projects stay intact.'), presets, custom, reset, progress);
     var legend = button('atlasLegend', 'Legend', function () { closeBrowse(true); api.legend(); });
-    var mobileHandoff = node('a', 'atlas-button atlas-handoff-link', 'Source and implementation handoff');
-    mobileHandoff.id = 'atlasHandoffDrawer'; mobileHandoff.href = 'handoff/';
-    mobileHandoff.setAttribute('aria-label', 'Open the source ZIP and implementation handoff');
     legend.title = 'Read the shapes, colors, and mission states';
-    aside.append(heading, projectSearchLabel, projectCount, projects, newProject, simulation, legend, mobileHandoff);
+    aside.append(heading, projectSearchLabel, projectCount, projects, newProject, simulation, legend);
     aside.addEventListener('keydown', function (ev) {
       if (ev.key === 'Escape') { ev.preventDefault(); closeBrowse(true); }
     });
