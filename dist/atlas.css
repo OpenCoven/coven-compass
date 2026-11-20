@@ -1077,3 +1077,12 @@ body.atlas-enhanced #atlasCameraDock .atlas-marker-style select { field-sizing: 
 body.atlas-enhanced.atlas-adaptive-mobile .workspace-urgent .ctl { min-height: 44px; }
 
 body.atlas-enhanced.atlas-adaptive-mobile .plan-head #atlasHandoff { display: inline-flex; }
+@container left (max-width: 860px) {
+  body.atlas-enhanced:not(.atlas-adaptive-mobile) .plan-head :is(#atlasHandoff,#atlasLab) { padding-inline: 6px; }
+  body.atlas-enhanced:not(.atlas-adaptive-mobile) .plan-head :is(#atlasHandoff,#atlasLab) > span { display: none; }
+  body.atlas-enhanced:not(.atlas-adaptive-mobile) .plan-head #atlasProject { max-width: 15ch; }
+}
+@container left (max-width: 720px) {
+  body.atlas-enhanced:not(.atlas-adaptive-mobile) .plan-head .atlas-brand > b { display: none; }
+  body.atlas-enhanced:not(.atlas-adaptive-mobile) .plan-head #atlasHeader { gap: 4px; }
+}
