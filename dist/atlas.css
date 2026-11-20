@@ -932,8 +932,26 @@ body.atlas-adaptive-mobile[data-mobile-layout="landscape"] .mission-captions:not
 #atlasMobileChrome .atlas-marker-style { grid-column: 1 / -1; justify-content: space-between; }
 #atlasMobileChrome .atlas-marker-style select { min-height: 44px; }
 
-#mission-section[aria-labelledby="mission-tab-tasks"] .i-task { padding: 10px 12px; margin-block: 6px; border: 1px solid var(--border); border-radius: 8px; background: color-mix(in srgb, var(--hue) 5%, var(--card)); }
-#mission-section[aria-labelledby="mission-tab-tasks"] .dots { margin: 7px 0 0; padding: 3px; border-radius: 5px; background: var(--well); }
+/* Task ownership, activity and agents share one reading surface. */
+#mission-section[aria-labelledby="mission-tab-tasks"]:has(.i-task) {
+  background: #1b1a20; border: 1px solid var(--border); border-radius: 10px; padding-inline: 12px;
+}
+#mission-section[aria-labelledby="mission-tab-tasks"] .i-task {
+  padding: 12px 0 9px; border: 0;
+}
+#mission-section[aria-labelledby="mission-tab-tasks"] .i-task + .i-task { border-top: 1px solid var(--border); }
+.i-task-meta { display: flex; align-items: baseline; flex-wrap: wrap; gap: 3px 8px; margin-block-start: 3px; }
+.i-task-owner, .i-task-meta .i-task-summary { font-size: calc(11.5px * var(--fs,1)); margin: 0; line-height: 1.5; }
+.i-task-owner { color: var(--hue); }
+.i-task-meta .waiting { color: var(--foreground); }
+#mission-section[aria-labelledby="mission-tab-tasks"] .dots { margin: 4px 0 0 -4px; gap: 2px; }
+#mission-section[aria-labelledby="mission-tab-tasks"] button.dot { width: 28px; height: 28px; }
+#mission-section[aria-labelledby="mission-tab-tasks"] button.dot i { width: 10px; height: 10px; }
+#mission-section[aria-labelledby="mission-tab-tasks"] button.dot.gate i { border-radius: 3px; }
+.i-task .i-agent { margin-top: 6px; background: var(--card); box-shadow: none; }
+@media (pointer: coarse) {
+  #mission-section[aria-labelledby="mission-tab-tasks"] button.dot { width: 44px; height: 44px; }
+}
 
 /* Three inspector rows: identity, activity/navigation, and sections. */
 body.atlas-enhanced .inspect .mission-header { display: grid; gap: 5px; min-width: 0; flex: none; }
@@ -943,7 +961,7 @@ body.atlas-enhanced .inspect .mission-header { display: grid; gap: 5px; min-widt
 .mission-path-separator { color: var(--subtle); }
 body.atlas-enhanced .mission-path .mission-context, body.atlas-enhanced .mission-path .mission-title { min-width: 0; overflow-x: auto; white-space: nowrap; scrollbar-width: thin; }
 body.atlas-enhanced .mission-path .mission-context { flex: 0 1 auto; max-width: 42%; color: var(--muted-foreground); }
-body.atlas-enhanced .mission-path .mission-title { flex: 0 1 auto; }
+body.atlas-enhanced .inspect .mission-path .mission-title { flex: 0 1 auto; font-weight: 600; letter-spacing: -.015em; }
 body.atlas-enhanced .mission-path .mission-word { max-width: none; overflow: visible; }
 .mission-activity { justify-content: space-between; gap: 4px; }
 body.atlas-enhanced .mission-header .i-counts { display: flex; align-items: baseline; flex-wrap: nowrap; gap: 7px; min-width: 0; overflow-x: auto; scrollbar-width: thin; }
@@ -999,3 +1017,9 @@ body.atlas-enhanced .mission-header .i-view button[aria-selected="true"] {
 body.atlas-enhanced .mission-header .i-view button[aria-selected="true"]::after {
   content: ''; position: absolute; inset: auto 14% 0; height: 2px; border-radius: 2px; background: var(--primary);
 }
+
+body.atlas-enhanced .mission-header .i-counts .gate:not(.zero) dd::before { content: ''; display: inline-block; width: 5px; height: 5px; margin-inline-end: 4px; vertical-align: 2px; border: 1px solid currentColor; border-radius: 1px; }
+body.atlas-enhanced .mission-header .i-counts .gate:not(.zero) dt { color: var(--foreground); }
+body.atlas-enhanced .mission-header .i-counts .zero dd { color: var(--muted-foreground); }
+body.atlas-enhanced .atlas-camera-dock :is(#atlasZoomIn, #atlasZoomOut) { font: 500 17px var(--f-body); }
+body.atlas-enhanced:not(.atlas-adaptive-mobile) .atlas-camera-dock :is(#atlasFit, .atlas-marker-style) { border-inline-start: 1px solid var(--border); border-radius: 0; padding-inline-start: 10px; }

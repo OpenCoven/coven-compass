@@ -60,6 +60,8 @@ Current progress ownership uses `TARGET_ROLES` in the prototype. Production inte
 
 ## 5. Progressive detail and control placement
 
+Mission details open on the left. The header keeps identity, activity and section navigation in three rows. The Tasks tab names each owning familiar and groups its assigned agents under the task. A filled circle means working, an open circle means idle, and a square with a center dot means waiting at a gate. Selecting an agent opens its details in that task row. Closing the details returns focus to the agent.
+
 The Coven view shows Project previews, exact mission counts, decision badges, and a compact identity filter. The Projects drawer is closed by default and overlays the map without changing its dimensions. Project view reveals useful controls and group counts. Mission selection opens task/agent detail. Retain the existing replay and Seal lab as clearly scoped controls.
 
 Project view shows connected mission seals and familiar badges. Selection exposes agent and task detail. The Inbox retains every pending decision.

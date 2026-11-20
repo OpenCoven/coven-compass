@@ -345,7 +345,7 @@
     shield(familiars);
     var cameraDock = node('div', 'atlas-camera-dock'); cameraDock.id = 'atlasCameraDock';
     cameraDock.setAttribute('role', 'toolbar'); cameraDock.setAttribute('aria-label', 'Map controls');
-    [['atlasZoomOut', '−', 'out', 'Zoom out'], ['atlasZoomIn', '+', 'in', 'Zoom in'], ['atlasFit', 'Fit', 'fit', 'Fit the current selection in view'], ['atlasLock', 'Lock', 'lock', 'Lock the map']].forEach(function (item) {
+    [['atlasZoomOut', '−', 'out', 'Zoom out'], ['atlasZoomIn', '+', 'in', 'Zoom in'], ['atlasFit', 'Fit view', 'fit', 'Fit the current selection in view'], ['atlasLock', 'Lock', 'lock', 'Lock the map']].forEach(function (item) {
       var control = button(item[0], item[1], function () { api.camera(item[2]); });
       control.setAttribute('aria-label', item[3]); control.title = item[3]; cameraDock.append(control);
     });
@@ -389,7 +389,8 @@
     if (s.camera) {
       ['atlasZoomOut', 'atlasZoomIn', 'atlasFit'].forEach(function (id) { $(id).disabled = s.camera.locked; });
       $('atlasLock').setAttribute('aria-pressed', String(s.camera.locked)); $('atlasLock').textContent = s.camera.locked ? 'Unlock' : 'Lock';
-      $('atlasLock').setAttribute('aria-label', s.camera.locked ? 'Unlock the map' : 'Lock the map');
+      $('atlasLock').title = s.camera.locked ? 'Unlock the map' : 'Lock the map';
+      $('atlasLock').setAttribute('aria-label', $('atlasLock').title);
       $('atlasCameraDock').setAttribute('aria-label', s.camera.locked ? 'Map controls. Map locked.' : 'Map controls. Drag to pan. Pinch with two fingers to zoom.');
     }
     if (!$('atlasMissionBrowser').hidden) updateMissions(s);

@@ -3615,7 +3615,7 @@ function syncInspect(force) {
     next.addEventListener('click', () => select(missionOrder[position + 1].id, null, 'side'));
     stepper.append(previous, html('span', '', (position + 1) + ' / ' + missionOrder.length), next);
     const counts = html('dl', 'i-counts'); insp.nums = {};
-    ['work', 'idle', 'gate'].forEach(st => { const d = html('div', st), dd = html('dd'); insp.nums[st] = dd; d.append(html('dt', null, STATE[st]), dd); counts.appendChild(d); });
+    ['gate', 'work', 'idle'].forEach(st => { const d = html('div', st), dd = html('dd'); insp.nums[st] = dd; d.append(html('dt', null, STATE[st]), dd); counts.appendChild(d); });
     const seg = html('div', 'seg i-view'); seg.setAttribute('role', 'tablist'); seg.setAttribute('aria-label', 'Mission sections');
     [['brief', 'Brief'], ['council', c.fam ? 'Councils' : 'Council'], ['tasks', 'Tasks'], ['agents', 'Agents']].forEach(([v, label]) => {
       const b = html('button', null, label); b.type = 'button'; b.id = 'mission-tab-' + v; b.dataset.focus = b.id;
@@ -3643,13 +3643,16 @@ function syncInspect(force) {
     box.appendChild(header);
     const sec = html('section'); sec.id = 'mission-section'; sec.setAttribute('role', 'tabpanel'); sec.setAttribute('aria-labelledby', 'mission-tab-' + panelView); sec.tabIndex = 0; sec.dataset.focus = 'mission-section';
     const dotBtn = a => { const b = html('button', 'dot'), co = coLead(w, a); b.type = 'button'; b.dataset.focus = 'agent-' + a.id; b.setAttribute('aria-pressed', 'false'); b.appendChild(html('i')); if (co) b.style.setProperty('--hue2', fam(co).hue); b.addEventListener('click', () => pick(a.id, 'panel')); insp.dots.set(a.id, {dot: b, btn: b, co: !!co}); return b; };
-    const group = (hue, title, list) => {
+    const group = (hue, title, list, owners = []) => {
       const row = html('div', 'i-task'), tt = html('div', 't'), dots = html('div', 'dots'); row.style.setProperty('--hue', hue);
       tt.append(title, html('span', 'i-assigned', plural(list.length, 'agent')));
       row.appendChild(tt);
-      if (panelView === 'tasks' && list.length) {
-        const summary = html('p', 'i-task-summary');
-        row.appendChild(summary);
+      if (panelView === 'tasks') {
+        const metadata = html('div', 'i-task-meta');
+        if (owners.length) metadata.appendChild(html('span', 'i-task-owner', owners.map(k => fam(k).name).join(' + ')));
+        const summary = html('span', 'i-task-summary');
+        metadata.appendChild(summary);
+        row.appendChild(metadata);
         insp.taskSummaries.push({summary, ids: list.map(a => a.id)});
       }
       list.forEach(a => dots.appendChild(dotBtn(a)));
@@ -3687,7 +3690,7 @@ function syncInspect(force) {
       tasks.forEach(t => {
         const title = html('span', 'tname'), TM = w.missions.get(t.mission); title.innerHTML = '<span class="avs">' + t.leads.map(avatar).join('') + '</span>'; title.append(t.name);
         if (c.fam && TM) title.appendChild(setMissionName(html('em'), TM.name));
-        group(fam(t.fam).hue, title, all.filter(a => a.task === t.id));
+        group(fam(t.fam).hue, title, all.filter(a => a.task === t.id), t.leads);
       });
       const loose = all.filter(a => !a.task || !w.tasks.has(a.task));
       if (loose.length) group('var(--subtle)', html('span', 'tname', 'No task yet'), loose);
@@ -3728,11 +3731,22 @@ function syncInspect(force) {
   for (const {summary, ids} of insp.taskSummaries) {
     const counts = {work: 0, idle: 0, gate: 0};
     for (const id of ids) counts[w.agents.get(id).state]++;
-    const text = ['gate', 'work', 'idle'].filter(st => counts[st]).map(st => counts[st] + ' ' + STATE[st].toLowerCase()).join(' · ');
+    const text = ids.length ? ['gate', 'work', 'idle'].filter(st => counts[st]).map(st => counts[st] + ' ' + STATE[st].toLowerCase()).join(' · ') : 'Unassigned';
+    summary.classList.toggle('waiting', counts.gate > 0);
     if (summary.textContent !== text) summary.textContent = text;
   }
   ['work', 'idle', 'gate'].forEach(st => { const v = all.filter(a => a.state === st).length; insp.nums[st].textContent = v; insp.nums[st].parentElement.classList.toggle('zero', v === 0); });
-  all.forEach(a => { const r = insp.dots.get(a.id); if (!r) return; r.dot.className = 'dot ' + a.state + (r.co ? ' co' : ''); if (r.st) r.st.textContent = ', ' + STATE[a.state].toLowerCase(); else r.btn.setAttribute('aria-label', `${a.id}, ${STATE[a.state].toLowerCase()}`); });
+  all.forEach(a => {
+    const r = insp.dots.get(a.id);
+    if (!r) return;
+    r.dot.className = 'dot ' + a.state + (r.co ? ' co' : '');
+    if (r.st) r.st.textContent = ', ' + STATE[a.state].toLowerCase();
+    else {
+      const label = a.id + ', ' + STATE[a.state].toLowerCase();
+      r.btn.setAttribute('aria-label', label);
+      r.btn.title = label;
+    }
+  });
 }
 function agentInfo(a, previous) {
   const w = cur().world, e = previous && previous.dataset.agent === a.id ? previous : html('div', 'a-info');
@@ -3801,6 +3815,10 @@ function showPick(reveal) {
   if (!a) {
     if (selected && hadFocus) { const fallback = $('missionDetailTitle'); if (fallback && !fallback.closest('[hidden],[inert]')) fallback.focus({preventScroll: true}); }
     return;
+  }
+  if (inPanel) {
+    const task = insp.dots.get(a.id).btn.closest('.i-task');
+    if (task && slot.parentNode !== task) task.appendChild(slot);
   }
   const host = inPanel ? slot : pop, previous = host.firstElementChild, info = agentInfo(a, previous);
   if (info !== previous) { host.textContent = ''; host.appendChild(info); }

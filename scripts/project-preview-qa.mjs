@@ -253,7 +253,7 @@ test('mission inspector keeps identity, activity and tabs in three rows', async 
       }
       assert.equal(await header.locator('.mission-title').innerText(), 'Changelog');
       assert.equal(await header.locator('.council-count').innerText(), '2');
-      assert.equal(await header.locator('.i-counts dd').allTextContents().then(counts => counts.join('/')), '9/3/0');
+      assert.equal(await header.locator('.i-counts dd').allTextContents().then(counts => counts.join('/')), '0/9/3');
       await header.getByRole('button', {name: /Previous mission/}).click();
       assert.equal(await header.locator('.mission-title').innerText(), 'Board cards');
       await header.getByRole('button', {name: /Next mission/}).click();
@@ -262,6 +262,38 @@ test('mission inspector keeps identity, activity and tabs in three rows', async 
       assert.equal(await page.locator('#mission-section').getAttribute('aria-labelledby'), 'mission-tab-tasks');
       await header.getByRole('button', {name: 'Close details'}).click();
       await header.waitFor({state: 'hidden'});
+    } finally {
+      await page.close();
+    }
+  }
+});
+
+test('Tasks identifies owners and opens agent details inside the originating group', async () => {
+  for (const hasTouch of [false, true]) {
+    const viewport = hasTouch ? {width: 390, height: 844} : {width: 1440, height: 900};
+    const page = await browser.newPage({viewport, hasTouch, reducedMotion: 'reduce'});
+    try {
+      await page.goto(new URL('#/project/psyche-build/mission/m-2?view=tasks&detail=side', base).href);
+      const groups = page.locator('#mission-section .i-task');
+      const waiting = groups.filter({has: page.locator('button.gate')}).first();
+      const agent = waiting.locator('button.gate').first();
+      await agent.waitFor();
+      const id = (await agent.getAttribute('aria-label')).split(',')[0];
+      assert.match(await waiting.locator('.i-task-owner').innerText(), /Astra|Charm/);
+      assert.match(await waiting.locator('.i-task-summary').innerText(), /at gate/);
+      const hit = await agent.boundingBox();
+      assert.ok(hit.width >= (hasTouch ? 44 : 28) && hit.height >= (hasTouch ? 44 : 28));
+      await agent.focus();
+      await page.keyboard.press('Enter');
+      const details = waiting.locator('.a-info');
+      assert.equal(await details.locator('h3').innerText(), 'Agent ' + id);
+      assert.ok(await details.locator('h3').evaluate(el => document.activeElement === el));
+      await details.getByRole('button', {name: 'Close agent details'}).click();
+      assert.ok(await agent.evaluate(el => document.activeElement === el));
+      const other = groups.filter({hasNot: page.locator('.i-task-summary.waiting')}).last();
+      await other.locator('button.dot').first().click();
+      assert.equal(await other.locator('.a-info:visible').count(), 1);
+      assert.equal(await waiting.locator('.a-info:visible').count(), 0);
     } finally {
       await page.close();
     }

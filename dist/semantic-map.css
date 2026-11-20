@@ -328,3 +328,8 @@ body.atlas-enhanced #plan.atlas-selected :is(.atlas-mission-lines, .atlas-squad-
 @media (prefers-reduced-motion: reduce) {
   #plan :is(.atlas-mission-group, .atlas-squad) { transition: none; }
 }
+
+/* Keep the selected seal prominent while retaining the coordinator's readings. */
+body.atlas-enhanced #plan.atlas-selected :is(.coord-track, .coord-band) { stroke-width: 2; }
+body.atlas-enhanced #plan.atlas-selected .coord-attention { stroke: #c6bdd9; }
+body.atlas-enhanced #plan .atlas-mission-group.dim:not(:hover, :focus-within) :is(.task-tray-bg, .task-tray-well) { fill: transparent; stroke: transparent; }
