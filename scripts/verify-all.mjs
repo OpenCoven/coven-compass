@@ -1,30 +1,6 @@
 #!/usr/bin/env node
-/**
- * One command for every repository check. Dependency-free (Node.js 24, Python 3.10+).
- *
- *   node scripts/verify-all.mjs
- *
- * Runs, in order: static source checks, the Node test suite, the crown check, a handoff
- * build into a temporary directory, ZIP verification, and the same checks against a
- * clean extraction of that ZIP. Every step runs even after a failure, so one run reports
- * everything; a step that depends on a failed step is reported as skipped. The exit code
- * is non-zero when any step fails or is skipped.
- *
- * When every step passes, it writes the measured counts to tests/evidence/current.json.
- * That file is the only place current counts live; docs link to it instead of repeating
- * numbers. It holds deterministic counts only (no time or commit), so it changes only when
- * a count changes.
- *
- * It also fails (with --check) when dist/handoff/guide.html, which the build regenerates from
- * the Markdown chapters, differs from the committed copy.
- *
- *   --check          compare instead of write; fail if current.json is stale (CI uses this)
- *   --report PATH    also write a run report with commit, runtimes, time, and step results
- *
- * Set PYTHON to choose the interpreter (default: python3).
- */
+// Verify the static site, run the unit suite and record reproducible evidence.
 import fs from 'node:fs';
-import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -34,7 +10,7 @@ const python = process.env.PYTHON || 'python3';
 const node = process.execPath;
 
 const usage = 'Usage: node scripts/verify-all.mjs [--check] [--report PATH]\n'
-  + 'Runs source, unit, crown, build, ZIP, and clean-extraction checks, then writes (or with\n'
+  + 'Runs site, source, unit, and crown checks, then writes (or with\n'
   + '--check, compares) tests/evidence/current.json. Exit 0 only if every step passes.';
 const options = { check: false, report: null };
 const argv = process.argv.slice(2);
@@ -49,22 +25,13 @@ const evidencePath = path.join(root, 'tests/evidence/current.json');
 const testFiles = directory => fs.readdirSync(path.join(directory, 'tests'))
   .filter(name => name.endsWith('.test.cjs')).sort().map(name => path.join('tests', name));
 
-const work = fs.mkdtempSync(path.join(os.tmpdir(), 'coven-compass-verify-'));
-const zip = path.join(work, 'handoff.zip');
-const extracted = path.join(work, 'extracted');
 const results = [];
 
-function run(name, command, args, { cwd = root, needs = [] } = {}) {
-  const blocked = needs.filter(dependency => results.find(r => r.name === dependency)?.status !== 'pass');
-  if (blocked.length) {
-    results.push({ name, status: 'skipped', detail: `needs ${blocked.join(', ')}` });
-    console.log(`\n── ${name}: SKIPPED (needs ${blocked.join(', ')})`);
-    return null;
-  }
+function run(name, command, args) {
   console.log(`\n── ${name}\n$ ${[path.basename(command), ...args].join(' ')}`);
   const started = Date.now();
   const result = spawnSync(command, args, {
-    cwd, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024,
+    cwd: root, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024,
     env: { ...process.env, NODE_OPTIONS: '', PYTHONDONTWRITEBYTECODE: '1' },
   });
   const output = `${result.stdout || ''}${result.stderr || ''}`;
@@ -75,48 +42,17 @@ function run(name, command, args, { cwd = root, needs = [] } = {}) {
   return result;
 }
 
-try {
-  run('source', node, ['scripts/check-source.mjs']);
-  run('tests', node, ['--test', ...testFiles(root)]);
-  run('crown', node, ['scripts/test-atlas-crown.mjs']);
-  const guidePath = path.join(root, 'dist/handoff/guide.html');
-  const guideBefore = fs.existsSync(guidePath) ? fs.readFileSync(guidePath) : null;
-  run('build', python, ['scripts/build-handoff.py', '--output', zip]);
-  if (results.at(-1).status === 'pass') {
-    // build-handoff regenerates the reader from Markdown in place. A change means the
-    // committed copy was stale.
-    const fresh = guideBefore !== null && guideBefore.equals(fs.readFileSync(guidePath));
-    results.push(fresh
-      ? { name: 'guide', status: 'pass', detail: 'dist/handoff/guide.html matches its Markdown' }
-      : options.check
-        ? { name: 'guide', status: 'fail', detail: 'dist/handoff/guide.html was stale; run node scripts/verify-all.mjs and commit it' }
-        : { name: 'guide', status: 'pass', detail: 'dist/handoff/guide.html regenerated; commit it' });
-    console.log(`\n── guide: ${results.at(-1).detail}`);
-  } else {
-    results.push({ name: 'guide', status: 'skipped', detail: 'needs build' });
-  }
-  run('zip', python, ['scripts/verify-handoff.py', zip], { needs: ['build'] });
-  run('extract', python, ['-I', '-c',
-    'import sys, zipfile; zipfile.ZipFile(sys.argv[1]).extractall(sys.argv[2])', zip, extracted],
-  { needs: ['zip'] });
-  const bundle = fs.existsSync(extracted)
-    ? path.join(extracted, fs.readdirSync(extracted)[0] ?? '') : extracted;
-  run('extracted: manifest', python, [path.join(bundle, 'scripts/verify-handoff.py'), bundle], { needs: ['extract'] });
-  run('extracted: source', node, ['scripts/check-source.mjs'], { cwd: bundle, needs: ['extract'] });
-  run('extracted: tests', node, ['--test', ...(fs.existsSync(path.join(bundle, 'tests')) ? testFiles(bundle) : [])],
-    { cwd: bundle, needs: ['extract'] });
-  run('extracted: crown', node, ['scripts/test-atlas-crown.mjs'], { cwd: bundle, needs: ['extract'] });
-} finally {
-  fs.rmSync(work, { recursive: true, force: true });
-}
+run('site', python, ['scripts/scan-secrets.py', 'site', 'dist']);
+run('source', node, ['scripts/check-source.mjs']);
+run('tests', node, ['--test', ...testFiles(root)]);
+run('crown', node, ['scripts/test-atlas-crown.mjs']);
 
 const outputOf = name => results.find(r => r.name === name)?.output ?? '';
 const number = (text, pattern) => { const m = pattern.exec(text); return m ? Number(m[1]) : null; };
 function measure() {
   const tests = outputOf('tests');
-  const zipOutput = /PASS: (\d+) files; (\d+) payload entries; (\d+) SHA-256 checks/.exec(outputOf('zip'));
   const evidence = {
-    about: 'Current source/package evidence. Generated by `node scripts/verify-all.mjs`; do not edit by hand. '
+    about: 'Current static site and unit evidence. Generated by `node scripts/verify-all.mjs`; do not edit by hand. '
       + 'CI runs `verify-all --check` and fails when this file is stale. Historical checkpoints live in '
       + 'docs/handoff/01-current-state-and-evidence.md and MOBILE_READINESS.md.',
     evidence_level: 'static + unit (Node with DOM facades). Not browser, device, daemon, packaged CLI, or remote Host.',
@@ -126,10 +62,6 @@ function measure() {
         .map(key => [key, number(tests, new RegExp(`^\\S* ?${key} (\\d+)$`, 'm'))])),
     },
     crown: { view_size_combinations: number(outputOf('crown'), /(\d+) view\/size combinations/) },
-    package: zipOutput
-      ? { files: Number(zipOutput[1]), payload_entries: Number(zipOutput[2]), sha256_checks: Number(zipOutput[3]) }
-      : null,
-    extracted_copy: 'Source, tests, crown, and manifest checks repeated in a clean extraction of the built ZIP.',
   };
   const missing = JSON.stringify(evidence).includes('null');
   return { evidence, missing };

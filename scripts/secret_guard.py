@@ -1,4 +1,4 @@
-"""Offline checks shared by Git hooks and the public handoff builder."""
+"""Offline checks shared by Git hooks and the public site checker."""
 import re
 from pathlib import PurePosixPath
 

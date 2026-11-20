@@ -29,6 +29,36 @@ def archive_suffix(data):
     return ".tar" if data[257:262] == b"ustar" else ""
 
 
+PRIVATE_DETAIL = re.compile(
+    rb"(?i)(?:/(?:users|home)/[\w.@+-]+|[a-z]:[\\/]+users[\\/]+[\w.-]+|"
+    rb"/(?:private/)?var/folders/[\w-]+|[~]/\.(?:coven|cargo)/(?:workspaces|git/db)|"
+    rb"appg(?:prj|ver)_[a-f0-9]{16,}|(?:dpl|prj|team)_[a-z0-9]{16,}|"
+    rb"https?://[\w-]+-[a-z0-9]{8,}-[\w-]+\.vercel\.app)"
+)
+
+
+def check_site(folder):
+    if folder.is_symlink() or not (folder / "index.html").is_file():
+        raise SecretError("Expected a static site with index.html")
+    for entry in folder.rglob("*"):
+        relative = entry.relative_to(folder)
+        if relative.parts[0].lower() in {"handoff", "downloads"}:
+            raise SecretError("Retired Handoff content in public site")
+        check_name(relative.as_posix())
+        if entry.is_symlink():
+            raise SecretError("Symlink in public site")
+        if entry.is_dir():
+            continue
+        if not entry.is_file():
+            raise SecretError("Special file in public site")
+        data = entry.read_bytes()
+        check_content(data)
+        if PRIVATE_DETAIL.search(data) or PRIVATE_DETAIL.search(os.fsencode(relative)):
+            raise SecretError("Private operational detail in public site")
+        if archive_suffix(data) or entry.suffix.lower() == ".zip":
+            raise SecretError("Archive in public site")
+
+
 def scan_gitleaks(folder, private):
     # Supply our own config and ignore file, independent of checkout contents and local overrides.
     config = private / "defaults.toml"
@@ -109,6 +139,10 @@ def scan_directory(folder, private):
 
 
 def execute(mode, path):
+    if mode == "site":
+        check_site(Path(path))
+        print("Public site check passed")
+        return
     with tempfile.TemporaryDirectory(prefix="compass-secret-scan-") as tmp:
         private = Path(tmp).resolve()
         folder = private / "objects"
@@ -155,11 +189,11 @@ def execute(mode, path):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("mode", choices=["history", "staged", "pre-push", "message", "directory", "source"])
+    parser.add_argument("mode", choices=["history", "staged", "pre-push", "message", "directory", "source", "site"])
     parser.add_argument("path", nargs="?")
     args = parser.parse_args()
-    if (args.mode in {"message", "directory", "source"}) != bool(args.path):
-        parser.error("message, source and directory require one path; Git modes take none")
+    if (args.mode in {"message", "directory", "source", "site"}) != bool(args.path):
+        parser.error("message, source, site and directory require one path; Git modes take none")
     try:
         execute(args.mode, args.path)
     except (SecretError, OSError, RuntimeError, ValueError, subprocess.CalledProcessError) as error:

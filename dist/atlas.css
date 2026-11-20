@@ -138,7 +138,6 @@ body.atlas-enhanced #atlasLayoutStatus:empty { display: none; }
 body.atlas-enhanced #atlasResetLayout { width: 100%; min-height: 40px; font-size: 10px; }
 body.atlas-enhanced #atlasNewProject { width: 100%; min-height: 44px; margin-top: 8px; }
 body.atlas-enhanced .atlas-button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 36px; padding: 0 11px; border: 1px solid var(--border); border-radius: 7px; background: rgba(21, 21, 26, .9); color: var(--muted-foreground); font-size: 11px; font-weight: 500; white-space: nowrap; text-decoration: none; }
-body.atlas-enhanced .atlas-handoff-link { display: flex; min-height: 44px; margin-top: 8px; white-space: normal; text-align: center; }
 body.atlas-enhanced .atlas-button:hover { border-color: rgba(179, 170, 235, .3); background: rgba(31, 28, 39, .94); color: var(--foreground); }
 body.atlas-enhanced .atlas-button svg { width: 17px; height: 17px; flex: none; }
 body.atlas-enhanced .atlas-sidebar {
@@ -337,7 +336,6 @@ body.atlas-enhanced :focus-visible { outline: 2px solid #c7bff4; outline-offset:
 }
 @container atlas-stage (max-width: 760px) {
   body.atlas-enhanced .atlas-header { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "brand actions" "scope actions"; gap: 6px 8px; top: 12px; inset-inline: 12px; }
-  body.atlas-enhanced #atlasHandoff { display: none; }
   body.atlas-enhanced .atlas-sidebar { top: 116px; left: 12px; width: min(320px, calc(100% - 24px)); max-height: calc(100% - 184px); }
   body.atlas-enhanced .atlas-mission-browser { top: 116px; left: 12px; width: min(360px, calc(100% - 24px)); max-height: calc(100% - 130px); }
   body.atlas-enhanced .hud,
@@ -354,7 +352,6 @@ body.atlas-enhanced :focus-visible { outline: 2px solid #c7bff4; outline-offset:
 /* Touch traversal keeps the same map modes within reach on tablets and phones. */
 @media (max-width: 1100px), (pointer: coarse) {
   body.atlas-enhanced .atlas-header { --atlas-header-target: 44px; }
-  body.atlas-enhanced #atlasHandoff { display: none; }
   body.atlas-enhanced .atlas-button,
   body.atlas-enhanced .atlas-familiar,
   body.atlas-enhanced .btn,

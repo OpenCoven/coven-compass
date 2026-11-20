@@ -165,7 +165,7 @@
             scrollingAncestors: clip.scrolling
           };
         }
-        var navIds = ['atlasOverview', 'atlasProject', 'atlasBrowse', 'atlasMissions', 'atlasHandoff', 'atlasHandoffDrawer', 'atlasLab', 'atlasMobileMap', 'atlasMobileMissions', 'atlasMobileActivity', 'atlasMobileView', 'play', 'scrub', 'speed', 'live', 'atlasPlan', 'atlas3d', 'atlasMove', 'atlasOrbit', 'atlasZoomOut', 'atlasZoomIn', 'atlasFit', 'atlasLock', 'launcher', 'atlasMissionClose', 'send'];
+        var navIds = ['atlasOverview', 'atlasProject', 'atlasBrowse', 'atlasMissions', 'atlasLab', 'atlasMobileMap', 'atlasMobileMissions', 'atlasMobileActivity', 'atlasMobileView', 'play', 'scrub', 'speed', 'live', 'atlasPlan', 'atlas3d', 'atlasMove', 'atlasOrbit', 'atlasZoomOut', 'atlasZoomIn', 'atlasFit', 'atlasLock', 'launcher', 'atlasMissionClose', 'send'];
         var keyControls = navIds.map(function (id) { return doc.getElementById(id); }).filter(visible).map(function (el) {
           return Object.assign({control: label(el), disabled: !!el.disabled}, geometry(el));
         });
