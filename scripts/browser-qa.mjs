@@ -281,8 +281,9 @@ async function briefEditor(vp) {
     rev: (bp.textContent.match(/sim-[0-9a-f]{8}/) || [])[0], next: bp.querySelector('.bp-action')?.textContent, accepted: bp.querySelectorAll('.bp-step')[3]?.textContent }; });
   try {
     await page.waitForTimeout(1200);
-    await page.locator('#mis > summary').click();
-    await page.locator('#mis button.opt', { hasText: 'New mission' }).first().click();
+    await page.locator('#plan .atlas-local-psyche').click();
+    await page.getByRole('tab', {name: 'Project', exact: true}).click();
+    await page.locator('#castPane [data-id="cs-new"]').click();
     await page.locator('[data-id="bp-add"]').click();
     const added = await done();
     check(mode, vp.name, 'adding success criteria previews the completion rule before Save',
@@ -293,14 +294,12 @@ async function briefEditor(vp) {
     await page.locator('[data-id="bp-min"]').fill('85');
     await page.locator('[data-id="bp-attempts"]').fill('4');
     await page.locator('#nmName').fill('Criteria check');
-    // Measure once the sheet has settled: the editor's box is unchanged across two animation frames.
-    await page.waitForFunction(() => new Promise(r => { const box = () => JSON.stringify(document.querySelector('.bp-editor').getBoundingClientRect());
-      const a = box(); requestAnimationFrame(() => requestAnimationFrame(() => r(box() === a))); }), null, { timeout: 5000 }).catch(() => {});
+    // Measure the editor where the user can see it after the sheet settles.
+    await page.locator('.bp-editor').scrollIntoViewIfNeeded();
     const fit = await page.evaluate(() => { const e = document.querySelector('.bp-editor').getBoundingClientRect(), f = document.getElementById('empty');
       return { width: e.width, right: e.right, viewport: innerWidth, scroll: f.scrollWidth, client: f.clientWidth }; });
     const fits = fit.width > 0 && fit.right <= fit.viewport + 1 && fit.scroll <= fit.client + 1;
     check(mode, vp.name, 'valid criteria re-enable Open mission, and the editor fits', !(await page.locator('#raise').isDisabled()) && fits, JSON.stringify(fit));
-    await page.locator('.bp-editor').scrollIntoViewIfNeeded();
     await shot(page, `${vp.name}-brief-editor`);
     // After Save the page selects the mission; on a phone it opens its details. Otherwise open it from Missions.
     const reopen = async () => {
@@ -319,7 +318,7 @@ async function briefEditor(vp) {
     check(mode, vp.name, 'the saved criteria reach the inspector, waiting for evidence, not accepted',
       first && /at least 85 of 100/.test(first.text) && /4 attempts/.test(first.text) && first.next === 'Wait for evidence' && /Not recorded/.test(first.accepted) && !!first.rev,
       first ? `${first.rev}; next "${first.next}"` : 'no .bp panel');
-    await page.locator('#inspect .bfg button').click();
+    await page.locator('#inspect [data-focus="edit-brief"]').click();
     const kept = await page.locator('[data-id="bp-attempts"]').inputValue();
     await page.locator('[data-id="bp-attempts"]').fill('6');
     const preview = await done();
