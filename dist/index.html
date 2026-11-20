@@ -2571,7 +2571,6 @@ function missionNameLines(name, fits) {
 }
 function labelMission(s, name) {
   if (s.labelName === name) return;
-  s.labelName = name;
   s.name.textContent = '';
   const first = svgEl('tspan', {x: 0}, s.name);
   const lines = missionNameLines(name, text => {
@@ -2583,6 +2582,8 @@ function labelMission(s, name) {
     span.setAttribute('y', (i - (lines.length - 1) / 2) * 14 + 4.3);
     span.textContent = line;
   });
+  // A hidden SVG has no text metrics. Measure it again when its Project opens.
+  if (!name || first.getComputedTextLength() > 0) s.labelName = name;
 }
 function project() {
   const P = (x, y) => [x, y];
@@ -2688,7 +2689,7 @@ function project() {
     s.readable = detailVisible(s.readable, s.diameter, 54, 50);
     s.g.classList.toggle('atlas-compact-seal', !s.readable);
     const reveal = Math.max(faceScale, 34 / (radius * screenScale));
-    s.face.style.setProperty('--mission-reveal', f(reveal));
+    s.face.style.setProperty('--mission-reveal', reveal);
     s.stateLabel.setAttribute('x', f(q[0]));
     s.stateLabel.setAttribute('y', f(q[1] + radius * (s.readable ? faceScale : reveal) + 12 * U));
     s.g.classList.toggle('atlas-mission-current', selected);
