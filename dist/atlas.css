@@ -417,7 +417,7 @@ body.atlas-enhanced :focus-visible { outline: 2px solid #c7bff4; outline-offset:
   body.atlas-enhanced .inspect .i-head .who { align-self: center; }
   body.atlas-enhanced .inspect .mission-title { display: block; white-space: normal; }
   body.atlas-enhanced .inspect .i-head .role { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  body.atlas-enhanced .inspect { scroll-padding-block: 130px 20px; }
+  body.atlas-enhanced .inspect { scroll-padding-block: 155px 20px; }
   body.atlas-enhanced .inspect .i-agent { position: static; margin-top: 0; }
   body.atlas-enhanced .leads { padding: 2px 66px 6px 2px; gap: 8px; scroll-snap-type: x mandatory; }
   body.atlas-enhanced .lead-card { flex: 0 0 min(280px, 79vw); min-height: 82px; }
@@ -934,3 +934,36 @@ body.atlas-adaptive-mobile[data-mobile-layout="landscape"] .mission-captions:not
 
 #mission-section[aria-labelledby="mission-tab-tasks"] .i-task { padding: 10px 12px; margin-block: 6px; border: 1px solid var(--border); border-radius: 8px; background: color-mix(in srgb, var(--hue) 5%, var(--card)); }
 #mission-section[aria-labelledby="mission-tab-tasks"] .dots { margin: 7px 0 0; padding: 3px; border-radius: 5px; background: var(--well); }
+
+/* Three inspector rows: identity, activity/navigation, and sections. */
+body.atlas-enhanced .inspect .mission-header { display: grid; gap: 5px; min-width: 0; flex: none; }
+.mission-identity, .mission-path, .mission-activity { display: flex; align-items: center; min-width: 0; gap: 5px; }
+.mission-path { flex: 1; gap: 6px; }
+.mission-identity > button { flex: none; }
+.mission-path-separator { color: var(--subtle); }
+body.atlas-enhanced .mission-path .mission-context, body.atlas-enhanced .mission-path .mission-title { min-width: 0; overflow-x: auto; white-space: nowrap; scrollbar-width: thin; }
+body.atlas-enhanced .mission-path .mission-context { flex: 0 1 auto; max-width: 42%; color: var(--muted-foreground); }
+body.atlas-enhanced .mission-path .mission-title { flex: 0 1 auto; }
+body.atlas-enhanced .mission-path .mission-word { max-width: none; overflow: visible; }
+.mission-activity { justify-content: space-between; gap: 4px; }
+body.atlas-enhanced .mission-header .i-counts { display: flex; align-items: baseline; flex-wrap: nowrap; gap: 7px; min-width: 0; overflow-x: auto; scrollbar-width: thin; }
+body.atlas-enhanced .mission-header .i-counts div { flex: none; flex-direction: row-reverse; align-items: baseline; gap: 3px; padding: 0; border: 0; }
+body.atlas-enhanced .mission-header .i-counts dd { font-size: calc(13px * var(--fs,1)); }
+body.atlas-enhanced .mission-header .i-counts dt { font-size: calc(11px * var(--fs,1)); white-space: nowrap; color: var(--muted-foreground); }
+body.atlas-enhanced .mission-header .mission-stepper { flex: none; border: 0; padding: 0; gap: 3px; }
+body.atlas-enhanced .mission-header .mission-stepper button { min-width: 26px; padding: 0 5px; font-size: 17px; }
+body.atlas-enhanced .mission-header .i-view { position: static; box-shadow: none; }
+.council-count { margin-inline-start: 4px; color: var(--muted-foreground); font-size: .85em; font-variant-numeric: tabular-nums; }
+@media (max-width: 1100px), (pointer: coarse) {
+  body.atlas-enhanced .inspect .mission-header { position: sticky; top: -14px; z-index: 4; background: #17171c; padding-block: 3px 5px; gap: 2px; }
+  body.atlas-enhanced .mission-header :is(.mission-identity, .mission-stepper) button { min-width: 44px; min-height: 44px; }
+}
+
+@media (max-width: 359px) {
+  body.atlas-enhanced .inspect .mission-header { margin-inline: -10px; }
+  .mission-identity, .mission-path { gap: 2px; }
+}
+@media (max-height: 450px) and (max-width: 1100px) {
+  body.atlas-enhanced .inspect .mission-header { position: static; }
+  body.atlas-enhanced .inspect { scroll-padding-block: 14px; }
+}

@@ -228,3 +228,40 @@ test('mission focus traces the seal and reveals the planes for its agents', asyn
     await page.close();
   }
 });
+
+test('mission inspector keeps identity, activity and tabs in three rows', async () => {
+  for (const [width, height] of [[1440, 900], [390, 844], [320, 640], [844, 390]]) {
+    const page = await browser.newPage({viewport: {width, height}, reducedMotion: 'reduce'});
+    try {
+      await page.goto(new URL('#/project/coven-cave/mission/m-2?view=agents&detail=side', base).href);
+      const header = page.locator('.mission-header');
+      await header.waitFor();
+      const rows = await header.locator(':scope > *').all();
+      assert.equal(rows.length, 3);
+      const bounds = await header.boundingBox();
+      assert.ok(bounds.height <= (width > 1100 ? 120 : 155));
+      let previousBottom = bounds.y;
+      for (const row of rows) {
+        const rect = await row.boundingBox();
+        assert.ok(rect.y >= previousBottom - 1);
+        previousBottom = rect.y + rect.height;
+      }
+      for (const label of await header.locator('.mission-context, .mission-title, .i-counts, .i-view').all()) {
+        assert.ok(await label.evaluate(el => el.scrollWidth <= el.clientWidth + 1), 'sample details fit at width ' + width);
+      }
+      assert.equal(await header.locator('.mission-title').innerText(), 'Changelog');
+      assert.equal(await header.locator('.council-count').innerText(), '2');
+      assert.equal(await header.locator('.i-counts dd').allTextContents().then(counts => counts.join('/')), '9/3/0');
+      await header.getByRole('button', {name: /Previous mission/}).click();
+      assert.equal(await header.locator('.mission-title').innerText(), 'Board cards');
+      await header.getByRole('button', {name: /Next mission/}).click();
+      assert.equal(await header.locator('.mission-title').innerText(), 'Changelog');
+      await header.getByRole('tab', {name: 'Tasks'}).click();
+      assert.equal(await page.locator('#mission-section').getAttribute('aria-labelledby'), 'mission-tab-tasks');
+      await header.getByRole('button', {name: 'Close details'}).click();
+      await header.waitFor({state: 'hidden'});
+    } finally {
+      await page.close();
+    }
+  }
+});

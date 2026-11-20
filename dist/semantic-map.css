@@ -325,3 +325,6 @@ body.atlas-enhanced #plan.atlas-selected :is(.atlas-mission-lines, .atlas-squad-
 @media (forced-colors: active) {
   body.atlas-enhanced #plan [data-map-item]:focus-visible :is(.se-selection, .familiar-disc, .hot, .task-tray-bg, .coord-face, .coord-point, .wall.base, rect:not(.atlas-map-hit)) { stroke: Highlight; }
 }
+@media (prefers-reduced-motion: reduce) {
+  #plan :is(.atlas-mission-group, .atlas-squad) { transition: none; }
+}

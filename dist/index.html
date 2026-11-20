@@ -3402,13 +3402,6 @@ function fitTarget(c) {
 }
 // A selected mission is written into the space it occupies: a title plate for the mission, a plate beside each council
 // seat listing that familiar's tasks, and a tag on anything of its waiting at a gate.
-function selHead(c) {
-  const M = c.world.missions.get(c.sel), head = html('div', 'i-head'), who = html('div', 'who');
-  const title = setMissionName(html('h2', 'mission-title'), c.fam ? fam(c.fam).name : M.name); title.id = 'missionDetailTitle'; title.tabIndex = -1;
-  if (c.fam) { const f = fam(c.fam); head.innerHTML = avatar(c.fam); who.append(title, setMissionName(html('span', 'role'), `${f.role} · on ${M.name}`)); }
-  else { head.innerHTML = avatar('mission'); who.append(title, html('span', 'role', `Mission · council of ${M.seats.length}`)); }
-  head.appendChild(who); return head;
-}
 const selName = c => { const M = c.world.missions.get(c.sel); return !M ? '' : c.fam ? `${fam(c.fam).name} on ${M.name}` : M.name; };
 const inSel = (c, a) => a.mission === c.sel && (!c.fam || a.fam === c.fam);
 const xBtn = (label, fn) => { const x = html('button', 'btn x', '×'); x.type = 'button'; x.setAttribute('aria-label', label); x.addEventListener('click', fn); return x; };
@@ -3574,7 +3567,8 @@ function syncInspect(force) {
   const tasks = [...w.tasks.values()].filter(t => c.fam ? t.leads.some(k => order.has(seatId(t.mission, k))) : t.mission === M.id).sort((a, b) => rank(seatId(a.mission, a.fam)) - rank(seatId(b.mission, b.fam)));
   const taskIds = new Set(tasks.map(t => t.id));      // a familiar's scope includes the agents of tasks it shares, wherever they sit
   const all = [...w.agents.values()].filter(a => order.has(a.seat) || (a.task && taskIds.has(a.task))).sort((a, b) => rank(a.seat) - rank(b.seat) || slotOf(a) - slotOf(b));
-  const sig = (panelView === 'brief' ? briefSig(briefState(w, M), M) + Math.floor((w.t - M.t0) / 60000) + canAct() : '') + active + M.id + '/' + (c.fam || '') + '|' + panelView + '|' + seatIds.join(',') + '|' + tasks.map(t => t.id).join(',') + '|' + all.map(a => a.id + ':' + (a.task || '')).join(',');
+  const missionOrder = [...w.missions.values()];
+  const sig = missionOrder.map(m => m.id).join(',') + '|' + (panelView === 'brief' ? briefSig(briefState(w, M), M) + Math.floor((w.t - M.t0) / 60000) + canAct() : '') + active + M.id + '/' + (c.fam || '') + '|' + panelView + '|' + seatIds.join(',') + '|' + tasks.map(t => t.id).join(',') + '|' + all.map(a => a.id + ':' + (a.task || '')).join(',');
   if (force || sig !== insp.sig) {
     const identity = [active, M.id, c.fam, panelView].join('|'), sameView = box.dataset.selection === identity;
     const previousScroll = sameView ? box.scrollTop : 0;
@@ -3584,27 +3578,39 @@ function syncInspect(force) {
     box.hidden = false;
     box.setAttribute('aria-label', c.fam ? fam(c.fam).name + ' on ' + M.name : M.name + ' mission details');
     box.setAttribute('aria-labelledby', 'missionDetailTitle'); box.tabIndex = -1;
-    const context = setMissionName(html('p', 'mission-context'), active + (c.fam ? ' / ' + M.name : ' / Mission details'));
-    const backRow = html('nav', 'mission-return'); backRow.setAttribute('aria-label', 'Mission navigation');
-    const back = html('button', 'btn sm', c.fam ? '← Back to mission' : '← All missions'); back.type = 'button'; back.dataset.focus = 'mission-back';
+    const header = html('header', 'mission-header');
+    const head = html('div', 'mission-identity');
+    const context = setMissionName(html('span', 'mission-context'), c.fam ? active + ' / ' + M.name : active);
+    const back = html('button', 'btn x', '←'); back.type = 'button'; back.dataset.focus = 'mission-back';
+    back.title = c.fam ? 'Back to mission' : 'All missions';
+    back.setAttribute('aria-label', back.title);
+    const title = setMissionName(html('h2', 'mission-title'), c.fam ? fam(c.fam).name : M.name);
+    title.id = 'missionDetailTitle'; title.tabIndex = -1;
+    const role = c.fam ? fam(c.fam).role : 'Mission details';
+    title.setAttribute('aria-description', role);
+    const path = html('div', 'mission-path');
+    path.title = context.textContent + ' / ' + title.textContent + ' · ' + role;
+    const separator = html('span', 'mission-path-separator', '/'); separator.setAttribute('aria-hidden', 'true');
+    path.append(context, separator, title);
     back.addEventListener('click', () => {
       if (c.fam) select(M.id, null, 'side');
       else if (c.missionBrowserOrigin) closeMissionDetails();
       else if (window.CovenAtlas) window.CovenAtlas.openMissions(true);
     });
-    backRow.append(back);
-    const head = selHead(c), toCard = html('button', 'btn x'); toCard.type = 'button'; toCard.innerHTML = ICON.card; toCard.setAttribute('aria-label', 'Show as a card');
-    toCard.dataset.focus = 'show-card';
+    const toCard = html('button', 'btn x'); toCard.type = 'button'; toCard.innerHTML = ICON.card; toCard.setAttribute('aria-label', 'Show as a card');
+    toCard.title = 'Show as a card'; toCard.dataset.focus = 'show-card';
     toCard.addEventListener('click', () => select(c.sel, c.fam, 'card'));
     const close = xBtn('Close details', closeMissionDetails); close.dataset.focus = 'close-details';
-    head.append(toCard, close);
-    const missionOrder = [...w.missions.values()], position = missionOrder.findIndex(m => m.id === M.id);
+    close.title = 'Close details';
+    head.append(back, path, toCard, close);
+    const position = missionOrder.findIndex(m => m.id === M.id);
     const stepper = html('div', 'mission-stepper');
-    const previous = html('button', 'btn sm', '← Previous'), next = html('button', 'btn sm', 'Next →');
+    const previous = html('button', 'btn sm', '‹'), next = html('button', 'btn sm', '›');
     previous.type = next.type = 'button'; previous.disabled = position <= 0; next.disabled = position >= missionOrder.length - 1;
     previous.dataset.focus = 'previous-mission'; next.dataset.focus = 'next-mission';
     previous.setAttribute('aria-label', previous.disabled ? 'Previous mission' : 'Previous mission: ' + missionOrder[position - 1].name);
     next.setAttribute('aria-label', next.disabled ? 'Next mission' : 'Next mission: ' + missionOrder[position + 1].name);
+    previous.title = previous.getAttribute('aria-label'); next.title = next.getAttribute('aria-label');
     previous.addEventListener('click', () => select(missionOrder[position - 1].id, null, 'side'));
     next.addEventListener('click', () => select(missionOrder[position + 1].id, null, 'side'));
     stepper.append(previous, html('span', '', (position + 1) + ' / ' + missionOrder.length), next);
@@ -3613,6 +3619,11 @@ function syncInspect(force) {
     const seg = html('div', 'seg i-view'); seg.setAttribute('role', 'tablist'); seg.setAttribute('aria-label', 'Mission sections');
     [['brief', 'Brief'], ['council', c.fam ? 'Councils' : 'Council'], ['tasks', 'Tasks'], ['agents', 'Agents']].forEach(([v, label]) => {
       const b = html('button', null, label); b.type = 'button'; b.id = 'mission-tab-' + v; b.dataset.focus = b.id;
+      if (v === 'council') {
+        const n = c.fam ? seats.length : M.seats.length;
+        b.appendChild(html('span', 'council-count', String(n)));
+        b.title = c.fam ? fam(c.fam).role + ' · ' + plural(n, 'council') : 'Council of ' + n;
+      }
       b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', String(panelView === v)); b.setAttribute('aria-pressed', String(panelView === v));
       b.setAttribute('aria-controls', 'mission-section'); b.tabIndex = panelView === v ? 0 : -1;
       b.addEventListener('click', () => { panelView = v; store.set('coven-compass-panel', v); syncInspect(true); atlasWriteRoute(true); const nb = $('inspect').querySelector('.i-view [aria-selected="true"]'); if (nb) nb.focus({preventScroll: true}); });
@@ -3626,7 +3637,10 @@ function syncInspect(force) {
       tabs[target].click();
     });
     insp.slot = html('div', 'i-agent'); insp.slot.hidden = true;
-    box.append(context, backRow, head, stepper, counts, seg);
+    const activity = html('div', 'mission-activity');
+    activity.append(counts, stepper);
+    header.append(head, activity, seg);
+    box.appendChild(header);
     const sec = html('section'); sec.id = 'mission-section'; sec.setAttribute('role', 'tabpanel'); sec.setAttribute('aria-labelledby', 'mission-tab-' + panelView); sec.tabIndex = 0; sec.dataset.focus = 'mission-section';
     const dotBtn = a => { const b = html('button', 'dot'), co = coLead(w, a); b.type = 'button'; b.dataset.focus = 'agent-' + a.id; b.setAttribute('aria-pressed', 'false'); b.appendChild(html('i')); if (co) b.style.setProperty('--hue2', fam(co).hue); b.addEventListener('click', () => pick(a.id, 'panel')); insp.dots.set(a.id, {dot: b, btn: b, co: !!co}); return b; };
     const group = (hue, title, list) => {
