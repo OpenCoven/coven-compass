@@ -7,7 +7,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const test = require('node:test');
-const { layout, missionPacking } = require('../dist/atlas-layout.js');
+const { layout, missionPacking, taskPacking } = require('../dist/atlas-layout.js');
 
 const COUNTS = [0, 1, 2, 4, 8, 12, 24, 64, 128];
 const ASPECTS = [0.4, 0.7, 1, 1.6, 2.5];
@@ -194,7 +194,7 @@ test('invalid keys and geometry fail explicitly', () => {
 test('browser global and CommonJS expose the same dependency-free API', () => {
   const context = { window: {} };
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../dist/atlas-layout.js'), 'utf8'), context);
-  assert.deepEqual(Object.keys(context.window.CovenAtlasLayout).sort(), ['layout', 'missionPacking']);
+  assert.deepEqual(Object.keys(context.window.CovenAtlasLayout).sort(), ['layout', 'missionPacking', 'taskPacking']);
   assert.equal(JSON.stringify(context.window.CovenAtlasLayout.layout(['a', 'b'])), JSON.stringify(layout(['a', 'b'])));
 });
 
@@ -231,4 +231,32 @@ test('mission packing supports a stricter visual limit but never exceeds eight',
   assert.throws(() => missionPacking(1.5), RangeError);
   assert.throws(() => missionPacking(Number.MAX_SAFE_INTEGER + 1), RangeError);
   assert.throws(() => missionPacking(3, { radius: 0 }), RangeError);
+});
+
+test('task regions tile the whole plane in proportion to staffing and contain every agent', () => {
+  const bounds = {x: -30, y: 80, width: 72, height: 59};
+  for (const counts of [[], [1], [7, 5], [1, 30, 2, 1], Array(64).fill(1), [256, 1]]) {
+    const regions = taskPacking(counts, bounds), total = counts.reduce((sum, count) => sum + count, 0);
+    assert.equal(regions.length, counts.length);
+    assert.deepEqual(regions, taskPacking(counts, bounds));
+    regions.forEach((r, i) => {
+      assert.ok(Math.abs(r.width * r.height / (bounds.width * bounds.height) - counts[i] / total) < 1e-10);
+      assert.ok(r.x >= bounds.x && r.x + r.width <= bounds.x + bounds.width + 1e-8);
+      assert.ok(r.y >= bounds.y && r.y + r.height <= bounds.y + bounds.height + 1e-8);
+      for (const other of regions.slice(0, i)) {
+        const overlapX = Math.min(r.x + r.width, other.x + other.width) - Math.max(r.x, other.x);
+        const overlapY = Math.min(r.y + r.height, other.y + other.height) - Math.max(r.y, other.y);
+        assert.ok(overlapX < 1e-8 || overlapY < 1e-8);
+      }
+      assert.equal(r.cells.length, counts[i]);
+      assert.equal(new Set(r.cells.map(cell => cell.radius)).size, 1, 'a short row keeps the same agent size');
+      const positions = new Set();
+      for (const c of r.cells) {
+        assert.ok(c.radius > 0 && c.x - c.radius >= r.x && c.x + c.radius <= r.x + r.width);
+        assert.ok(c.y - c.radius >= r.y + r.labelHeight && c.y + c.radius <= r.y + r.height);
+        positions.add(c.x + ',' + c.y);
+      }
+      assert.equal(positions.size, counts[i]);
+    });
+  }
 });

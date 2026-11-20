@@ -326,7 +326,8 @@ test('mobile workspace keeps the original replay and camera controls and restore
   const chrome = f.document.getElementById('atlasMobileChrome');
   assert.ok(chrome, 'a mobile workspace dock is present');
   assert.equal(f.timeline.parentNode, chrome, 'move the existing timeline, never duplicate playback controls');
-  assert.equal(f.camera.parentNode, chrome);
+  assert.equal(f.camera.parentNode, originalCameraParent);
+  assert.equal(f.camera.hidden, true);
   assert.equal(f.live.parentNode, f.timeline, 'the existing Live action remains available from the overview replay dock');
   assert.equal(f.document.getElementById('live'), f.live);
   f.live.setAttribute('aria-pressed', 'false'); f.live.setAttribute('aria-label', 'Replaying. Click to go live');
@@ -357,7 +358,8 @@ test('adaptive layout follows available screen shape and preserves an explicit c
   view.click();
   assert.equal(chrome.dataset.cameraOpen, 'true');
   assert.equal(view.getAttribute('aria-expanded'), 'true');
-  assert.equal(f.familiars.hidden, true, 'camera popup must not cover still-focusable familiar filters');
+  assert.equal(f.camera.hidden, false);
+  assert.equal(f.familiars.hidden, false, 'the familiar key remains available beside the camera');
   f.resize(852, 393); f.flushFrames();
   assert.equal(f.document.body.dataset.mobileLayout, 'landscape');
   assert.equal(chrome.dataset.cameraOpen, 'true', 'rotation must not overwrite an explicit view choice');
@@ -367,7 +369,7 @@ test('adaptive layout follows available screen shape and preserves an explicit c
   f.resize(1280, 800); f.flushFrames();
   assert.equal(f.familiars.hidden, false, 'desktop restores filters when the mobile camera popup is absent');
   f.resize(834, 1194); f.flushFrames();
-  assert.equal(f.familiars.hidden, true, 'returning to mobile retains the explicit View choice');
+  assert.equal(f.camera.hidden, false, 'returning to mobile retains the explicit View choice');
   view.click();
   assert.equal(chrome.dataset.cameraOpen, 'false');
   assert.equal(f.familiars.hidden, false);

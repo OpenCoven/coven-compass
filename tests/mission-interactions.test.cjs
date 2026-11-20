@@ -273,7 +273,8 @@ test('an explicit panel-agent pick reveals named details and Close returns to it
   f.context.pick(f.a.id, 'panel');
   const {info, title, close} = f.details();
   assert.equal(f.slot.hidden, false); assert.equal(f.pop.hidden, true);
-  assert.equal(f.document.activeElement, title); assert.equal(title.textContent, 'Agent a-001');
+  assert.equal(f.document.activeElement, title); assert.equal(title.textContent, 'Need approval');
+  assert.equal(info.querySelector('.id').textContent, 'Agent a-001');
   assert.equal(info.getAttribute('aria-labelledby'), title.id);
   assert.equal(f.row.getAttribute('aria-pressed'), 'true');
   assert.ok(f.calls.some(call => call.kind === 'scroll' && call.target === f.slot));
