@@ -27,7 +27,7 @@ ARCHIVE_ROOT = f"Coven_Compass_Handoff_{EDITION.isoformat()}"
 BASELINE_COMMIT = "d7b6f1e655140036cca49f31687131352162de13"
 MANIFEST = "HANDOFF_MANIFEST.json"
 CHECKSUMS = "CHECKSUMS.sha256"
-ALLOW_FILES = ("AGENTS.md", "README.md", "START_HERE.md", "MOBILE_READINESS.md", ".gitignore")
+ALLOW_FILES = ("AGENTS.md", "README.md", "START_HERE.md", "MOBILE_READINESS.md", ".gitignore", "docs/map-performance.md")
 ALLOW_DIRS = ("dist", "docs/handoff", "docs/discovery", "examples", "tests", "scripts")
 REQUIRED = (
     "README.md", "START_HERE.md", "MOBILE_READINESS.md", "dist/index.html",
