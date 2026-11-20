@@ -1023,3 +1023,57 @@ body.atlas-enhanced .mission-header .i-counts .gate:not(.zero) dt { color: var(-
 body.atlas-enhanced .mission-header .i-counts .zero dd { color: var(--muted-foreground); }
 body.atlas-enhanced .atlas-camera-dock :is(#atlasZoomIn, #atlasZoomOut) { font: 500 17px var(--f-body); }
 body.atlas-enhanced:not(.atlas-adaptive-mobile) .atlas-camera-dock :is(#atlasFit, .atlas-marker-style) { border-inline-start: 1px solid var(--border); border-radius: 0; padding-inline-start: 10px; }
+
+/* One workspace bar outside the map, shared by the Coven and Project scopes. */
+body.atlas-enhanced .plan .plan-head {
+  display: flex; flex-wrap: nowrap; align-items: center; gap: 6px;
+  min-height: 48px; padding: 4px 10px; z-index: 16; background: var(--card);
+}
+body.atlas-enhanced .plan-head #atlasHeader {
+  position: static; display: flex; flex: 1; align-items: center; gap: 10px;
+  width: auto; min-width: 0; padding: 0; border: 0; background: transparent;
+}
+body.atlas-enhanced .plan-head .atlas-actions { margin-inline-start: auto; }
+body.atlas-enhanced .plan-head .atlas-actions :is(button,a) { background: transparent; border-color: transparent; }
+body.atlas-enhanced .plan-head .atlas-actions :is(button,a):is(:hover,[aria-expanded="true"]) { background: var(--card-raised); color: var(--foreground); }
+.workspace-urgent { display: flex; align-items: center; gap: 4px; }
+.workspace-tools { flex: none; }
+.workspace-tools > summary { list-style: none; cursor: pointer; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 6px; color: var(--muted-foreground); }
+.workspace-tools > summary::-webkit-details-marker { display: none; }
+.workspace-tools[open] > summary, .workspace-tools > summary:hover { color: var(--foreground); background: var(--card-raised); }
+.workspace-utilities {
+  position: absolute; right: 4px; top: calc(100% + 3px); width: min(600px, calc(100% - 8px));
+  display: flex; align-items: center; flex-wrap: wrap; gap: 6px; padding: 8px;
+  background: var(--card); border: 1px solid var(--border-strong); border-radius: 8px;
+}
+body.atlas-enhanced[data-atlas-scope="coven"] .plan-head :is(.workspace-tools,.workspace-urgent) { display: none; }
+body.atlas-enhanced .atlas-marker-style svg { fill: var(--primary); flex: none; }
+body.atlas-enhanced #atlasCameraDock[data-locked="true"] :is(#atlasZoomOut,#atlasZoomIn,#atlasFit) { display: none; }
+body.atlas-enhanced #atlasCameraDock { align-items: center; gap: 2px; }
+body.atlas-enhanced #atlasCameraDock #atlasLock { gap: 5px; }
+#atlasLock svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.35; stroke-linecap: round; }
+#atlasLock[aria-pressed="true"] .lock-open, #atlasLock[aria-pressed="false"] .lock-closed { display: none; }
+body.atlas-enhanced #atlasCameraDock .atlas-marker-style { gap: 4px; }
+body.atlas-enhanced #atlasCameraDock .atlas-marker-style select { background: transparent; border-color: transparent; }
+body.atlas-enhanced #atlasCameraDock :is(button, select):focus-visible { outline-offset: -2px; }
+body.atlas-enhanced:not(.atlas-adaptive-mobile) :is(.atlas-sidebar,.atlas-mission-browser,.inspect,.manifest,.hud) { top: 12px; }
+body.atlas-enhanced:not(.atlas-adaptive-mobile) :is(.atlas-sidebar,.atlas-mission-browser) { max-height: calc(100% - 24px); }
+body.atlas-enhanced.atlas-adaptive-mobile .plan .plan-head { padding: 2px 5px; gap: 2px; }
+body.atlas-enhanced.atlas-adaptive-mobile .workspace-tools > summary { min-width: 44px; height: 44px; }
+body.atlas-enhanced.atlas-adaptive-mobile #atlasCameraDock[data-locked="true"] { grid-template-columns: auto 1fr; }
+body.atlas-enhanced.atlas-adaptive-mobile #atlasCameraDock[data-locked="true"] .atlas-marker-style { grid-column: 2; grid-row: 1; justify-content: flex-end; }
+@media (max-width: 600px) {
+  body.atlas-enhanced .plan-head #atlasHeader { gap: 2px; }
+  body.atlas-enhanced .plan-head .atlas-brand > b,
+  body.atlas-enhanced .plan-head .atlas-actions > :is(a,button) > span { display: none; }
+  body.atlas-enhanced .plan-head .atlas-actions > :is(a,button):not(#atlasMissions) { display: inline-flex; width: 44px; padding-inline: 0; }
+}
+
+body.atlas-enhanced #atlasCameraDock .atlas-marker-style select { field-sizing: content; }
+@media (min-width: 380px) and (max-width: 600px) {
+  body.atlas-enhanced .plan-head .atlas-actions > #atlasBrowse { width: auto; gap: 5px; }
+  body.atlas-enhanced .plan-head #atlasBrowse > span { display: inline; }
+}
+body.atlas-enhanced.atlas-adaptive-mobile .workspace-urgent .ctl { min-height: 44px; }
+
+body.atlas-enhanced.atlas-adaptive-mobile .plan-head #atlasHandoff { display: inline-flex; }

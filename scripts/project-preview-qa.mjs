@@ -46,6 +46,7 @@ for (const [width, height] of [[1440, 900], [390, 844]]) {
       await page.setViewportSize({width: 1440, height: 900});
       await page.goto(new URL('#/project/psyche-build', base).href);
       await page.reload();
+      await page.locator('#workspaceTools > summary').click();
       await page.locator('#traceBox > summary').click();
       await page.locator('#traceLoad > summary').click();
       const names = ['Brief', 'Review', 'Copy', 'Layout', 'Polish'];
@@ -297,5 +298,42 @@ test('Tasks identifies owners and opens agent details inside the originating gro
     } finally {
       await page.close();
     }
+  }
+});
+
+test('one top bar contains navigation and project actions at desktop and phone widths', async () => {
+  for (const [width, height] of [[1440, 900], [390, 844], [320, 640], [844, 390]]) {
+    const page = await browser.newPage({viewport: {width, height}, hasTouch: width < 1100, reducedMotion: 'reduce'});
+    try {
+      await page.goto(new URL('#/project/psyche-build', base).href);
+      const bar = page.locator('#workspaceBar'), menu = bar.locator('#workspaceTools > summary');
+      await menu.waitFor();
+      const bounds = await bar.boundingBox(), stage = await page.locator('#stage').boundingBox();
+      assert.ok(bounds.height <= 60 && bounds.y + bounds.height <= stage.y + 1);
+      for (const control of await bar.locator('#atlasHeader :is(a,button):visible, #stopBtn:visible, #needBtn:visible, #workspaceTools > summary').all()) {
+        const r = await control.boundingBox();
+        assert.ok(r.x >= bounds.x && r.x + r.width <= bounds.x + bounds.width + 1);
+        assert.ok(r.y >= bounds.y && r.y + r.height <= bounds.y + bounds.height);
+      }
+      await menu.focus();
+      await page.keyboard.press('Enter');
+      const ward = page.locator('#ward > summary');
+      await ward.click();
+      const panel = await page.locator('#wardBody').boundingBox();
+      assert.ok(panel.x >= 0 && panel.x + panel.width <= width + 1 && panel.y > bounds.y);
+      await page.keyboard.press('Escape');
+      assert.ok(await ward.evaluate(el => document.activeElement === el));
+      await page.keyboard.press('Escape');
+      assert.ok(await menu.evaluate(el => document.activeElement === el && !el.parentElement.open));
+      if (width < 1100) await page.locator('#atlasMobileView').click();
+      const lock = page.locator('#atlasLock');
+      await lock.click();
+      assert.equal(await page.locator('#atlasZoomIn').isVisible(), false);
+      assert.equal(await page.locator('#atlasFit').isVisible(), false);
+      assert.ok(await page.getByRole('combobox', {name: 'Psyche marker'}).isVisible());
+      await lock.click();
+      assert.ok(await page.locator('#atlasZoomIn').isEnabled());
+      assert.ok(await page.locator('#atlasFit').isVisible());
+    } finally { await page.close(); }
   }
 });

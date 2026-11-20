@@ -81,6 +81,9 @@ function mountAtlas() {
     addEventListener: (type, fn) => { (document.listeners[type] ||= []).push(fn); },
   };
   document.body = new Element(document, 'body');
+  const bar = new Element(document, 'div'); bar.id = 'workspaceBar'; document.body.append(bar);
+  const tools = new Element(document, 'details'); tools.id = 'workspaceTools'; bar.append(tools);
+  tools.append(new Element(document, 'summary'));
   const stage = new Element(document, 'div'); stage.id = 'stage'; document.body.append(stage);
   const window = {matchMedia: () => ({matches: false})};
   const context = vm.createContext({

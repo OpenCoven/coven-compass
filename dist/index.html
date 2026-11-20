@@ -1510,7 +1510,14 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
   <main class="main">
     <section class="left">
       <div class="plan card">
-        <div class="plan-head">
+        <div class="plan-head" id="workspaceBar">
+          <div class="workspace-urgent">
+            <div class="ctl need-ctl"><button class="attn" type="button" id="needBtn" aria-pressed="false" aria-controls="notif" hidden><span class="in-i" id="needIc"></span><span id="needTxt"></span></button></div>
+            <div class="ctl stop-ctl"><button class="stopb" type="button" id="stopBtn" aria-expanded="false" aria-controls="stopPop" hidden><i></i><span id="stopTxt">Stop</span></button></div>
+          </div>
+          <details class="workspace-tools" id="workspaceTools">
+            <summary title="Project tools" aria-label="Project tools">•••</summary>
+            <div class="workspace-utilities">
           <div class="ctl crumb">
           <details class="pill" id="proj">
             <summary class="btn"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 3v9h4V9h2v3h4V3h-2v2H8V3H6v2H4V3Z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg><span class="sr">Project: </span><span class="nm" id="projName"></span><svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
@@ -1561,10 +1568,10 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
             <div class="ctl"><button type="button" id="keyBtn" aria-haspopup="dialog" aria-controls="keyModal" aria-label="Key and help" title="Key and help"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5.2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M7 6.4v3.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="7" cy="4.4" r=".9" fill="currentColor"/></svg></button></div>
             <div class="ctl"><button type="button" id="lock" aria-pressed="false" aria-label="Lock the view"></button></div>
             <div class="ctl live-ctl"><button type="button" class="live-btn" id="live" aria-pressed="true"><i></i><span class="sr">Live</span></button><span class="summary sr" id="summary"></span></div>
-            <div class="ctl need-ctl"><button class="attn" type="button" id="needBtn" aria-pressed="false" aria-controls="notif" hidden><span class="in-i" id="needIc"></span><span id="needTxt"></span></button></div>
-            <div class="ctl stop-ctl"><button class="stopb" type="button" id="stopBtn" aria-expanded="false" aria-controls="stopPop" hidden><i></i><span id="stopTxt">Stop</span></button></div>
             <div class="ctl"><button type="button" id="footBtn" aria-pressed="true" aria-label="Hide the timeline and missions"><svg viewBox="0 0 14 14" aria-hidden="true"><rect x="2" y="2.5" width="10" height="9" rx="1.3" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M2 8.4h10" stroke="currentColor" stroke-width="1.3"/></svg><span id="footClock" hidden></span></button></div>
           </div>
+            </div>
+          </details>
           <section class="notif stop-pop" id="stopPop" aria-label="Stop this project" hidden>
       <div class="hd"><span class="hd-i q" id="stopIc"></span><span class="hd-t">Stop this project</span><span class="hd-m" id="stopName"></span></div>
       <p class="pc-note">Every agent here stops at once and stays stopped until you resume. This does not go through Psyche.</p>
@@ -3230,10 +3237,12 @@ function drawMissions() {
 }
 // popovers hang from the toolbar, kept inside the card and never taller than it
 function placePill(d) {
-  const body = d.querySelector('.pill-body'), head = d.closest('.plan-head'), unit = d.parentElement, top = unit.offsetTop + unit.offsetHeight + 6;
-  const w = Math.min((d.id === 'traceBox' || d.id === 'ward' ? 360 : 304) * (+getComputedStyle(document.documentElement).getPropertyValue('--fs') || 1), head.clientWidth - 20);
+  const body = d.querySelector('.pill-body'), head = d.closest('.plan-head'), anchor = d.closest('.workspace-utilities') || head;
+  const control = d.querySelector('summary').getBoundingClientRect(), origin = anchor.getBoundingClientRect();
+  const top = control.bottom - origin.top + 6;
+  const w = Math.min((d.id === 'traceBox' || d.id === 'ward' ? 360 : 304) * (+getComputedStyle(document.documentElement).getPropertyValue('--fs') || 1), anchor.clientWidth - 12);
   body.style.width = w + 'px'; body.style.top = top + 'px';
-  body.style.left = clamp(d.id === 'mis' ? d.offsetLeft : unit.offsetLeft, 10, Math.max(10, head.clientWidth - w - 10)) + 'px';
+  body.style.left = clamp(control.left - origin.left, 4, Math.max(4, anchor.clientWidth - w - 4)) + 'px';
   body.style.maxHeight = Math.max(180, head.parentElement.clientHeight - top - 12) + 'px';
 }
 document.querySelectorAll('details.pill').forEach(d => d.firstElementChild.addEventListener('click', () => {
@@ -4818,7 +4827,7 @@ function openKey() {
     Object.keys(SEAL_STATE).forEach(st => { const r = html('div', 'kz-st'); r.innerHTML = sealSvg(demo(st, {warn: st === 'broken'}), 26); r.append(html('b', null, SEAL_STATE[st][0])); r.title = SEAL_STATE[st][0] + ': ' + SEAL_STATE[st][1]; box.appendChild(r); }); }
   $('keyIc').innerHTML = $('keyBtn').innerHTML; $('keyModal').hidden = false; $('keyBtn').setAttribute('aria-expanded', 'true'); $('keyX').focus();
 }
-function closeKey() { $('keyModal').hidden = true; $('keyBtn').setAttribute('aria-expanded', 'false'); (document.body.dataset.atlasScope === 'coven' ? $('atlasBrowse') : $('keyBtn')).focus(); }
+function closeKey() { $('keyModal').hidden = true; $('keyBtn').setAttribute('aria-expanded', 'false'); (document.body.dataset.atlasScope === 'coven' ? $('atlasBrowse') : $('workspaceTools').open ? $('keyBtn') : $('workspaceTools').firstElementChild).focus(); }
 $('keyBtn').addEventListener('click', ev => { ev.stopPropagation(); openKey(); });
 $('keyX').addEventListener('click', closeKey); $('keyBg').addEventListener('click', closeKey);
 $('keyModal').addEventListener('click', ev => ev.stopPropagation());

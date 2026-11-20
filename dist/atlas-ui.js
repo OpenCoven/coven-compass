@@ -205,6 +205,7 @@
     var brand = node('div', 'atlas-brand');
     brand.innerHTML = '<svg viewBox="0 0 2048 1889" aria-hidden="true"><use href="#crown" width="2048" height="1889"/></svg>';
     brand.append(node('b', '', 'Compass'));
+    brand.setAttribute('role', 'img'); brand.setAttribute('aria-label', 'Compass');
     var nav = node('nav', 'atlas-nav'); nav.setAttribute('aria-label', 'Workspace scope');
     nav.append(
       button('atlasOverview', 'Coven', function () { closeBrowse(false); closeMissions(false); api.overview(); }),
@@ -347,9 +348,14 @@
     cameraDock.setAttribute('role', 'toolbar'); cameraDock.setAttribute('aria-label', 'Map controls');
     [['atlasZoomOut', '−', 'out', 'Zoom out'], ['atlasZoomIn', '+', 'in', 'Zoom in'], ['atlasFit', 'Fit view', 'fit', 'Fit the current selection in view'], ['atlasLock', 'Lock', 'lock', 'Lock the map']].forEach(function (item) {
       var control = button(item[0], item[1], function () { api.camera(item[2]); });
+      if (item[0] === 'atlasLock') {
+        control.innerHTML = '<svg aria-hidden="true" viewBox="0 0 16 16"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path class="lock-closed" d="M5 7V5a3 3 0 0 1 6 0v2"/><path class="lock-open" d="M5 7V5a3 3 0 0 1 5.7-1.3"/></svg><span>Lock</span>';
+      }
       control.setAttribute('aria-label', item[3]); control.title = item[3]; cameraDock.append(control);
     });
-    var markerLabel = node('label', 'atlas-marker-style', 'Psyche');
+    var markerLabel = node('label', 'atlas-marker-style');
+    markerLabel.title = 'Psyche marker';
+    markerLabel.innerHTML = '<svg viewBox="0 0 2048 1889" width="16" height="16" aria-hidden="true"><use href="#crown" width="2048" height="1889"/></svg>';
     var markerSelect = node('select');
     markerSelect.id = 'atlasMarkerStyle';
     markerSelect.setAttribute('aria-label', 'Psyche marker');
@@ -361,7 +367,24 @@
     markerLabel.append(markerSelect);
     cameraDock.append(markerLabel);
     shield(cameraDock);
-    stage.insertBefore(head, stage.firstChild);
+    var bar = $('workspaceBar'), tools = $('workspaceTools'), toolsButton = tools.firstElementChild;
+    bar.insertBefore(head, bar.firstChild);
+    tools.addEventListener('keydown', function (ev) {
+      if (ev.key !== 'Escape' || !tools.open) return;
+      var pill = tools.querySelector('.pill[open]');
+      if (pill) { pill.open = false; pill.querySelector('summary').focus(); }
+      else { tools.open = false; toolsButton.focus(); }
+      ev.stopPropagation(); ev.preventDefault();
+    });
+    tools.addEventListener('toggle', function () {
+      if (!tools.open) tools.querySelectorAll('.pill[open]').forEach(function (pill) { pill.open = false; });
+    });
+    document.addEventListener('pointerdown', function (ev) {
+      if (tools.open && !tools.contains(ev.target)) tools.open = false;
+    }, true);
+    document.addEventListener('focusin', function (ev) {
+      if (tools.open && !tools.contains(ev.target)) tools.open = false;
+    });
     stage.append(buildNotice(), aside, missionBrowser, familiars, cameraDock, navigationStatus);
     document.addEventListener('pointerdown', function (ev) {
       if (!aside.hidden && !aside.contains(ev.target) && !browse.contains(ev.target)) closeBrowse(false);
@@ -383,14 +406,21 @@
     document.body.dataset.atlasScope = s.scope;
     $('atlasOverview').setAttribute('aria-pressed', String(s.scope === 'coven'));
     $('atlasProject').setAttribute('aria-pressed', String(s.scope !== 'coven'));
+    $('atlasProject').textContent = s.scope === 'project' ? s.active : 'Project';
     $('atlasProject').title = 'Project view · ' + s.active;
     $('atlasProject').setAttribute('aria-label', 'Open current project, ' + s.active);
     $('atlasMissions').setAttribute('aria-label', 'Browse ' + s.missions + ' missions');
+    if (s.scope === 'coven') $('workspaceTools').open = false;
     if (s.camera) {
       ['atlasZoomOut', 'atlasZoomIn', 'atlasFit'].forEach(function (id) { $(id).disabled = s.camera.locked; });
-      $('atlasLock').setAttribute('aria-pressed', String(s.camera.locked)); $('atlasLock').textContent = s.camera.locked ? 'Unlock' : 'Lock';
-      $('atlasLock').title = s.camera.locked ? 'Unlock the map' : 'Lock the map';
-      $('atlasLock').setAttribute('aria-label', $('atlasLock').title);
+      var dock = $('atlasCameraDock'), lock = $('atlasLock');
+      if (dock.dataset.locked !== String(s.camera.locked)) {
+        dock.dataset.locked = String(s.camera.locked);
+        lock.setAttribute('aria-pressed', String(s.camera.locked));
+        lock.querySelector('span').textContent = s.camera.locked ? 'Unlock' : 'Lock';
+        lock.title = s.camera.locked ? 'Unlock the map' : 'Lock the map';
+        lock.setAttribute('aria-label', lock.title);
+      }
       $('atlasCameraDock').setAttribute('aria-label', s.camera.locked ? 'Map controls. Map locked.' : 'Map controls. Drag to pan. Pinch with two fingers to zoom.');
     }
     if (!$('atlasMissionBrowser').hidden) updateMissions(s);

@@ -211,11 +211,12 @@ test('landscape Project makes use of the map height alongside its controls', asy
     await verifyGeometry(page);
     const observed = await page.evaluate(() => {
       const stage = document.querySelector('#plan').getBoundingClientRect();
-      const controls = ['#atlasHeader', '#atlasFamiliars'].map(id => document.querySelector(id).getBoundingClientRect());
+      const header = document.querySelector('#atlasHeader').getBoundingClientRect();
+      const familiars = document.querySelector('#atlasFamiliars').getBoundingClientRect();
       const discs = [...document.querySelectorAll('.atlas-project-detail .familiar-disc')].map(el => el.getBoundingClientRect());
       const left = Math.min(...discs.map(r => r.left)), right = Math.max(...discs.map(r => r.right));
       const top = Math.min(...discs.map(r => r.top)), bottom = Math.max(...discs.map(r => r.bottom));
-      return {clear: left > Math.max(...controls.map(r => r.right)) && right <= stage.right && top >= stage.top && bottom <= stage.bottom,
+      return {clear: header.bottom <= stage.top && left > familiars.right && right <= stage.right && top >= stage.top && bottom <= stage.bottom,
         heightUsed: (bottom - top) / stage.height};
     });
     assert.equal(observed.clear, true);
