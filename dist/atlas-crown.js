@@ -12,17 +12,13 @@
     };
     const work = band('work', 25), attention = band('attention', 30);
     svg('use', {class: 'coord-crown', href: '#crown', x: -16, y: -14.8, width: 32, height: 29.6}, artwork);
-    svg('circle', {class: 'coord-point', r: 8}, badge);
-    const label = svg('text', {class: 'coord-name', 'text-anchor': 'middle', 'font-size': 11}, badge);
-    label.textContent = 'Psyche';
     const title = svg('title', {}, parent);
-    return {badge, hit, artwork, work, attention, label, title, parent};
+    return {badge, hit, artwork, work, attention, title, parent};
   }
-  function draw(marker, {x, y, screenScale, radius, point}) {
+  function draw(marker, {x, y, screenScale, radius}) {
     marker.badge.setAttribute('transform', `translate(${x} ${y}) scale(${1 / screenScale})`);
     marker.artwork.setAttribute('transform', `scale(${radius / 32})`);
-    marker.hit.setAttribute('r', Math.max(22, point ? 8 : radius));
-    marker.label.setAttribute('y', radius + 13);
+    marker.hit.setAttribute('r', Math.max(22, radius));
   }
   function update(marker, scope, working, agents, waiting, missions) {
     const fraction = (part, total) => (total ? 100 * part / total : 0).toFixed(3) + ' 100';

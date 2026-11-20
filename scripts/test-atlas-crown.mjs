@@ -21,8 +21,6 @@ function svg(tag, attrs, parent) {
 const parent = {children: [], setAttribute(key, value) { this[key] = value; }};
 const marker = api.create(parent, svg), crown = marker.artwork.children.find(el => el.tag === 'use');
 assert.equal(crown.attrs.href, '#crown');
-assert.equal(marker.label.textContent, 'Psyche');
-assert.equal(marker.label.attrs['text-anchor'], 'middle');
 assert.ok(marker.work.attrs.r < marker.attention.attrs.r);
 for (const [work, agents, waiting, missions, inner, outer] of [[0, 0, 0, 0, 0, 0], [3, 4, 1, 2, 75, 50], [4, 4, 0, 2, 100, 0]]) {
   api.update(marker, 'Project', work, agents, waiting, missions);
@@ -37,10 +35,9 @@ for (const [x, y] of [[0, 0], [-400, 370], [550, -80]]) {
     api.draw(marker, {x, y, screenScale, radius});
     assert.equal(marker.badge.attrs.transform, `translate(${x} ${y}) scale(${1 / screenScale})`);
     assert.equal(marker.artwork.attrs.transform, `scale(${radius / 32})`);
-    assert.ok(marker.hit.attrs.r >= 22);
-    assert.ok(marker.label.attrs.y > radius);
+    assert.equal(marker.hit.attrs.r, Math.max(22, radius));
     assert.equal(marker.artwork.children.length, 6);
     combinations++;
   }
 }
-console.log(`Crown checks passed: canonical path digest, ${combinations} view/size combinations, activity and attention fractions, target and label.`);
+console.log(`Crown checks passed: canonical path digest, ${combinations} view/size combinations, activity and attention fractions, target and accessible description.`);
