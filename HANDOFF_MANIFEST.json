@@ -27,13 +27,13 @@
     },
     {
       "path": "README.md",
-      "bytes": 13964,
-      "sha256": "ac18529581b4a932992cd63640aa264baa91b4797ab0852545c1bcd4fb66913c"
+      "bytes": 14313,
+      "sha256": "fe2802fa3ecaf56a30b840e7d5e060ca8336916f32e1447568d0a7244b959a79"
     },
     {
       "path": "START_HERE.md",
-      "bytes": 10716,
-      "sha256": "bbac35690e243d6f7888c21f4d8d4dc76697443be51a1a7c8b46e1b4af8c93c0"
+      "bytes": 10880,
+      "sha256": "f8001a6b3ecd99f643dc2cef7e12e7b176626d91c214d066e8e2c6852e4302f2"
     },
     {
       "path": "dist/atlas-crown.js",
@@ -62,8 +62,8 @@
     },
     {
       "path": "dist/handoff/guide.html",
-      "bytes": 290629,
-      "sha256": "07a0ddf4e21e2b5fda1c19c5f8db88ffdedb835652ed143069fd2ab1219578c9"
+      "bytes": 291209,
+      "sha256": "8a4b060ff9f31abf8e82580bee1dd742f224bf9f3d558d4d10b10979fe40a254"
     },
     {
       "path": "dist/handoff/handoff.css",
@@ -236,9 +236,14 @@
       "sha256": "2f107f0e4758edc42ffc8d50632ee162ed883378a0772a6a8a085325f8e57708"
     },
     {
+      "path": "scripts/verify-all.mjs",
+      "bytes": 4230,
+      "sha256": "dbf804de11dda629ff2d71464571ff707c978f54a55a4d87a39d6d04175751a9"
+    },
+    {
       "path": "scripts/verify-checkout.sh",
-      "bytes": 620,
-      "sha256": "84bbc08603f772aabf06934d260b21ef1be1d26ba8b4a1b1ee017973ddcbffb9"
+      "bytes": 143,
+      "sha256": "17c8f8f849be82e4cfa1279cbe5920d195e18d2bcd38d5d7ac38bf0f47a7ff15"
     },
     {
       "path": "scripts/verify-handoff.py",

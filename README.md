@@ -8,6 +8,14 @@ Open [START_HERE.md](START_HERE.md) for the runnable ZIP workflow and [the hando
 
 The handoff preserves the prototype as a simulation. Production APIs, schemas, and command paths require current-repository discovery and acceptance; conceptual JSON examples are inert documentation fixtures.
 
+Run every check with one command. CI runs the same command on every pull request (`.github/workflows/verify.yml`, repository only):
+
+```bash
+node scripts/verify-all.mjs
+```
+
+It runs the steps below, then repeats the source, test, crown, and manifest checks in a clean extraction of the built ZIP. It exits non-zero if any step fails or is skipped.
+
 ```bash
 node scripts/check-source.mjs
 node --test tests/*.test.cjs
