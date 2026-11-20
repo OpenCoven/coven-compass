@@ -2724,7 +2724,8 @@ function project() {
   const f = v => v.toFixed(1);
   const drawMarker = (marker, x, y, radius) => window.CovenAtlasCrown.draw(marker, {x, y, radius});
   const seg = (el, a, b, ox, oy) => { el.setAttribute('x1', f(a[0] + (ox || 0))); el.setAttribute('y1', f(a[1] + (oy || 0))); el.setAttribute('x2', f(b[0] + (ox || 0))); el.setAttribute('y2', f(b[1] + (oy || 0))); };
-  const vw = 784 / cam.zoom, screenScale = Math.max(.001, Math.min(stage.clientWidth, stage.clientHeight) / vw), kpx = Math.max(.05, screenScale), U = clamp(Math.pow(kpx, .35), .8, 1.2) / kpx;
+  const width = stage.clientWidth, height = stage.clientHeight;
+  const vw = 784 / cam.zoom, screenScale = Math.max(.001, Math.min(width, height) / vw), kpx = Math.max(.05, screenScale), U = clamp(Math.pow(kpx, .35), .8, 1.2) / kpx;
   const minHit = (narrow.matches ? 44 : 24) / screenScale;
   const squareHit = el => {
     el.setAttribute('x', f(-minHit / 2)); el.setAttribute('y', f(-minHit / 2));
@@ -2740,7 +2741,7 @@ function project() {
   const overviewChanged = cv.scale !== screenScale || cv.fontSize !== fsz || cv.narrow !== narrow.matches;
   if (far && overviewChanged) {
     cv.scale = screenScale; cv.fontSize = fsz; cv.narrow = narrow.matches;
-    sc.ghosts.forEach(gh => atlasProjectGhost(gh, P, f));
+    sc.ghosts.forEach(gh => atlasProjectGhost(gh, P, f, screenScale));
     const set = (t, q, dy) => { t.setAttribute('x', f(q[0])); t.setAttribute('y', f(q[1] + dy)); };
     const hq = P(cv.x, cv.y), hubU = Math.min(U, 8);
     drawMarker(cv.marker, cv.x, cv.y, cv.hubRadius);
@@ -2778,7 +2779,6 @@ function project() {
     });
   }
   if (far) {
-    const width = stage.clientWidth, height = stage.clientHeight;
     if (overviewChanged || cv.px !== cam.px || cv.py !== cam.py || cv.width !== width || cv.height !== height) {
       showMissionCaptions(updateVisibleProjectPreviews(sc.ghosts, cam, screenScale, width, height));
       cv.px = cam.px; cv.py = cam.py; cv.width = width; cv.height = height;
@@ -2809,7 +2809,7 @@ function project() {
   drawMarker(sc.psy.marker, 0, 0, 49);
   sc.psy.sx = pc[0]; sc.psy.sy = pc[1];
   const captions = [];
-  const lowWideMap = !far && stage.clientWidth >= 700 && stage.clientHeight < 440 && sc.missions.size <= 4;
+  const lowWideMap = !far && width >= 700 && height < 440 && sc.missions.size <= 4;
   let missionNumber = 0;
   sc.missions.forEach(s => {
     missionNumber++;
@@ -5345,9 +5345,8 @@ function updateVisibleProjectPreviews(ghosts, camera, scale, width, height) {
   return captions;
 }
 
-function atlasProjectGhost(gh, P, f) {
+function atlasProjectGhost(gh, P, f, scale) {
   const w = projects[gh.k].world;
-  const scale = Math.max(.001, Math.min(stage.clientWidth, stage.clientHeight) * cam.zoom / 784);
   const pixels = 560 * scale;
   gh.named = detailVisible(gh.named, pixels, 50, 44);
   gh.density = gh.named ? 'full' : 'tiny';
