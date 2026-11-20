@@ -1,0 +1,3103 @@
+{
+  "run": {
+    "revision": "c15823626a073540c3a8a5bff08f018eb360a091",
+    "base": "http://127.0.0.1:18742/",
+    "mode": "matrix",
+    "started": "2026-11-20T09:49:34.575Z",
+    "node": "v24.22.0",
+    "runnerSha256": "a75e5a455ca9117a530b2b1b91ec7507fbeb4235ff6b61cd1676894583f05816",
+    "platform": "darwin",
+    "release": "27.2.0",
+    "arch": "arm64",
+    "cpu": "Apple M5 Max",
+    "logicalCpus": 18,
+    "ramBytes": 137438953472,
+    "browser": "130.0.6723.31",
+    "playwright": "1.48.2",
+    "model": "Mac17,6",
+    "macOS": "27.2.1",
+    "finished": "2026-11-20T09:54:37.075Z",
+    "failures": 0
+  },
+  "cells": {
+    "desktop-128": {
+      "scenarios": 5,
+      "passed": 5,
+      "workloads": [
+        {
+          "projects": 128,
+          "missions": 224,
+          "agents": 3648,
+          "tasks": 736,
+          "seatedFamiliars": [
+            "astra",
+            "charm",
+            "cody",
+            "echo"
+          ]
+        }
+      ],
+      "initialLoadEventEndMs": {
+        "n": 5,
+        "min": 277.9,
+        "median": 360.5,
+        "p95": 399.4,
+        "max": 399.4
+      },
+      "latencyMs": {
+        "setup": {
+          "populate overview": {
+            "n": 5,
+            "min": 107.2,
+            "median": 115.1,
+            "p95": 148.4,
+            "max": 148.4
+          }
+        },
+        "first journey": {
+          "open Projects": {
+            "n": 5,
+            "min": 31.4,
+            "median": 42,
+            "p95": 84.8,
+            "max": 84.8
+          },
+          "filter Projects": {
+            "n": 5,
+            "min": 20.6,
+            "median": 28.3,
+            "p95": 43.6,
+            "max": 43.6
+          },
+          "enter Project": {
+            "n": 5,
+            "min": 65.8,
+            "median": 76,
+            "p95": 91,
+            "max": 91
+          },
+          "pan": {
+            "n": 5,
+            "min": 33.2,
+            "median": 38.6,
+            "p95": 39.4,
+            "max": 39.4
+          },
+          "zoom": {
+            "n": 5,
+            "min": 56.7,
+            "median": 58.8,
+            "p95": 78.7,
+            "max": 78.7
+          },
+          "open Missions": {
+            "n": 5,
+            "min": 54.6,
+            "median": 69.1,
+            "p95": 75.8,
+            "max": 75.8
+          },
+          "filter missions": {
+            "n": 5,
+            "min": 22.9,
+            "median": 25.4,
+            "p95": 25.7,
+            "max": 25.7
+          },
+          "focus mission": {
+            "n": 5,
+            "min": 19.7,
+            "median": 27.8,
+            "p95": 38.1,
+            "max": 38.1
+          },
+          "inspect mission": {
+            "n": 5,
+            "min": 76.6,
+            "median": 94.6,
+            "p95": 121.4,
+            "max": 121.4
+          },
+          "inspect tasks": {
+            "n": 5,
+            "min": 43.9,
+            "median": 60.3,
+            "p95": 61.6,
+            "max": 61.6
+          },
+          "return to result": {
+            "n": 5,
+            "min": 74.9,
+            "median": 75.6,
+            "p95": 101.5,
+            "max": 101.5
+          },
+          "return to launcher": {
+            "n": 5,
+            "min": 52.8,
+            "median": 67,
+            "p95": 80.3,
+            "max": 80.3
+          },
+          "start and advance replay": {
+            "n": 5,
+            "min": 77.2,
+            "median": 86.9,
+            "p95": 108.9,
+            "max": 108.9
+          },
+          "restore live sample": {
+            "n": 5,
+            "min": 62.9,
+            "median": 68.2,
+            "p95": 83.1,
+            "max": 83.1
+          },
+          "return to overview": {
+            "n": 5,
+            "min": 93.6,
+            "median": 99.7,
+            "p95": 106.2,
+            "max": 106.2
+          }
+        },
+        "warm": {
+          "open Projects": {
+            "n": 5,
+            "min": 45.3,
+            "median": 64.2,
+            "p95": 77.3,
+            "max": 77.3
+          },
+          "filter Projects": {
+            "n": 5,
+            "min": 35.3,
+            "median": 44,
+            "p95": 60.5,
+            "max": 60.5
+          },
+          "enter Project": {
+            "n": 5,
+            "min": 65.2,
+            "median": 80,
+            "p95": 95.3,
+            "max": 95.3
+          },
+          "pan": {
+            "n": 5,
+            "min": 37.1,
+            "median": 38.1,
+            "p95": 41,
+            "max": 41
+          },
+          "zoom": {
+            "n": 5,
+            "min": 56.7,
+            "median": 65.6,
+            "p95": 69.8,
+            "max": 69.8
+          },
+          "open Missions": {
+            "n": 5,
+            "min": 53,
+            "median": 57,
+            "p95": 74.7,
+            "max": 74.7
+          },
+          "filter missions": {
+            "n": 5,
+            "min": 25.3,
+            "median": 29.3,
+            "p95": 36.7,
+            "max": 36.7
+          },
+          "focus mission": {
+            "n": 5,
+            "min": 20.6,
+            "median": 25,
+            "p95": 48.3,
+            "max": 48.3
+          },
+          "inspect mission": {
+            "n": 5,
+            "min": 70.3,
+            "median": 82.1,
+            "p95": 100.7,
+            "max": 100.7
+          },
+          "inspect tasks": {
+            "n": 5,
+            "min": 52.1,
+            "median": 59.5,
+            "p95": 70.9,
+            "max": 70.9
+          },
+          "return to result": {
+            "n": 5,
+            "min": 77.4,
+            "median": 80.5,
+            "p95": 92,
+            "max": 92
+          },
+          "return to launcher": {
+            "n": 5,
+            "min": 54.4,
+            "median": 70.2,
+            "p95": 79.7,
+            "max": 79.7
+          },
+          "start and advance replay": {
+            "n": 5,
+            "min": 75.3,
+            "median": 103.7,
+            "p95": 122.6,
+            "max": 122.6
+          },
+          "restore live sample": {
+            "n": 5,
+            "min": 63.2,
+            "median": 78.4,
+            "p95": 103.6,
+            "max": 103.6
+          },
+          "return to overview": {
+            "n": 5,
+            "min": 102.1,
+            "median": 128.4,
+            "p95": 139.3,
+            "max": 139.3
+          }
+        },
+        "profile": {
+          "open Projects": {
+            "n": 1,
+            "min": 46.6,
+            "median": 46.6,
+            "p95": 46.6,
+            "max": 46.6
+          },
+          "filter Projects": {
+            "n": 1,
+            "min": 60.4,
+            "median": 60.4,
+            "p95": 60.4,
+            "max": 60.4
+          },
+          "enter Project": {
+            "n": 1,
+            "min": 92.9,
+            "median": 92.9,
+            "p95": 92.9,
+            "max": 92.9
+          },
+          "pan": {
+            "n": 1,
+            "min": 36.2,
+            "median": 36.2,
+            "p95": 36.2,
+            "max": 36.2
+          },
+          "zoom": {
+            "n": 1,
+            "min": 59.2,
+            "median": 59.2,
+            "p95": 59.2,
+            "max": 59.2
+          },
+          "open Missions": {
+            "n": 1,
+            "min": 69.1,
+            "median": 69.1,
+            "p95": 69.1,
+            "max": 69.1
+          },
+          "filter missions": {
+            "n": 1,
+            "min": 26,
+            "median": 26,
+            "p95": 26,
+            "max": 26
+          },
+          "focus mission": {
+            "n": 1,
+            "min": 33.7,
+            "median": 33.7,
+            "p95": 33.7,
+            "max": 33.7
+          },
+          "inspect mission": {
+            "n": 1,
+            "min": 91.6,
+            "median": 91.6,
+            "p95": 91.6,
+            "max": 91.6
+          },
+          "inspect tasks": {
+            "n": 1,
+            "min": 68.4,
+            "median": 68.4,
+            "p95": 68.4,
+            "max": 68.4
+          },
+          "return to result": {
+            "n": 1,
+            "min": 92.2,
+            "median": 92.2,
+            "p95": 92.2,
+            "max": 92.2
+          },
+          "return to launcher": {
+            "n": 1,
+            "min": 54,
+            "median": 54,
+            "p95": 54,
+            "max": 54
+          },
+          "start and advance replay": {
+            "n": 1,
+            "min": 93.1,
+            "median": 93.1,
+            "p95": 93.1,
+            "max": 93.1
+          },
+          "restore live sample": {
+            "n": 1,
+            "min": 99.5,
+            "median": 99.5,
+            "p95": 99.5,
+            "max": 99.5
+          },
+          "return to overview": {
+            "n": 1,
+            "min": 124,
+            "median": 124,
+            "p95": 124,
+            "max": 124
+          }
+        }
+      },
+      "frameIntervalsMs": {
+        "setup": {
+          "n": 190,
+          "min": 16.5,
+          "median": 16.7,
+          "p95": 100,
+          "max": 133.4
+        },
+        "first journey": {
+          "n": 1118,
+          "min": 16.5,
+          "median": 16.7,
+          "p95": 50,
+          "max": 100.1
+        },
+        "warm": {
+          "n": 1176,
+          "min": 16.5,
+          "median": 16.7,
+          "p95": 50.1,
+          "max": 100
+        },
+        "profile": {
+          "n": 239,
+          "min": 16.5,
+          "median": 16.7,
+          "p95": 66.7,
+          "max": 116.7
+        }
+      },
+      "longTaskDurationMs": {
+        "setup": {
+          "n": 34,
+          "min": 50,
+          "median": 65.5,
+          "p95": 106,
+          "max": 110
+        },
+        "first journey": {
+          "n": 17,
+          "min": 52,
+          "median": 58,
+          "p95": 67,
+          "max": 67
+        },
+        "warm": {
+          "n": 71,
+          "min": 50,
+          "median": 59,
+          "p95": 78,
+          "max": 84
+        },
+        "profile": {
+          "n": 16,
+          "min": 50,
+          "median": 62.5,
+          "p95": 107,
+          "max": 107
+        }
+      },
+      "attachedElements": {
+        "setup": {
+          "n": 5,
+          "min": 7899,
+          "median": 7899,
+          "p95": 7899,
+          "max": 7899
+        },
+        "first journey": {
+          "n": 5,
+          "min": 13342,
+          "median": 14325,
+          "p95": 14635,
+          "max": 14635
+        },
+        "warm": {
+          "n": 5,
+          "min": 13099,
+          "median": 14975,
+          "p95": 15292,
+          "max": 15292
+        }
+      },
+      "usedHeapBytes": {
+        "setup": {
+          "n": 5,
+          "min": 5624940,
+          "median": 7024624,
+          "p95": 8621272,
+          "max": 8621272
+        },
+        "first journey": {
+          "n": 5,
+          "min": 6484116,
+          "median": 7502224,
+          "p95": 8072904,
+          "max": 8072904
+        },
+        "warm": {
+          "n": 5,
+          "min": 8812216,
+          "median": 10363656,
+          "p95": 11238324,
+          "max": 11238324
+        }
+      },
+      "profiledInputWindows": {
+        "desktop-128-1": {
+          "open Projects": {
+            "latencyMs": 46.6,
+            "renderer": {
+              "UpdateLayoutTree": {
+                "events": 15,
+                "ms": 9.71
+              },
+              "Layout": {
+                "events": 5,
+                "ms": 18.63
+              },
+              "PrePaint": {
+                "events": 13,
+                "ms": 5.24
+              },
+              "Paint": {
+                "events": 2,
+                "ms": 3.23
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "visible": 12,
+              "project": 10,
+              "openNativeDialog": 1,
+              "openBrowse": 1
+            }
+          },
+          "filter Projects": {
+            "latencyMs": 60.4,
+            "renderer": {
+              "UpdateLayoutTree": {
+                "events": 5,
+                "ms": 2.88
+              },
+              "Layout": {
+                "events": 4,
+                "ms": 8.63
+              },
+              "PrePaint": {
+                "events": 3,
+                "ms": 3.75
+              },
+              "Paint": {
+                "events": 1,
+                "ms": 1.96
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "project": 3,
+              "filterProjects": 1
+            }
+          },
+          "enter Project": {
+            "latencyMs": 92.9,
+            "renderer": {
+              "UpdateLayoutTree": {
+                "events": 13,
+                "ms": 21.63
+              },
+              "Layout": {
+                "events": 11,
+                "ms": 53.83
+              },
+              "PrePaint": {
+                "events": 4,
+                "ms": 3.77
+              },
+              "Paint": {
+                "events": 1,
+                "ms": 1.56
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "project": 22,
+              "atlasFitScene": 16,
+              "layoutMapLabels": 12,
+              "fits": 11,
+              "atlasWriteRoute": 1
+            }
+          },
+          "pan": {
+            "latencyMs": 36.2,
+            "renderer": {
+              "PrePaint": {
+                "events": 5,
+                "ms": 2.78
+              },
+              "UpdateLayoutTree": {
+                "events": 6,
+                "ms": 2.53
+              },
+              "Layout": {
+                "events": 4,
+                "ms": 13.03
+              },
+              "Paint": {
+                "events": 2,
+                "ms": 0.71
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "project": 11,
+              "layoutMapLabels": 2,
+              "seg": 1
+            }
+          },
+          "zoom": {
+            "latencyMs": 59.2,
+            "renderer": {
+              "PrePaint": {
+                "events": 5,
+                "ms": 2.64
+              },
+              "UpdateLayoutTree": {
+                "events": 14,
+                "ms": 15.07
+              },
+              "Layout": {
+                "events": 20,
+                "ms": 34.33
+              },
+              "Paint": {
+                "events": 2,
+                "ms": 0.78
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "project": 25,
+              "fits": 12,
+              "layoutMapLabels": 2,
+              "eligible": 2,
+              "missionNameLines": 1
+            }
+          },
+          "open Missions": {
+            "latencyMs": 69.1,
+            "renderer": {
+              "UpdateLayoutTree": {
+                "events": 21,
+                "ms": 17.34
+              },
+              "Layout": {
+                "events": 14,
+                "ms": 28.03
+              },
+              "PrePaint": {
+                "events": 13,
+                "ms": 4.16
+              },
+              "Paint": {
+                "events": 2,
+                "ms": 1.25
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "project": 16,
+              "fits": 8,
+              "visible": 8,
+              "svgEl": 4,
+              "openMissions": 3
+            }
+          },
+          "filter missions": {
+            "latencyMs": 26,
+            "renderer": {
+              "UpdateLayoutTree": {
+                "events": 6,
+                "ms": 2.17
+              },
+              "Layout": {
+                "events": 4,
+                "ms": 6.84
+              },
+              "PrePaint": {
+                "events": 3,
+                "ms": 2.58
+              },
+              "Paint": {
+                "events": 1,
+                "ms": 0.41
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "svgEl": 4,
+              "project": 4,
+              "countOf": 1,
+              "sealSvg": 1,
+              "sealOf": 1
+            }
+          },
+          "focus mission": {
+            "latencyMs": 33.7,
+            "renderer": {
+              "UpdateLayoutTree": {
+                "events": 10,
+                "ms": 3.31
+              },
+              "Layout": {
+                "events": 5,
+                "ms": 16.11
+              },
+              "PrePaint": {
+                "events": 4,
+                "ms": 4.23
+              },
+              "Paint": {
+                "events": 2,
+                "ms": 0.75
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "project": 9,
+              "layoutMapLabels": 2
+            }
+          },
+          "inspect mission": {
+            "latencyMs": 91.6,
+            "renderer": {
+              "UpdateLayoutTree": {
+                "events": 21,
+                "ms": 21.92
+              },
+              "Layout": {
+                "events": 23,
+                "ms": 53.58
+              },
+              "PrePaint": {
+                "events": 4,
+                "ms": 2.88
+              },
+              "Paint": {
+                "events": 1,
+                "ms": 1.46
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "drawLeadCard": 12,
+              "project": 11,
+              "syncInspect": 9,
+              "fits": 8,
+              "fitTarget": 7
+            }
+          },
+          "inspect tasks": {
+            "latencyMs": 68.4,
+            "renderer": {
+              "UpdateLayoutTree": {
+                "events": 19,
+                "ms": 7.05
+              },
+              "Layout": {
+                "events": 15,
+                "ms": 46.92
+              },
+              "PrePaint": {
+                "events": 13,
+                "ms": 4.26
+              },
+              "Paint": {
+                "events": 2,
+                "ms": 1.87
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "project": 20,
+              "drawLeadCard": 11,
+              "layoutMapLabels": 4,
+              "placeCard": 3,
+              "selHead": 1
+            }
+          },
+          "return to result": {
+            "latencyMs": 92.2,
+            "renderer": {
+              "PrePaint": {
+                "events": 13,
+                "ms": 5.04
+              },
+              "UpdateLayoutTree": {
+                "events": 17,
+                "ms": 11.26
+              },
+              "Layout": {
+                "events": 8,
+                "ms": 50.46
+              },
+              "Paint": {
+                "events": 1,
+                "ms": 0.96
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "project": 11,
+              "syncInspect": 10,
+              "atlasFitScene": 9,
+              "openMissions": 9,
+              "svgEl": 4
+            }
+          },
+          "return to launcher": {
+            "latencyMs": 54,
+            "renderer": {
+              "UpdateLayoutTree": {
+                "events": 12,
+                "ms": 5.97
+              },
+              "Layout": {
+                "events": 6,
+                "ms": 37.31
+              },
+              "PrePaint": {
+                "events": 4,
+                "ms": 4.18
+              },
+              "Paint": {
+                "events": 2,
+                "ms": 0.95
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "project": 25,
+              "closeMissions": 8,
+              "layoutMapLabels": 2
+            }
+          },
+          "start and advance replay": {
+            "latencyMs": 93.1,
+            "renderer": {
+              "PrePaint": {
+                "events": 17,
+                "ms": 6.49
+              },
+              "UpdateLayoutTree": {
+                "events": 13,
+                "ms": 6.01
+              },
+              "Layout": {
+                "events": 9,
+                "ms": 65.87
+              },
+              "Paint": {
+                "events": 3,
+                "ms": 0.94
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "project": 35,
+              "drawStream": 10,
+              "eligible": 7,
+              "sync": 2,
+              "$": 1
+            }
+          },
+          "restore live sample": {
+            "latencyMs": 99.5,
+            "renderer": {
+              "Layout": {
+                "events": 14,
+                "ms": 45.36
+              },
+              "UpdateLayoutTree": {
+                "events": 15,
+                "ms": 21.79
+              },
+              "PrePaint": {
+                "events": 14,
+                "ms": 3.98
+              },
+              "Paint": {
+                "events": 2,
+                "ms": 1.1
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "project": 20,
+              "drawStream": 20,
+              "eligible": 9,
+              "fits": 8,
+              "svgEl": 4
+            }
+          },
+          "return to overview": {
+            "latencyMs": 124,
+            "renderer": {
+              "Layout": {
+                "events": 150,
+                "ms": 60.58
+              },
+              "UpdateLayoutTree": {
+                "events": 149,
+                "ms": 43.31
+              },
+              "PrePaint": {
+                "events": 14,
+                "ms": 3.91
+              },
+              "Paint": {
+                "events": 2,
+                "ms": 1.15
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "project": 29,
+              "atlasProjectGhost": 29,
+              "fits": 15,
+              "atlasFitScene": 8,
+              "updateVisibleProjectPreviews": 4
+            }
+          }
+        }
+      }
+    },
+    "desktop-32": {
+      "scenarios": 5,
+      "passed": 5,
+      "workloads": [
+        {
+          "projects": 32,
+          "missions": 56,
+          "agents": 912,
+          "tasks": 184,
+          "seatedFamiliars": [
+            "astra",
+            "charm",
+            "cody",
+            "echo"
+          ]
+        }
+      ],
+      "initialLoadEventEndMs": {
+        "n": 5,
+        "min": 245.5,
+        "median": 289.3,
+        "p95": 414.5,
+        "max": 414.5
+      },
+      "latencyMs": {
+        "setup": {
+          "populate overview": {
+            "n": 5,
+            "min": 53.8,
+            "median": 65.1,
+            "p95": 94.2,
+            "max": 94.2
+          }
+        },
+        "first journey": {
+          "open Projects": {
+            "n": 5,
+            "min": 31.7,
+            "median": 56.4,
+            "p95": 60.7,
+            "max": 60.7
+          },
+          "filter Projects": {
+            "n": 5,
+            "min": 14,
+            "median": 23.2,
+            "p95": 35.5,
+            "max": 35.5
+          },
+          "enter Project": {
+            "n": 5,
+            "min": 40.2,
+            "median": 49.6,
+            "p95": 64.5,
+            "max": 64.5
+          },
+          "pan": {
+            "n": 5,
+            "min": 34.9,
+            "median": 41.9,
+            "p95": 42.6,
+            "max": 42.6
+          },
+          "zoom": {
+            "n": 5,
+            "min": 42.6,
+            "median": 47.1,
+            "p95": 59.5,
+            "max": 59.5
+          },
+          "open Missions": {
+            "n": 5,
+            "min": 33.8,
+            "median": 45.8,
+            "p95": 55.2,
+            "max": 55.2
+          },
+          "filter missions": {
+            "n": 5,
+            "min": 16.7,
+            "median": 20.1,
+            "p95": 26.2,
+            "max": 26.2
+          },
+          "focus mission": {
+            "n": 5,
+            "min": 17.5,
+            "median": 22.8,
+            "p95": 33.8,
+            "max": 33.8
+          },
+          "inspect mission": {
+            "n": 5,
+            "min": 42.2,
+            "median": 48.6,
+            "p95": 66.1,
+            "max": 66.1
+          },
+          "inspect tasks": {
+            "n": 5,
+            "min": 44.1,
+            "median": 48.1,
+            "p95": 72.4,
+            "max": 72.4
+          },
+          "return to result": {
+            "n": 5,
+            "min": 41.2,
+            "median": 49.6,
+            "p95": 53.6,
+            "max": 53.6
+          },
+          "return to launcher": {
+            "n": 5,
+            "min": 38.2,
+            "median": 45.8,
+            "p95": 57.1,
+            "max": 57.1
+          },
+          "start and advance replay": {
+            "n": 5,
+            "min": 68.6,
+            "median": 71.4,
+            "p95": 81.4,
+            "max": 81.4
+          },
+          "restore live sample": {
+            "n": 5,
+            "min": 40.7,
+            "median": 43.7,
+            "p95": 44,
+            "max": 44
+          },
+          "return to overview": {
+            "n": 5,
+            "min": 48,
+            "median": 63.8,
+            "p95": 67,
+            "max": 67
+          }
+        },
+        "warm": {
+          "open Projects": {
+            "n": 5,
+            "min": 48.5,
+            "median": 65.8,
+            "p95": 71.8,
+            "max": 71.8
+          },
+          "filter Projects": {
+            "n": 5,
+            "min": 19.9,
+            "median": 26.1,
+            "p95": 33.2,
+            "max": 33.2
+          },
+          "enter Project": {
+            "n": 5,
+            "min": 44.2,
+            "median": 46.6,
+            "p95": 55.4,
+            "max": 55.4
+          },
+          "pan": {
+            "n": 5,
+            "min": 33.6,
+            "median": 41.6,
+            "p95": 43,
+            "max": 43
+          },
+          "zoom": {
+            "n": 5,
+            "min": 43.2,
+            "median": 47.9,
+            "p95": 60.4,
+            "max": 60.4
+          },
+          "open Missions": {
+            "n": 5,
+            "min": 28.3,
+            "median": 35.9,
+            "p95": 45.7,
+            "max": 45.7
+          },
+          "filter missions": {
+            "n": 5,
+            "min": 14.6,
+            "median": 18.5,
+            "p95": 20.5,
+            "max": 20.5
+          },
+          "focus mission": {
+            "n": 5,
+            "min": 17.3,
+            "median": 19.9,
+            "p95": 22.1,
+            "max": 22.1
+          },
+          "inspect mission": {
+            "n": 5,
+            "min": 46.1,
+            "median": 50.1,
+            "p95": 65.7,
+            "max": 65.7
+          },
+          "inspect tasks": {
+            "n": 5,
+            "min": 21.4,
+            "median": 41.1,
+            "p95": 55.8,
+            "max": 55.8
+          },
+          "return to result": {
+            "n": 5,
+            "min": 41.2,
+            "median": 44.9,
+            "p95": 48.2,
+            "max": 48.2
+          },
+          "return to launcher": {
+            "n": 5,
+            "min": 27.8,
+            "median": 39.1,
+            "p95": 43.9,
+            "max": 43.9
+          },
+          "start and advance replay": {
+            "n": 5,
+            "min": 67.7,
+            "median": 72.3,
+            "p95": 83.7,
+            "max": 83.7
+          },
+          "restore live sample": {
+            "n": 5,
+            "min": 38.6,
+            "median": 46.8,
+            "p95": 49.3,
+            "max": 49.3
+          },
+          "return to overview": {
+            "n": 5,
+            "min": 40.9,
+            "median": 65.6,
+            "p95": 85.2,
+            "max": 85.2
+          }
+        }
+      },
+      "frameIntervalsMs": {
+        "setup": {
+          "n": 230,
+          "min": 16.6,
+          "median": 16.7,
+          "p95": 49.9,
+          "max": 633.3
+        },
+        "first journey": {
+          "n": 1240,
+          "min": 16.5,
+          "median": 16.7,
+          "p95": 33.4,
+          "max": 66.7
+        },
+        "warm": {
+          "n": 1213,
+          "min": 16.5,
+          "median": 16.7,
+          "p95": 33.4,
+          "max": 66.6
+        }
+      },
+      "longTaskDurationMs": {
+        "setup": {
+          "n": 6,
+          "min": 86,
+          "median": 104.5,
+          "p95": 623,
+          "max": 623
+        },
+        "first journey": {
+          "n": 0
+        },
+        "warm": {
+          "n": 1,
+          "min": 50,
+          "median": 50,
+          "p95": 50,
+          "max": 50
+        }
+      },
+      "attachedElements": {
+        "setup": {
+          "n": 5,
+          "min": 5107,
+          "median": 5107,
+          "p95": 5107,
+          "max": 5107
+        },
+        "first journey": {
+          "n": 5,
+          "min": 4728,
+          "median": 4930,
+          "p95": 4930,
+          "max": 4930
+        },
+        "warm": {
+          "n": 5,
+          "min": 4728,
+          "median": 4794,
+          "p95": 5426,
+          "max": 5426
+        }
+      },
+      "usedHeapBytes": {
+        "setup": {
+          "n": 5,
+          "min": 4401220,
+          "median": 4646232,
+          "p95": 4762928,
+          "max": 4762928
+        },
+        "first journey": {
+          "n": 5,
+          "min": 4203508,
+          "median": 5246304,
+          "p95": 6973804,
+          "max": 6973804
+        },
+        "warm": {
+          "n": 5,
+          "min": 5991968,
+          "median": 6524536,
+          "p95": 7691268,
+          "max": 7691268
+        }
+      }
+    },
+    "desktop-4": {
+      "scenarios": 5,
+      "passed": 5,
+      "workloads": [
+        {
+          "projects": 4,
+          "missions": 7,
+          "agents": 114,
+          "tasks": 23,
+          "seatedFamiliars": [
+            "astra",
+            "charm",
+            "cody",
+            "echo"
+          ]
+        }
+      ],
+      "initialLoadEventEndMs": {
+        "n": 5,
+        "min": 270.7,
+        "median": 367.3,
+        "p95": 424.6,
+        "max": 424.6
+      },
+      "latencyMs": {
+        "first journey": {
+          "open Projects": {
+            "n": 5,
+            "min": 35.1,
+            "median": 40.6,
+            "p95": 55,
+            "max": 55
+          },
+          "filter Projects": {
+            "n": 5,
+            "min": 13.8,
+            "median": 15.1,
+            "p95": 15.9,
+            "max": 15.9
+          },
+          "enter Project": {
+            "n": 5,
+            "min": 30.8,
+            "median": 33.8,
+            "p95": 41,
+            "max": 41
+          },
+          "pan": {
+            "n": 5,
+            "min": 38.7,
+            "median": 43.9,
+            "p95": 44.8,
+            "max": 44.8
+          },
+          "zoom": {
+            "n": 5,
+            "min": 43,
+            "median": 43.5,
+            "p95": 43.9,
+            "max": 43.9
+          },
+          "open Missions": {
+            "n": 5,
+            "min": 19.8,
+            "median": 21.4,
+            "p95": 23.2,
+            "max": 23.2
+          },
+          "filter missions": {
+            "n": 5,
+            "min": 17,
+            "median": 18.6,
+            "p95": 20.6,
+            "max": 20.6
+          },
+          "focus mission": {
+            "n": 5,
+            "min": 18.5,
+            "median": 20.7,
+            "p95": 33.3,
+            "max": 33.3
+          },
+          "inspect mission": {
+            "n": 5,
+            "min": 35.4,
+            "median": 36.6,
+            "p95": 41,
+            "max": 41
+          },
+          "inspect tasks": {
+            "n": 5,
+            "min": 23.5,
+            "median": 29.2,
+            "p95": 46.4,
+            "max": 46.4
+          },
+          "return to result": {
+            "n": 5,
+            "min": 29.6,
+            "median": 32.5,
+            "p95": 48.6,
+            "max": 48.6
+          },
+          "return to launcher": {
+            "n": 5,
+            "min": 18.9,
+            "median": 35.7,
+            "p95": 41,
+            "max": 41
+          },
+          "start and advance replay": {
+            "n": 5,
+            "min": 68.7,
+            "median": 70,
+            "p95": 76.6,
+            "max": 76.6
+          },
+          "restore live sample": {
+            "n": 5,
+            "min": 31.6,
+            "median": 34.7,
+            "p95": 39.8,
+            "max": 39.8
+          },
+          "return to overview": {
+            "n": 5,
+            "min": 25.1,
+            "median": 27,
+            "p95": 47.5,
+            "max": 47.5
+          }
+        },
+        "warm": {
+          "open Projects": {
+            "n": 5,
+            "min": 18.7,
+            "median": 26,
+            "p95": 46.4,
+            "max": 46.4
+          },
+          "filter Projects": {
+            "n": 5,
+            "min": 14,
+            "median": 14.8,
+            "p95": 20,
+            "max": 20
+          },
+          "enter Project": {
+            "n": 5,
+            "min": 31.8,
+            "median": 34.3,
+            "p95": 41.5,
+            "max": 41.5
+          },
+          "pan": {
+            "n": 5,
+            "min": 43.7,
+            "median": 44.1,
+            "p95": 45.6,
+            "max": 45.6
+          },
+          "zoom": {
+            "n": 5,
+            "min": 41.8,
+            "median": 43.8,
+            "p95": 44.3,
+            "max": 44.3
+          },
+          "open Missions": {
+            "n": 5,
+            "min": 18.3,
+            "median": 19.1,
+            "p95": 40,
+            "max": 40
+          },
+          "filter missions": {
+            "n": 5,
+            "min": 16.3,
+            "median": 18.8,
+            "p95": 20,
+            "max": 20
+          },
+          "focus mission": {
+            "n": 5,
+            "min": 18.2,
+            "median": 21.3,
+            "p95": 22.6,
+            "max": 22.6
+          },
+          "inspect mission": {
+            "n": 5,
+            "min": 29.8,
+            "median": 31.9,
+            "p95": 52.1,
+            "max": 52.1
+          },
+          "inspect tasks": {
+            "n": 5,
+            "min": 24.5,
+            "median": 39.1,
+            "p95": 41,
+            "max": 41
+          },
+          "return to result": {
+            "n": 5,
+            "min": 29.8,
+            "median": 30.9,
+            "p95": 36.9,
+            "max": 36.9
+          },
+          "return to launcher": {
+            "n": 5,
+            "min": 19.6,
+            "median": 31.7,
+            "p95": 42.4,
+            "max": 42.4
+          },
+          "start and advance replay": {
+            "n": 5,
+            "min": 67.5,
+            "median": 69.2,
+            "p95": 78.7,
+            "max": 78.7
+          },
+          "restore live sample": {
+            "n": 5,
+            "min": 26.9,
+            "median": 34.4,
+            "p95": 42,
+            "max": 42
+          },
+          "return to overview": {
+            "n": 5,
+            "min": 23.7,
+            "median": 28.8,
+            "p95": 54,
+            "max": 54
+          }
+        }
+      },
+      "frameIntervalsMs": {
+        "setup": {
+          "n": 51,
+          "min": 16.6,
+          "median": 16.7,
+          "p95": 116.7,
+          "max": 133.3
+        },
+        "first journey": {
+          "n": 966,
+          "min": 16.5,
+          "median": 16.7,
+          "p95": 16.8,
+          "max": 66.6
+        },
+        "warm": {
+          "n": 1051,
+          "min": 16.5,
+          "median": 16.7,
+          "p95": 16.8,
+          "max": 33.4
+        }
+      },
+      "longTaskDurationMs": {
+        "setup": {
+          "n": 5,
+          "min": 80,
+          "median": 94,
+          "p95": 97,
+          "max": 97
+        },
+        "first journey": {
+          "n": 0
+        },
+        "warm": {
+          "n": 0
+        }
+      },
+      "attachedElements": {
+        "setup": {
+          "n": 5,
+          "min": 2551,
+          "median": 2551,
+          "p95": 2588,
+          "max": 2588
+        },
+        "first journey": {
+          "n": 5,
+          "min": 2670,
+          "median": 2670,
+          "p95": 2670,
+          "max": 2670
+        },
+        "warm": {
+          "n": 5,
+          "min": 2670,
+          "median": 2670,
+          "p95": 2670,
+          "max": 2670
+        }
+      },
+      "usedHeapBytes": {
+        "setup": {
+          "n": 5,
+          "min": 2951896,
+          "median": 3630432,
+          "p95": 3869248,
+          "max": 3869248
+        },
+        "first journey": {
+          "n": 5,
+          "min": 3662936,
+          "median": 4404296,
+          "p95": 4682492,
+          "max": 4682492
+        },
+        "warm": {
+          "n": 5,
+          "min": 3757844,
+          "median": 4564284,
+          "p95": 5104192,
+          "max": 5104192
+        }
+      }
+    },
+    "narrow-128": {
+      "scenarios": 5,
+      "passed": 5,
+      "workloads": [
+        {
+          "projects": 128,
+          "missions": 224,
+          "agents": 3648,
+          "tasks": 736,
+          "seatedFamiliars": [
+            "astra",
+            "charm",
+            "cody",
+            "echo"
+          ]
+        }
+      ],
+      "initialLoadEventEndMs": {
+        "n": 5,
+        "min": 279.3,
+        "median": 368.2,
+        "p95": 411.8,
+        "max": 411.8
+      },
+      "latencyMs": {
+        "setup": {
+          "populate overview": {
+            "n": 5,
+            "min": 118.3,
+            "median": 121.9,
+            "p95": 133.1,
+            "max": 133.1
+          }
+        },
+        "first journey": {
+          "open Projects": {
+            "n": 5,
+            "min": 61.6,
+            "median": 69.2,
+            "p95": 90,
+            "max": 90
+          },
+          "filter Projects": {
+            "n": 5,
+            "min": 18.2,
+            "median": 20.3,
+            "p95": 22,
+            "max": 22
+          },
+          "enter Project": {
+            "n": 5,
+            "min": 61.9,
+            "median": 72.7,
+            "p95": 90,
+            "max": 90
+          },
+          "pan": {
+            "n": 5,
+            "min": 41.2,
+            "median": 42.8,
+            "p95": 44.5,
+            "max": 44.5
+          },
+          "zoom": {
+            "n": 5,
+            "min": 41.3,
+            "median": 41.8,
+            "p95": 44.2,
+            "max": 44.2
+          },
+          "open Missions": {
+            "n": 5,
+            "min": 50.7,
+            "median": 63.1,
+            "p95": 87.7,
+            "max": 87.7
+          },
+          "filter missions": {
+            "n": 5,
+            "min": 24.2,
+            "median": 26.4,
+            "p95": 44.5,
+            "max": 44.5
+          },
+          "focus mission": {
+            "n": 5,
+            "min": 17.4,
+            "median": 23.7,
+            "p95": 34,
+            "max": 34
+          },
+          "inspect mission": {
+            "n": 5,
+            "min": 76.5,
+            "median": 90,
+            "p95": 97,
+            "max": 97
+          },
+          "inspect tasks": {
+            "n": 5,
+            "min": 28.9,
+            "median": 35.9,
+            "p95": 51,
+            "max": 51
+          },
+          "return to result": {
+            "n": 5,
+            "min": 70.2,
+            "median": 74.4,
+            "p95": 77.6,
+            "max": 77.6
+          },
+          "return to launcher": {
+            "n": 5,
+            "min": 42.5,
+            "median": 48.3,
+            "p95": 51.3,
+            "max": 51.3
+          },
+          "start and advance replay": {
+            "n": 5,
+            "min": 67,
+            "median": 74.4,
+            "p95": 84.5,
+            "max": 84.5
+          },
+          "restore live sample": {
+            "n": 5,
+            "min": 68.7,
+            "median": 75.9,
+            "p95": 81.2,
+            "max": 81.2
+          },
+          "return to overview": {
+            "n": 5,
+            "min": 113.9,
+            "median": 129.4,
+            "p95": 134.9,
+            "max": 134.9
+          }
+        },
+        "warm": {
+          "open Projects": {
+            "n": 5,
+            "min": 36.9,
+            "median": 55,
+            "p95": 68.9,
+            "max": 68.9
+          },
+          "filter Projects": {
+            "n": 5,
+            "min": 17.4,
+            "median": 22.5,
+            "p95": 32,
+            "max": 32
+          },
+          "enter Project": {
+            "n": 5,
+            "min": 63.6,
+            "median": 82,
+            "p95": 90.1,
+            "max": 90.1
+          },
+          "pan": {
+            "n": 5,
+            "min": 43,
+            "median": 43.1,
+            "p95": 44,
+            "max": 44
+          },
+          "zoom": {
+            "n": 5,
+            "min": 41.7,
+            "median": 43.5,
+            "p95": 44,
+            "max": 44
+          },
+          "open Missions": {
+            "n": 5,
+            "min": 45.2,
+            "median": 47.6,
+            "p95": 109.7,
+            "max": 109.7
+          },
+          "filter missions": {
+            "n": 5,
+            "min": 22.4,
+            "median": 24.9,
+            "p95": 29.6,
+            "max": 29.6
+          },
+          "focus mission": {
+            "n": 5,
+            "min": 18.1,
+            "median": 25.6,
+            "p95": 27.5,
+            "max": 27.5
+          },
+          "inspect mission": {
+            "n": 5,
+            "min": 72,
+            "median": 78.6,
+            "p95": 102.7,
+            "max": 102.7
+          },
+          "inspect tasks": {
+            "n": 5,
+            "min": 21.9,
+            "median": 33.3,
+            "p95": 42.1,
+            "max": 42.1
+          },
+          "return to result": {
+            "n": 5,
+            "min": 65.6,
+            "median": 74.2,
+            "p95": 94.9,
+            "max": 94.9
+          },
+          "return to launcher": {
+            "n": 5,
+            "min": 28.8,
+            "median": 48.9,
+            "p95": 56.8,
+            "max": 56.8
+          },
+          "start and advance replay": {
+            "n": 5,
+            "min": 72,
+            "median": 84,
+            "p95": 98.9,
+            "max": 98.9
+          },
+          "restore live sample": {
+            "n": 5,
+            "min": 65.8,
+            "median": 70.1,
+            "p95": 101.8,
+            "max": 101.8
+          },
+          "return to overview": {
+            "n": 5,
+            "min": 113.7,
+            "median": 121.2,
+            "p95": 146.2,
+            "max": 146.2
+          }
+        },
+        "profile": {
+          "open Projects": {
+            "n": 1,
+            "min": 55.6,
+            "median": 55.6,
+            "p95": 55.6,
+            "max": 55.6
+          },
+          "filter Projects": {
+            "n": 1,
+            "min": 26.3,
+            "median": 26.3,
+            "p95": 26.3,
+            "max": 26.3
+          },
+          "enter Project": {
+            "n": 1,
+            "min": 75.5,
+            "median": 75.5,
+            "p95": 75.5,
+            "max": 75.5
+          },
+          "pan": {
+            "n": 1,
+            "min": 41.5,
+            "median": 41.5,
+            "p95": 41.5,
+            "max": 41.5
+          },
+          "zoom": {
+            "n": 1,
+            "min": 41.7,
+            "median": 41.7,
+            "p95": 41.7,
+            "max": 41.7
+          },
+          "open Missions": {
+            "n": 1,
+            "min": 98.1,
+            "median": 98.1,
+            "p95": 98.1,
+            "max": 98.1
+          },
+          "filter missions": {
+            "n": 1,
+            "min": 23.5,
+            "median": 23.5,
+            "p95": 23.5,
+            "max": 23.5
+          },
+          "focus mission": {
+            "n": 1,
+            "min": 16.8,
+            "median": 16.8,
+            "p95": 16.8,
+            "max": 16.8
+          },
+          "inspect mission": {
+            "n": 1,
+            "min": 86,
+            "median": 86,
+            "p95": 86,
+            "max": 86
+          },
+          "inspect tasks": {
+            "n": 1,
+            "min": 27.3,
+            "median": 27.3,
+            "p95": 27.3,
+            "max": 27.3
+          },
+          "return to result": {
+            "n": 1,
+            "min": 75.8,
+            "median": 75.8,
+            "p95": 75.8,
+            "max": 75.8
+          },
+          "return to launcher": {
+            "n": 1,
+            "min": 31.7,
+            "median": 31.7,
+            "p95": 31.7,
+            "max": 31.7
+          },
+          "start and advance replay": {
+            "n": 1,
+            "min": 82.7,
+            "median": 82.7,
+            "p95": 82.7,
+            "max": 82.7
+          },
+          "restore live sample": {
+            "n": 1,
+            "min": 74.8,
+            "median": 74.8,
+            "p95": 74.8,
+            "max": 74.8
+          },
+          "return to overview": {
+            "n": 1,
+            "min": 117.5,
+            "median": 117.5,
+            "p95": 117.5,
+            "max": 117.5
+          }
+        }
+      },
+      "frameIntervalsMs": {
+        "setup": {
+          "n": 183,
+          "min": 16.5,
+          "median": 16.7,
+          "p95": 100,
+          "max": 133.4
+        },
+        "first journey": {
+          "n": 1067,
+          "min": 16.5,
+          "median": 16.7,
+          "p95": 33.4,
+          "max": 100.1
+        },
+        "warm": {
+          "n": 1200,
+          "min": 16.5,
+          "median": 16.7,
+          "p95": 50,
+          "max": 133.4
+        },
+        "profile": {
+          "n": 238,
+          "min": 16.6,
+          "median": 16.7,
+          "p95": 50,
+          "max": 83.4
+        }
+      },
+      "longTaskDurationMs": {
+        "setup": {
+          "n": 12,
+          "min": 51,
+          "median": 79.0,
+          "p95": 103,
+          "max": 103
+        },
+        "first journey": {
+          "n": 25,
+          "min": 50,
+          "median": 58,
+          "p95": 74,
+          "max": 84
+        },
+        "warm": {
+          "n": 30,
+          "min": 50,
+          "median": 61.0,
+          "p95": 80,
+          "max": 103
+        },
+        "profile": {
+          "n": 5,
+          "min": 53,
+          "median": 58,
+          "p95": 73,
+          "max": 73
+        }
+      },
+      "attachedElements": {
+        "setup": {
+          "n": 5,
+          "min": 5947,
+          "median": 5947,
+          "p95": 5947,
+          "max": 5947
+        },
+        "first journey": {
+          "n": 5,
+          "min": 12336,
+          "median": 12680,
+          "p95": 13689,
+          "max": 13689
+        },
+        "warm": {
+          "n": 5,
+          "min": 12336,
+          "median": 12474,
+          "p95": 13374,
+          "max": 13374
+        }
+      },
+      "usedHeapBytes": {
+        "setup": {
+          "n": 5,
+          "min": 6016032,
+          "median": 6260288,
+          "p95": 7020956,
+          "max": 7020956
+        },
+        "first journey": {
+          "n": 5,
+          "min": 7567820,
+          "median": 9621572,
+          "p95": 11563468,
+          "max": 11563468
+        },
+        "warm": {
+          "n": 5,
+          "min": 7862580,
+          "median": 8854080,
+          "p95": 12788304,
+          "max": 12788304
+        }
+      },
+      "profiledInputWindows": {
+        "narrow-128-1": {
+          "open Projects": {
+            "latencyMs": 55.6,
+            "renderer": {
+              "Layout": {
+                "events": 261,
+                "ms": 17.83
+              },
+              "UpdateLayoutTree": {
+                "events": 269,
+                "ms": 23.87
+              },
+              "PrePaint": {
+                "events": 13,
+                "ms": 1.74
+              },
+              "Paint": {
+                "events": 2,
+                "ms": 1.92
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "atlasProjectGhost": 15,
+              "visible": 12,
+              "project": 6,
+              "set": 1,
+              "focus": 1
+            }
+          },
+          "filter Projects": {
+            "latencyMs": 26.3,
+            "renderer": {
+              "Layout": {
+                "events": 5,
+                "ms": 2.64
+              },
+              "UpdateLayoutTree": {
+                "events": 5,
+                "ms": 5.69
+              },
+              "PrePaint": {
+                "events": 3,
+                "ms": 0.84
+              },
+              "Paint": {
+                "events": 1,
+                "ms": 0.74
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "project": 2
+            }
+          },
+          "enter Project": {
+            "latencyMs": 75.5,
+            "renderer": {
+              "UpdateLayoutTree": {
+                "events": 14,
+                "ms": 34.28
+              },
+              "Layout": {
+                "events": 14,
+                "ms": 33.02
+              },
+              "PrePaint": {
+                "events": 4,
+                "ms": 1.4
+              },
+              "Paint": {
+                "events": 1,
+                "ms": 0.79
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "project": 13,
+              "visible": 11,
+              "fits": 10,
+              "layoutMapLabels": 4,
+              "atlasFitScene": 3
+            }
+          },
+          "pan": {
+            "latencyMs": 41.5,
+            "renderer": {
+              "PrePaint": {
+                "events": 5,
+                "ms": 1.48
+              },
+              "UpdateLayoutTree": {
+                "events": 6,
+                "ms": 1.74
+              },
+              "Layout": {
+                "events": 4,
+                "ms": 6.45
+              },
+              "Paint": {
+                "events": 2,
+                "ms": 0.53
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "project": 6,
+              "layoutMapLabels": 2,
+              "openNativeDialog": 1
+            }
+          },
+          "zoom": {
+            "latencyMs": 41.7,
+            "renderer": {
+              "PrePaint": {
+                "events": 5,
+                "ms": 1.28
+              },
+              "UpdateLayoutTree": {
+                "events": 6,
+                "ms": 2.14
+              },
+              "Layout": {
+                "events": 4,
+                "ms": 23.39
+              },
+              "Paint": {
+                "events": 2,
+                "ms": 0.47
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "project": 19,
+              "layoutMapLabels": 2,
+              "f": 1
+            }
+          },
+          "open Missions": {
+            "latencyMs": 98.1,
+            "renderer": {
+              "PrePaint": {
+                "events": 13,
+                "ms": 1.73
+              },
+              "UpdateLayoutTree": {
+                "events": 28,
+                "ms": 46.89
+              },
+              "Layout": {
+                "events": 23,
+                "ms": 28.42
+              },
+              "Paint": {
+                "events": 2,
+                "ms": 0.95
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "project": 22,
+              "fits": 21,
+              "visible": 13,
+              "svgEl": 4,
+              "openMissions": 4
+            }
+          },
+          "filter missions": {
+            "latencyMs": 23.5,
+            "renderer": {
+              "UpdateLayoutTree": {
+                "events": 6,
+                "ms": 5.08
+              },
+              "Layout": {
+                "events": 4,
+                "ms": 4.02
+              },
+              "PrePaint": {
+                "events": 3,
+                "ms": 0.71
+              },
+              "Paint": {
+                "events": 1,
+                "ms": 0.28
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "svgEl": 4,
+              "project": 3,
+              "atlasSnapshot": 2,
+              "sealSvg": 1,
+              "sealOf": 1
+            }
+          },
+          "focus mission": {
+            "latencyMs": 16.8,
+            "renderer": {
+              "UpdateLayoutTree": {
+                "events": 8,
+                "ms": 1.79
+              },
+              "Layout": {
+                "events": 3,
+                "ms": 4.78
+              },
+              "PrePaint": {
+                "events": 3,
+                "ms": 0.67
+              },
+              "Paint": {
+                "events": 1,
+                "ms": 0.29
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "project": 4,
+              "updateAdaptiveLayout": 1
+            }
+          },
+          "inspect mission": {
+            "latencyMs": 86,
+            "renderer": {
+              "UpdateLayoutTree": {
+                "events": 26,
+                "ms": 53.74
+              },
+              "Layout": {
+                "events": 24,
+                "ms": 20.28
+              },
+              "PrePaint": {
+                "events": 4,
+                "ms": 1.59
+              },
+              "Paint": {
+                "events": 1,
+                "ms": 0.95
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "visible": 22,
+              "fits": 11,
+              "project": 9,
+              "placeCard": 7,
+              "syncInspect": 5
+            }
+          },
+          "inspect tasks": {
+            "latencyMs": 27.3,
+            "renderer": {
+              "PrePaint": {
+                "events": 11,
+                "ms": 0.88
+              },
+              "UpdateLayoutTree": {
+                "events": 17,
+                "ms": 7.4
+              },
+              "Layout": {
+                "events": 10,
+                "ms": 8.41
+              },
+              "Paint": {
+                "events": 1,
+                "ms": 0.62
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "drawLeadCard": 4,
+              "project": 4,
+              "placeCard": 3,
+              "syncInspect": 1,
+              "applyModal": 1
+            }
+          },
+          "return to result": {
+            "latencyMs": 75.8,
+            "renderer": {
+              "PrePaint": {
+                "events": 12,
+                "ms": 1.5
+              },
+              "UpdateLayoutTree": {
+                "events": 21,
+                "ms": 35.57
+              },
+              "Layout": {
+                "events": 9,
+                "ms": 20.73
+              },
+              "Paint": {
+                "events": 1,
+                "ms": 0.5
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "visible": 22,
+              "project": 9,
+              "placeCard": 4,
+              "syncInspect": 4,
+              "atlasFitScene": 3
+            }
+          },
+          "return to launcher": {
+            "latencyMs": 31.7,
+            "renderer": {
+              "UpdateLayoutTree": {
+                "events": 10,
+                "ms": 15.56
+              },
+              "Layout": {
+                "events": 3,
+                "ms": 11.41
+              },
+              "PrePaint": {
+                "events": 3,
+                "ms": 0.85
+              },
+              "Paint": {
+                "events": 1,
+                "ms": 0.46
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "visible": 10,
+              "project": 9,
+              "openNativeDialog": 1,
+              "focus": 1,
+              "layoutMapLabels": 1
+            }
+          },
+          "start and advance replay": {
+            "latencyMs": 82.7,
+            "renderer": {
+              "UpdateLayoutTree": {
+                "events": 19,
+                "ms": 14.67
+              },
+              "Layout": {
+                "events": 12,
+                "ms": 47.73
+              },
+              "PrePaint": {
+                "events": 21,
+                "ms": 2.95
+              },
+              "Paint": {
+                "events": 4,
+                "ms": 0.99
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "project": 30,
+              "drawStream": 5,
+              "eligible": 3,
+              "timelineUI": 2,
+              "hms": 2
+            }
+          },
+          "restore live sample": {
+            "latencyMs": 74.8,
+            "renderer": {
+              "UpdateLayoutTree": {
+                "events": 14,
+                "ms": 25.23
+              },
+              "PrePaint": {
+                "events": 12,
+                "ms": 1.77
+              },
+              "Layout": {
+                "events": 13,
+                "ms": 31.09
+              },
+              "Paint": {
+                "events": 1,
+                "ms": 0.57
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "fits": 10,
+              "drawStream": 9,
+              "project": 9,
+              "eligible": 5,
+              "pos": 1
+            }
+          },
+          "return to overview": {
+            "latencyMs": 117.5,
+            "renderer": {
+              "Layout": {
+                "events": 17,
+                "ms": 53.26
+              },
+              "UpdateLayoutTree": {
+                "events": 143,
+                "ms": 39.06
+              },
+              "PrePaint": {
+                "events": 14,
+                "ms": 2.73
+              },
+              "Paint": {
+                "events": 2,
+                "ms": 0.85
+              }
+            },
+            "nearestNamedAppFrameSamples": {
+              "project": 18,
+              "atlasProjectGhost": 16,
+              "atlasViewportFrame": 12,
+              "fits": 9,
+              "svgEl": 5
+            }
+          }
+        }
+      }
+    },
+    "narrow-32": {
+      "scenarios": 5,
+      "passed": 5,
+      "workloads": [
+        {
+          "projects": 32,
+          "missions": 56,
+          "agents": 912,
+          "tasks": 184,
+          "seatedFamiliars": [
+            "astra",
+            "charm",
+            "cody",
+            "echo"
+          ]
+        }
+      ],
+      "initialLoadEventEndMs": {
+        "n": 5,
+        "min": 299.1,
+        "median": 363.7,
+        "p95": 381.1,
+        "max": 381.1
+      },
+      "latencyMs": {
+        "setup": {
+          "populate overview": {
+            "n": 5,
+            "min": 51.9,
+            "median": 56.6,
+            "p95": 69.8,
+            "max": 69.8
+          }
+        },
+        "first journey": {
+          "open Projects": {
+            "n": 5,
+            "min": 26.2,
+            "median": 30.3,
+            "p95": 34.8,
+            "max": 34.8
+          },
+          "filter Projects": {
+            "n": 5,
+            "min": 18.8,
+            "median": 20.8,
+            "p95": 22.6,
+            "max": 22.6
+          },
+          "enter Project": {
+            "n": 5,
+            "min": 43.4,
+            "median": 46.8,
+            "p95": 68.2,
+            "max": 68.2
+          },
+          "pan": {
+            "n": 5,
+            "min": 39.1,
+            "median": 44.2,
+            "p95": 45.3,
+            "max": 45.3
+          },
+          "zoom": {
+            "n": 5,
+            "min": 36.9,
+            "median": 42.1,
+            "p95": 44.2,
+            "max": 44.2
+          },
+          "open Missions": {
+            "n": 5,
+            "min": 30.4,
+            "median": 39.7,
+            "p95": 55.3,
+            "max": 55.3
+          },
+          "filter missions": {
+            "n": 5,
+            "min": 16.5,
+            "median": 23.9,
+            "p95": 31.4,
+            "max": 31.4
+          },
+          "focus mission": {
+            "n": 5,
+            "min": 19,
+            "median": 24.8,
+            "p95": 26.6,
+            "max": 26.6
+          },
+          "inspect mission": {
+            "n": 5,
+            "min": 53.8,
+            "median": 63.4,
+            "p95": 94.5,
+            "max": 94.5
+          },
+          "inspect tasks": {
+            "n": 5,
+            "min": 24.4,
+            "median": 29.8,
+            "p95": 33.6,
+            "max": 33.6
+          },
+          "return to result": {
+            "n": 5,
+            "min": 44.5,
+            "median": 55.5,
+            "p95": 71.8,
+            "max": 71.8
+          },
+          "return to launcher": {
+            "n": 5,
+            "min": 21.3,
+            "median": 23.8,
+            "p95": 26.5,
+            "max": 26.5
+          },
+          "start and advance replay": {
+            "n": 5,
+            "min": 68.7,
+            "median": 72.7,
+            "p95": 73,
+            "max": 73
+          },
+          "restore live sample": {
+            "n": 5,
+            "min": 44,
+            "median": 47.1,
+            "p95": 51.9,
+            "max": 51.9
+          },
+          "return to overview": {
+            "n": 5,
+            "min": 50.2,
+            "median": 69.8,
+            "p95": 79.4,
+            "max": 79.4
+          }
+        },
+        "warm": {
+          "open Projects": {
+            "n": 5,
+            "min": 25.4,
+            "median": 27.9,
+            "p95": 63.2,
+            "max": 63.2
+          },
+          "filter Projects": {
+            "n": 5,
+            "min": 15.4,
+            "median": 21.2,
+            "p95": 29.4,
+            "max": 29.4
+          },
+          "enter Project": {
+            "n": 5,
+            "min": 45.2,
+            "median": 51,
+            "p95": 59.3,
+            "max": 59.3
+          },
+          "pan": {
+            "n": 5,
+            "min": 37.2,
+            "median": 45.2,
+            "p95": 46.6,
+            "max": 46.6
+          },
+          "zoom": {
+            "n": 5,
+            "min": 43.8,
+            "median": 45.1,
+            "p95": 49.3,
+            "max": 49.3
+          },
+          "open Missions": {
+            "n": 5,
+            "min": 25.3,
+            "median": 27.2,
+            "p95": 38.2,
+            "max": 38.2
+          },
+          "filter missions": {
+            "n": 5,
+            "min": 17.5,
+            "median": 20.3,
+            "p95": 32.3,
+            "max": 32.3
+          },
+          "focus mission": {
+            "n": 5,
+            "min": 16.1,
+            "median": 19.7,
+            "p95": 29.6,
+            "max": 29.6
+          },
+          "inspect mission": {
+            "n": 5,
+            "min": 53.9,
+            "median": 56.3,
+            "p95": 80,
+            "max": 80
+          },
+          "inspect tasks": {
+            "n": 5,
+            "min": 19,
+            "median": 22.7,
+            "p95": 37.4,
+            "max": 37.4
+          },
+          "return to result": {
+            "n": 5,
+            "min": 40.9,
+            "median": 44.3,
+            "p95": 63.1,
+            "max": 63.1
+          },
+          "return to launcher": {
+            "n": 5,
+            "min": 20.6,
+            "median": 22.2,
+            "p95": 43.9,
+            "max": 43.9
+          },
+          "start and advance replay": {
+            "n": 5,
+            "min": 66.5,
+            "median": 71.2,
+            "p95": 73,
+            "max": 73
+          },
+          "restore live sample": {
+            "n": 5,
+            "min": 41.3,
+            "median": 48.1,
+            "p95": 55.7,
+            "max": 55.7
+          },
+          "return to overview": {
+            "n": 5,
+            "min": 63.8,
+            "median": 67.1,
+            "p95": 85.8,
+            "max": 85.8
+          }
+        }
+      },
+      "frameIntervalsMs": {
+        "setup": {
+          "n": 167,
+          "min": 16.5,
+          "median": 16.7,
+          "p95": 50,
+          "max": 116.7
+        },
+        "first journey": {
+          "n": 1072,
+          "min": 16.5,
+          "median": 16.7,
+          "p95": 33.3,
+          "max": 83.3
+        },
+        "warm": {
+          "n": 1087,
+          "min": 16.5,
+          "median": 16.7,
+          "p95": 33.3,
+          "max": 66.7
+        }
+      },
+      "longTaskDurationMs": {
+        "setup": {
+          "n": 6,
+          "min": 61,
+          "median": 96.0,
+          "p95": 109,
+          "max": 109
+        },
+        "first journey": {
+          "n": 3,
+          "min": 50,
+          "median": 50,
+          "p95": 53,
+          "max": 53
+        },
+        "warm": {
+          "n": 0
+        }
+      },
+      "attachedElements": {
+        "setup": {
+          "n": 5,
+          "min": 3651,
+          "median": 3651,
+          "p95": 3651,
+          "max": 3651
+        },
+        "first journey": {
+          "n": 5,
+          "min": 4588,
+          "median": 4724,
+          "p95": 4784,
+          "max": 4784
+        },
+        "warm": {
+          "n": 5,
+          "min": 4720,
+          "median": 4720,
+          "p95": 4724,
+          "max": 4724
+        }
+      },
+      "usedHeapBytes": {
+        "setup": {
+          "n": 5,
+          "min": 4232028,
+          "median": 4734324,
+          "p95": 5424464,
+          "max": 5424464
+        },
+        "first journey": {
+          "n": 5,
+          "min": 4739392,
+          "median": 5281236,
+          "p95": 6416804,
+          "max": 6416804
+        },
+        "warm": {
+          "n": 5,
+          "min": 5682680,
+          "median": 7929272,
+          "p95": 8044900,
+          "max": 8044900
+        }
+      }
+    },
+    "narrow-4": {
+      "scenarios": 5,
+      "passed": 5,
+      "workloads": [
+        {
+          "projects": 4,
+          "missions": 7,
+          "agents": 114,
+          "tasks": 23,
+          "seatedFamiliars": [
+            "astra",
+            "charm",
+            "cody",
+            "echo"
+          ]
+        }
+      ],
+      "initialLoadEventEndMs": {
+        "n": 5,
+        "min": 256,
+        "median": 359.4,
+        "p95": 373.9,
+        "max": 373.9
+      },
+      "latencyMs": {
+        "first journey": {
+          "open Projects": {
+            "n": 5,
+            "min": 39,
+            "median": 46.6,
+            "p95": 77.6,
+            "max": 77.6
+          },
+          "filter Projects": {
+            "n": 5,
+            "min": 20.3,
+            "median": 20.7,
+            "p95": 20.8,
+            "max": 20.8
+          },
+          "enter Project": {
+            "n": 5,
+            "min": 34.3,
+            "median": 41.2,
+            "p95": 41.5,
+            "max": 41.5
+          },
+          "pan": {
+            "n": 5,
+            "min": 42.5,
+            "median": 45.3,
+            "p95": 46.3,
+            "max": 46.3
+          },
+          "zoom": {
+            "n": 5,
+            "min": 42.9,
+            "median": 44.5,
+            "p95": 45.9,
+            "max": 45.9
+          },
+          "open Missions": {
+            "n": 5,
+            "min": 23.2,
+            "median": 24.9,
+            "p95": 27.2,
+            "max": 27.2
+          },
+          "filter missions": {
+            "n": 5,
+            "min": 17.5,
+            "median": 17.8,
+            "p95": 20.7,
+            "max": 20.7
+          },
+          "focus mission": {
+            "n": 5,
+            "min": 17.5,
+            "median": 20.5,
+            "p95": 33.5,
+            "max": 33.5
+          },
+          "inspect mission": {
+            "n": 5,
+            "min": 43.2,
+            "median": 46.5,
+            "p95": 53.4,
+            "max": 53.4
+          },
+          "inspect tasks": {
+            "n": 5,
+            "min": 20.7,
+            "median": 21.8,
+            "p95": 25.3,
+            "max": 25.3
+          },
+          "return to result": {
+            "n": 5,
+            "min": 28.7,
+            "median": 34,
+            "p95": 40.5,
+            "max": 40.5
+          },
+          "return to launcher": {
+            "n": 5,
+            "min": 19.5,
+            "median": 21.2,
+            "p95": 33.9,
+            "max": 33.9
+          },
+          "start and advance replay": {
+            "n": 5,
+            "min": 68.9,
+            "median": 72.1,
+            "p95": 73.5,
+            "max": 73.5
+          },
+          "restore live sample": {
+            "n": 5,
+            "min": 34.7,
+            "median": 35.9,
+            "p95": 50.8,
+            "max": 50.8
+          },
+          "return to overview": {
+            "n": 5,
+            "min": 31.7,
+            "median": 35.5,
+            "p95": 61.7,
+            "max": 61.7
+          }
+        },
+        "warm": {
+          "open Projects": {
+            "n": 5,
+            "min": 20.2,
+            "median": 22.4,
+            "p95": 23.3,
+            "max": 23.3
+          },
+          "filter Projects": {
+            "n": 5,
+            "min": 17.4,
+            "median": 18.3,
+            "p95": 21.1,
+            "max": 21.1
+          },
+          "enter Project": {
+            "n": 5,
+            "min": 27.5,
+            "median": 30.8,
+            "p95": 47.9,
+            "max": 47.9
+          },
+          "pan": {
+            "n": 5,
+            "min": 44,
+            "median": 45.4,
+            "p95": 46.2,
+            "max": 46.2
+          },
+          "zoom": {
+            "n": 5,
+            "min": 43.6,
+            "median": 45,
+            "p95": 45.9,
+            "max": 45.9
+          },
+          "open Missions": {
+            "n": 5,
+            "min": 22.4,
+            "median": 24,
+            "p95": 25,
+            "max": 25
+          },
+          "filter missions": {
+            "n": 5,
+            "min": 17.2,
+            "median": 22.9,
+            "p95": 24.3,
+            "max": 24.3
+          },
+          "focus mission": {
+            "n": 5,
+            "min": 17,
+            "median": 18.2,
+            "p95": 20.2,
+            "max": 20.2
+          },
+          "inspect mission": {
+            "n": 5,
+            "min": 38,
+            "median": 42.1,
+            "p95": 48.5,
+            "max": 48.5
+          },
+          "inspect tasks": {
+            "n": 5,
+            "min": 18.2,
+            "median": 20.4,
+            "p95": 25,
+            "max": 25
+          },
+          "return to result": {
+            "n": 5,
+            "min": 30,
+            "median": 31,
+            "p95": 39.2,
+            "max": 39.2
+          },
+          "return to launcher": {
+            "n": 5,
+            "min": 17.6,
+            "median": 19.4,
+            "p95": 21.2,
+            "max": 21.2
+          },
+          "start and advance replay": {
+            "n": 5,
+            "min": 68.8,
+            "median": 71,
+            "p95": 73.7,
+            "max": 73.7
+          },
+          "restore live sample": {
+            "n": 5,
+            "min": 31.4,
+            "median": 33.8,
+            "p95": 40.6,
+            "max": 40.6
+          },
+          "return to overview": {
+            "n": 5,
+            "min": 28.8,
+            "median": 34.9,
+            "p95": 41.6,
+            "max": 41.6
+          }
+        }
+      },
+      "frameIntervalsMs": {
+        "setup": {
+          "n": 37,
+          "min": 16.6,
+          "median": 16.7,
+          "p95": 133.3,
+          "max": 133.3
+        },
+        "first journey": {
+          "n": 840,
+          "min": 16.5,
+          "median": 16.7,
+          "p95": 16.8,
+          "max": 50
+        },
+        "warm": {
+          "n": 815,
+          "min": 16.5,
+          "median": 16.7,
+          "p95": 16.8,
+          "max": 33.4
+        }
+      },
+      "longTaskDurationMs": {
+        "setup": {
+          "n": 5,
+          "min": 93,
+          "median": 98,
+          "p95": 105,
+          "max": 105
+        },
+        "first journey": {
+          "n": 0
+        },
+        "warm": {
+          "n": 0
+        }
+      },
+      "attachedElements": {
+        "setup": {
+          "n": 5,
+          "min": 2483,
+          "median": 2483,
+          "p95": 2594,
+          "max": 2594
+        },
+        "first journey": {
+          "n": 5,
+          "min": 2530,
+          "median": 2530,
+          "p95": 2666,
+          "max": 2666
+        },
+        "warm": {
+          "n": 5,
+          "min": 2530,
+          "median": 2530,
+          "p95": 2666,
+          "max": 2666
+        }
+      },
+      "usedHeapBytes": {
+        "setup": {
+          "n": 5,
+          "min": 3382628,
+          "median": 3479780,
+          "p95": 3987676,
+          "max": 3987676
+        },
+        "first journey": {
+          "n": 5,
+          "min": 3535736,
+          "median": 3992784,
+          "p95": 5149760,
+          "max": 5149760
+        },
+        "warm": {
+          "n": 5,
+          "min": 3879388,
+          "median": 4169980,
+          "p95": 4629384,
+          "max": 4629384
+        }
+      }
+    }
+  },
+  "failures": []
+}

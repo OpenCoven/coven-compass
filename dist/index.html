@@ -2670,10 +2670,12 @@ let popAt = null;
 // Wrap only at whitespace. A word wider than the seal moves to a full caption.
 function missionNameLines(name, fits) {
   const lines = [];
+  let lineStart = 0, wordStart = 0;
   for (const word of name.trim().split(/\s+/u).filter(Boolean)) {
     const last = lines.length - 1;
-    if (last >= 0 && fits(lines[last] + ' ' + word)) lines[last] += ' ' + word;
-    else lines.push(word);
+    if (last >= 0 && fits(lines[last] + ' ' + word, lineStart)) lines[last] += ' ' + word;
+    else { lines.push(word); lineStart = wordStart; }
+    wordStart += word.length + 1;
   }
   return lines;
 }
@@ -2694,13 +2696,26 @@ function labelMission(s, name, scale, reference, side = 1) {
   s.name.style.fontSize = units + 'px';
   s.name.textContent = '';
   const first = svgEl('tspan', {x: 0}, s.name);
-  const fits = text => {
-    first.textContent = text;
+  // Measure one shaped SVG run. Word and line offsets use the same UTF-16
+  // units as getSubStringLength; whitespace is normalized before indexing.
+  const text = name.trim().replace(/\s+/gu, ' ');
+  first.textContent = text;
+  const width = first.getComputedTextLength();
+  const addressable = first.getNumberOfChars() === text.length;
+  const fits = (line, start) => {
+    if (addressable) return first.getSubStringLength(start, line.length) <= 112;
+    // Some characters can be discarded by SVG layout. Measure that line directly.
+    first.textContent = line;
     return first.getComputedTextLength() <= 112;
   };
-  const lines = missionNameLines(name, fits);
+  const lines = width > 112 ? missionNameLines(text, fits) : text ? [text] : [];
   const leading = units * 1.13;
-  s.needsCaption = lines.length * leading > 49 || lines.some(line => !fits(line));
+  let start = 0;
+  s.needsCaption = lines.length * leading > 49 || (width > 112 && lines.some(line => {
+    const ok = fits(line, start);
+    start += line.length + 1;
+    return !ok;
+  }));
   const display = s.needsCaption && reference ? [String(reference)] : lines;
   const height = leading * display.length;
   const gap = units * .5;
@@ -2711,7 +2726,7 @@ function labelMission(s, name, scale, reference, side = 1) {
     span.setAttribute('y', center + (i - (display.length - 1) / 2) * leading + units * .32);
     span.textContent = line;
   });
-  if (!name || first.getComputedTextLength() > 0) {
+  if (!name || width > 0) {
     s.labelName = name; s.labelUnits = units; s.reference = reference; s.labelSide = side;
   }
 }
@@ -2745,7 +2760,8 @@ function project() {
   const P = (x, y) => [x, y];
   const f = v => v.toFixed(1);
   const seg = (el, a, b, ox, oy) => { el.setAttribute('x1', f(a[0] + (ox || 0))); el.setAttribute('y1', f(a[1] + (oy || 0))); el.setAttribute('x2', f(b[0] + (ox || 0))); el.setAttribute('y2', f(b[1] + (oy || 0))); };
-  const vw = 784 / cam.zoom, screenScale = Math.max(.001, Math.min(stage.clientWidth, stage.clientHeight) / vw), kpx = Math.max(.05, screenScale), U = clamp(Math.pow(kpx, .35), .8, 1.2) / kpx;
+  const width = stage.clientWidth, height = stage.clientHeight;
+  const vw = 784 / cam.zoom, screenScale = Math.max(.001, Math.min(width, height) / vw), kpx = Math.max(.05, screenScale), U = clamp(Math.pow(kpx, .35), .8, 1.2) / kpx;
   const minHit = (narrow.matches ? 44 : 24) / screenScale;
   const squareHit = el => {
     el.setAttribute('x', f(-minHit / 2)); el.setAttribute('y', f(-minHit / 2));
@@ -2761,7 +2777,7 @@ function project() {
   const overviewChanged = cv.scale !== screenScale || cv.fontSize !== fsz || cv.narrow !== narrow.matches;
   if (far && overviewChanged) {
     cv.scale = screenScale; cv.fontSize = fsz; cv.narrow = narrow.matches;
-    sc.ghosts.forEach(gh => atlasProjectGhost(gh, P, f));
+    sc.ghosts.forEach(gh => atlasProjectGhost(gh, P, f, screenScale));
     const set = (t, q, dy) => { t.setAttribute('x', f(q[0])); t.setAttribute('y', f(q[1] + dy)); };
     cv.links.forEach((L, i) => {
       const gh = sc.ghosts[i], gate = P(L.gx, L.gy);
@@ -2795,7 +2811,6 @@ function project() {
     });
   }
   if (far) {
-    const width = stage.clientWidth, height = stage.clientHeight;
     if (overviewChanged || cv.px !== cam.px || cv.py !== cam.py || cv.width !== width || cv.height !== height) {
       showMissionCaptions(updateVisibleProjectPreviews(sc.ghosts, cam, screenScale, width, height));
       let totalRadius = 0, count = 0;
@@ -2846,7 +2861,7 @@ function project() {
   window.CovenAtlasCrown.draw(sc.psy.marker, {x: 0, y: 0, screenScale, radius: hubRadius, point});
   sc.psy.sx = pc[0]; sc.psy.sy = pc[1];
   const captions = [];
-  const lowWideMap = !far && stage.clientWidth >= 700 && stage.clientHeight < 440 && sc.missions.size <= 4;
+  const lowWideMap = !far && width >= 700 && height < 440 && sc.missions.size <= 4;
   let missionNumber = 0;
   sc.missions.forEach(s => {
     missionNumber++;
@@ -5401,9 +5416,8 @@ function updateVisibleProjectPreviews(ghosts, camera, scale, width, height) {
   return captions;
 }
 
-function atlasProjectGhost(gh, P, f) {
+function atlasProjectGhost(gh, P, f, scale) {
   const w = projects[gh.k].world;
-  const scale = Math.max(.001, Math.min(stage.clientWidth, stage.clientHeight) * cam.zoom / 784);
   const pixels = 560 * scale;
   gh.named = detailVisible(gh.named, pixels, 50, 44);
   gh.density = gh.named ? 'full' : 'tiny';
