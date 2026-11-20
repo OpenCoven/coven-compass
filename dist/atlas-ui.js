@@ -138,7 +138,7 @@
     var status = $('atlasProjectCount');
     if (status) status.textContent = count + (count === 1 ? ' Project' : ' Projects') + (needle ? ' found' : ' in this Coven');
   }
-  var fort = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 3 7 5h10l4-2-2 4v10l2 4-4-2H7l-4 2 2-4V7Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>';
+  var projectIcon = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M10 4H7L4 7v10l3 3h10l3-3V7l-3-3h-3" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>';
   function headerAction(control, label, drawing) {
     control.innerHTML = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + drawing + '</svg>';
     control.append(node('span', '', label));
@@ -164,7 +164,7 @@
     sim.title = 'An interactive local simulation. Decisions and chat affect sample data only.';
     var browse = headerAction(button('atlasBrowse', '', function () {
       if ($('atlasSidebar').hidden) openBrowse(); else closeBrowse(false);
-    }), 'Projects', '<path d="M3 3l3 1.5h8L17 3l-1.5 3v8l1.5 3-3-1.5H6L3 17l1.5-3V6L3 3Z"/>');
+    }), 'Projects', '<path d="M8 3H6L3 6v8l3 3h8l3-3V6l-3-3h-2"/>');
     browse.setAttribute('aria-expanded', 'false'); browse.setAttribute('aria-controls', 'atlasSidebar');
     browse.title = 'Browse Projects'; browse.setAttribute('aria-label', 'Browse Projects');
     var missions = headerAction(button('atlasMissions', '', function () {
@@ -327,7 +327,7 @@
             $('atlasProject').focus({ preventScroll: true });
           }, 'atlas-project');
           b.dataset.project = p.key;
-          var icon = node('span', 'atlas-project-icon'); icon.innerHTML = fort;
+          var icon = node('span', 'atlas-project-icon'); icon.innerHTML = projectIcon;
           var copy = node('span', 'atlas-project-copy'); copy.append(node('b'), node('span'));
           b.append(icon, copy, node('span', 'atlas-project-state'));
           $('atlasProjects').append(b); projectNodes.set(p.key, b);

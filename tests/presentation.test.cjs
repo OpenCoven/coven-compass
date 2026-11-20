@@ -232,7 +232,7 @@ test('local familiar selection clears a conflicting global filter; a chip replac
 });
 
 const constants = text => text.slice(text.indexOf('const TARGET_ROLES ='), text.indexOf('function sealOf(')).trim();
-const groundZT = text => Number(text.match(/const ZW\s*=\s*[^;]+\bZT\s*=\s*([\d.]+)/)[1]);
+const groundZT = text => Number(text.match(/\bZT\s*=\s*([\d.]+)/)[1]);
 const familiars = {
   astra: { name: 'Astra', hue: '#9cc2f2', roles: ['Researcher'] },
   cody: { name: 'Cody', hue: '#e8c99a', roles: ['Hacker'] },
