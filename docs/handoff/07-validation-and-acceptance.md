@@ -10,7 +10,7 @@ node --test --test-reporter=tap tests/*.test.cjs
 node scripts/test-atlas-crown.mjs
 ```
 
-The layout module's sweep covers selected project counts through 128 (0, 1, 2, 4, 8, 12, 24, 64, and 128) as geometric correctness cases; mission packing covers every integer count from 0 through 128. It is not a load test or production benchmark. Current browser QA is unavailable because of the prior browser URL-policy block. Historical pre-layout Chrome records and source fingerprints do not establish visual or interaction acceptance of the new layout, density modes, sample controls, crown, or fit behavior. [Guide 15](15-scalable-atlas-layout.md) supplies the current presentation contract and remaining browser cases.
+The layout module's sweep covers selected project counts through 128 (0, 1, 2, 4, 8, 12, 24, 64, and 128) as geometric correctness cases; mission packing covers every integer count from 0 through 128. It is not a load test or production benchmark. Headless Chromium QA of the current source ran on 2026-11-19 ([record](../../tests/evidence/browser-qa-2026-11-19.json), summarized in chapter 01); it does not establish Safari, physical-device, real multi-touch, keyboard-only, or screen-reader acceptance. Historical pre-layout Chrome records and source fingerprints do not establish visual or interaction acceptance of the new layout, density modes, sample controls, crown, or fit behavior. [Guide 15](15-scalable-atlas-layout.md) supplies the current presentation contract and remaining browser cases.
 
 ## Historical v3 baseline evidence
 

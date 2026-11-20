@@ -1917,8 +1917,23 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
 <script src="atlas-layout.js"></script>
 <script src="atlas-viewport.js"></script>
 <script src="atlas-crown.js"></script>
+<script src="projection-source.js"></script>
 <script>
 (() => {
+// Projection mode is explicit (?source=). Any mode other than the simulation stops here,
+// before the simulation boots, so sample data can never stand in for another source.
+const requestedSource = new URLSearchParams(location.search).get('source');
+if (requestedSource !== null && requestedSource.trim().toLowerCase() !== 'simulation') {
+  if (window.CovenProjection) window.CovenProjection.renderStandalone(document, window.CovenProjection.selectMode(location.search));
+  else {
+    document.getElementById('app').hidden = true;
+    const alert = document.createElement('p');
+    alert.setAttribute('role', 'alert');
+    alert.textContent = 'Projection source unavailable: projection-source.js did not load. No sample data is shown.';
+    document.body.appendChild(alert);
+  }
+  return;
+}
 const NS = 'http://www.w3.org/2000/svg', RAD = Math.PI / 180;
 let sealAnimating = false;
 const S = 280, A = 74, B = 30, BT = 82, G = 22, LEAD_R = 118, C = 10.5;
@@ -5489,6 +5504,7 @@ function atlasSnapshot(includeMissions) {
   const c = cur(), M = c.sel && c.world.missions.get(c.sel), scope = atlasScope === 'coven' ? 'coven' : M ? 'mission' : 'project';
   return {active, scope, projects: ps, familiars: [...fs.values()], missions, missionItems, agents, needs, highlight: sc.hl || null, mission: M ? M.name : null, missionId: M ? M.id : null, detail: c.detail, view: panelView, camera: {is3d: camT.pitch > 2, locked: cam.locked, gestureMode: camT.pitch <= 2 ? 'pan' : atlasGestureMode}};
 }
+if (window.CovenProjection) window.CovenProjection.register(window.CovenProjection.createSimulationSource({snapshot: () => atlasSnapshot(false)}));
 if (window.CovenAtlas) {
   window.CovenAtlas.mount({snapshot: atlasSnapshot, overview: atlasOverview, openProject: atlasOpenProject, openMission: atlasOpenMission, setProjectCount: atlasSetProjectCount, newProject: () => openProjectForm(), camera: atlasCamera, highlight: covHl, legend: () => $('keyBtn').click()});
   $('plan').setAttribute('role', 'group');

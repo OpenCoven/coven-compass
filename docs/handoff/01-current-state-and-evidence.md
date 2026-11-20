@@ -46,7 +46,8 @@ The combined mobile workspace reuses the original replay and camera controls in 
 | `dist/atlas-crown.js` | Exact canonical crown faces and sampled extrusion walls | Decorative scene relief; no change to familiar identity, mission progress, or flat UI marks |
 | `dist/mobile-ui.js` and scene viewport callbacks | Adaptive dock, original-node portals, measured stage space, keyboard state, focus, and modal ownership | Refit only the visible interactive scene; preserve manual camera policy and existing control state |
 | `dist/index.html`: replay loop, `seek`, and `emit` | Shared local replay cursor, elapsed playback, event application, and delayed-report retention | Keep sample replay separate from canonical execution time, persistence, and operation receipts |
-| `atlasSnapshot` | Derives navigation and familiar totals from sample worlds | Proposed replacement seam for a normalized, read-only SDK projection |
+| `atlasSnapshot` | Derives navigation and familiar totals from sample worlds | Wrapped by the simulation `ProjectionSource` in `dist/projection-source.js`. A read-only canonical adapter implements the same `read()` interface; the fixture source is the first non-simulation implementation |
+| `dist/projection-source.js`, `dist/fixtures/` | Explicit `?source=` mode selection; simulation and fixture sources; a standalone view with fresh/stale/reconciling/unavailable states | The plug-in point for a live adapter once D01/D03/D04 are decided. A non-simulation mode never boots the simulation |
 | `buildScene`, `sync`, `project`, `applySel` | Constructs SVG, reconciles it, projects geometry, and applies local selection/filter state | Retain presentation logic while separating canonical data from local view state |
 | `atlasSyncOverviewMissions` | Adds/removes overview seals as mission IDs change | Preserve reconciliation across snapshot replacement, event replay, and pagination/completeness changes |
 | `sealOf`, `buildSeal`, `drawSeal` | Computes and draws mission seal measurements/state | Preserve meanings; use canonical progress/limit evidence instead of inferring success from visual height |
@@ -63,6 +64,15 @@ This is a navigation aid, not a promise that similarly named functions exist in 
 ### Current evidence: generated, not hand-written
 
 Current counts live in one file, [`tests/evidence/current.json`](../../tests/evidence/current.json). `node scripts/verify-all.mjs` runs the static source checker, the Node suite, the crown check, a handoff build, ZIP verification, and the source/test/crown/manifest checks in a clean extraction of the built ZIP, then writes the counts it measured. CI runs `node scripts/verify-all.mjs --check` on every pull request and fails if that file is stale. `--report PATH` adds the commit, runtimes, time, and per-step results for one run; CI uploads that report as a workflow artifact. Evidence level: static + unit only.
+
+### Browser QA — 2026-11-19 (headless Chromium)
+
+`scripts/browser-qa.mjs` ran at commit `b3970fd` in headless Chromium 130.0.6723.31 (Playwright 1.48.2, installed outside the repository) against `python3 -m http.server`. It made **201 browser checks, 201 passed, 0 failed** ([record](../../tests/evidence/browser-qa-2026-11-19.json)):
+
+- **Simulation mode**, both default and `?source=simulation`, at 1440×900, 390×844 and 844×390. The map renders and the settled fit keeps every Project in the stage. A Project opens from the Projects drawer, and a mission opens from the mission browser (the mobile dock's Missions on phones) with its inspector visible. Replay starts and moves the cursor. Seal lab opens and closes. The mobile dock shows on phones and is hidden on desktop. No console errors, page errors or failed requests (Google Fonts excluded).
+- **Every `?source=fixture` scenario, and `?source=live`**, at the same sizes. The simulation never boots: `#app` is hidden and the Atlas header is not mounted. The state label and message match each scenario. The Projects table is present with the right row count, or absent. There's no horizontal page scroll and no clipped table.
+
+The run found one bug, in the fixture table layout at phone width, which was fixed in `b3970fd` before the recorded run. Screenshots stay outside the repository. This is browser-engine evidence. It **does not establish** Safari, physical devices, real multi-touch, keyboard-only use, screen readers, or daemon behavior.
 
 Everything after this subsection is a **dated historical record**. It keeps its counts as recorded and is not updated with later changes. Other documents link here or to `current.json` instead of repeating counts, and `scripts/check-source.mjs` enforces that.
 
@@ -96,7 +106,7 @@ node --test --test-reporter=tap tests/*.test.cjs
 node scripts/test-atlas-crown.mjs
 ```
 
-The layout sweep covers selected project counts through 128 (0, 1, 2, 4, 8, 12, 24, 64, and 128) as bounded geometry cases. Mission-packing integration covers every integer count from 0 through 128. These are not load or production benchmarks. Current browser QA is unavailable because of the prior browser URL-policy block. No workaround was used, and neither historical Chrome evidence nor source-only checks establish visual, keyboard, touch, or responsive acceptance of this refinement. Locally generated SVG specimens illustrate source geometry, not browser rendering or interaction. [Remaining layout acceptance](15-scalable-atlas-layout.md)
+The layout sweep covers selected project counts through 128 (0, 1, 2, 4, 8, 12, 24, 64, and 128) as bounded geometry cases. Mission-packing integration covers every integer count from 0 through 128. These are not load or production benchmarks. At this 2026-11-18 checkpoint, browser QA was unavailable because of the prior browser URL-policy block; see the 2026-11-19 browser QA record above for the later run. No workaround was used, and neither historical Chrome evidence nor source-only checks establish visual, keyboard, touch, or responsive acceptance of this refinement. Locally generated SVG specimens illustrate source geometry, not browser rendering or interaction. [Remaining layout acceptance](15-scalable-atlas-layout.md)
 
 ### Combined standalone export verification — 18 November 2026
 
