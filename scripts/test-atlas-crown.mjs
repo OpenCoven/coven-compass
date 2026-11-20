@@ -72,7 +72,7 @@ const hole = crown.edges.filter(edge => edge.hole).map(edge => edge.a);
 const holeCenter = [0, 1].map(axis =>
   (Math.min(...hole.map(p => p[axis])) + Math.max(...hole.map(p => p[axis]))) / 2);
 let views = 0;
-for (const size of [34, 118, 420]) {
+for (const size of [38, 118, 440]) {
   for (const pitch of [0, 25, 60, 90]) {
     for (const yaw of [-360, -90, 0, 90, 180, 270, 360]) {
       api.draw(crown, { x: 50, y: -30, size, pitch, yaw });
@@ -89,6 +89,10 @@ for (const size of [34, 118, 420]) {
         }
       }
       const front = matrix(crown.front), back = matrix(crown.back);
+      assert.deepEqual(front.slice(0, 5), [size, 0, 0, size, 0], 'The front uses the canonical proportions and stays upright.');
+      assert.deepEqual(back.slice(0, 5), front.slice(0, 5), 'Depth has no sideways offset.');
+      const depth = (back[5] - front[5]) / size;
+      assert(depth > 0 && depth <= 0.035, 'Visible depth is shallow at every crown size.');
       const frontCenter = project(front, holeCenter), backCenter = project(back, holeCenter);
       const clearPoint = frontCenter.map((v, i) => (v + backCenter[i]) / 2);
       assert(inside(hole.map(p => project(front, p)), clearPoint));
@@ -103,11 +107,17 @@ for (const size of [34, 118, 420]) {
   }
 }
 api.draw(crown, { x: 0, y: 0, size: 118, pitch: 0, yaw: 0 });
-const reliefAtZero = matrix(crown.back)[5] - matrix(crown.front)[5];
-assert(reliefAtZero > 0, 'Plan view retains readable relief.');
-assert(crown.edges.some(edge => edge.el.getAttribute('display') === 'inline'));
-api.draw(crown, { x: 0, y: 0, size: 118, pitch: 90, yaw: 0 });
-assert(matrix(crown.back)[5] - matrix(crown.front)[5] > reliefAtZero, 'Relief responds to pitch.');
+const faces = [matrix(crown.front), matrix(crown.back)];
+const visibleWalls = crown.edges.filter(edge => edge.el.getAttribute('display') === 'inline');
+assert(visibleWalls.length > 0);
+assert.match(crown.front.getAttribute('fill'), /var\(--primary[,) ]/);
+for (const edge of visibleWalls) {
+  assert.equal(edge.el.getAttribute('fill'), crown.back.getAttribute('fill'), 'The rim keeps a single rear-face shade.');
+  assert.equal(edge.el.getAttribute('stroke'), edge.el.getAttribute('fill'), 'Wall seams use the same color.');
+}
+api.draw(crown, { x: 20, y: -18, size: 118, pitch: 90, yaw: 90 });
+assert.deepEqual([matrix(crown.front), matrix(crown.back)], faces, 'Orbit preserves depth and orientation.');
+assert.equal(crown.g.getAttribute('transform'), 'translate(20 -18)', 'The crown still follows the projected scene center.');
 for (const view of [{}, { size: 0 }, { size: -1 }, { size: Infinity, pitch: NaN, yaw: Infinity },
   { x: Number.MAX_VALUE, y: -Number.MAX_VALUE, size: Number.MAX_VALUE }]) {
   api.draw(crown, view);

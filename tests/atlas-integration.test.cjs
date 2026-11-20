@@ -138,75 +138,27 @@ test('actual snapshot and hash writer keep explicit scope at extreme and mismatc
   assert.equal(writes.length, n, 'Back/Forward restoration does not push another route');
 });
 
-function overviewFixture() {
-  const all = Array.from({length: 128}, (_, index) => ({id: `m${index}`, name: `Mission ${index}`, seats: ['astra']}));
-  const demoProject = {world: {missions: new Map(), agents: new Map()}, layout: {n: 4}};
-  const gh = {k: 'demo', g: svgEl('g'), missions: [], runs: [], plinths: [], faces: [], ox: 0, oy: 0};
-  gh.aggregate = svgEl('text', {}, gh.g); gh.more = svgEl('g', {}, gh.g); gh.moreLabel = svgEl('text', {}, gh.more);
-  const opens = [], draws = [], cam = {zoom: 1};
-  const context = load(['atlasFocusable', 'atlasSyncOverviewMissions', 'atlasProjectGhost'], {
-    projects: {demo: demoProject}, window: {CovenAtlasLayout: layout}, svgEl,
-    atlasOpenMission: (...args) => opens.push(args),
-    stage: {clientWidth: 1000, clientHeight: 700}, cam, sc: {hl: null}, ZPL: 14, ZT: 0,
-    plural: (count, noun) => `${count} ${noun}${count === 1 ? '' : 's'}`,
-    // Seal math has its own pinned-baseline fixtures. Here the real integration
-    // must use packed radius, maintain records, and preserve exact count labels.
-    sealOf: () => ({state: 'planned', warn: false, wedges: []}), SEAL_STATE: {planned: ['Planned']},
-    buildSeal() {}, drawSeal: (...args) => draws.push(args),
-    ring: (x, y, radius, count) => Array.from({length: count}, (_, i) => [
-      x + radius * Math.cos(i / count * 2 * Math.PI), y + radius * Math.sin(i / count * 2 * Math.PI),
-    ]),
+test('overview keeps a single exact and accessible count as replay and density change', () => {
+  const world = {missions: new Map(), agents: new Map()};
+  const gh = {k: 'demo', g: svgEl('g'), ox: 0, oy: 0};
+  const aggregate = gh.aggregate = svgEl('text', {}, gh.g);
+  const cam = {zoom: 1};
+  const context = load(['atlasProjectGhost'], {
+    projects: {demo: {world}}, stage: {clientWidth: 1000, clientHeight: 700}, cam,
+    ZPL: 14, ZT: 0, clamp, openAsks: () => [],
+    detailVisible: require('../dist/atlas-presentation.js').detailVisible,
+    plural: (n, noun) => n + ' ' + noun + (n === 1 ? '' : 's'),
   });
-  const sync = () => context.atlasSyncOverviewMissions(gh);
-  const project = () => context.atlasProjectGhost(gh, (x, y, z) => [x, y, z], n => n.toFixed(2), 1,
-    points => points.map(point => point.slice(0, 2).join(',')).join(' '));
-  const set = missions => { demoProject.world.missions = new Map(missions.map(mission => [mission.id, mission])); sync(); };
-  return {context, all, demoProject, gh, cam, opens, draws, sync, project, set};
-}
-
-test('actual overview packing keeps eight seals plus exact overflow through 128 missions', () => {
-  const f = overviewFixture(); let first;
-  for (let count = 0; count <= 128; count++) {
-    f.set(f.all.slice(0, count)); f.project();
-    const expected = layout.missionPacking(count, {limit: 8, radius: 150});
-    assert.equal(f.gh.packing.total, count); assert.equal(f.gh.missions.length, Math.min(count, 8));
-    assert.equal(f.gh.g.children.filter(el => el.getAttribute('class') === 'atlas-ghost-mission').length, Math.min(count, 8));
-    assert.equal(f.gh.aggregate.textContent, String(count), 'aggregate text is the full count');
-    assert.equal(f.gh.g.getAttribute('aria-label'), `demo, ${count} mission${count === 1 ? '' : 's'}, 0 agents. Open project`);
-    if (count > 8) {
-      assert.equal(f.gh.moreLabel.textContent, `+${count - 8}`);
-      assert.equal(f.gh.more.style.display, '');
-      assert.match(f.gh.more.getAttribute('aria-label'), new RegExp(`Open all ${count} missions$`));
-    } else assert.equal(f.gh.more.style.display, 'none');
-    f.gh.missions.forEach((record, index) => {
-      near(record.x, expected.items[index].x, 'packed x'); near(record.y, expected.items[index].y, 'packed y');
-    });
-    if (count === 1) first = f.gh.missions[0];
-    if (count > 1) assert.equal(f.gh.missions[0], first, 'unaffected DOM records survive changing slot geometry');
-    assert.equal(f.demoProject.layout.n, 4, 'mission count does not require a boundary-count change');
-  }
-  near(f.draws.at(-1)[4].radius, f.gh.packing.sealRadius, 'real renderer receives the bounded packed radius');
-  f.gh.missions[7].g.dispatch('click'); f.gh.missions[7].g.dispatch('keydown', {key: ' '});
-  assert.deepEqual(f.opens, [['demo', 'm7'], ['demo', 'm7']]);
-});
-
-test('overview replay removes stale seals, retains unchanged records, and restores exact totals', () => {
-  const f = overviewFixture(); f.set(f.all);
-  const retained = f.gh.missions[2], removed = f.gh.missions[0];
-  f.set([f.all[2], f.all[127]]); f.project();
-  assert.equal(f.gh.missions[0], retained); assert.equal(removed.g.parent, null);
-  assert.deepEqual(Array.from(f.gh.missions, mission => mission.id), ['m2', 'm127']);
-  const late = f.gh.missions[1]; late.g.dispatch('keydown', {key: 'Enter'});
-  assert.deepEqual(f.opens, [['demo', 'm127']], 'a replay-created record opens its actual mission');
-  f.set(f.all); f.sync(); f.project();
-  assert.equal(f.gh.missions[2], retained); assert.equal(late.g.parent, null);
-  assert.equal(f.gh.missions.length, 8); assert.equal(f.gh.packing.total, 128);
-  assert.equal(f.gh.moreLabel.textContent, '+120');
-  for (const [zoom, density] of [[0.07, 'compact'], [0.04, 'tiny']]) {
-    f.cam.zoom = zoom; const before = f.draws.length; f.project();
-    assert.equal(f.gh.density, density); assert.equal(f.gh.g.getAttribute('data-density'), density);
-    assert.equal(f.gh.aggregate.textContent, '128'); assert.match(f.gh.g.getAttribute('aria-label'), /128 missions/);
-    assert.equal(f.gh.more.style.display, 'none'); assert.equal(f.draws.length, before, 'dense tiers omit seal-detail rendering');
+  const project = () => context.atlasProjectGhost(gh, (x, y, z) => [x, y, z], n => n.toFixed(2));
+  for (const count of [...Array.from({length: 129}, (_, i) => i), 2, 0, 128]) {
+    world.missions = new Map(Array.from({length: count}, (_, i) => [i, {}]));
+    for (const [zoom, density] of [[1, 'full'], [0.04, 'tiny']]) {
+      cam.zoom = zoom; project();
+      assert.equal(gh.density, density);
+      assert.equal(aggregate.textContent, String(count));
+      assert.equal(gh.g.getAttribute('aria-label'), `demo, ${count} mission${count === 1 ? '' : 's'}, 0 agents. Open project`);
+      assert.deepEqual(gh.g.children, [aggregate], 'density changes reuse the single count element');
+    }
   }
 });
 

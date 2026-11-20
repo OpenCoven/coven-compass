@@ -16,7 +16,7 @@ The [scalable layout and crown guide](15-scalable-atlas-layout.md) supersedes ea
 | Psyche crown at the center | Coordination within the displayed scope | That the model or UI owns daemon authority |
 | Neutral connection | A project participates in this coordination scope | Network reachability or active execution by itself |
 | Shared branch corridor and inward gate | Readable coordination from Psyche to the destination Project | Execution dependencies, scheduling order, or authority implied by shared geometry |
-| Mission aggregate or overflow marker | Exact known total or remainder when miniature detail is reduced | A limit on the canonical mission collection or evidence of complete data when coverage is partial |
+| Mission count inside a Project | Exact known mission total | A limit on the canonical mission collection or evidence of complete data when coverage is partial |
 | Colored connection after familiar selection | That familiar's assignments in that project | Permission to change all highlighted work |
 | Dotted connection | No agents assigned in the current complete sample projection | Offline, deleted, or inaccessible data; those require explicit state |
 
@@ -63,9 +63,9 @@ Current progress ownership uses `TARGET_ROLES` in the prototype. Production inte
 
 ## 5. Progressive detail and control placement
 
-The Coven view carries boundaries, seals, decisions, and a compact identity filter. The Projects drawer is closed by default and overlays the map without changing its dimensions. Project view reveals useful controls and group counts. Mission selection opens task/agent detail. Retain the existing replay and Seal lab as clearly scoped controls.
+The Coven view carries boundaries, exact mission counts, decision badges, and a compact identity filter. The Projects drawer is closed by default and overlays the map without changing its dimensions. Project view reveals useful controls and group counts. Mission selection opens task/agent detail. Retain the existing replay and Seal lab as clearly scoped controls.
 
-Full overview detail shows at most eight mission seals plus an exact overflow count. Compact/tiny density modes show an exact mission aggregate instead of unreadable miniatures; the complete mission collection remains available through search and drilldown. Project search and the 8/16/32/64/128 layout samples make dense compositions inspectable. **Remove extra samples** removes only generated layout samples, preserving baseline and user-created Projects. The removed cosmetic 16-Project and 12-mission creation caps must not return as model limits.
+Project view shows mission seals on a common shallow base. Wedge height adds role-owned progress when the projected seal is large enough to read. The selected mission has a neutral selection ring, a state label, and a single review preview. Its detail pages retain exact agent counts and the Inbox retains every pending decision. Project search and the sample presets keep larger compositions navigable.
 
 Coven and project scope are explicit navigation state, separate from camera zoom. A Fit action uses measured chrome-safe space and enables auto-fit; resize refits only in that mode. Manual camera framing is retained. Camera fitting includes screen-facing crown and label bounds as well as the projected ground. [Scope and fit details](15-scalable-atlas-layout.md)
 

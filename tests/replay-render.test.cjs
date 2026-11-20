@@ -108,6 +108,8 @@ function fixture(trace = []) {
     pol: (radius, degrees) => [radius * Math.cos(degrees * Math.PI / 180), radius * Math.sin(degrees * Math.PI / 180)],
     unit: (x, y) => { const length = Math.hypot(x, y) || 1; return [x / length, y / length]; },
     atlasEaseProgress: (_seal, _key, target) => target,
+    ...require('../dist/atlas-presentation.js'),
+    clamp: (n, min, max) => Math.min(max, Math.max(min, n)),
     atlasFocusable() {}, makeSolid: () => ({}), sigil: () => '', SIGIL: { mission: '' },
     drawNew() {}, syncCoven() {}, applySel() {}, fxFor() {},
     $: id => { if (!elements.has(id)) elements.set(id, new Element()); return elements.get(id); },
@@ -117,14 +119,13 @@ function fixture(trace = []) {
   const ring = source.slice(ringStart, source.indexOf('\n', ringStart));
   context.SimModel = loadSimulationModel({ normBrief: () => null, fam: context.fam });
   const names = ['seek', 'hullOf', 'sync', 'sealOf', 'buildSeal', 'drawSeal',
-    'atlasSyncOverviewMissions', 'atlasProjectGhost'];
+    'atlasProjectGhost'];
   new vm.Script(`${constants}\n${ring}\n${names.map(extract).join('\n')}`, {
     filename: 'actual-replay-render-functions.js',
   }).runInContext(context);
   const cp = Math.cos(.65), sp = Math.sin(.65);
   const P = (x, y, z) => [x, y * cp - z * sp, y * sp + z * cp];
   const f = number => number.toFixed(4);
-  const pp = points => points.map(point => `${f(point[0])},${f(point[1])}`).join(' ');
   function renderActive(options = {}) {
     context.sync();
     for (const mission of sc.missions.values()) {
@@ -135,8 +136,7 @@ function fixture(trace = []) {
     }
   }
   function renderGhost() {
-    context.atlasSyncOverviewMissions(ghost);
-    context.atlasProjectGhost(ghost, P, f, cp, pp);
+    context.atlasProjectGhost(ghost, P, f);
     finiteAttributes(ghost.g);
   }
   return { c, sc, ghost, context, renderActive, renderGhost };
@@ -163,15 +163,15 @@ test('an active mission renders before its first council seat at every map tier'
   assert.ok(seal.sgTop.attributes.rx, 'The planned mission has a rendered center');
 });
 
-test('an overview mission renders before its first council seat and gains its wedge later', () => {
+test('an overview count is available before the mission seats its first familiar', () => {
   const trace = [opened, { t: 73000, type: 'council.seated', mission: 'm1', familiar: 'astra' }];
   const { c, ghost, context, renderGhost } = fixture(trace);
   context.seek(c, 1000, true);
   assert.doesNotThrow(renderGhost);
-  assert.equal(ghost.missions[0].seal.wedges.length, 0);
+  assert.equal(ghost.aggregate.textContent, '1');
   context.seek(c, 73000, true);
   assert.doesNotThrow(renderGhost);
-  assert.equal(ghost.missions[0].seal.wedges.length, 1);
+  assert.equal(ghost.aggregate.textContent, '1');
 });
 
 test('replay renders through mission opening, sparse events, seating, closure, and backward seek', () => {
@@ -191,10 +191,10 @@ test('replay renders through mission opening, sparse events, seating, closure, a
     assert.equal(c.applied, trace.filter(event => event.t <= time).length);
   }
   assert.equal(sc.missions.size, 0, 'Closed mission leaves the active map');
-  assert.equal(ghost.missions.length, 0, 'Closed mission leaves the overview');
+  assert.equal(ghost.aggregate.textContent, '0', 'Closed mission leaves the overview');
   context.seek(c, 1000, true);
   assert.doesNotThrow(renderActive, 'Backward replay recreates a planned mission');
-  assert.doesNotThrow(renderGhost, 'Backward replay recreates its overview seal');
+  assert.doesNotThrow(renderGhost, 'Backward replay restores its overview count');
   assert.equal(sc.missions.get('m1').seal.wedges.length, 0);
-  assert.equal(ghost.missions[0].seal.wedges.length, 0);
+  assert.equal(ghost.aggregate.textContent, '1');
 });
