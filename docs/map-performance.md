@@ -18,7 +18,7 @@ Each timing cell below gives primary / reproduction medians in milliseconds. Eac
 
 The overview return had the largest median increase from 4 to 128 Projects on desktop in both runs (+99.6 and +84.1 ms) and on narrow in the primary run (+86.3 ms). In the narrow reproduction, opening Missions rose from 24.2 to 95.2 ms (+71.0), ahead of overview return (+65.4). Individual 128-Project overview returns ranged from 102.1 to 146.2 ms across the two matrices. At this density the p95 frame interval over the entire warmed journey was 50–67 ms on desktop and 50 ms on narrow. Both 32-Project runs were about 33 ms at p95. [Individual observations and timelines](../tests/evidence/map-performance-2026-11-20/main-matrix.tar.gz) · [Reproduction observations and timelines](../tests/evidence/map-performance-2026-11-20/repro-matrix.tar.gz)
 
-The two dense desktop profiles each recorded 150 Layout events inside a single overview return. Layout occupied 61 and 54 ms and style recalculation occupied 43 and 40 ms in the respective windows. Paint occupied about 1 ms in each. Both CPU profiles sampled `project` and `atlasProjectGhost` during that input. The latter reads stage dimensions for each Project and updates its SVG attributes. A bounded follow-up can test whether reading those dimensions once per frame reduces repeated layout. The baseline establishes where to look. Measuring the same journey before and after a change would establish its effect.
+The two dense desktop profiles each recorded 150 Layout events inside a single overview return. Layout occupied 61 and 54 ms and style recalculation occupied 43 and 40 ms in the respective windows. Paint occupied about 1 ms in each. Both CPU profiles sampled `project` and `atlasProjectGhost` during that input. The latter reads stage dimensions for each Project and updates its SVG attributes. The overview-return measurements below compare this baseline with a version that reads the stage dimensions once per frame.
 
 Initial document load always boots the four-Project map. Across 30 fresh contexts per run, median navigation-to-load was 364 ms in the first matrix and 339 ms in the second. The larger presets have a separate first-use cost. For example, populating 128 Projects on desktop took 115 ms and 136 ms at the median. Each raw report also separates first use of Missions from repeated use of its existing drawer.
 
@@ -34,7 +34,30 @@ Each dense narrow soak used one document for its full duration and returned to t
 
 The attached-element endpoint increased in the first run and decreased in the reproduction. Renderer node counts ended higher in both runs, while used heap rose and fell during each run. These observations leave retained-object growth unresolved. A heap-retention investigation would need additional evidence such as object retainers across controlled garbage collections. [Primary checkpoint and frame records](../tests/evidence/map-performance-2026-11-20/main-soak.tar.gz) · [Reproduction checkpoint and frame records](../tests/evidence/map-performance-2026-11-20/repro-soak.tar.gz)
 
-**Proposed for Val's decision.** Use a 100 ms median for a warmed Project-to-overview return across five fresh contexts on each of these two viewport configurations as a regression budget for this host and browser. Both runs meet it through the measured 32-Project sample and exceed it at 128. The observed gap gives the threshold a practical use for comparing candidates. Val owns acceptance of the budget and any published support claim.
+### Overview-return budget
+
+The regression budget is **at most 100 ms** for the median warmed Project-to-overview return across five fresh contexts, evaluated separately at 4, 32, and 128 Projects on desktop and narrow. It applies to the reference hardware, Chromium version, sample composition and measurement runner above. Product support on other configurations requires its own evidence.
+
+Run `python3 scripts/check-overview-budget.py <matrix-output-directory>` after the external browser matrix. It compares the unrounded median and prints each observed range. Exit 0 means all six cells met budget. Exit 1 identifies an over-budget cell. Exit 2 identifies incomplete or inapplicable evidence. Both historical baseline matrices exceeded budget at 128 Projects on both viewports.
+
+### Renderer comparison
+
+The baseline served `c15823626a073540c3a8a5bff08f018eb360a091`. The frame-scale change at `68ddbebc94243cabf823fbc455ab3f993c1d7309` reads the stage dimensions once per frame and shares its scale across Project tiles. The candidate at `e7bb5a38ef76536ef94148db91a586cec5f664be` also measures a mission name in a single SVG text run while fitting its words. Each column is a separate matrix on the reference host. Each value is an unprofiled warmed median in milliseconds over five fresh contexts.
+
+| Viewport | Projects | Baseline | Frame scale | Frame scale repeat | Candidate | Candidate repeat |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| desktop | 4 | 27.3 | 27.0 | 27.1 | 24.8 | 24.7 |
+| desktop | 32 | 71.1 | 42.1 | 36.7 | 45.6 | 34.1 |
+| desktop | 128 | 118.3 | 91.8 | 114.2 | 102.3 | 83.9 |
+| narrow | 4 | 57.4 | 29.1 | 58.9 | 37.1 | 29.1 |
+| narrow | 32 | 71.4 | 74.7 | 69.2 | 65.9 | 61.3 |
+| narrow | 128 | 131.2 | 112.7 | 110.3 | 116.0 | 104.2 |
+
+Each matrix completed all 30 journeys, including checks on Project selection, mission counts, keyboard focus, replay and return to the overview. The two candidate matrices met the budget through 32 Projects on both viewports. The 128-Project workload remains a stress case. The observed latency includes the browser’s frame scheduling.
+
+During the separately profiled 128-Project desktop return, the baseline recorded 150 Layout events. Each candidate run recorded 15. Across those same three windows, time in Layout was 73.6 ms, 49.2 ms and 46.5 ms, respectively. Each profile covers one return. The unprofiled medians above determine the budget result.
+
+Extract an archive and pass its top-level directory to the budget checker or to `scripts/summarize-map-performance.py` for the complete breakdown. Each archive includes the served-file checksums, input observations, frame records and Chromium profiles. [Baseline](../tests/evidence/overview-return-2026-11-20/baseline.tar.gz) · [Frame scale](../tests/evidence/overview-return-2026-11-20/frame-scale.tar.gz) · [Frame scale repeat](../tests/evidence/overview-return-2026-11-20/frame-scale-repeat.tar.gz) · [Candidate](../tests/evidence/overview-return-2026-11-20/candidate.tar.gz) · [Candidate repeat](../tests/evidence/overview-return-2026-11-20/candidate-repeat.tar.gz)
 
 ## Reproduction
 
