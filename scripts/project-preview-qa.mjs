@@ -352,6 +352,7 @@ test('inspector actions open the brief and conversation and desktop title rows a
       await edit.click();
       await page.locator('#empty').waitFor();
       assert.equal(await page.locator('#nmName').inputValue(), 'Source survey');
+      assert.ok(await page.locator('#nmTitle').evaluate(el => document.activeElement === el));
       await page.locator('#emptyX').click();
       assert.ok(await edit.evaluate(el => document.activeElement === el));
       await ask.click();
@@ -368,6 +369,12 @@ test('inspector actions open the brief and conversation and desktop title rows a
         await ask.click();
         assert.equal(await say.inputValue(), 'Draft question');
         assert.ok(await say.evaluate(el => el === document.activeElement));
+        await page.locator('#minBtn').click();
+        await page.locator('#scrub').press('ArrowLeft');
+        const history = actions.getByRole('button', {name: 'View chat'});
+        await history.click();
+        assert.equal(await say.isDisabled(), true);
+        assert.ok(await page.locator('#tabChat').evaluate(el => document.activeElement === el));
       }
     } finally { await page.close(); }
   }
