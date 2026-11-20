@@ -3,8 +3,8 @@
   "evidence_level": "static + unit (Node with DOM facades). Not browser, device, daemon, packaged CLI, or remote Host.",
   "tests": {
     "files": 19,
-    "tests": 270,
-    "pass": 270,
+    "tests": 271,
+    "pass": 271,
     "fail": 0,
     "cancelled": 0,
     "skipped": 0,
@@ -14,9 +14,9 @@
     "view_size_combinations": 12
   },
   "package": {
-    "files": 120,
-    "payload_entries": 118,
-    "sha256_checks": 119
+    "files": 126,
+    "payload_entries": 124,
+    "sha256_checks": 125
   },
   "extracted_copy": "Source, tests, crown, and manifest checks repeated in a clean extraction of the built ZIP."
 }

@@ -27,6 +27,19 @@ test('mission names wrap at word boundaries in the caption and retain short name
   assert.deepEqual(lines('Release', 7), ['Release']);
 });
 
+test('wrapping measures each candidate at its offset in the normalized SVG run', () => {
+  const original = '  👩🏽‍💻\tgo   go\nnext  phase';
+  const normalized = original.trim().replace(/\s+/gu, ' ');
+  const offsets = [];
+  const result = Array.from(ctx.missionNameLines(original, (candidate, start) => {
+    assert.equal(normalized.slice(start, start + candidate.length), candidate);
+    offsets.push(start);
+    return candidate.length <= 7;
+  }));
+  assert.deepEqual(result, ['👩🏽‍💻', 'go go', 'next', 'phase']);
+  assert.deepEqual(offsets, [0, 8, 8, 14]);
+});
+
 test('long words and unlimited rows retain every word in the source name', () => {
   for (const name of ['OpenCovenCompass review', 'one two three four five six', 'release-candidate integration', '👩🏽‍💻'.repeat(10) + ' café 日本語', 'x…y']) {
     assert.equal(lines(name, 6).join(' '), name);
@@ -42,8 +55,9 @@ test('seal labels use one-third design size, a screen-pixel floor and a caption 
       const span = {
         setAttribute(key, value) { this[key] = value; },
         getComputedTextLength() { return this.textContent.length * parseFloat(parent.style.fontSize) / 2; },
-        getNumberOfChars() { return this.textContent.length; },
+        getNumberOfChars() { return Array.from(this.textContent).length; },
         getSubStringLength(start, length) {
+          assert.equal(this.getNumberOfChars(), this.textContent.length, 'unaddressable runs require direct measurement');
           assert.ok(start >= 0 && start + length <= this.textContent.length);
           return this.textContent.slice(start, start + length).length * parseFloat(parent.style.fontSize) / 2;
         },
@@ -62,6 +76,9 @@ test('seal labels use one-third design size, a screen-pixel floor and a caption 
   assert.ok(s.name.lines[0].y + s.labelUnits / 2 < -43, 'changing sides clears the upper rim');
   ctx.labelMission(s, 'x'.repeat(90), .85, 2);
   assert.ok(s.labelUnits * .85 >= 10.5);
+  assert.equal(s.needsCaption, true);
+  assert.equal(s.name.lines[0].textContent, '2');
+  ctx.labelMission(s, '👩🏽‍💻 ' + 'x'.repeat(90), .85, 2);
   assert.equal(s.needsCaption, true);
   assert.equal(s.name.lines[0].textContent, '2');
   ctx.labelMission(s, 'Review', .85, 2);
