@@ -90,6 +90,23 @@ function assertValid(result, keys) {
   });
 }
 
+test('large Covens keep one stable, clear route to each Project as the population grows', () => {
+  const keys = keysFor(4097), options = {aspect: 2.3, nodeWidth: 1000, nodeHeight: 1150, gap: 200};
+  const all = layout(keys, options), prefix = layout(keys.slice(0, 1537), options);
+  assert.deepEqual(all.nodes.slice(0, prefix.nodes.length), prefix.nodes);
+  assert.deepEqual(all.routes.slice(0, prefix.routes.length), prefix.routes);
+  assert.deepEqual(all.nodes.map(n => n.key), keys);
+  assert.deepEqual(all.routes.map(r => r.key), keys);
+  const reserved = all.nodes.map(box);
+  // Compare widely separated routes, including the last one, against every other reservation.
+  for (let index = 0; index < keys.length; index += 128) {
+    const points = all.routes[index].points;
+    points.slice(1).forEach((b, j) => reserved.forEach((r, k) => {
+      if (k !== index) assert.equal(crossesInterior(points[j], b, r), false);
+    }));
+  }
+});
+
 for (const count of COUNTS) {
   for (const aspect of ASPECTS) {
     test('layout N=' + count + ' aspect=' + aspect + ' preserves clear geometry', () => {

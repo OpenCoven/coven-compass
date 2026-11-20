@@ -152,7 +152,7 @@ function formFixture() {
       stage.inert = !form.hidden; form.inert = form.hidden;
     },
   };
-  const context = load(['drawNew', 'openNew', 'closeNew'], {
+  const context = load(['setMissionName', 'drawNew', 'openNew', 'closeNew'], {
     ...f, stage, nm, cz, cur: () => project, active: 'brand', atlasScope: 'project',
     canAct: () => actionable,
     sc: {far: false}, select() {}, setView() {}, setLead() {}, drawBriefForm() {},
@@ -175,7 +175,7 @@ function agentFixture() {
     agents: new Map([[a.id, a]]), missions: new Map([['m1', {name: 'Research'}]]),
     asks: new Map([[q.id, q]]), tasks: new Map([['t1', {name: 'Draft brief', leads: ['echo']}]]),
   }};
-  const context = load(['agentInfo', 'pick', 'clearPick', 'showPick'], {
+  const context = load(['setMissionName', 'agentInfo', 'pick', 'clearPick', 'showPick'], {
     ...f, cur: () => c, fam: () => ({name: 'Echo', hue: '#c5a7ff'}),
     STATE: {gate: 'At a gate', work: 'Working', idle: 'Idle'}, GATE_NAME: {N: 'North'}, ago: () => '1 min',
     flashAsk: id => f.calls.push({kind: 'review', id}),
@@ -317,6 +317,22 @@ test('resolving the focused gate action moves to Close without scrolling or rebu
   f.calls.length = 0; f.context.showPick();
   assert.equal(f.document.activeElement, close);
   assert.equal(f.calls.filter(call => call.kind === 'focus' || call.kind === 'scroll').length, 0);
+});
+
+test('agent facts keep task ownership distinct from state and gate context', () => {
+  const f = agentFixture();
+  f.context.pick(f.a.id, 'panel');
+  const info = f.details().info;
+  const field = key => info.querySelector(`[data-agent-field="${key}"]`);
+  assert.equal(field('gate').textContent, 'North gate');
+  assert.equal(field('task').textContent, 'Draft brief');
+  assert.equal(field('mission').textContent, 'Research');
+  f.a.state = 'idle'; f.a.task = null; f.a.ask = null;
+  f.context.showPick();
+  assert.equal(field('gate').parentNode.hidden, true);
+  assert.equal(field('task').textContent, 'Unassigned');
+  assert.equal(field('leads').textContent, 'Echo');
+  assert.equal(field('work').textContent, 'Waiting for work');
 });
 
 test('clearing focused agent details or toggling the same row returns to that row', () => {

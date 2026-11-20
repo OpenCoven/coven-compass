@@ -27,7 +27,6 @@
   border-radius: 14px;
   background: var(--csl-surface);
   color: var(--csl-ink);
-  box-shadow: 0 24px 70px #0009;
   overflow: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
@@ -144,6 +143,7 @@ body.csl-open { overflow: hidden; }
 .csl-preview { border-right: 1px solid var(--csl-line); }
 
 .csl-specimen {
+  margin: 0;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   justify-items: center;
@@ -151,24 +151,12 @@ body.csl-open { overflow: hidden; }
   padding: 10px 12px 12px;
   border: 1px solid var(--csl-line);
   border-radius: 9px;
-  background: radial-gradient(ellipse at 50% 52%, #2a2932, #1a191e 62%, #101013);
+  background: #18171c;
 }
 
-.csl-modes {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 3px;
-  max-width: 100%;
-  padding: 3px;
-  border: 1px solid var(--csl-line);
-  border-radius: 8px;
-  background: var(--csl-surface);
-}
-
-.csl-dialog .csl-modes button { min-height: 30px; padding: 3px 12px; border-color: transparent; font-size: 13px; }
-.csl-dialog .csl-modes button[aria-pressed="true"] { border-color: color-mix(in srgb, var(--csl-accent) 56%, transparent); }
+.csl-mission-name { font: 500 .75rem/1.4 var(--f-body, system-ui, sans-serif); text-align: center; color: #d3cfdb; }
 .csl-scene { display: block; width: 100%; height: clamp(175px, 24vh, 250px); }
-.csl-mode-copy { margin: 0; color: var(--csl-muted); text-align: center; font-size: 13px; }
+
 
 .csl-state-card { padding: 13px 0 12px; }
 .csl-state-card h3 { margin: 0 0 3px; color: var(--csl-accent); font-size: 16px; font-weight: 600; }
@@ -178,7 +166,7 @@ body.csl-open { overflow: hidden; }
 
 .csl-anatomy {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 9px 14px;
   margin: 0;
   padding-top: 11px;
@@ -188,14 +176,6 @@ body.csl-open { overflow: hidden; }
 
 .csl-anatomy dt { display: flex; align-items: center; gap: 6px; font-weight: 600; }
 .csl-anatomy dd { margin: 2px 0 0; color: var(--csl-muted); }
-.csl-anatomy-mark { flex: none; position: relative; width: 11px; height: 11px; color: var(--csl-accent); }
-.csl-anatomy-wedge { background: currentColor; clip-path: polygon(0 100%, 0 0, 33% 5%, 64% 20%, 88% 45%, 100% 76%); }
-.csl-anatomy-height { background: currentColor; clip-path: polygon(0 100%, 0 63%, 35% 63%, 35% 33%, 67% 33%, 67% 0, 100% 0, 100% 100%); }
-.csl-anatomy-signet { border: 3px double currentColor; border-radius: 50%; }
-.csl-anatomy-rim { border: 1.5px solid var(--csl-warning); border-left-color: transparent; border-radius: 50%; }
-.csl-anatomy-pips { background: radial-gradient(circle at 15% 55%, currentColor 1px, transparent 1.5px), radial-gradient(circle at 50% 25%, currentColor 1px, transparent 1.5px), radial-gradient(circle at 86% 50%, currentColor 1px, transparent 1.5px); }
-.csl-anatomy-lead { border-radius: 50%; border: 1px solid currentColor; background: radial-gradient(circle, currentColor 2px, transparent 2.5px); }
-
 .csl-control-heading, .csl-familiar-top, .csl-range-heading, .csl-limit-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
 .csl-control-heading { margin-bottom: 2px; }
 .csl-control-heading h3 { margin: 0; font-size: 18px; font-weight: 600; letter-spacing: -.015em; }
@@ -315,12 +295,11 @@ body.csl-open { overflow: hidden; }
 
 @media (max-width: 420px) {
   .csl-dialog .csl-state-btn { gap: 5px; padding-inline: 3px; }
-  .csl-dialog .csl-modes button { padding-inline: 8px; }
 }
 
 @media (pointer: coarse) {
   .csl-dialog .csl-close { width: 44px; height: 44px; }
-  .csl-dialog .csl-state-btn, .csl-dialog .csl-modes button, .csl-dialog .csl-reset, .csl-dialog .csl-stepper button { min-height: 44px; }
+  .csl-dialog .csl-state-btn, .csl-dialog .csl-reset, .csl-dialog .csl-stepper button { min-height: 44px; }
   .csl-familiar-fields { grid-template-columns: minmax(0, 1fr) 118px; gap: 12px; }
   .csl-range { height: 44px; font-size: 16px; }
   .csl-stepper { grid-template-columns: 44px minmax(0, 1fr) 44px; }

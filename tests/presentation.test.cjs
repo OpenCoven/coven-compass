@@ -232,7 +232,6 @@ test('local familiar selection clears a conflicting global filter; a chip replac
 });
 
 const constants = text => text.slice(text.indexOf('const TARGET_ROLES ='), text.indexOf('function sealOf(')).trim();
-const groundZT = text => Number(text.match(/const ZW\s*=\s*[^;]+\bZT\s*=\s*([\d.]+)/)[1]);
 const familiars = {
   astra: { name: 'Astra', hue: '#9cc2f2', roles: ['Researcher'] },
   cody: { name: 'Cody', hue: '#e8c99a', roles: ['Hacker'] },
@@ -240,13 +239,11 @@ const familiars = {
 };
 function sealContext(text) {
   return loadFunctions(['sealOf', 'buildSeal', 'drawSeal'], {
-    svgEl, RAD: Math.PI / 180, ZT: groundZT(text),
+    svgEl,
     fam: key => familiars[key],
     countOf: (w, predicate) => [...w.agents.values()].filter(predicate).length,
     openAsks: w => [...w.asks.values()].filter(q => q.status === 'open'),
     briefState: (_w, M) => M.fixtureBrief,
-    atlasEaseProgress: (_seal, _key, target) => target,
-    sealDepth: require('../dist/atlas-presentation.js').sealDepth,
   }, text, constants(text));
 }
 function sealFixture(state, counts = [7, 10, 6]) {
@@ -279,8 +276,6 @@ function tree(element) {
 test('seal state, numeric semantics, and configured bounds match the pinned v2 baseline', () => {
   assert.equal(extract(source, 'sealOf'), extract(baseline, 'sealOf'), 'Model source equality');
   assert.equal(constants(source), constants(baseline), 'target ownership, states, threshold, and wedge limits');
-  assert.equal(groundZT(baseline), 30);
-  assert.equal(groundZT(source), 0);
   const current = sealContext(source), old = sealContext(baseline);
   for (const state of ['planned', 'active', 'needsYou', 'stalled', 'sealed', 'broken']) {
     const { w, M } = sealFixture(state);
@@ -300,32 +295,33 @@ test('seal state, numeric semantics, and configured bounds match the pinned v2 b
   near(small.wedges[2].share * 360, 12, 'minimum Echo wedge');
 });
 
-test('rendered seals keep the same base for every Project state and selected tier', () => {
+test('a flat seal fills its face by council share and keeps progress and limits on the rim', () => {
   const context = sealContext(source);
-  const cp = Math.cos(.65), sp = Math.sin(.65);
-  let projectBase;
   for (const state of ['planned', 'active', 'needsYou', 'stalled', 'sealed', 'broken']) {
     const fixture = sealFixture(state, [17, 2, 1]);
     const data = context.sealOf(fixture.w, fixture.M);
-    for (const tier of ['coven', 'project', 'selected']) {
-      const se = {g: svgEl('g')};
-      context.buildSeal(se, data);
-      const bounds = context.drawSeal(se, data, {x: 0, y: 0}, [0, 0], {
-        P: (x, y, z) => [x, y * cp - z * sp, y * sp + z * cp],
-        f: n => n.toFixed(5), cp, far: tier === 'coven', sel: tier === 'selected', noEase: true,
-      });
-      assert(bounds.every(Number.isFinite));
-      assert.doesNotMatch(JSON.stringify(tree(se.g)), /NaN|Infinity/);
-      assert(se.baseTop.getAttribute('d'));
-      assert(se.selection.getAttribute('d'));
-      if (tier === 'coven') assert.equal(se.baseWall.getAttribute('d'), '');
-      else {
-        projectBase ??= se.baseWall.getAttribute('d');
-        assert(projectBase);
-        assert.equal(se.baseWall.getAttribute('d'), projectBase, 'Only the wedge height varies with progress.');
-      }
-      if (tier !== 'selected') assert.equal(se.pipEls.length, 0);
-      else if (!['planned', 'broken'].includes(state)) assert.equal(se.pipEls.length, 15);
-    }
+    const se = {g: svgEl('g')};
+    context.buildSeal(se, data);
+    context.drawSeal(se, data);
+    assert.match(se.g.getAttribute('class'), new RegExp('st-' + state));
+    assert.equal(se.g.getAttribute('class').includes(' warn'), data.warn);
+    assert.equal(se.face.tag, 'circle');
+    assert.equal(se.selection.tag, 'circle');
+    assert.equal(se.wedges.length, 3);
+    const length = circle => parseFloat(circle.getAttribute('stroke-dasharray'));
+    assert.equal(length(se.limit), data.burn * 360);
+    se.wedges.forEach((segment, i) => {
+      const member = data.wedges[i];
+      assert.equal(segment.share.tag, 'circle');
+      const radius = Number(segment.share.getAttribute('r'));
+      assert.equal(Number(segment.share.getAttribute('stroke-width')), 2 * radius, 'the colored slice reaches the center');
+      assert.ok(2 * radius < Number(segment.progress.getAttribute('r')), 'progress runs along the outer edge');
+      assert.ok(2 * radius >= Number(se.face.getAttribute('r')) * .85, 'slices cover most of the face');
+      const span = member.share * 360 - 2;
+      assert(Math.abs(length(segment.share) - span) <= .001);
+      assert(Math.abs(length(segment.progress) - span * member.progress) <= .001);
+      assert.match(segment.title.textContent, /assigned, \d+ working, \d+% target progress/);
+    });
+    assert.doesNotMatch(JSON.stringify(tree(se.g)), /NaN|Infinity|polygon|se-side|se-wall/);
   }
 });

@@ -10,10 +10,6 @@
       requests.reduce((first, request) => !first || request.t < first.t ? request : first, undefined);
   }
 
-  function sealDepth(radius, summary) {
-    return summary ? {base: 0, progress: 0} : {base: radius * 0.12, progress: radius * 0.3};
-  }
-
   const clamp = (value, low, high) => Math.min(high, Math.max(low, value));
   function overlaps(a, b) {
     return a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y;
@@ -57,7 +53,7 @@
     return null;
   }
 
-  const api = Object.freeze({detailVisible, primaryRequest, placeAnnotation, sealDepth});
+  const api = Object.freeze({detailVisible, primaryRequest, placeAnnotation});
   if (typeof module === 'object' && module.exports) module.exports = api;
   if (root) root.CovenAtlasPresentation = api;
 }(typeof window === 'object' ? window : null));

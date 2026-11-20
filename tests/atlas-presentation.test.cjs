@@ -2,7 +2,7 @@
 
 const assert = require('node:assert/strict');
 const test = require('node:test');
-const {detailVisible, primaryRequest, placeAnnotation, sealDepth} = require('../dist/atlas-presentation.js');
+const {detailVisible, primaryRequest, placeAnnotation} = require('../dist/atlas-presentation.js');
 
 test('detail enters and exits at distinct projected sizes', () => {
   assert.equal(detailVisible(false, 8, 9, 7), false);
@@ -26,13 +26,4 @@ test('the card and its leader avoid occupied areas and stay inside the stage', (
   const card = placeAnnotation({x: 200, y: 105}, {width: 150, height: 40}, frame, blocked, 12);
   assert.deepEqual(card, {x: 125, y: 53, width: 150, height: 40, end: {x: 200, y: 93}});
   assert.equal(placeAnnotation({x: 200, y: 105}, {width: 380, height: 240}, frame, blocked, 12), null);
-});
-
-test('relief uses a common base with a bounded incremental depth at every radius', () => {
-  const standard = sealDepth(22);
-  const large = sealDepth(44);
-  assert(standard.base > 0);
-  assert(standard.progress <= 22 / 3);
-  assert.deepEqual(large, {base: standard.base * 2, progress: standard.progress * 2});
-  assert.deepEqual(sealDepth(22, true), {base: 0, progress: 0});
 });

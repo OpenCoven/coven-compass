@@ -12,6 +12,17 @@ const fixture = JSON.parse(fs.readFileSync(path.join(__dirname, '../dist/fixture
 const index = fs.readFileSync(path.join(__dirname, '../dist/index.html'), 'utf8');
 const NOW = Date.UTC(2026, 10, 19, 12, 0, 0);
 const read = (scenario, load = () => fixture) => P.createFixtureSource({scenario, load, now: () => NOW}).read();
+const page = (extra = {}) => ({apiVersion: '1.0', minimumClientVersion: '0.0.1',
+  projects: [{id: 'a', name: 'A', root: '/a'}], nextCursor: null, ...extra});
+const observation = {now: NOW, observedAt: NOW - 1000, staleAfterMs: 60000};
+const projectList = (extra = {}, options = {}) => P.fromProjectsList({'': page(extra)}, {...observation, ...options});
+function assertUnavailable(p, reason, context) {
+  assert.equal(p.availability.state, 'unavailable', context);
+  assert.equal(p.availability.reason, reason, context);
+  assert.equal(p.source.authoritative, false, context);
+  assert.equal(p.complete, false, context);
+  assert.deepEqual(p.projects, [], context);
+}
 
 test('mode is explicit: no parameter is the simulation, unknown values are invalid, never simulation', () => {
   assert.deepEqual(P.selectMode(''), {mode: 'simulation', requested: null, scenario: null, explicit: false});
@@ -118,6 +129,161 @@ test('load failures, bad shapes, unknown scenarios, and version gates never yiel
   assert.equal(P.fromProjectsList(page({apiVersion: 'one'}), {}).availability.reason, 'unsupported_version');
 });
 
+test('API versions must be complete numeric versions, not a coercible value or numeric prefix', () => {
+  for (const apiVersion of ['1.0broken', '1.0.0.1', '1.0\n', ' 1.0', '01.0', '1.00',
+    '1.0.01', '1.9007199254740992', 1, ['1.0'], {}, null, undefined]) {
+    assertUnavailable(projectList({apiVersion}), 'unsupported_version', String(apiVersion));
+  }
+});
+
+test('a supplied malformed minimum client version cannot bypass compatibility checking', () => {
+  for (const minimumClientVersion of ['not-a-version', '0.0.1trailing', '0.0.1.9', '0.0.1\n',
+    '00.0.1', '0.0.01', '9007199254740992.0.0', null, 0, false, ['0.0.1'], {}]) {
+    assertUnavailable(projectList({minimumClientVersion}), 'fixture_invalid', String(minimumClientVersion));
+  }
+});
+
+test('complete supported versions and an omitted optional minimum keep their compatibility behavior', () => {
+  for (const extra of [
+    {apiVersion: '1.0', minimumClientVersion: '0.0.1'},
+    {apiVersion: '1.99.2', minimumClientVersion: '0.0.0'},
+    {apiVersion: '1.0.0', minimumClientVersion: '0.0'},
+    {minimumClientVersion: undefined},
+  ]) {
+    assert.equal(projectList(extra).availability.state, 'fresh');
+  }
+  for (const minimumClientVersion of ['0.0.2', '0.1', '1.0.0']) {
+    assertUnavailable(projectList({minimumClientVersion}), 'incompatible_version', minimumClientVersion);
+  }
+});
+
+test('opaque Project IDs may be prototype property names while duplicate IDs still fail', () => {
+  const ids = ['constructor', '__proto__', 'toString', 'hasOwnProperty'];
+  const projects = ids.map(id => ({id, name: 'Project ' + id, root: '/fixture/' + id}));
+  const p = projectList({projects});
+  assert.equal(p.availability.state, 'fresh');
+  assert.deepEqual(p.projects.map(x => x.id), ids);
+  for (const item of projects) {
+    assertUnavailable(projectList({projects: [item, {...item, root: '/another'}]}), 'fixture_invalid', item.id);
+  }
+});
+
+test('opaque cursor keys named like prototype properties are followed as their own pages', () => {
+  const pages = {
+    '': page({nextCursor: 'constructor'}),
+    constructor: page({projects: [{id: 'b', name: 'B', root: '/b'}], nextCursor: '__proto__'}),
+    ['__proto__']: page({projects: [{id: 'c', name: 'C', root: '/c'}], nextCursor: 'toString'}),
+    toString: page({projects: [{id: 'd', name: 'D', root: '/d'}]}),
+  };
+  const p = P.fromProjectsList(pages, observation);
+  assert.equal(p.availability.state, 'fresh');
+  assert.equal(p.complete, true);
+  assert.deepEqual(p.projects.map(x => x.id), ['a', 'b', 'c', 'd']);
+});
+
+test('inherited pages do not supply fixture data and missing opaque cursors remain incomplete', () => {
+  for (const nextCursor of ['__proto__', 'constructor', 'toString']) {
+    const p = P.fromProjectsList({'': page({nextCursor})}, observation);
+    assert.equal(p.availability.state, 'reconciling', nextCursor);
+    assert.equal(p.complete, false, nextCursor);
+    assert.deepEqual(p.projects.map(x => x.id), ['a']);
+  }
+  assertUnavailable(P.fromProjectsList(Object.create({'': page()}), observation), 'fixture_invalid');
+  const inheritedNext = Object.assign(Object.create({next: page({projects: [{id: 'b', name: 'B', root: '/b'}]})}),
+    {'': page({nextCursor: 'next'})});
+  assert.equal(P.fromProjectsList(inheritedNext, observation).availability.state, 'reconciling');
+});
+
+for (const field of ['observedAt', 'now']) {
+  test('invalid ' + field + ' cannot throw or label an observation fresh', () => {
+    const nonfinite = field === 'now' ? [NaN, Infinity] : [Infinity, NaN];
+    for (const value of [...nonfinite, -Infinity, 8640000000000001, -8640000000000001, '2026-11-19', {}]) {
+      let p;
+      assert.doesNotThrow(() => { p = projectList({}, {[field]: value}); }, field + '=' + String(value));
+      assertUnavailable(p, 'fixture_invalid', field + '=' + String(value));
+    }
+  });
+}
+
+test('valid Date boundaries work and missing timing remains unknown rather than zero', () => {
+  for (const value of [-8640000000000000, 0, 8640000000000000]) {
+    const p = projectList({}, {now: value, observedAt: value, staleAfterMs: 0});
+    assert.equal(p.availability.state, 'fresh');
+    assert.equal(p.freshness.ageMs, 0);
+    assert.equal(p.freshness.observedAt, new Date(value).toISOString());
+  }
+  for (const field of ['observedAt', 'now']) for (const value of [undefined, null]) {
+    const p = projectList({}, {[field]: value});
+    assert.equal(p.availability.state, 'stale');
+    assert.equal(p.availability.reason, 'unknown_age');
+    assert.equal(p.freshness.ageMs, null);
+    assert.equal(p.projects.length, 1);
+  }
+});
+
+test('invalid freshness windows cannot turn unknown or old data fresh', () => {
+  for (const staleAfterMs of [Infinity, NaN, -Infinity, -1, '60000']) {
+    assertUnavailable(projectList({}, {staleAfterMs}), 'fixture_invalid', String(staleAfterMs));
+  }
+  for (const staleAfterMs of [undefined, null]) {
+    const p = projectList({}, {staleAfterMs});
+    assert.equal(p.availability.state, 'stale');
+    assert.equal(p.freshness.staleAfterMs, null);
+    assert.match(p.availability.message, /freshness window is unknown/i);
+  }
+});
+
+test('malformed fixture scenarios resolve to explicit unavailable without substituting sample data', async () => {
+  for (const selected of [null, [], false, 42, 'fresh', {}, {pages: []}, {pages: null}]) {
+    assertUnavailable(await read('fresh', () => ({scenarios: {fresh: selected}})), 'fixture_invalid', String(selected));
+  }
+  for (const scenarios of [[], null, false, 'fresh']) {
+    assertUnavailable(await read('fresh', () => ({scenarios})), 'fixture_invalid', String(scenarios));
+  }
+  const inherited = Object.create({fresh: fixture.scenarios.fresh});
+  assertUnavailable(await read('fresh', () => ({scenarios: inherited})), 'unknown_scenario');
+});
+
+test('invalid fixture age and connection metadata cannot masquerade as a fresh scenario', async () => {
+  for (const observedAgoMs of [Infinity, NaN, -Infinity, -1, '1000']) {
+    const f = {staleAfterMs: 60000, scenarios: {fresh: {pages: {'': page()}, observedAgoMs}}};
+    assertUnavailable(await read('fresh', () => f), 'fixture_invalid', String(observedAgoMs));
+  }
+  for (const connection of ['offline', false, null]) {
+    assertUnavailable(projectList({}, {connection}), 'fixture_invalid', String(connection));
+  }
+  for (const observedAgoMs of [undefined, null]) {
+    const f = {staleAfterMs: 60000, scenarios: {fresh: {pages: {'': page()}, observedAgoMs}}};
+    const p = await read('fresh', () => f);
+    assert.equal(p.availability.state, 'stale');
+    assert.equal(p.availability.reason, 'unknown_age');
+  }
+});
+
+test('normalization failures resolve as fixture-invalid while load failures stay fixture-unreadable', async () => {
+  const p = await P.createFixtureSource({load: () => fixture, now: () => { throw new Error('clock failed'); }}).read();
+  assertUnavailable(p, 'fixture_invalid');
+  assert.match(p.availability.message, /clock failed/);
+  for (const now of [NaN, null, false, 0]) {
+    assertUnavailable(await P.createFixtureSource({load: () => fixture, now}).read(), 'fixture_invalid', String(now));
+  }
+  const rejected = await read('fresh', () => Promise.reject(new Error('network failed')));
+  assertUnavailable(rejected, 'fixture_unreadable');
+  assert.match(rejected.availability.message, /network failed/);
+});
+
+test('present malformed page containers and cursors are invalid rather than coerced into paging', () => {
+  const arrayPages = [];
+  arrayPages[''] = page();
+  assertUnavailable(P.fromProjectsList(arrayPages, observation), 'fixture_invalid');
+  for (const value of [null, [], false, 42, 'page']) {
+    assertUnavailable(P.fromProjectsList({'': page({nextCursor: 'next'}), next: value}, observation), 'fixture_invalid', String(value));
+  }
+  for (const nextCursor of [false, 1, [], {}]) {
+    assertUnavailable(projectList({nextCursor}), 'fixture_invalid', String(nextCursor));
+  }
+});
+
 test('without an observation time a complete list is stale, not fresh', () => {
   const p = P.fromProjectsList({'': {apiVersion: '1.0', projects: [{id: 'a', name: 'A', root: '/r'}], nextCursor: null}}, {now: NOW, staleAfterMs: 60000});
   assert.equal(p.availability.state, 'stale');
@@ -202,4 +368,15 @@ test('an invalid mode renders unavailable and never reads a source with data', a
   assert.equal(p.availability.reason, 'invalid_mode');
   assert.deepEqual(p.projects, []);
   assert.match(find(doc.body, n => n.attributes && n.attributes.role === 'status').textContent, /Requested "live"/);
+});
+
+test('a malformed selected scenario renders unavailable instead of leaving the view loading', async () => {
+  const {doc, app} = fakeDocument();
+  const p = await P.renderStandalone(doc, P.selectMode('?source=fixture'), {load: () => ({scenarios: {fresh: null}}), now: () => NOW});
+  assertUnavailable(p, 'fixture_invalid');
+  assert.equal(app.hidden, true);
+  const status = find(doc.body, n => n.attributes && n.attributes.role === 'status');
+  assert.equal(status.getAttribute('data-state'), 'unavailable');
+  assert.match(status.textContent, /not authoritative/);
+  assert.equal(find(doc.body, n => n.tagName === 'TABLE').getAttribute('hidden'), '');
 });

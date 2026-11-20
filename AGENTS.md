@@ -23,9 +23,10 @@ The table comes from #6. Run its focused check while you work, then `verify-all`
 | Change | Edit | Focused check |
 | --- | --- | --- |
 | Project form and mission inspector | `dist/index.html` | `node --test tests/mission-interactions.test.cjs`, then exercise the form in a desktop and a narrow browser |
-| Routes and mission browser | `dist/mission-navigation.js`, `dist/atlas-ui.js`, and their bindings in `dist/index.html` | `node --test tests/navigation.test.cjs tests/mission-interactions.test.cjs` |
+| Routes and mission browser | `dist/mission-navigation.js`, `dist/atlas-ui.js`, and their bindings in `dist/index.html` | `node --test tests/navigation.test.cjs tests/navigation-notice.test.cjs tests/mission-interactions.test.cjs` |
 | Map and camera | `dist/atlas-layout.js`, `dist/atlas-viewport.js` | `node --test tests/atlas-layout.test.cjs tests/atlas-viewport.test.cjs` |
 | Mobile controls and focus | `dist/mobile-ui.js`, `dist/mobile-interactions.js`, `dist/atlas.css` | `node --test tests/mobile-*.test.cjs` |
+| Map keyboard focus (one Tab stop, arrow keys inside) | `dist/map-focus.js`, `atlasFocusable` in `dist/index.html` | `node --test tests/map-focus.test.cjs`, then Tab through the map in a browser |
 | Simulation fold (what an event does to the world) | `dist/simulation-model.js` | `node --test tests/simulation-model.test.cjs tests/replay-*.test.cjs` |
 | Projection sources (`?source=`) | `dist/projection-source.js`, `dist/fixtures/`, the guard at the top of the inline script in `dist/index.html` | `node --test tests/projection-source.test.cjs tests/castle-join.test.cjs` |
 | Handoff | Chapters in `docs/handoff/`, or the landing page `dist/handoff/index.html`. The builder generates `dist/handoff/guide.html`. | `node scripts/verify-all.mjs`, then follow Handoff in the preview |
@@ -39,7 +40,9 @@ Keep `tests/fixtures/` (the pinned baseline) and the dated audits in `tests/evid
 3. **No live daemon transport.** D03 is unresolved: the daemon's loopback TCP listener is unauthenticated and sends no CORS headers, so a static page can't safely reach it.
 4. **No outward actions without explicit authorization.** That means no deploys or Site publishes, no edits to other OpenCoven repos, and no messages outside GitHub. Linked issues are how you reach other repos.
 5. **Report evidence exactly:** command, exit code, and counts. List skipped checks as skipped. Don't loosen a test or gate just to get to green.
-6. **Vocabulary:** *Projects contain Castles.* The map's enclosure is a **Project**. A **Castle** is a hosted place where a familiar runs work (`coven-castles`). Don't reintroduce "Castle" for the enclosure.
+6. **Vocabulary:** *Projects contain Castles.* The map's enclosure is a **Project**. A **Castle** is a bounded, hosted place where a Project's work runs and its results come back, with exactly one execution owner (Val's definition, 2026-11-19, recorded in [D01](docs/handoff/11-open-decisions.md)). `coven-host` provides a Castle's folder surface and `coven-castles` checks whether a sandbox is fit to back one. A Project has zero or more Castles. A Castle is never the Project and keeps its own ID, so don't reintroduce "Castle" for the enclosure, and don't treat a Castle's folder path or `castle.json` as a Project identity. Which object backs a Project is still open (D01 ownership).
+
+7. **Compass is strictly 2D.** The map, Seal lab, icons, previews and responsive views share an upright drawing plane. Use position, size, outlines, fill, arcs and labels to encode meaning. Pan and zoom are the only camera movements. Adding perspective, orbit, tilt, extrusion, depth shading or a 3D renderer requires Val’s explicit override of this restriction in the issue or PR before implementation. Cite that decision when changing this invariant and its source check. There is no runtime override.
 
 ## Generated files: never hand-edit
 
@@ -63,10 +66,11 @@ Keep `tests/fixtures/` (the pinned baseline) and the dated audits in `tests/evid
 | `dist/atlas-ui.js`, `dist/atlas.css` | Header, project search and sample presets, mission browser, drawer, familiar chips |
 | `dist/atlas-layout.js` | Pure geometry: paired project placement, corridors, gates, bounded mission packing |
 | `dist/atlas-viewport.js` | Measured safe-area fit |
-| `dist/atlas-crown.js` | Canonical Psyche crown faces and extrusion (decorative) |
+| `dist/atlas-crown.js` | Canonical flat Psyche crown and aperture |
 | `dist/mission-navigation.js` | Route codec (`#/project/<name>[/mission/<id>…]`), replay selection reconciliation |
 | `dist/projection-source.js`, `dist/fixtures/` | **The projection seam.** `?source=simulation` (the default) or `?source=fixture&scenario=…`. Every source implements `read() → Projection`. Add a live adapter here, never inside the simulation. |
 | `dist/mobile-ui.js`, `dist/mobile-interactions.js` | Adaptive dock, portals, focus, gestures, visual viewport |
+| `dist/map-focus.js` | Roving tabindex for map items: the map is one Tab stop, and arrow keys, Home and End move between Projects, gates, familiars, missions and agents |
 | `dist/seal-lab.js`, `dist/semantic-map.css` | Isolated seal explorer; scope-specific scene visibility |
 | `dist/handoff/` | Handoff landing page (hand-written `index.html`) and generated `guide.html` |
 | `tests/*.test.cjs` | Node tests using DOM facades; `tests/fixtures/` pins the v2 reference source |
@@ -80,7 +84,10 @@ For a function-level map of `dist/index.html`, see [chapter 01 §4](docs/handoff
 
 ## Evidence and status vocabulary
 
-- **Evidence level:** `static` | `unit` | `browser` | `daemon` | `packaged CLI` | `remote Host`. verify-all establishes `static` and `unit` only. Browser evidence comes from `scripts/browser-qa.mjs` (headless Chromium, run outside verify-all; see its header). The latest record is `tests/evidence/browser-qa-2026-11-19.json`. It doesn't cover Safari, physical devices, real touch, keyboard-only use, or screen readers.
+- **Evidence level:** `static` | `unit` | `browser` | `daemon` | `packaged CLI` | `remote Host`. verify-all establishes `static` and `unit` only. Browser evidence comes from `scripts/browser-qa.mjs` (headless Chromium, run outside verify-all; see its header). The [mission discovery report](tests/evidence/browser-qa-2026-11-20-mission-discovery.json) records the tested Git revision, keyboard journeys, compact-label control and fixture checks. Physical keyboards, screen readers, real touch and Safari remain separate qualification work under #39.
+- **Check the 2D restriction in a browser.** With the external Playwright install described in `scripts/browser-qa.mjs`, copy `scripts/plan-qa.mjs` to the same directory and run `node plan-qa.mjs http://127.0.0.1:18433/` against the local preview. This exercises legacy preferences, input, camera controls and the Seal lab.
+- **Reproduce mission discovery.** Use Node 24 and the external Playwright 1.48.2 Chromium installation described at the top of `scripts/browser-qa.mjs`. Serve the candidate’s `dist/`, copy that runner into the Playwright directory, and run `node browser-qa.mjs http://127.0.0.1:18433/ ./shots ./qa.json <candidate-sha> --keyboard-only`. The report records Tab counts, focused controls, inspector return and permalink reload. The runner opens Trace → Load a recording and supplies its own eight-mission JSON Lines file. It tests the focused label at the same zoom before and after removing its two focus selectors in a disposable page. Omit `--keyboard-only` to exercise projection fixtures and replay as well.
+- **Verify a served revision.** From the checkout, run `node scripts/verify-served.mjs https://coven-compass.vercel.app/ <deployed-sha>` to compare the public root and every tracked file under `dist/` with Git. Then use that URL and SHA in the browser command above and omit `--keyboard-only` for the full journey.
 - **Packet status:** `implemented` | `verified` | `proposed` | `blocked` | `unknown`.
 - **Completion record:** every PR or handoff ends with the exact record in [document 10](docs/handoff/10-agent-task-prompts.md#required-completion-record).
 
@@ -99,3 +106,5 @@ For a function-level map of `dist/index.html`, see [chapter 01 §4](docs/handoff
 - [docs/handoff/05-implementation-plan.md](docs/handoff/05-implementation-plan.md): phases W01–W14
 - [docs/handoff/09-security-and-authority.md](docs/handoff/09-security-and-authority.md): authority boundaries
 - [docs/handoff/15-scalable-atlas-layout.md](docs/handoff/15-scalable-atlas-layout.md): layout, crown, and presentation contract
+
+Run `scripts/project-preview-qa.mjs` using the same external Playwright installation as `scripts/browser-qa.mjs`. Serve `dist/`, copy the script beside that installation, and run `node project-preview-qa.mjs http://127.0.0.1:8000/` to exercise Coven previews and task inspection on desktop and portrait layouts. The test imports its own recording with unstaffed tasks. It follows a Project from the overview through its task inspector, filtered mission search and focus return, then opens an invalid permalink.

@@ -20,7 +20,7 @@ For the **historical pre-layout** Node and Chrome mobile pass, read [Mobile read
 | [10 — Agent task prompts](10-agent-task-prompts.md) | Ready-to-use prompts for discovery and scoped implementation |
 | [11 — Open decisions](11-open-decisions.md) | Proposed defaults, owners, risks, and validation needed |
 | [12 — Source ledger](12-source-ledger.md) | Provenance and limits for each source class |
-| [15 — Scalable Atlas layout and crown](15-scalable-atlas-layout.md) | Uniform Projects, compact placement, bounded mission detail, density/search/sample controls, explicit scope, measured fit, and canonical crown relief |
+| [15 — Scalable Atlas layout and crown](15-scalable-atlas-layout.md) | Uniform Projects, compact placement, bounded mission detail, density/search/sample controls, explicit scope, measured fit, and canonical flat crown |
 
 ## Working templates
 
