@@ -18,12 +18,12 @@
   --attention:#F6F4FF; --attention-soft:rgba(246,244,255,.3); --attention-halo:rgba(246,244,255,.14);
   --ring:rgba(179,170,235,.6);
   --radius:6px;
-  --sheen:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,0) 64%);
-  --shadow-card:inset 0 1px 0 rgba(255,255,255,.055),0 1px 2px rgba(0,0,0,.5),0 22px 48px -24px rgba(0,0,0,.8);
-  --shadow-raised:inset 0 1px 0 rgba(255,255,255,.075),0 1px 1px rgba(0,0,0,.45),0 8px 20px -10px rgba(0,0,0,.7);
-  --shadow-pop:inset 0 1px 0 rgba(255,255,255,.1),0 0 0 1px rgba(0,0,0,.45),0 28px 64px -16px rgba(0,0,0,.85);
-  --shadow-primary:inset 0 1px 0 rgba(255,255,255,.4),0 1px 2px rgba(0,0,0,.5),0 8px 22px -8px rgba(179,170,235,.5);
-  --shadow-inset:inset 0 1px 3px rgba(0,0,0,.6);
+  --sheen:none;
+  --shadow-card:0 0 transparent;
+  --shadow-raised:0 0 transparent;
+  --shadow-pop:0 0 transparent;
+  --shadow-primary:0 0 transparent;
+  --shadow-inset:0 0 transparent;
   --f-display:"Instrument Serif",Georgia,"Times New Roman",serif;
   --f-body:"Geist",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --f-mono:"Geist Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
@@ -91,9 +91,8 @@ h1,h2,h3,p,dl,dd{margin:0}
 .view{margin-left:auto;display:flex;align-items:center;gap:6px}
 .plan-body{display:flex;flex:1;min-height:0}
 .stage{position:relative;flex:1;min-width:0;min-height:0;cursor:grab;touch-action:pan-y;-webkit-user-select:none;user-select:none}
-.stage.orbiting{cursor:grabbing}
 .stage.locked{cursor:default}
-.stage.panning{cursor:move}
+.stage.panning{cursor:grabbing}
 .stage:focus-visible{outline-offset:-3px}
 #plan{position:absolute;inset:0;display:block;width:100%;height:100%;touch-action:none}
 .pill{position:relative}
@@ -113,12 +112,6 @@ h1,h2,h3,p,dl,dd{margin:0}
 .empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:24px;cursor:default}
 .empty h2{font-family:var(--f-display);font-weight:400;font-size:calc(30px * var(--fs,1) * var(--fsl,1));letter-spacing:-.2px}
 .empty p{color:var(--muted-foreground);max-width:30ch}
-.gizmo{position:absolute;left:12px;bottom:8px;display:flex;align-items:center;gap:8px;pointer-events:none;font-size:calc(11.5px * var(--fs,1) * var(--fsl,1));color:var(--subtle)}
-.gizmo svg{width:46px;height:46px;flex:none}
-.gcap{display:flex;flex-direction:column;gap:1px}
-.gizmo line{stroke:var(--muted-foreground);stroke-width:1.2;stroke-linecap:round}
-.gizmo line.z{stroke:var(--primary)}
-.gizmo text{font-family:var(--f-mono);font-size:calc(8px * var(--fs,1) * var(--fsl,1));fill:var(--subtle);text-anchor:middle}
 
 /* timeline */
 .timeline{display:flex;align-items:center;gap:10px;padding:9px 14px;border-top:1px solid var(--border);background:rgba(255,255,255,.012)}
@@ -138,17 +131,11 @@ h1,h2,h3,p,dl,dd{margin:0}
 .live-btn[aria-pressed="true"] i{background:var(--primary);box-shadow:0 0 0 3px var(--primary-soft),0 0 8px var(--glow)}
 
 /* plan drawing */
-.floor{fill:var(--floor)}
-.face{fill:var(--wall-face)}
 .wall{fill:none;stroke:var(--primary);stroke-opacity:.85;stroke-width:1.5;stroke-linejoin:round}
-.wall.top{filter:drop-shadow(0 0 6px var(--glow))}
 .wall.base,.wall.vert{stroke-opacity:.26;stroke-width:1}
-.post{fill:var(--card);stroke:var(--primary);stroke-width:1.2}
 .gate-l{font-family:var(--f-mono);font-size:calc(11px * var(--fs,1) * var(--fsl,1));fill:var(--subtle);text-anchor:middle}
-.stem{stroke:var(--border-strong);stroke-width:1;stroke-dasharray:2 4}
-.shadow{fill:var(--shade)}
 .ring{fill:none;stroke:var(--primary)}
-.core{fill:var(--primary);filter:drop-shadow(0 0 10px var(--primary))}
+.core{fill:var(--primary);filter:none}
 .core-hi{fill:var(--attention)}
 .pulse{fill:none;stroke:var(--primary);stroke-width:1;transform-box:fill-box;transform-origin:center;animation:pulse 3.8s ease-out infinite}
 @keyframes pulse{0%{transform:scale(1);opacity:.5}100%{transform:scale(3.3);opacity:0}}
@@ -160,23 +147,14 @@ h1,h2,h3,p,dl,dd{margin:0}
 .flow.task-flow{stroke:var(--hue,var(--primary));stroke-opacity:.75;stroke-width:1.2;stroke-dasharray:1.5 13.5;animation-duration:2.8s}
 @keyframes flow{to{stroke-dashoffset:-30}}
 .link{stroke:var(--hue,var(--primary));stroke-opacity:.24;stroke-width:.9}
-.pk{fill:var(--primary);filter:drop-shadow(0 0 5px var(--primary))}
-.pk.h{fill:var(--hue,var(--primary));filter:drop-shadow(0 0 5px var(--hue,var(--primary)))}
-.pk.q{fill:var(--attention);filter:drop-shadow(0 0 6px var(--attention))}
-.puck-side{fill:var(--disc-lo);stroke:var(--border);stroke-width:1}
-.task{fill:url(#disc);stroke:var(--border-strong);stroke-width:1}
-.rim{fill:none;stroke:var(--hue,var(--primary));stroke-opacity:.16;stroke-width:2}
-.gauge{fill:none;stroke:var(--hue,var(--primary));stroke-width:2;stroke-linecap:round}
+.pk{fill:var(--primary);filter:none}
+.pk.h{fill:var(--hue,var(--primary));filter:none}
+.pk.q{fill:var(--attention);filter:none}
 .task-l{font-family:var(--f-body);font-size:calc(11px * var(--fs,1) * var(--fsl,1));font-weight:500;fill:var(--muted-foreground);text-anchor:middle;paint-order:stroke;stroke:var(--card);stroke-width:4px;stroke-linejoin:round;pointer-events:none;opacity:0;transition:opacity .25s}
 .task-l.show{opacity:1}
 .task-l .n{font-family:var(--f-mono);font-weight:400;font-size:calc(9.5px * var(--fs,1) * var(--fsl,1));fill:var(--subtle)}
 .cell-ghost{fill:none;stroke:var(--attention);stroke-opacity:.45;stroke-width:.9;stroke-dasharray:2 2.5}
 .lead-node{cursor:pointer}
-.lead-node .halo{fill:none;stroke:var(--hue,var(--primary));stroke-opacity:.22;stroke-width:1;transition:stroke-opacity .2s}
-.lead-node .disc{fill:url(#disc);stroke:var(--hue,var(--primary));stroke-width:1.4}
-.lead-node:hover .halo,.lead-node.sel .halo{stroke-opacity:.8}
-.lead-node.sel .disc{fill:var(--hue,var(--primary));filter:drop-shadow(0 0 12px var(--hue,var(--primary)))}
-.lead-node.sel .sig{color:var(--primary-foreground)}
 .sig{color:var(--hue,var(--primary))}
 .lead-name{font-family:var(--f-body);font-size:calc(16px * var(--fs,1) * var(--fsl,1));font-weight:500;fill:var(--foreground);text-anchor:middle;paint-order:stroke;stroke:var(--card);stroke-width:5px;stroke-linejoin:round;pointer-events:none}
 .agent{cursor:pointer}
@@ -363,9 +341,7 @@ h1,h2,h3,p,dl,dd{margin:0}
 .flow.in{stroke:var(--muted-foreground)}
 .seat{cursor:pointer}
 .seat .halo{fill:none;stroke:var(--hue,var(--primary));stroke-opacity:0;stroke-width:1;transition:stroke-opacity .2s}
-.seat .disc{fill:url(#disc);stroke:var(--hue,var(--primary));stroke-width:1.3}
 .seat:hover .halo,.seat.sel .halo{stroke-opacity:.85}
-.seat.sel .disc{fill:var(--hue,var(--primary))}
 .seat .sig{color:var(--hue,var(--primary))}
 .leads{grid-template-columns:repeat(auto-fit,minmax(168px,1fr))}
 .lead-card{display:flex;flex-direction:column;align-items:stretch;gap:9px}
@@ -598,22 +574,13 @@ body{letter-spacing:-.006em;font-feature-settings:"ss01","cv11";text-rendering:o
 .leaders circle{fill:var(--hue,var(--primary))}
 .plates:not(:has(.manifest)) .plate-h .rl{display:none}
 
-/* ================= the fort in the round, and its neighbors ================= */
-:root{--wall-top:rgba(179,170,235,.11)}
-.plinth{fill:var(--disc-lo);stroke:var(--border);stroke-width:.8;stroke-linejoin:round}
-.moat{fill:none;stroke:var(--primary);stroke-opacity:.16;stroke-width:1;stroke-dasharray:3 8}
-.walk{fill:var(--wall-top)}
-.wall.inner{stroke-opacity:.36;stroke-width:1}
-.wall.lintel{stroke-opacity:.55;stroke-width:1.1}
+/* Project outlines and names in the Coven overview. */
 .road{stroke:var(--primary);stroke-opacity:.24;stroke-width:1.3;stroke-dasharray:2 11;stroke-linecap:round}
 .ghostfort{cursor:pointer;opacity:.66;transition:opacity .2s}
 .ghostfort:hover{opacity:1}
 .ghostfort.dormant{opacity:.36}
 .ghostfort.dormant:hover{opacity:.8}
 .gfloor{fill:var(--floor);pointer-events:all}
-.wall.gtop{stroke-opacity:.75;stroke-width:1.3}
-.gmark{fill:var(--hue,var(--primary));fill-opacity:.78}
-.gmark.m{fill:var(--card);fill-opacity:1;stroke:var(--primary);stroke-width:1.6}
 .lead-name.gname{font-size:calc(15px * var(--u,1) * var(--fs,1));fill:var(--muted-foreground)}
 .ghostfort .gname{fill:var(--foreground)}
 .task-l.gsub{font-size:calc(11.5px * var(--u,1) * var(--fs,1));fill:var(--subtle)}
@@ -621,8 +588,6 @@ body{letter-spacing:-.006em;font-feature-settings:"ss01","cv11";text-rendering:o
 #plan.far .lead-name:not(.gname),#plan.far .task-l:not(.gsub),#plan.far .gate-l,#plan.far .psy-l{opacity:0}
 
 /* ================= shared leadership: one second color, never a second copy ================= */
-.agent .core{display:none;fill:var(--hue2,var(--primary));stroke:var(--card);stroke-width:.7;stroke-linejoin:round;pointer-events:none}
-.agent.co .core{display:block}
 .colink line{stroke:var(--hue,var(--primary));stroke-width:1.6;stroke-dasharray:5 5;stroke-linecap:round;stroke-opacity:.9}
 .colink line.b{stroke-dashoffset:5}
 .dot.co i{outline:1.5px solid var(--hue2,var(--primary));outline-offset:1.5px}
@@ -632,7 +597,7 @@ body{letter-spacing:-.006em;font-feature-settings:"ss01","cv11";text-rendering:o
 .avs{display:inline-flex}
 .avs .avatar+.avatar{margin-left:-6px}
 /* lines keep their weight at any zoom, so far projects stay drawn */
-.wall,.road,.moat,.plinth,.thread,.link,.stem,.colink line{vector-effect:non-scaling-stroke}
+.wall,.road,.thread,.link,.colink line{vector-effect:non-scaling-stroke}
 
 /* ================= quiet pass: one title bar, one kind of row, one popover ================= */
 .brand{font-size:calc(23px * var(--fs,1) * var(--fsl,1))}
@@ -865,7 +830,6 @@ body{letter-spacing:-.006em;font-feature-settings:"ss01","cv11";text-rendering:o
 @media (hover:none){.m-acts{opacity:0}.msg.last .m-acts,.msg.acts-on .m-acts{opacity:1}}
 .cf-d{border-top:0}
 @media (max-width:1100px), (pointer:coarse){.tb-gap{display:none}}
-@media (max-width:1100px), (pointer:coarse){.gcap{display:none}}
 @media (max-width:520px){.view{flex-wrap:nowrap;gap:3px;width:100%;justify-content:space-between}.view .btn.icon{width:34px}.view .btn.icon.wide{width:auto}}
 @media (max-width:1100px), (pointer:coarse){.hud{padding:10px 12px;gap:8px}.hud h2{font-size:calc(15px * var(--fs,1) * var(--fsl,1))}.hud p{display:none}.hud-stats{gap:14px}.hud-stats b{display:inline;margin-right:4px;font-size:calc(14px * var(--fs,1) * var(--fsl,1))}}
 
@@ -913,7 +877,7 @@ body{letter-spacing:-.006em;font-feature-settings:"ss01","cv11";text-rendering:o
 @media (max-width:520px){.view{gap:4px}}
 @media (prefers-reduced-motion:reduce){.vsw button span{transition:none}}
 
-/* ================= depth: the map runs under glass bars; controls are raised units that carry state ================= */
+/* Toolbar controls and map overlays */
 #plan{overflow:visible}
 .plan-head{gap:6px;padding:8px 10px;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(17,17,20,.86),rgba(17,17,20,.6));
   -webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:0 16px 24px -20px rgba(0,0,0,.95)}
@@ -963,59 +927,29 @@ body{letter-spacing:-.006em;font-feature-settings:"ss01","cv11";text-rendering:o
 .dr-b li::before{content:"";flex:none;width:4px;height:4px;border-radius:50%;background:var(--tone);opacity:.85}
 .dr-b li span{margin-left:auto}
 
-/* ================= levels have ground: Psyche's dais, a court per mission, a pad per council seat ================= */
-.court,.pad,.court-sh{pointer-events:none;stroke-linejoin:round;vector-effect:non-scaling-stroke}
-.court{fill:#1D1D20;fill-opacity:.62;stroke:var(--primary);stroke-opacity:.3;stroke-width:1;transition:opacity .3s,stroke-opacity .2s,fill-opacity .2s}
-.court.sel{fill-opacity:.8;stroke-opacity:.75}
-.court.psy{fill:#222226;fill-opacity:.55;stroke-opacity:.42}
-.court-sh{fill:#000;fill-opacity:.22}
-.pad{fill:var(--hue,var(--primary));fill-opacity:.1;stroke:var(--hue,var(--primary));stroke-opacity:.38;stroke-width:1}
-#plan.far .court,#plan.far .pad,#plan.far .court-sh{opacity:.5}
 .pill-body{z-index:8;background:linear-gradient(#17171A,#17171A) padding-box,var(--hair) border-box}
 
 /* ================= the Coven: one Psyche, four familiars, a lane to each project for each familiar working there ================= */
 .hub{cursor:pointer}
-.hubring{fill:none;stroke:var(--primary);stroke-opacity:.38;stroke-width:1.2;vector-effect:non-scaling-stroke}
-.huborb{fill:var(--primary);stroke:var(--card);stroke-width:7}
-.hub:hover .huborb{fill:#fff}
-.hub-l{font-family:var(--f-body);font-weight:500;font-size:calc(13px * var(--u,1) * var(--fs,1));letter-spacing:calc(5px * var(--u,1));fill:var(--primary);text-anchor:middle;paint-order:stroke;stroke:var(--card);stroke-width:calc(4px * var(--u,1));stroke-linejoin:round;pointer-events:none}
-.harc{fill:none;stroke:var(--hue,var(--primary));stroke-opacity:.85;stroke-linecap:round;transition:opacity .25s}
-.harc.off{opacity:.16}
 .lane{stroke:var(--hue,var(--primary));stroke-opacity:.6;stroke-linecap:round;transition:opacity .25s}
 .lane.off{opacity:.1}
 #plan:not(.far) .lane{stroke-opacity:.26}
-.hubfam{cursor:pointer}
-.hubfam circle{fill:var(--card);stroke:var(--hue,var(--primary));stroke-width:4;transition:fill .15s;pointer-events:all}
-.hubfam .sig{color:var(--hue,var(--primary))}
-.hubfam:hover circle,.hubfam.on circle{fill:var(--hue,var(--primary))}
-.hubfam:hover .sig,.hubfam.on .sig{color:var(--card)}
-.hubfam.idle{opacity:.45}
-.hubfam .gname{fill:var(--hue,var(--foreground))}
-.beacon{stroke:var(--attention);stroke-opacity:.85;stroke-width:1.5;vector-effect:non-scaling-stroke;pointer-events:none}
-.beacon-d{fill:var(--attention);pointer-events:none}
-@keyframes beacon{50%{fill-opacity:.35}}
-.beacon-d{animation:beacon 2.2s ease-in-out infinite}
-@media (prefers-reduced-motion:reduce){.beacon-d{animation:none}}
 #plan .gneed{fill:var(--attention);font-weight:500}
 #plan .faronly{opacity:0;transition:opacity .25s;pointer-events:none}
 #plan.far .faronly{opacity:1}
-#plan:not(.far) .beacon,#plan:not(.far) .beacon-d{opacity:0}
 #plan.far~#empty{display:none}
-@media (max-width:1100px), (pointer:coarse){#plan.far .hubfam text,#plan.far .hub .gsub:not(.gneed){display:none}.hub-l{letter-spacing:calc(2px * var(--u,1))}}
+@media (max-width:1100px), (pointer:coarse){#plan.far .hub .gsub:not(.gneed){display:none}}
 
 /* ================= only what carries meaning ================= */
-.gizmo,.flow,.moat,.plinth,.walk,.wall.inner,.court-sh,.hubring{display:none}
-.wall.top{filter:none}
+.flow{display:none}
 .pulse{animation:none;opacity:0}
 #plan.live .pulse{animation:pulse 3.8s ease-out infinite}
 @media (prefers-reduced-motion:reduce){#plan.live .pulse{animation:none}}
 #plan .gate-l{opacity:0}
 #plan .gate-l.on{opacity:1;fill:var(--attention)}
 #plan.far .gate-l.on{opacity:0}
-#plan.many .lead-name:not(.gname),#plan.tight .lead-name:not(.gname){opacity:0}
-#plan.many .lead-node:focus-visible+.lead-name,#plan.tight .lead-node:focus-visible+.lead-name,#plan.many .lead-node:hover+.lead-name,#plan.many .lead-node.sel+.lead-name,#plan.tight .lead-node:hover+.lead-name,#plan.tight .lead-node.sel+.lead-name{opacity:1}
-#plan.tight .atlas-squad>.task-l,#plan.tight .atlas-local-psyche .psy-l{opacity:0}
-#plan.tight .atlas-squad:hover>.task-l{opacity:1}
+
+
 .key{margin:0;padding:10px 14px 14px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:7px 12px;font-size:calc(12.5px * var(--fs,1) * var(--fsl,1))}
 .key dt{display:flex;align-items:center;gap:3px;color:var(--foreground);white-space:nowrap}
 .key dd{margin:0;color:var(--muted-foreground)}
@@ -1072,25 +1006,6 @@ body{letter-spacing:-.006em;font-feature-settings:"ss01","cv11";text-rendering:o
 .lead-card{flex:1 0 168px}
 #plan:not(.far) .lane{stroke-opacity:.14}
 
-/* ================= in 3D, missions are flags and familiars are solids ================= */
-.solid,.flag3,.so-foot{display:none}
-#plan:not(.flat) .solid,#plan:not(.flat) .flag3,#plan:not(.flat) .so-foot{display:inline}
-#plan:not(.flat) .seat>.halo,#plan:not(.flat) .seat>.disc,#plan:not(.flat) .seat>.sig,#plan:not(.flat) .lead-node>.halo,#plan:not(.flat) .lead-node>.disc,#plan:not(.flat) .lead-node>.sig,#plan:not(.flat) .hubfam .flatmark{display:none}
-.so-face{stroke:var(--hue,var(--primary));stroke-width:.9;stroke-linejoin:round;vector-effect:non-scaling-stroke}
-.so-ball{fill:color-mix(in srgb,var(--hue,#B3AAEB) 78%,#0E0E0F);stroke:var(--hue,var(--primary));stroke-width:.9;vector-effect:non-scaling-stroke}
-.so-ring{fill:none;stroke:var(--hue,var(--primary));stroke-width:1.3;vector-effect:non-scaling-stroke}
-.so-ring.far{stroke-opacity:.45}
-.so-foot{fill:var(--hue,var(--primary));fill-opacity:.12;stroke:var(--hue,var(--primary));stroke-opacity:0;stroke-width:1.2;vector-effect:non-scaling-stroke;transition:stroke-opacity .2s,fill-opacity .2s}
-.seat:hover .so-foot,.seat.sel .so-foot{stroke-opacity:.9;fill-opacity:.3}
-.fl-base{fill:var(--primary);fill-opacity:.14;stroke:var(--primary);stroke-opacity:.5;stroke-width:1.2;vector-effect:non-scaling-stroke;transition:fill-opacity .2s,stroke-opacity .2s}
-.fl-pole{stroke:var(--foreground);stroke-opacity:.8;stroke-width:1.6;stroke-linecap:round;vector-effect:non-scaling-stroke}
-.fl-hit{fill:transparent;pointer-events:all}
-.fl-tip{fill:var(--foreground)}
-.fl-cloth{fill:var(--primary);fill-opacity:.78;stroke:var(--primary);stroke-width:1;stroke-linejoin:round;vector-effect:non-scaling-stroke;transition:fill-opacity .2s}
-.fl-cloth.done{fill-opacity:1}
-.fl-cloth.unset{fill-opacity:.08;stroke-dasharray:2.5 2.5}
-.lead-node:hover .fl-base,.lead-node.sel .fl-base{fill-opacity:.4;stroke-opacity:1}
-.lead-node.sel .fl-cloth{fill:var(--foreground);stroke:var(--foreground);fill-opacity:1}
 @media (max-width:520px){.view{flex-wrap:wrap;justify-content:flex-start;width:auto}}
 @media (max-width:1100px), (pointer:coarse){.stage.composing{aspect-ratio:auto;height:min(760px,86vh)}}
 
@@ -1105,28 +1020,6 @@ body{letter-spacing:-.006em;font-feature-settings:"ss01","cv11";text-rendering:o
 .stop-pop .pc-note{padding-top:12px}
 #plan.halted .glow{opacity:0}
 @media (pointer:coarse){.stopb{min-height:36px}}
-
-/* ================= 3D marks, finished: pedestals, lit facets, a striped banner on a stepped base ================= */
-.so-face{stroke:color-mix(in srgb,#fff 30%,var(--hue,#B3AAEB));stroke-width:.7;stroke-opacity:.9}
-.so-ped{fill:color-mix(in srgb,var(--hue,#B3AAEB) 42%,#0C0C0D);stroke:var(--hue,var(--primary));stroke-width:.9;vector-effect:non-scaling-stroke}
-.so-ped.side{fill:color-mix(in srgb,var(--hue,#B3AAEB) 20%,#0C0C0D);stroke-opacity:.55}
-.so-ball{fill:color-mix(in srgb,var(--hue,#B3AAEB) 82%,#0C0C0D)}
-.so-shine{fill:#fff;fill-opacity:.55;pointer-events:none}
-.so-ring{stroke-width:1.4}
-.so-ring.r0{stroke-opacity:.28}.so-ring.r1{stroke-opacity:.55}.so-ring.r2{stroke-opacity:.9}
-.so-ring.front{fill:none;stroke-width:1.6}
-.so-foot{fill-opacity:.1}
-.fl-base{fill-opacity:.1;stroke-opacity:.4}
-.fl-step{fill:color-mix(in srgb,var(--primary) 38%,#0C0C0D);stroke:var(--primary);stroke-width:.9;vector-effect:non-scaling-stroke}
-.fl-step.side{fill:color-mix(in srgb,var(--primary) 18%,#0C0C0D);stroke-opacity:.55}
-.fl-pole{stroke-width:2;stroke-opacity:.9}
-.fl-tip{fill:var(--card);stroke:var(--foreground);stroke-width:1.4;vector-effect:non-scaling-stroke}
-.flag3.done .fl-tip{fill:var(--primary);stroke:var(--primary)}
-.fl-band{fill:var(--hue,var(--primary));stroke:rgba(0,0,0,.42);stroke-width:.6;stroke-linejoin:round;vector-effect:non-scaling-stroke}
-.fl-cloth.unset .fl-band{fill-opacity:.1;stroke:var(--hue,var(--primary));stroke-dasharray:2.5 2.5}
-.flag3.stopped .fl-band{fill-opacity:.32}
-.lead-node.sel .fl-pole{stroke:var(--foreground);stroke-opacity:1}
-.lead-node.sel .fl-step{stroke:var(--foreground)}
 
 /* ================= needs you: two kinds of request, each row led by who asks and what, an open one becomes a single card ================= */
 .notif .needs-list{padding:0 0 8px}
@@ -1473,8 +1366,6 @@ kbd{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 
 :root{--background:#070708;--card:#101011;--card-raised:#161617;--popover:rgba(21,21,22,.94);--disc-hi:#1C1C1E;--disc-lo:#121213;--well:#09090A;--surface-hi:#161617;--surface-lo:#0E0E0F;
   --wall-face:rgba(255,255,255,.028);--wall-top:rgba(255,255,255,.07);--foreground:#EDEDEF;--muted-foreground:#A5A5AB;--subtle:#808087;--primary-soft:rgba(179,170,235,.1);--glow:rgba(179,170,235,.2)}
 .tg[aria-pressed="true"]{background:rgba(255,255,255,.08)}
-.court{fill-opacity:.7;stroke-opacity:.26}
-.court.psy{stroke-opacity:.36}
 
 /* ================= familiar editor: rows that show their value and open to change it ================= */
 .fm-b{gap:0;padding:0}
@@ -1583,60 +1474,16 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
 @media (prefers-reduced-motion:reduce){.psyche .cast{animation:none}}
 
 /* ================= Psyche wears the Coven mark: a small crown, lavender, never loud ================= */
-.core.crown{fill:var(--primary);filter:drop-shadow(0 0 7px rgba(179,170,235,.55))}
-.huborb{fill:var(--primary);stroke:none;filter:drop-shadow(0 0 16px rgba(179,170,235,.45));transition:fill .15s}
+.core.crown{fill:var(--primary);filter:none}
+.huborb{fill:var(--primary);stroke:none;filter:none;transition:fill .15s}
 .hubhit{fill:transparent}
 .p-mark{color:var(--primary)}
 .launcher svg{color:var(--primary)}
 
 /* ================= the mission seal ================= */
-:root{--warn:#F2836B;--seal-ink:#4B4390}
-.lead-node>.halo,.lead-node>.disc,.lead-node>.sig{display:none!important}
-.se-top,.se-wall,.se-side{stroke:rgba(0,0,0,.5);stroke-width:.6;stroke-linejoin:round;vector-effect:non-scaling-stroke}
-.se-top{fill:color-mix(in srgb,var(--hue) 70%,#0C0C0D);transition:fill .3s}
-.se-wall{fill:color-mix(in srgb,var(--hue) 42%,#0C0C0D)}
-.se-side{fill:color-mix(in srgb,var(--hue) 27%,#0C0C0D)}
-.se-w.live .se-top{fill:var(--hue)}
-#plan.live .seal:not(.st-sealed) .se-w.live .se-top{animation:sealBreathe 2s ease-in-out infinite}
-@keyframes sealBreathe{50%{filter:brightness(1.2) saturate(1.1)}}
-.se-w.blocked{opacity:.4}
-.se-w.asking .se-top{stroke:var(--attention);stroke-width:1.8}
-.seal.st-planned .se-top{fill:color-mix(in srgb,var(--hue) 8%,transparent);stroke:var(--hue);stroke-width:1;stroke-dasharray:3 2.5}
-.seal.st-broken .se-w{opacity:.45}
-.seal.st-broken .se-w.lead .se-top{fill:none;stroke:var(--hue);stroke-width:1}
-.seal.st-broken .se-w.lead .se-wall,.seal.st-broken .se-w.lead .se-side{fill:none;stroke:var(--hue);stroke-opacity:.5}
-.se-lead{fill:var(--seal-ink);stroke:rgba(0,0,0,.5);stroke-width:.5;vector-effect:non-scaling-stroke}
-.se-sg{fill:var(--primary);stroke:rgba(0,0,0,.5);stroke-width:.6;vector-effect:non-scaling-stroke}
-.se-sg-side{fill:color-mix(in srgb,var(--primary) 52%,#0C0C0D);stroke:rgba(0,0,0,.5);stroke-width:.6;vector-effect:non-scaling-stroke}
-.se-sg-in{display:none;fill:none;stroke:var(--seal-ink);stroke-width:1;vector-effect:non-scaling-stroke}
-.seal.st-sealed .se-sg-in{display:inline}
-.seal.st-planned .se-sg,.seal.st-broken .se-sg{fill:var(--card);stroke:var(--primary);stroke-width:1.5}
-.seal.st-planned .se-sg-side,.seal.st-broken .se-sg-side{fill:none;stroke:var(--primary);stroke-opacity:.5}
-.se-slash{display:none;stroke:var(--warn);stroke-width:1.8;stroke-linecap:round;vector-effect:non-scaling-stroke}
-.seal.st-broken .se-slash{display:inline}
-.se-halo{display:none;fill:none;stroke:var(--attention);stroke-width:1.3;vector-effect:non-scaling-stroke;transform-box:fill-box;transform-origin:center}
-.seal.st-needsYou .se-halo{display:inline;animation:sealHalo 1.2s ease-out infinite}
-@keyframes sealHalo{from{transform:scale(.55);opacity:.95}to{transform:scale(1.35);opacity:0}}
-.se-rim-bg{fill:none;stroke:var(--primary);stroke-opacity:.18;stroke-width:2.2;vector-effect:non-scaling-stroke}
-.se-rim{fill:none;stroke:var(--primary);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
-.seal.warn .se-rim{stroke:var(--warn)}
-.seal.st-sealed .se-rim{stroke:var(--primary)}
-.seal[data-tier="s"] .se-rim,.seal[data-tier="s"] .se-rim-bg,.seal[data-tier="s"] .se-lead{display:none}
-.se-pip{fill:var(--hue);stroke:rgba(0,0,0,.5);stroke-width:.4}
-.se-hit{fill:transparent;stroke:none;pointer-events:all}
-.lead-node:hover .se-rim-bg,.lead-node.sel .se-rim-bg{stroke-opacity:.5}
+:root{--warn:#F2836B}
 .thread.ask{stroke:var(--attention);stroke-opacity:.85;stroke-dasharray:4 4;stroke-width:1.3}
 .seal2{flex:none;display:block;overflow:visible}
-.seal2 .sw{fill:color-mix(in srgb,var(--hue) 72%,#0C0C0D);stroke:#0C0C0D;stroke-width:.9;stroke-linejoin:round}
-.seal2 .sw.live{fill:var(--hue)}
-.seal2 .sw.dim{opacity:.38}
-.seal2 .sw.ask{stroke:var(--attention);stroke-width:1.5}
-.seal2.st-planned .sw{fill:color-mix(in srgb,var(--hue) 10%,transparent);stroke:var(--hue);stroke-width:.9;stroke-dasharray:2 1.6}
-.seal2 .sg{fill:var(--primary);stroke:#0C0C0D;stroke-width:.9}
-.seal2 .sg.hollow{fill:var(--card);stroke:var(--primary);stroke-width:1.3}
-.seal2 .sg-in{fill:none;stroke:var(--seal-ink);stroke-width:.9}
-.seal2 .sg-halo{fill:none;stroke:var(--attention);stroke-width:1.1}
-.seal2 .sg-slash{stroke:var(--warn);stroke-width:1.5;stroke-linecap:round}
 .lc-seal{flex:none;display:grid;place-items:center;margin-right:8px}
 .lc-top{align-items:center}
 .opt-seal{flex:none;display:grid;place-items:center}
@@ -1648,7 +1495,6 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
 .kz-st .seal2{grid-row:1}
 .kz-st b{font-size:calc(12px * var(--fs,1) * var(--fsl,1));font-weight:500}
 .kz-st span{font-size:calc(10.5px * var(--fs,1) * var(--fsl,1));line-height:1.25;color:var(--subtle)}
-@media (prefers-reduced-motion:reduce){#plan.live .seal .se-w.live .se-top,.seal.st-needsYou .se-halo{animation:none}}
 </style>
 <link rel="stylesheet" href="atlas.css">
 <link rel="stylesheet" href="seal-lab.css">
@@ -1701,9 +1547,8 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
           </details>
           </div>
           <div class="view" role="group" aria-label="View">
-            <div class="ctl vsw" role="group" aria-label="Camera">
-              <button type="button" id="vPlan" aria-pressed="false" aria-label="Plan view"><svg viewBox="0 0 14 14" aria-hidden="true"><rect x="2.5" y="2.5" width="9" height="9" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M2.5 7h9M7 2.5v9" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Plan</span></button>
-              <button type="button" id="v3d" aria-pressed="true" aria-label="3D view"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 1.8 11.5 4.4v5.2L7 12.2 2.5 9.6V4.4zM2.5 4.4 7 7l4.5-2.6M7 7v5.2" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/></svg><span>3D</span></button>
+            <div class="ctl vsw" role="group" aria-label="Map scope">
+              <button type="button" id="vProject" aria-pressed="false" aria-label="Current Project"><svg viewBox="0 0 14 14" aria-hidden="true"><rect x="2.5" y="2.5" width="9" height="9" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M2.5 7h9M7 2.5v9" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Project</span></button>
               <button type="button" id="vAll" aria-pressed="false" aria-label="Coven view, every project"><svg viewBox="0 0 14 14" aria-hidden="true"><rect x="2" y="2" width="4" height="4" rx=".9" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><rect x="8" y="2" width="4" height="4" rx=".9" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><rect x="2" y="8" width="4" height="4" rx=".9" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><rect x="8" y="8" width="4" height="4" rx=".9" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Coven</span></button>
             </div>
             <div class="ctl" role="group" aria-label="Zoom">
@@ -1724,12 +1569,8 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
     </section>
         </div>
         <div class="plan-body">
-          <div class="stage" id="stage" tabindex="0" aria-label="Project view. Arrow keys move, Shift with arrows orbits, plus and minus zoom, zero resets.">
-            <svg id="plan" viewBox="-392 -392 784 784" role="img" aria-label="The project: Psyche at the top, missions around it, each with its council of familiars and their squads of agents, gates on the walls"></svg>
-            <div class="gizmo" id="gizmo" aria-hidden="true">
-              <svg viewBox="0 0 46 46"><line id="gx" x1="23" y1="23"/><line id="gy" x1="23" y1="23"/><line class="z" id="gz" x1="23" y1="23"/><text id="gxl">x</text><text id="gyl">y</text><text id="gzl">z</text></svg>
-              <div class="gcap"><span id="gcap">Boundaries contain projects. Seals are missions. Glyphs identify familiars.</span><span id="ghint"></span></div>
-            </div>
+          <div class="stage" id="stage" tabindex="0" aria-label="Project view. Drag or use arrow keys to pan. Pinch, scroll, or use plus and minus to zoom. Press zero to fit.">
+            <svg id="plan" viewBox="-392 -392 784 784" role="img" aria-label="The project: Psyche at the center, missions around it, each with its council of familiars and their squads of agents, gates on the walls"></svg>
             <form class="empty" id="projectForm" aria-label="Project" autocomplete="off" novalidate hidden>
               <div class="hd"><span class="hd-i" id="czIcon"></span><h2 class="hd-t" id="czTitle">New project</h2><span class="hd-m" id="czMeta"></span><button class="btn x" type="button" id="czX" aria-label="Close">×</button></div>
               <div class="mobile-form-body">
@@ -1829,15 +1670,17 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
     <header class="hd"><span class="hd-i" id="keyIc"></span><h2 class="hd-t" id="keyTitle">Map key</h2><button class="btn x" type="button" id="keyX" aria-label="Close">×</button></header>
     <div class="key-reader">
       <p class="key-context">Local simulation · Decisions and chat affect sample data only.</p>
-<div class="kz-r"><span class="kz-m"><svg viewBox="0 0 20 20" aria-hidden="true"><path class="kl" d="M3 4v13h5v-4a2 2 0 0 1 4 0v4h5V4h-3v3h-3V4H9v3H6V4Z"/></svg></span><div><b>Project</b><p>Each castle on the Coven kingdom map represents a Project. Open its courtyard to explore missions.</p></div></div>
+<div class="kz-r"><span class="kz-m"><svg viewBox="0 0 20 20" aria-hidden="true"><path class="kl" d="M5 3h10l2 2v10l-2 2H5l-2-2V5Z"/></svg></span><div><b>Project</b><p>Open a Project outline to explore its missions. The number inside is its mission count.</p></div></div>
 <div class="kz-r"><span class="kz-m"><svg viewBox="-9 -9 18 18" aria-hidden="true" style="color:var(--primary)"><use href="#crown" x="-8.4" y="-8.1" width="16.8" height="15.5" fill="currentColor"/></svg></span><div><b>Psyche</b><p>Open the crown to talk to Psyche.</p></div></div>
 <div class="kz-r"><span class="kz-m" id="kzSealMark"></span><div><b>Mission</b><p>Select a seal to see its familiars, tasks and agents.</p></div></div>
 <div class="kz-r"><span class="kz-m"><svg viewBox="0 0 18 18" aria-hidden="true"><rect x="3" y="3" width="12" height="12" rx="1" fill="none" stroke="var(--attention)"/><path d="M9 6v6" stroke="var(--attention)"/></svg></span><div><b>Decision</b><p>Open a numbered gate to review pending requests.</p></div></div>
-<details class="key-topic" name="map-key-topic"><summary>Familiars, tasks and agents</summary><div><div id="kzFams" class="kz-fams"></div><div class="kz-r"><span class="kz-m" id="kzDots"></span><div><b>Familiar color</b><p>Connects the familiar to its mission and agents. Moving highlights indicate working agents.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="-1.2 -1.2 2.4 2.4" aria-hidden="true"><use href="#agent-cog-profile" fill="var(--fam-astra)"/><rect x="-.28" y="-.28" width=".56" height=".56" fill="var(--card)"/></svg></span><div><b>Agent and assignment</b><p>Each cog is an agent. A square hub means it has a task. Working cogs turn together. Idle cogs are smaller and hollow.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 14 14" aria-hidden="true"><circle class="kc on" cx="7" cy="7" r="4.5"/><circle cx="7" cy="7" r="2" fill="var(--fam-cody)"/></svg></span><div><b>Shared task</b><p>A second hub color identifies a co-leading familiar. A dashed spot reserves a waiting agent’s place.</p></div></div></div></details>
-<details class="key-topic" name="map-key-topic"><summary>Mission progress and limits</summary><div><div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><path d="M0,0L0,-10A10,10 0 0 1 9.5,3.1Z" fill="var(--fam-astra)"/><path d="M0,0L9.5,3.1A10,10 0 0 1 -8.7,5Z" fill="var(--fam-cody)" opacity=".45"/><path d="M0,0L-8.7,5A10,10 0 0 1 0,-10Z" fill="var(--fam-echo)" opacity=".45"/></svg></span><div><b>Wedge</b><p>Width shows a familiar’s share of agents. Height shows progress on its targets.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><circle r="10" fill="none" stroke="var(--border-strong)"/><circle r="3.2" fill="var(--primary)"/></svg></span><div><b>Center mark</b><p>Shows the mission state.</p></div></div><div class="kz-states" id="kzStates"></div><div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><circle r="9" fill="none" stroke="var(--primary)" stroke-opacity=".2" stroke-width="2"/><path d="M0,-9A9,9 0 1 1 -8.6,2.8" fill="none" stroke="var(--warn)" stroke-width="2" stroke-linecap="round"/></svg></span><div><b>Resource rim</b><p>Coral marks a limit at or above 85% of time, tokens or budget.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><path d="M0,0L0,-10A10,10 0 0 1 9.5,3.1Z" fill="var(--fam-astra)"/><circle cx="3.6" cy="-4.4" r="1.5" fill="#4B4390"/></svg></span><div><b>Lead familiar</b><p>The dot marks the lead familiar’s wedge.</p></div></div></div></details>
+<details class="key-topic" name="map-key-topic"><summary>Familiars, tasks and agents</summary><div><div id="kzFams" class="kz-fams"></div><div class="kz-r"><span class="kz-m" id="kzDots"></span><div><b>Familiar color</b><p>Connects the familiar to its mission and agents. Moving highlights indicate working agents.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="-1.2 -1.2 2.4 2.4" aria-hidden="true"><circle r=".96" fill="var(--fam-astra)"/><rect x="-.28" y="-.28" width=".56" height=".56" fill="var(--card)"/></svg></span><div><b>Agent and assignment</b><p>Each dot is an agent. A square center marks a task assignment. Working agents are filled. Idle agents are hollow.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 14 14" aria-hidden="true"><circle class="kc on" cx="7" cy="7" r="4.5"/><circle cx="7" cy="7" r="2" fill="var(--fam-cody)"/></svg></span><div><b>Shared task</b><p>A second hub color identifies a co-leading familiar. A dashed spot reserves a waiting agent’s place.</p></div></div></div></details>
+<details class="key-topic" name="map-key-topic"><summary>Mission progress and limits</summary><div>
+<div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><circle r="8" fill="none" stroke="var(--fam-cody)" stroke-width="3" opacity=".45"/><path d="M0 -8a8 8 0 0 1 8 8" fill="none" stroke="var(--fam-cody)" stroke-width="3"/></svg></span><div><b>Council ring</b><p>Each color shows a familiar’s share of the agents. The brighter part shows progress on its targets.</p></div></div>
+<div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><circle r="9" fill="none" stroke="var(--primary)" stroke-dasharray="2 2"/></svg></span><div><b>Mission state</b><p>Read the name inside the seal. Its outline shows the state.</p></div></div>
+<div class="kz-states" id="kzStates"></div><div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><circle r="9" fill="none" stroke="var(--border-strong)"/><path d="M0,-9A9,9 0 1 1 -8.6,2.8" fill="none" stroke="var(--warn)" stroke-width="2"/></svg></span><div><b>Resource limit</b><p>A coral arc marks a limit at or above 85% of time, tokens or budget.</p></div></div></div></details>
 <details class="key-topic" name="map-key-topic"><summary>Connections and messages</summary><div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M2 7h22" stroke="var(--muted-foreground)" stroke-width="1.3"/></svg></span><div><b>Project connection</b><p>Psyche coordinates this Project. Filter by familiar to highlight its missions.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M2 7h22" stroke="var(--muted-foreground)" stroke-width="1.3" stroke-dasharray="2 4"/></svg></span><div><b>Dormant connection</b><p>No agents are assigned to this Project.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 26 14" aria-hidden="true"><path class="kl dim" d="M2 7h14" stroke-dasharray="1.5 3"/><circle cx="20" cy="7" r="2.6" fill="var(--primary)"/></svg></span><div><b>Message in transit</b><p>Lavender goes out from Psyche. Familiar colors come back. White marks a request for you.</p></div></div></div></details>
 <details class="key-topic" name="map-key-topic"><summary>Keyboard and text size</summary><div><div class="kz-k"><kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd><span>Move</span></div>
-        <div class="kz-k"><kbd>Shift</kbd><kbd>←</kbd><kbd>→</kbd><span>Orbit</span></div>
         <div class="kz-k"><kbd>+</kbd><kbd>−</kbd><span>Zoom</span></div>
         <div class="kz-k"><kbd>0</kbd><span>Reset the view</span></div>
         <div class="kz-k"><kbd>Tab</kbd><span>Take Psyche’s suggested message</span></div>
@@ -1880,7 +1723,6 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
 <script src="seal-lab.js"></script>
 <script src="atlas-layout.js"></script>
 <script src="atlas-viewport.js"></script>
-<script src="castle-map.js"></script>
 <script src="atlas-crown.js"></script>
 <script src="atlas-presentation.js"></script>
 <script src="simulation-model.js"></script>
@@ -1901,14 +1743,12 @@ if (requestedSource !== null && requestedSource.trim().toLowerCase() !== 'simula
   }
   return;
 }
-const {detailVisible, primaryRequest, placeAnnotation, sealDepth} = window.CovenAtlasPresentation;
+const {detailVisible, primaryRequest, placeAnnotation} = window.CovenAtlasPresentation;
 const NS = 'http://www.w3.org/2000/svg', RAD = Math.PI / 180;
-let sealAnimating = false;
-const S = 280, G = 22, LEAD_R = 118, C = 10.5;
+const S = 280, G = 22, LEAD_R = 160, C = 10.5;
 // A Project grows with its mission layout. Each side keeps a gap for its gate.
 const fortN = m => Math.max(4, m), fortG = n => n / 4, fortA = n => S * n / 4;
 const cornerAngle = (n, k) => -135 + k * 360 / n, gateAng = (n, k) => cornerAngle(n, k) + 180 / n;
-const fortExt = n => fortA(n) / Math.cos(Math.PI / n);
 function projectBoundary(n) {
   const radius = fortA(n), halfSide = radius * Math.tan(Math.PI / n);
   const shoulder = halfSide - Math.min(32, halfSide / 4);
@@ -1925,9 +1765,8 @@ const nearestGate = (n, deg) => { let best = 0, bd = 999; for (let k = 0; k < n;
 const COMPASS = {N: -90, E: 0, S: 90, W: 180};
 function gatePos(L, letter, i) {                     // where an agent stands at a gate: just inside it, one each side of the opening
   const ga = gateAng(L.n, nearestGate(L.n, COMPASS[letter] != null ? COMPASS[letter] : -90)) * Math.PI / 180, nx = Math.cos(ga), ny = Math.sin(ga), o = i ? 14 : -14;
-  return [nx * (L.a - 26) - ny * o, ny * (L.a - 26) + nx * o];
+  return [nx * (L.lead - 22) - ny * o, ny * (L.lead - 22) + nx * o];
 }
-const ZT = 0, ZS = 0, ZL = 0, ZP = 0;            // one ground plane; only seal progress adds elevation
 const $ = id => document.getElementById(id);
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const narrow = matchMedia('(max-width: 1100px), (pointer: coarse)');
@@ -2053,15 +1892,12 @@ function colorIssue(c) {                             // a familiar's color has t
   if (far([242, 131, 107]) < 42) return 'Coral is kept for warnings. Pick something further from it.';
   return '';
 }
-const SOLID_NAMES = ['Tetrahedron', 'Cube', 'Octahedron', 'Dodecahedron', 'Icosahedron'];
-const FAM_DEF = {astra: {roles: ['Researcher'], sym: 'astra', solid: 'Octahedron', color: '#9CC2F2'}, cody: {roles: ['Hacker'], sym: 'cody', solid: 'Cube', color: '#E8C99A'}, echo: {roles: ['Correspondent', 'Reviewer'], sym: 'echo', solid: 'Icosahedron', color: '#EBAACB'}, charm: {roles: ['Recorder'], sym: 'charm', solid: 'Tetrahedron', color: '#A3DCC3'}};
+const FAM_DEF = {astra: {roles: ['Researcher'], sym: 'astra', color: '#9CC2F2'}, cody: {roles: ['Hacker'], sym: 'cody', color: '#E8C99A'}, echo: {roles: ['Correspondent', 'Reviewer'], sym: 'echo', color: '#EBAACB'}, charm: {roles: ['Recorder'], sym: 'charm', color: '#A3DCC3'}};
 function applyFams(saved) {
   Object.keys(FAM_DEF).forEach(k => { const d = FAM_DEF[k], v = (saved && saved[k]) || {}, f = FAM[k];
     const roles = (Array.isArray(v.roles) ? v.roles : d.roles).filter(r => ROLES[r]); f.roles = roles.length ? roles : d.roles.slice(); f.role = f.roles.join(', ');
-    f.solid = SOLID_NAMES.includes(v.solid) ? v.solid : d.solid;
     f.sym = SYMS[v.sym] ? v.sym : d.sym; { const pc = parseColor(v.color); f.color = pc && !colorIssue(pc) ? colorText(pc) : d.color; } });
   const ks = Object.keys(FAM_DEF), dup = key => new Set(ks.map(k => FAM[k][key])).size < ks.length;       // never two familiars with one mark
-  if (dup('solid')) ks.forEach(k => { FAM[k].solid = FAM_DEF[k].solid; });
   if (dup('sym')) ks.forEach(k => { FAM[k].sym = FAM_DEF[k].sym; }); if (dup('color')) ks.forEach(k => { FAM[k].color = FAM_DEF[k].color; });
   ks.forEach(k => document.documentElement.style.setProperty('--fam-' + k, FAM[k].color));
 }
@@ -2088,7 +1924,6 @@ const SIGIL = {
 const sigil = k => SIGIL[symOf(k)] || SIGIL[k] || SIGIL.other;
 const avatar = key => `<svg class="avatar sig" style="--hue:${fam(key).hue}" viewBox="-16 -16 32 32" aria-hidden="true"><circle class="r" r="14.5"/>${sigil(key)}</svg>`;
 const GATE_NAME = {N: 'north', E: 'east', S: 'south', W: 'west'};
-const SLOTS = [[214, -19], [224, 16], [298, -1], [392, 0], [252, 40], [252, -42]];
 
 // ------------------------------------------------------------ trace
 // A project holds missions. Each mission seats a council of the familiars it needs. The mission spawns agents, and each
@@ -2266,18 +2101,24 @@ function parseTrace(text) {
 const SimModel = window.CovenSimulationModel.create({normBrief, ART, KIND, GATE_NAME, CAP, fam});
 const {newWorld, seatId, ROUTE, routeLabel, apply} = SimModel;
 // positions come from the whole trace, so a mission, a seat and an agent keep their place for the length of a replay
-const slotAt = i => i < SLOTS.length ? SLOTS[i] : [SLOTS[i % SLOTS.length][0] + 92 * Math.floor(i / SLOTS.length), SLOTS[i % SLOTS.length][1] * .8];
 function layoutOf(trace) {
   const L = {ang: new Map(), seat: new Map(), slot: new Map(), size: new Map()}, per = new Map(), order = [];
   trace.forEach(e => { if (e.type === 'mission.opened' && e.mission && !per.has(e.mission)) { per.set(e.mission, 0); order.push(e.mission); } });
   L.n = fortN(order.length); L.g = fortG(L.n); L.a = fortA(L.n); L.lead = LEAD_R * L.g;
-  L.rho = L.a / Math.cos(Math.PI / L.n) / (S * Math.SQRT2);               // how far out the squads sit, as the fort grows
-  order.forEach((m, i) => L.ang.set(m, cornerAngle(L.n, i)));
+  // Use the full trace so entering or leaving replay never moves a familiar's badge.
+  const councils = new Map(order.map(id => [id, new Set()]));
+  for (const event of trace) if (event.type === 'council.seated' && event.familiar) councils.get(event.mission)?.add(event.familiar);
+  order.forEach((m, i) => L.ang.set(m, cornerAngle(L.n, i - 1)));
   trace.forEach(e => {
     if (e.type === 'council.seated' && e.familiar && L.ang.has(e.mission) && !L.seat.has(seatId(e.mission, e.familiar))) {
       const i = per.get(e.mission), id = seatId(e.mission, e.familiar); per.set(e.mission, i + 1);
-      const sl = slotAt(i), [x, y] = pol(sl[0] * L.rho, L.ang.get(e.mission) + sl[1] * 4 / L.n);
-      L.seat.set(id, {x, y, rot: Math.atan2(y, x) / RAD}); L.size.set(id, 0);
+      const angle = L.ang.get(e.mission), count = councils.get(e.mission).size;
+      const row = Math.floor(i / 4), seats = Math.min(4, count - row * 4);
+      const spread = seats === 1 ? 0 : (i % 4 / (seats - 1) - .5) * Math.min(115, (seats - 1) * 72);
+      const direction = angle + spread, [mx, my] = pol(L.lead, angle);
+      const [dx, dy] = pol(94 + row * 64, direction), bx = mx + dx, by = my + dy;
+      const [ax, ay] = pol(45, direction);
+      L.seat.set(id, {x: bx + ax, y: by + ay, bx, by, rot: direction}); L.size.set(id, 0);
     } else if (e.type === 'agent.spawned' && L.seat.has(seatId(e.mission, e.familiar)) && !L.slot.has(e.agent)) {
       const id = seatId(e.mission, e.familiar), n = L.size.get(id); L.slot.set(e.agent, n); L.size.set(id, n + 1);
     }
@@ -2346,7 +2187,7 @@ const coLead = (w, a) => { const t = a.task ? w.tasks.get(a.task) : null; return
 
 // ------------------------------------------------------------ scene
 const plan = $('plan'), stage = $('stage');
-const PAN = 1000000, ZMIN = .00001, ZPL = 14, MAC = /Mac|iPhone|iPad/.test(navigator.platform || '');
+const PAN = 1000000, ZMIN = .00001;
 // every project has its own ground; together they are the Coven, a project of projects
 // A measured, compact arrangement around Psyche; branch aisles carry coordination.
 const HUB_R = 330, HUB_M = 520;
@@ -2363,7 +2204,11 @@ function atlasViewportFrame(selection) {
     if (r.right <= rect.left || r.left >= rect.right || r.bottom <= rect.top || r.top >= rect.bottom) return;
     occluders.push({x: r.left - rect.left, y: r.top - rect.top, width: r.width, height: r.height, edge});
   };
-  reserve($('atlasHeader'), 'top'); reserve($('atlasFamiliars'), 'bottom'); reserve($('atlasCameraDock'), 'bottom');
+  const chrome = document.body?.dataset;
+  const sideControls = chrome?.mobileLayout === 'landscape' && chrome.atlasScope === 'project' && !selection;
+  reserve($('atlasHeader'), sideControls ? 'left' : 'top');
+  reserve($('atlasFamiliars'), sideControls ? 'left' : 'bottom');
+  reserve($('atlasCameraDock'), 'bottom');
   if (selection) {
     const mobile = document.body && document.body.classList.contains('atlas-adaptive-mobile');
     const manifest = document.querySelector('#notes .manifest'), hud = document.querySelector(mobile ? '#notes .hud' : '#notes > .hud');
@@ -2372,13 +2217,13 @@ function atlasViewportFrame(selection) {
     const modal = mobile && document.body.classList.contains('atlas-mobile-overlay');
     if (inspect && !inspect.hidden && !modal) reserve(inspect, inspect.getBoundingClientRect().width > width * .65 ? 'bottom' : 'right');
   }
-  return window.CovenAtlasViewport.safeFrame({width, height, occluders, padding: width < 600 ? 16 : 28});
+  return window.CovenAtlasViewport.safeFrame({width, height, occluders, padding: sideControls ? 10 : width < 600 ? 16 : 28});
 }
 function atlasWorldLayout(remeasure) {
   const keys = Object.keys(projects), key = JSON.stringify(keys);
   if (atlasLayoutCache && atlasLayoutCache.key === key && !remeasure) return atlasLayoutCache;
-  const frame = atlasViewportFrame(false), pitch = typeof camT === 'object' ? camT.pitch : 24;
-  const aspect = Math.round(clamp(frame.width / frame.height * Math.cos(pitch * RAD), .25, 4) * 20) / 20;
+  const frame = atlasViewportFrame(false);
+  const aspect = Math.round(clamp(frame.width / frame.height, .25, 4) * 20) / 20;
   const options = {aspect, nodeWidth: 1000, nodeHeight: 1150, gap: 200, hubRadius: 360, gateOffset: 280, padding: 80};
   const signature = key + '|' + JSON.stringify(options);
   if (atlasLayoutCache && atlasLayoutCache.signature === signature) return atlasLayoutCache;
@@ -2390,25 +2235,24 @@ function atlasFitScene(remeasure) {
   const width = Math.max(1, stage.clientWidth), height = Math.max(1, stage.clientHeight);
   let bounds;
   if (atlasScope === 'coven') {
-    camT.pitch = clamp(camT.pitch, 0, 45); // Screen-facing crowns and labels need ground clearance.
     const layout = atlasWorldLayout(remeasure), origin = worldOf(active), rectangles = layout.nodes.map(n => ({x0: n.x - n.width / 2, y0: n.y - n.height / 2, x1: n.x + n.width / 2, y1: n.y + n.height / 2}));
     rectangles.push({x0: -500, y0: -575, x1: 500, y1: 575});
     layout.routes.forEach(r => r.points.forEach(p => rectangles.push({x0: p[0] - 60, y0: p[1] - 60, x1: p[0] + 60, y1: p[1] + 60})));
-    bounds = window.CovenAtlasViewport.projectedBounds(rectangles, {yaw: camT.yaw, pitch: camT.pitch, originX: origin[0], originY: origin[1]});
-    const cy = Math.cos(camT.yaw * RAD), sy = Math.sin(camT.yaw * RAD), cp = Math.cos(camT.pitch * RAD);
-    const hx = -origin[0] * cy + origin[1] * sy, hy = (-origin[0] * sy - origin[1] * cy) * cp;
-    bounds.x0 = Math.min(bounds.x0, hx - 500); bounds.x1 = Math.max(bounds.x1, hx + 500);
-    bounds.y0 = Math.min(bounds.y0, hy - 350); bounds.y1 = Math.max(bounds.y1, hy + 560);
+    bounds = window.CovenAtlasViewport.projectedBounds(rectangles, {originX: origin[0], originY: origin[1]});
     if (sc && sc.layoutSignature !== layout.signature) { buildScene(); sync(); }
   } else if (cur().sel) {
     const target = fitTarget(cur()); if (target) Object.assign(camT, target);
     atlasAutoFit = true; saveView(); kick(); return;
   } else {
-    const e = fortExt(cur().layout.n);
-    bounds = window.CovenAtlasViewport.projectedBounds([{x0: -e, y0: -e, x1: e, y1: e + 80}], {yaw: camT.yaw, pitch: camT.pitch});
+    const footprints = [{x0: -49, y0: -49, x1: 49, y1: 49}];
+    const include = (x, y, halfWidth, top, bottom) => footprints.push({x0: x - halfWidth, y0: y - top, x1: x + halfWidth, y1: y + bottom});
+    sc.missions.forEach(m => include(m.x, m.y, 43, 43, 60));
+    sc.seats.forEach(s => include(s.bx, s.by, 26, 15, 32));
+    sc.gateL.forEach(gate => { if (gate.asks.length) include(gate.x, gate.y, 14, 14, 14); });
+    bounds = window.CovenAtlasViewport.projectedBounds(footprints);
   }
-  const target = window.CovenAtlasViewport.fit(bounds, {width, height, frame: atlasViewportFrame(false), fill: .94});
-  Object.assign(camT, {zoom: clamp(target.zoom, ZMIN, 6), px: target.px, py: target.py});
+  const target = window.CovenAtlasViewport.fit(bounds, {width, height, frame: atlasViewportFrame(false), fill: .94, minZoom: ZMIN, maxZoom: 6});
+  Object.assign(camT, {zoom: target.zoom, px: target.px, py: target.py});
   atlasAutoFit = true; saveView(); kick();
 }
 function atlasQueueFit() {
@@ -2434,99 +2278,35 @@ function atlasRoutePath(points, radius) {
   }
   return d + 'L' + fmt(points[points.length - 1]);
 }
-const cam = {yaw: 0, pitch: 0, zoom: 1, px: 0, py: 0, locked: false};
-const VIEWS = {plan: {yaw: 0, pitch: 0, zoom: 1, px: 0, py: 0}, '3d': {yaw: 0, pitch: 32, zoom: 1.1, px: 0, py: 0}};
-const camT = Object.assign({}, VIEWS['3d']);
+const camT = {zoom: 1, px: 0, py: 0};
+const cam = {...camT, locked: false};
 let sc = null;
 
-// Familiar glyphs keep their identity in plan and relief. Only mission seals use measured elevation.
-const SOLID = (() => {
-  const mk = (V, F) => { const c0 = [0, 1, 2].map(ax => V.reduce((t, v) => t + v[ax], 0) / V.length); return {V, F: F.map(fc => {
-    const [a, b, c2] = fc.map(i => V[i]), n = [(b[1] - a[1]) * (c2[2] - a[2]) - (b[2] - a[2]) * (c2[1] - a[1]), (b[2] - a[2]) * (c2[0] - a[0]) - (b[0] - a[0]) * (c2[2] - a[2]), (b[0] - a[0]) * (c2[1] - a[1]) - (b[1] - a[1]) * (c2[0] - a[0])];
-    const cen = [0, 1, 2].map(ax => fc.reduce((t, i) => t + V[i][ax], 0) / fc.length - c0[ax]), len = Math.hypot(n[0], n[1], n[2]) || 1; let u = n.map(x => x / len);
-    if (u[0] * cen[0] + u[1] * cen[1] + u[2] * cen[2] < 0) u = u.map(x => -x);
-    return {i: fc, n: u, lit: .26 + .74 * Math.max(0, u[0] * -.35 + u[1] * .45 + u[2] * .82)};
-  })}; };
-  // Regular Cartesian vertex sets. Each face lists its perimeter in cyclic order.
-  const phi = (1 + Math.sqrt(5)) / 2, inv = 1 / phi;
-  return {
-    Tetrahedron: mk(
-      [[-1, -1, 1], [-1, 1, -1], [1, -1, -1], [1, 1, 1]],
-      [[2, 0, 1], [1, 0, 3], [3, 0, 2], [2, 1, 3]]),
-    Cube: mk(
-      [[-1, -1, -1], [-1, -1, 1], [-1, 1, -1], [-1, 1, 1], [1, -1, -1], [1, -1, 1], [1, 1, -1], [1, 1, 1]],
-      [[2, 0, 1, 3], [1, 0, 4, 5], [4, 0, 2, 6], [3, 1, 5, 7], [6, 2, 3, 7], [5, 4, 6, 7]]),
-    Octahedron: mk(
-      [[1, 0, 0], [0, 1, 0], [0, 0, 1], [-1, 0, 0], [0, -1, 0], [0, 0, -1]],
-      [[2, 0, 1], [1, 0, 5], [4, 0, 2], [5, 0, 4], [2, 1, 3], [3, 1, 5], [4, 2, 3], [4, 3, 5]]),
-    Dodecahedron: mk(
-      [[-1, -1, -1], [-1, -1, 1], [-1, 1, -1], [-1, 1, 1], [1, -1, -1], [1, -1, 1], [1, 1, -1], [1, 1, 1], [0, -inv, -phi], [-phi, 0, -inv], [-inv, -phi, 0], [0, -inv, phi], [phi, 0, -inv], [-inv, phi, 0], [0, inv, -phi], [-phi, 0, inv], [inv, -phi, 0], [0, inv, phi], [phi, 0, inv], [inv, phi, 0]],
-      [[15, 9, 0, 10, 1], [14, 8, 0, 9, 2], [16, 10, 0, 8, 4], [3, 15, 1, 11, 17], [5, 11, 1, 10, 16], [3, 13, 2, 9, 15], [6, 14, 2, 13, 19], [19, 13, 3, 17, 7], [5, 16, 4, 12, 18], [6, 12, 4, 8, 14], [17, 11, 5, 18, 7], [18, 12, 6, 19, 7]]),
-    Icosahedron: mk(
-      [[0, -1, -phi], [-phi, 0, -1], [-1, -phi, 0], [0, -1, phi], [phi, 0, -1], [-1, phi, 0], [0, 1, -phi], [-phi, 0, 1], [1, -phi, 0], [0, 1, phi], [phi, 0, 1], [1, phi, 0]],
-      [[1, 0, 2], [6, 0, 1], [2, 0, 8], [4, 0, 6], [8, 0, 4], [7, 1, 2], [6, 1, 5], [5, 1, 7], [7, 2, 3], [3, 2, 8], [7, 3, 9], [10, 3, 8], [9, 3, 10], [11, 4, 6], [8, 4, 10], [10, 4, 11], [6, 5, 11], [9, 5, 7], [11, 5, 9], [11, 9, 10]]),
-  };
-})();
-function solidPreview(name) {
-  const mesh = SOLID[name];
-  const points = mesh.V.map(([x,y,z]) => [x * .8 - y * .6, x * .3 + y * .4 - z * Math.sqrt(.75)]);
-  const radius = Math.hypot(...mesh.V[0]);
-  const faces = mesh.F.filter(face => face.n[0] * .6 * Math.sqrt(.75) + face.n[1] * .8 * Math.sqrt(.75) + face.n[2] * .5 > 0);
-  return `<svg viewBox="-1 -1 2 2" aria-hidden="true">${faces.map(face => `<polygon points="${face.i.map(i => points[i].map(v => v / radius).join(',')).join(' ')}" fill="currentColor" fill-opacity="${face.lit}" stroke="currentColor" stroke-width=".045"/>`).join('')}</svg>`;
-}
-function makeSolid(parent, k) {
-  const name = FAM[k]?.solid || 'Cube', mesh = SOLID[name];
-  const g = svgEl('g', {class: 'solid', 'data-solid': name}, parent);
-  const faces = mesh.F.map(face => {
-    const el = svgEl('polygon', {class: 'so-face'}, g);
-    el.style.fill = `color-mix(in srgb, var(--hue, #B3AAEB) ${Math.round(face.lit * 100)}%, #16151a)`;
-    return el;
-  });
-  return {mesh, faces, scale: 15 / Math.hypot(...mesh.V[0])};
-}
 function coordinationMarker(parent) {
-  return {
-    base: svgEl('ellipse', {class: 'coord-base'}, parent),
-    face: svgEl('ellipse', {class: 'coord-face'}, parent),
-    crown: window.CovenAtlasCrown.create(parent, svgEl)
-  };
+  return window.CovenAtlasCrown.create(parent, svgEl);
 }
-// A single eight-tooth profile serves every agent at every map density.
-const cogOutline = Array.from({length: 8}, (_, tooth) => [0, 8, 21, 29].map((offset, i) => {
-  const angle = (tooth * 45 + offset) * RAD, r = i === 1 || i === 2 ? 1 : .78;
-  return [r * Math.cos(angle), r * Math.sin(angle)].map(v => v.toFixed(3)).join(',');
-}).join(' ')).join(' ');
 function buildScene() {
   plan.textContent = '';
   const highlight = sc && sc.hl;
-  sc = {missions: new Map(), seats: new Map(), agents: new Map(), colinks: new Map(), orderEls: null, dirty: true, plated: null, hl: highlight || null};
-  { const L0 = cur().layout; sc.n = L0.n; sc.g = L0.g; sc.a = L0.a; sc.fort = projectBoundary(L0.n); sc.outline = sc.fort.flat(); }
-  const defs = svgEl('defs', {}, plan);
-  svgEl('polygon', {id: 'agent-cog-profile', points: cogOutline}, defs);
-  const glow = svgEl('radialGradient', {id: 'glow'}, defs);
-  [['0', '.2'], ['.4', '.05'], ['1', '0']].forEach(([o, op]) => svgEl('stop', {offset: o, class: 's-glow', 'stop-opacity': op}, glow));
-  const disc = svgEl('linearGradient', {id: 'disc', x1: 0, y1: 0, x2: 0, y2: 1}, defs);
-  svgEl('stop', {offset: '0', class: 's-hi'}, disc); svgEl('stop', {offset: '1', class: 's-lo'}, disc);
+  sc = {missions: new Map(), seats: new Map(), agents: new Map(), colinks: new Map(), hl: highlight || null};
+  { const L0 = cur().layout; sc.n = L0.n; sc.g = L0.g; }
   sc.world = svgEl('g', {class: 'atlas-overview'}, plan);
   const layout = atlasWorldLayout(), here = worldOf(active); sc.layoutSignature = layout.signature;
   // Every project has the same overview representation. Position expresses containment and coordination.
-  const cv = sc.cov = {x: -here[0], y: -here[1], links: [], fams: []};
+  const cv = sc.cov = {x: -here[0], y: -here[1], links: []};
   cv.g = svgEl('g', {class: 'hub'}, sc.world);
   cv.marker = coordinationMarker(cv.g);
   cv.sub = svgEl('text', {class: 'task-l gsub show faronly'}, cv.g); cv.need = svgEl('text', {class: 'task-l gsub show gneed faronly'}, cv.g);
   svgEl('title', {}, cv.g).textContent = 'Psyche, the one channel to every project. Open the chat';
   cv.g.addEventListener('click', ev => { ev.stopPropagation(); openPsyche(); });
   atlasFocusable(cv.g, 'Psyche, coordination across all Projects. Open simulated conversation', () => openPsyche());
-  cv.arcG = svgEl('g', {}, sc.world); cv.roadG = svgEl('g', {class: 'atlas-roads'}, sc.world); cv.laneG = svgEl('g', {class: 'atlas-lanes'}, sc.world);
+  cv.roadG = svgEl('g', {class: 'atlas-roads'}, sc.world); cv.laneG = svgEl('g', {class: 'atlas-lanes'}, sc.world);
   Object.keys(projects).forEach(k => { const o = worldOf(k); cv.links.push({k, ox: o[0] - here[0], oy: o[1] - here[1], road: svgEl('path', {class: 'road'}, cv.roadG), lanes: [], sig: null}); });
   const overviewBoundary = projectBoundary(4);
-  const kit = svgEl('g', {id:'overview-castle'}, defs);
-  sc.overviewCastle = window.CovenCastleMap.create(kit, overviewBoundary, svgEl, true);
   sc.ghosts = Object.keys(projects).map(k => {
     const o = worldOf(k), c2 = projects[k], g = svgEl('g', {class: 'ghostfort' + (c2.world.agents.size ? '' : ' dormant')}, sc.world);
     const rec = {k, ox: o[0] - here[0], oy: o[1] - here[1], g, floor: svgEl('polygon', {class: 'gfloor'}, g), runs: overviewBoundary};
     rec.base = rec.runs.map(() => svgEl('polyline', {class: 'wall base'}, g));
-    rec.castle = svgEl('use', {href:'#overview-castle', 'aria-hidden':'true', 'pointer-events':'none'}, g);
     rec.name = svgEl('text', {class: 'lead-name gname'}, g); rec.name.textContent = k;
     rec.sub = svgEl('text', {class: 'task-l gsub show'}, g);
     rec.aggregate = svgEl('text', {class: 'atlas-aggregate', 'aria-hidden': 'true'}, g);
@@ -2535,22 +2315,7 @@ function buildScene() {
     atlasFocusable(g, k + ', Project', () => atlasOpenProject(k));
     return rec;
   });
-  // every familiar the Coven knows stands round Psyche, turned so none sits on a project's road
-  const fks = [...new Set(Object.keys(FAM).concat(...Object.keys(projects).map(k => [...projects[k].world.missions.values()].flatMap(m => m.seats))))], stepF = 360 / fks.length;
-  const cAng = cv.links.map(L => Math.atan2(L.oy - cv.y, L.ox - cv.x) / RAD); let phi = -135, bestD = -1;
-  for (let t = -135; t < -135 + stepF; t += 1) { let dm = 999; for (let i = 0; i < fks.length; i++) cAng.forEach(ca => { dm = Math.min(dm, Math.abs(((t + i * stepF - ca + 540) % 360) - 180)); }); if (dm > bestD + .01) { bestD = dm; phi = t; } }
-  fks.forEach((k, i) => {
-    const F0 = fam(k), arc = svgEl('path', {class: 'harc'}, cv.arcG), g = svgEl('g', {class: 'hubfam'}, sc.world), m = svgEl('g', {}, g); arc.style.setProperty('--hue', F0.hue); g.style.setProperty('--hue', F0.hue);
-    svgEl('circle', {class: 'flatmark', r: 62}, m); svgEl('g', {class: 'sig flatmark', transform: 'scale(4.4)'}, m).innerHTML = sigil(k); const solid = makeSolid(m, k);
-    const nm = svgEl('text', {class: 'lead-name gname faronly'}, g), sub = svgEl('text', {class: 'task-l gsub show faronly'}, g); nm.textContent = F0.name;
-    svgEl('title', {}, g).textContent = `${F0.name}, ${F0.role}. Show where it works`;
-    g.addEventListener('click', ev => { ev.stopPropagation(); covHl(sc.hl === k ? null : k); });
-    atlasFocusable(g, F0.name + ', highlight assignments across Projects', () => covHl(sc.hl === k ? null : k));
-    cv.fams.push({k, ang: phi + i * stepF, half: Math.max(6, stepF / 2 - 8), arc, g, m, nm, sub, solid});
-  });
   cv.links.forEach(L => {
-    L.beam = svgEl('line', {class: 'beacon'}, sc.world); L.bdot = svgEl('circle', {class: 'beacon-d', r: 15}, sc.world);
-    L.need = svgEl('text', {class: 'task-l gsub show gneed faronly'}, sc.world);
     L.decision = svgEl('g', {class: 'atlas-decision'}, sc.world);
     L.decisionHit = svgEl('rect', {class: 'atlas-map-hit'}, L.decision);
     L.decisionBox = svgEl('rect', {rx: 2}, L.decision);
@@ -2560,19 +2325,8 @@ function buildScene() {
     L.decision.addEventListener('click', ev => { ev.stopPropagation(); review(); });
   });
   const detail = sc.detail = svgEl('g', {class: 'atlas-project-detail'}, plan);
-  sc.moat = svgEl('polygon', {class: 'moat'}, detail);
-  sc.plinth = sc.outline.map(() => svgEl('polygon', {class: 'plinth'}, detail));
-  sc.floor = svgEl('polygon', {class: 'floor'}, detail);
-  sc.glow = svgEl('ellipse', {class: 'atlas-floor-glow', fill: 'url(#glow)'}, detail);
-  sc.home = svgEl('text', {class: 'lead-name gname faronly'}, detail); sc.home.textContent = active;
-  atlasFocusable(sc.home, active + ', enter this Project', () => atlasOpenProject(active));
-  sc.home.addEventListener('click', ev => { ev.stopPropagation(); atlasOpenProject(active); });
-  plan.classList.toggle('many', sc.n > 5);
-  const walls = svgEl('g', {class: 'atlas-project-wall'}, detail);
-  sc.runs = sc.fort.map(points => ({points, edge: svgEl('polyline', {class: 'wall base'}, walls)}));
-  sc.projectCastle = window.CovenCastleMap.create(walls, sc.fort, svgEl);
   sc.gateL = Object.keys(COMPASS).map(l => {
-    const k = nearestGate(sc.n, COMPASS[l]), [x, y] = pol(sc.a, gateAng(sc.n, k)), t = svgEl('text', {class: 'gate-l'}, detail);
+    const k = nearestGate(sc.n, COMPASS[l]), [x, y] = pol(cur().layout.lead, gateAng(sc.n, k)), t = svgEl('text', {class: 'gate-l'}, detail);
     t.textContent = l;
     const mark = svgEl('g', {class: 'atlas-decision atlas-project-decision'}, detail), hit = svgEl('rect', {class: 'atlas-map-hit'}, mark), box = svgEl('rect', {x: -10, y: -10, width: 20, height: 20, rx: 2}, mark), count = svgEl('text', {y: 4}, mark);
     const rec = {t, x, y, k, mark, box, hit, count, asks: []};
@@ -2581,20 +2335,17 @@ function buildScene() {
     mark.addEventListener('click', ev => { ev.stopPropagation(); review(); });
     return rec;
   });
-  sc.courts = svgEl('g', {}, detail);
-  sc.pDais = svgEl('ellipse', {class: 'court psy'}, sc.courts);
   sc.lines = svgEl('g', {}, detail);
-  sc.pBase = svgEl('ellipse', {class: 'shadow'}, sc.lines);
-  sc.pStem = svgEl('line', {class: 'stem'}, sc.lines);
-  sc.sorted = svgEl('g', {}, detail);
+  sc.nodes = svgEl('g', {class: 'atlas-nodes'}, detail);
+  sc.gateAgents = svgEl('g', {}, detail);
   sc.fx = svgEl('g', {}, detail); packets = [];
-  const pg = svgEl('g', {class: 'atlas-local-psyche'}, sc.sorted);
+  const pg = svgEl('g', {class: 'atlas-local-psyche'}, sc.nodes);
   sc.psy = {g: pg, marker: coordinationMarker(pg)};
   atlasFocusable(pg, 'Psyche, coordination for ' + active + '. Open simulated conversation', () => openPsyche());
   pg.addEventListener('click', ev => { ev.stopPropagation(); openPsyche(); });
 }
 // Stable packed positions keep each agent in its familiar's group throughout replay.
-const HEX_D = 13.6, HEX_H = 7, TH = 7;
+const HEX_D = 13.6, HEX_H = 7;
 const HEX = (() => { const d = [[1, 0], [1, -1], [0, -1], [-1, 0], [-1, 1], [0, 1]], out = [[0, 0]];
   for (let k = 1; k <= 3; k++) { let q = d[4][0] * k, r = d[4][1] * k; for (let i = 0; i < 6; i++) for (let j = 0; j < k; j++) { out.push([q, r]); q += d[i][0]; r += d[i][1]; } }
   return out; })();
@@ -2608,15 +2359,15 @@ function slotXY(t, i) {
 function targetOf(c, a) {
   if (a.state === 'gate') {
     const q = c.world.asks.get(a.ask), lp = missionXY(c, a.mission);
-    if (!q) return [0, 0, 0];
+    if (!q) return [0, 0];
     const i = q.agents.indexOf(a.id), f = j => gatePos(c.layout, q.gate, j);
     const g = q.agents.length > 1 ? f(i % 2) : [f(0), f(1)].sort((p, r) => Math.hypot(p[0] - lp[0], p[1] - lp[1]) - Math.hypot(r[0] - lp[0], r[1] - lp[1]))[0];
-    return [g[0], g[1], 0];
+    return g;
   }
   const t = c.layout.seat.get(a.seat);
-  if (!t) return [0, 0, ZT];
+  if (!t) return [0, 0];
   const [x, y] = slotXY(t, c.layout.slot.get(a.id) || 0);
-  return [x, y, ZT];
+  return [x, y];
 }
 // information in motion: a packet travels Psyche, mission, familiar (or back)
 let packets = [];
@@ -2634,13 +2385,6 @@ function fxFor(e) {
   else if (e.type === 'gate.requested') packet(e.mission, e.familiar, 'in', 'q');                                     // a question for you, white
   else if (e.type === 'gate.resolved') { const q = cur().world.asks.get(e.ask); if (q) packet(q.mission, q.fam, 'out', 'q'); }
 }
-const ring = (x, y, r, n = 18) => Array.from({length: n}, (_, i) => [x + r * Math.cos(i / n * 2 * Math.PI), y + r * Math.sin(i / n * 2 * Math.PI)]);
-function hullOf(pts) {                               // convex hull, monotone chain
-  const p = pts.slice().sort((a, b) => a[0] - b[0] || a[1] - b[1]), cross = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]), lo = [], up = [];
-  p.forEach(q => { while (lo.length > 1 && cross(lo[lo.length - 2], lo[lo.length - 1], q) <= 0) lo.pop(); lo.push(q); });
-  for (let i = p.length - 1; i >= 0; i--) { const q = p[i]; while (up.length > 1 && cross(up[up.length - 2], up[up.length - 1], q) <= 0) up.pop(); up.push(q); }
-  lo.pop(); up.pop(); return lo.concat(up);
-}
 function sync() {
   if (sc.layoutSignature !== atlasWorldLayout().signature) { buildScene(); if (atlasAutoFit) atlasQueueFit(); }
   const c = cur(), w = c.world, tally = new Map(), liveSeats = new Set();
@@ -2649,17 +2393,16 @@ function sync() {
     if (!sc.missions.has(M.id)) {
       const id = M.id, [x, y] = missionXY(c, id);
       const ln = svgEl('g', {class: 'atlas-mission-lines', 'data-m': id}, sc.lines);
-      const s = {id, x, y, ln, courtSh: svgEl('path', {class: 'court-sh', 'data-m': id}, sc.courts), court: svgEl('path', {class: 'court atlas-court-mission', 'data-m': id}, sc.courts), hull: [], shadow: svgEl('ellipse', {class: 'shadow'}, ln), stem: svgEl('line', {class: 'stem'}, ln),
-        thread: svgEl('line', {class: 'thread'}, ln), out: svgEl('line', {class: 'flow out'}, ln), inn: svgEl('line', {class: 'flow in'}, ln), g: svgEl('g', {class: 'atlas-mission-group', 'data-m': id}, sc.sorted)};
+      const s = {id, x, y, ln,
+        thread: svgEl('line', {class: 'thread'}, ln), out: svgEl('line', {class: 'flow out'}, ln), inn: svgEl('line', {class: 'flow in'}, ln), g: svgEl('g', {class: 'atlas-mission-group', 'data-m': id}, sc.nodes)};
       s.node = svgEl('g', {class: 'lead-node'}, s.g);
-      svgEl('circle', {class: 'halo', r: 23}, s.node); svgEl('circle', {class: 'disc', r: 17}, s.node);
-      svgEl('g', {class: 'sig'}, s.node).innerHTML = SIGIL.mission;
       s.hit = svgEl('circle', {class: 'atlas-map-hit'}, s.node);
-      s.seal = {g: svgEl('g', {class: 'seal'}, s.node), wedges: [], data: null, built: null};
+      s.face = svgEl('g', {class: 'mission-face'}, s.node);
+      s.seal = {g: svgEl('g', {}, s.face)};
       svgEl('title', {}, s.node).textContent = M.name + ', mission';
       s.node.addEventListener('click', ev => { ev.stopPropagation(); select(id); });
       atlasFocusable(s.node, M.name + ', mission. Show its agents and tasks', () => select(id));
-      s.name = svgEl('text', {class: 'lead-name'}, s.g); s.name.textContent = M.name;
+      s.name = svgEl('text', {class: 'lead-name', 'aria-hidden': 'true'}, s.face);
       s.stateLabel = svgEl('text', {class: 'atlas-mission-state', 'aria-hidden': 'true'}, s.g);
       sc.missions.set(id, s);
     }
@@ -2669,66 +2412,53 @@ function sync() {
       if (!s) {
         const p = c.layout.seat.get(id) || {x: 0, y: 0, rot: 0}, hue = fam(k).hue;
         const ln = svgEl('g', {class: 'atlas-squad-lines', 'data-m': M.id, 'data-fam': k}, sc.lines); ln.style.setProperty('--hue', hue);
-        s = {id, m: M.id, fam: k, x: p.x, y: p.y, rot: p.rot, ln, shadow: svgEl('ellipse', {class: 'shadow'}, ln), stem: svgEl('line', {class: 'stem'}, ln),
-          link: svgEl('line', {class: 'link'}, ln), lflow: svgEl('line', {class: 'flow task-flow'}, ln), g: svgEl('g', {class: 'atlas-squad', 'data-m': M.id, 'data-fam': k}, sc.sorted), lshow: null};
+        s = {id, m: M.id, fam: k, x: p.x, y: p.y, rot: p.rot, ln,
+          link: svgEl('line', {class: 'link'}, ln), lflow: svgEl('line', {class: 'flow task-flow'}, ln), g: svgEl('g', {class: 'atlas-squad', 'data-m': M.id, 'data-fam': k}, sc.nodes)};
         s.g.style.setProperty('--hue', hue);
-        s.pad = svgEl('path', {class: 'pad atlas-court-squad', 'data-m': M.id, 'data-fam': k}, sc.courts); s.pad.style.setProperty('--hue', hue); s.hull = [];
-        s.side = svgEl('path', {class: 'puck-side'}, s.g); s.disc = svgEl('ellipse', {class: 'task'}, s.g);
-        s.rim = svgEl('ellipse', {class: 'rim'}, s.g); s.gauge = svgEl('path', {class: 'gauge'}, s.g);
-        s.label = svgEl('text', {class: 'task-l'}, s.g);
-        svgEl('tspan', {}, s.label).textContent = fam(k).name; s.lnum = svgEl('tspan', {class: 'n', dx: 6}, s.label);
-        svgEl('title', {}, s.disc).textContent = `${fam(k).name}'s squad on ${M.name}`;
-        s.bstem = svgEl('line', {class: 'stem'}, s.g);
+        s.label = svgEl('text', {class: 'task-l show'}, s.g);
+        s.label.textContent = fam(k).name;
         s.badge = svgEl('g', {class: 'seat'}, s.g);
-        svgEl('circle', {class: 'atlas-glyph-hit', r: 18}, s.badge);
-        svgEl('circle', {class: 'halo', r: 16.5}, s.badge); svgEl('circle', {class: 'disc', r: 12.5}, s.badge);
-        svgEl('g', {class: 'sig', transform: 'scale(.8)'}, s.badge).innerHTML = sigil(k);
-        s.foot = svgEl('ellipse', {class: 'so-foot'}, s.badge); s.solid = makeSolid(s.badge, k);
+        s.hit = svgEl('circle', {class: 'atlas-glyph-hit'}, s.badge);
+        svgEl('circle', {class: 'familiar-disc', r: 14}, s.badge);
+        svgEl('g', {class: 'sig', transform: 'scale(1.0)'}, s.badge).innerHTML = sigil(k);
         svgEl('title', {}, s.badge).textContent = `${fam(k).name}, on the ${M.name} council`;
         s.badge.addEventListener('click', ev => { ev.stopPropagation(); const cc = cur(); select(cc.sel === M.id && cc.fam === k ? null : M.id, k); });
         atlasFocusable(s.badge, fam(k).name + ', familiar on ' + M.name, () => { const cc = cur(); select(cc.sel === M.id && cc.fam === k ? null : M.id, k); });
         sc.seats.set(id, s);
       }
-      const tl = tally.get(id) || {tot: 0, work: 0}, txt = String(tl.tot), mp = missionXY(c, M.id);
-      s.R = seatR(c, id); s.frac = tl.tot ? tl.work / tl.tot : 0; s.ln.classList.toggle('working', tl.work > 0);
-      const [ux, uy] = unit(mp[0] - s.x, mp[1] - s.y); s.bx = s.x + ux * (s.R + 7); s.by = s.y + uy * (s.R + 7);   // the familiar sits at the head of its squad, facing the mission
-      if (s.lnum.textContent !== txt) s.lnum.textContent = txt;
+      const tl = tally.get(id) || {tot: 0, work: 0};
+      s.R = seatR(c, id);
+      s.ln.classList.toggle('working', tl.work > 0);
+      const seat = c.layout.seat.get(id);
+      s.bx = seat.bx; s.by = seat.by;
       s.badge.setAttribute('aria-label', fam(k).name + ', ' + tl.tot + ' agents on ' + M.name + ', ' + tl.work + ' working');
     });
   });
-  sc.missions.forEach((s, id) => { if (!w.missions.has(id)) { s.ln.remove(); s.g.remove(); s.court.remove(); s.courtSh.remove(); sc.missions.delete(id); } });
-  sc.seats.forEach((s, id) => { if (!liveSeats.has(id)) { s.ln.remove(); s.g.remove(); s.pad.remove(); sc.seats.delete(id); } });
-  // the outline that holds a level's things: a seat's pad wraps its squad and its familiar; a mission's court wraps its node and every pad
-  sc.missions.forEach(ms => { ms.pts = ring(ms.x, ms.y, 37); const M2 = w.missions.get(ms.id); if (!M2) return;
-    const d = sealOf(w, M2), se = ms.seal, built = d.wedges.map(x => x.k + (x.lead ? '*' : '') + fam(x.k).name).join('+'); se.data = d;
+  sc.missions.forEach((s, id) => { if (!w.missions.has(id)) { s.ln.remove(); s.g.remove(); sc.missions.delete(id); } });
+  sc.seats.forEach((s, id) => { if (!liveSeats.has(id)) { s.ln.remove(); s.g.remove(); sc.seats.delete(id); } });
+  sc.missions.forEach(ms => { const M2 = w.missions.get(ms.id); if (!M2) return;
+    const d = sealOf(w, M2), se = ms.seal;
+    const council = d.wedges.map(x => x.k).join('+');
     const stateName = SEAL_STATE[d.state][0];
     ms.ln.classList.toggle('working', d.wedges.some(wedge => wedge.live));
     if (ms.stateLabel) ms.stateLabel.textContent = stateName + (d.warn ? ' · Limit' : '');
     ms.node.setAttribute('aria-label', M2.name + ', ' + stateName + (d.warn ? ', resource limit warning' : '') + '. Show its agents and tasks');
-    if (built !== se.built) { se.built = built; buildSeal(se, d); }
-    if (d.sig !== se.sig) { se.sig = d.sig; se.g.setAttribute('class', `seal st-${d.state}${d.warn ? ' warn' : ''}`);
-      d.wedges.forEach((x, i) => { const el = se.wedges[i]; if (el) el.g.setAttribute('class', 'se-w' + (x.live ? ' live' : '') + (x.blocked ? ' blocked' : '') + (x.asking ? ' asking' : '') + (x.lead ? ' lead' : '')); });
-      ms.thread.classList.toggle('ask', d.state === 'needsYou'); sc.dirty = true; } });
-  sc.seats.forEach(s2 => {
-    s2.hull = hullOf(ring(s2.x, s2.y, s2.R + 7).concat(ring(s2.bx, s2.by, 17)));
-    const ms = sc.missions.get(s2.m); if (ms) ms.pts = ms.pts.concat(ring(s2.x, s2.y, s2.R + 17), ring(s2.bx, s2.by, 27));
+    if (council !== se.council) { se.council = council; buildSeal(se, d); }
+    drawSeal(se, d);
+    ms.thread.classList.toggle('ask', d.state === 'needsYou');
   });
-  sc.missions.forEach(ms => { ms.hull = hullOf(ms.pts); ms.pts = null; });
   w.agents.forEach(a => {
     let s = sc.agents.get(a.id);
     const q = targetOf(c, a), lt = c.layout.seat.get(a.seat), tg = sc.seats.get(a.seat);
     if (!s) {
       const e = svgEl('g', {class: 'agent', 'data-m': a.mission, 'data-fam': a.fam});
       e.style.setProperty('--hue', fam(a.fam).hue);
-      const halo = svgEl('ellipse', {class: 'hot'}, e);
-      const cog = svgEl('g', {class: 'agent-cog'}, e);
-      const side = svgEl('g', {class: 'cog-side'}, cog);
-      svgEl('use', {href: '#agent-cog-profile', class: 'cog-rotor'}, side);
-      svgEl('use', {href: '#agent-cog-profile', class: 'cog-rotor cog-face'}, cog);
-      svgEl('circle', {class: 'cog-bore', r: .35}, cog);
-      svgEl('rect', {class: 'cog-drive', x: -.28, y: -.28, width: .56, height: .56}, cog);
-      s = {id: a.id, el: e, halo, cog, side, co: null,
-        p: reduce || !tg ? q.slice() : [tg.bx, tg.by, ZS], q, state: null, ghost: null, home: null};
+      const halo = svgEl('circle', {class: 'hot'}, e);
+      const mark = svgEl('g', {class: 'agent-mark', 'pointer-events': 'none'}, e);
+      svgEl('circle', {class: 'o', r: 1}, mark);
+      svgEl('rect', {class: 'agent-task', x: -.35, y: -.35, width: .7, height: .7}, mark);
+      s = {id: a.id, el: e, halo, mark, co: null,
+        p: reduce || !tg ? q.slice() : [tg.bx, tg.by], q, state: null, ghost: null, home: null};
       svgEl('title', {}, e).textContent = a.id + ' · ' + fam(a.fam).name;
       e.addEventListener('click', ev => { ev.stopPropagation(); pick(a.id, 'plan'); });
       atlasFocusable(e, a.id + ', agent led by ' + fam(a.fam).name, () => pick(a.id, 'plan'));
@@ -2739,15 +2469,14 @@ function sync() {
     const description = [a.id, fam(a.fam).name, task ? task.name : 'Unassigned', a.state === 'gate' ? 'Waiting at gate' : a.state === 'work' ? 'Working' : 'Idle'].join(' · ');
     s.el.setAttribute('aria-label', description);
     s.el.querySelector('title').textContent = description;
-    s.el.classList.toggle('reverse-cog', (c.layout.slot.get(a.id) || 0) % 2 === 1);
-    s.q = q; s.seat = a.seat; s.rot = lt ? lt.rot : 0;
+    s.q = q; s.seat = a.seat;
     const co = coLead(w, a); if (co !== s.co) { s.co = co; s.el.classList.toggle('co', !!co); if (co) s.el.style.setProperty('--hue2', fam(co).hue); }
     if (s.state !== a.state) { s.el.classList.remove('work', 'idle', 'gate'); s.el.classList.add(a.state); s.state = a.state; }
-    if (a.state === 'gate') { if (s.el.parentNode !== sc.sorted) sc.sorted.appendChild(s.el); }
-    else if (tg && s.el.parentNode !== tg.g) tg.g.insertBefore(s.el, tg.bstem);
+    if (a.state === 'gate') { if (s.el.parentNode !== sc.gateAgents) sc.gateAgents.appendChild(s.el); }
+    else if (tg && s.el.parentNode !== tg.g) tg.g.insertBefore(s.el, tg.badge);
     if (a.state === 'gate' && !s.ghost && tg && lt) {                 // its cell stays reserved while it waits at the gate
-      s.ghost = svgEl('ellipse', {class: 'cell-ghost'}); tg.g.insertBefore(s.ghost, tg.label.nextSibling);
-      const [hx, hy] = slotXY(lt, c.layout.slot.get(a.id) || 0); s.home = [hx, hy, ZT];
+      s.ghost = svgEl('circle', {class: 'cell-ghost'}); tg.g.insertBefore(s.ghost, tg.label.nextSibling);
+      const [hx, hy] = slotXY(lt, c.layout.slot.get(a.id) || 0); s.home = [hx, hy];
     }
     if (a.state !== 'gate' && s.ghost) { s.ghost.remove(); s.ghost = null; }
   });
@@ -2764,19 +2493,17 @@ function sync() {
   sc.colinks.forEach((r, key) => { if (!pairs.has(key)) { r.g.remove(); sc.colinks.delete(key); } });
   drawNew();
   $('ward').hidden = w.missions.size === 0;
-  { const tot = w.agents.size, hot = new Set(openAsks(w).map(q => nearestGate(sc.n, COMPASS[q.gate] != null ? COMPASS[q.gate] : -90)));
-    sc.glow.style.opacity = tot ? (.2 + .8 * countOf(w, a => a.state === 'work') / tot).toFixed(2) : '0';
+  { const hot = new Set(openAsks(w).map(q => nearestGate(sc.n, COMPASS[q.gate] != null ? COMPASS[q.gate] : -90)));
     sc.gateL.forEach(g => g.t.classList.toggle('on', hot.has(g.k))); }
   syncCoven();
   sc.ghosts.forEach(gh => { const g2 = projects[gh.k].world, t = g2.agents.size ? `${plural(g2.missions.size, 'mission')} · ${g2.agents.size} agents` : g2.missions.size ? plural(g2.missions.size, 'planned mission') : 'dormant'; if (gh.sub.textContent !== t) gh.sub.textContent = t; gh.g.classList.toggle('dormant', !g2.missions.size); });
-  sc.dirty = true;
   applySel();
 }
 // a selected mission lights its council; a selected familiar lights every seat it holds, across councils
 // the Coven's own figures: who works where and how much, and which projects are waiting on you
 function syncCoven() {
   const cv = sc.cov; if (!cv) return;
-  const tot = new Map(), where = new Map(); let agents = 0, need = 0;
+  let agents = 0, need = 0;
   cv.links.forEach(L => {
     const w2 = projects[L.k].world, by = new Map();
     w2.agents.forEach(a => by.set(a.fam, (by.get(a.fam) || 0) + 1));
@@ -2785,18 +2512,11 @@ function syncCoven() {
     L.road.classList.toggle('dormant', !w2.agents.size);
     L.road.classList.toggle('off', !!sc.hl && !by.has(sc.hl));
     L.lanes.forEach(x => { x.o = 0; x.el.style.display = sc.hl === x.k ? '' : 'none'; });
-    by.forEach((v, k) => { tot.set(k, (tot.get(k) || 0) + v); where.set(k, (where.get(k) || 0) + 1); agents += v; });
-    const q = openAsks(w2).length, t = q ? `${q} ${q === 1 ? 'needs' : 'need'} you` : ''; need += q;
-    if (L.need.textContent !== t) L.need.textContent = t; L.beam.style.display = L.bdot.style.display = q ? '' : 'none';
+    agents += w2.agents.size;
+    const q = openAsks(w2).length; need += q;
     L.decision.style.display = q ? '' : 'none';
     L.decisionCount.textContent = String(q);
     L.decision.setAttribute('aria-label', L.k + ': ' + plural(q, 'pending decision') + '. Review in the simulated Inbox');
-    if (L.sub) { const t2 = w2.agents.size ? `${plural(w2.missions.size, 'mission')} · ${w2.agents.size} agents` : 'dormant'; if (L.sub.textContent !== t2) L.sub.textContent = t2; }
-  });
-  cv.fams.forEach(F => {
-    const n = tot.get(F.k) || 0, t = n ? `${n} agents` : 'resting';
-    F.arc.setAttribute('stroke-width', (n ? 9 + 3.6 * Math.sqrt(n) : 4).toFixed(1)); if (F.sub.textContent !== t) F.sub.textContent = t;
-    F.g.classList.toggle('idle', !n); F.g.classList.toggle('on', sc.hl === F.k); F.arc.classList.toggle('off', (!!sc.hl && sc.hl !== F.k) || !n);
   });
   const t = `${agents} agents`, tn = need ? `${need} ${need === 1 ? 'needs' : 'need'} you` : ''; if (cv.sub.textContent !== t) cv.sub.textContent = t; if (cv.need.textContent !== tn) cv.need.textContent = tn;
 }
@@ -2810,7 +2530,7 @@ function applySel() {
     e.classList.toggle('dim', !lit);
   });
   sc.missions.forEach(s => { s.node.classList.toggle('sel', c.sel === s.id);
-    s.node.setAttribute('aria-pressed', String(c.sel === s.id)); s.court.classList.toggle('sel', c.sel === s.id); });
+    s.node.setAttribute('aria-pressed', String(c.sel === s.id)); });
   sc.seats.forEach(s => s.badge.classList.toggle('sel', c.fam === s.fam && c.sel === s.m));
   sc.agents.forEach(s => {
     const a = w.agents.get(s.id), visible = !!a && c.sel === a.mission;
@@ -2828,47 +2548,47 @@ function applySel() {
   });
 }
 
-// ------------------------------------------------------------ camera + projection (x, y floor; z height)
-let is3d = null, popAt = null;
-// A mission's name sits on the side of its seal facing Psyche, the open ground between the seal
-// and the crown (its familiars' squads fill the outer side). An off-axis name is anchored at its
-// seal and runs away from the centre line, so it clears the crown and the name across from it.
-// ext is the seal's [top, bottom] offset from q.
-function missionLabelAt(q, pc, ext, U) {
-  const dx = q[0] - pc[0], below = q[1] < pc[1] + 1, side = Math.abs(dx) < 12 * U ? 0 : Math.sign(dx);
-  return {x: q[0], y: q[1] + (below ? ext[1] + 20 * U : ext[0] - 8 * U), anchor: side < 0 ? 'end' : side > 0 ? 'start' : 'middle'};
-}
-// When seals sit closer on screen than a name needs, names would pile onto each other and the
-// crown, so they hide (like #plan.many) and return on hover or selection. The squads' familiar
-// labels and the PSYCHE caption crowd the same space, so #plan.tight hides them too (a squad's
-// label returns on hover). pts are projected
-// seal positions and pc the crown, in SVG units; kpx converts them to screen pixels. A name
-// clears the crown when its seal is far enough to the side (missionLabelAt then anchors it away
-// from the centre line) or far enough above or below.
-const NAME_ROOM_PX = 56, CROWN_SIDE_PX = 16;
-function missionNamesTight(pts, pc, kpx) {
-  for (let i = 0; i < pts.length; i++) {
-    const dx = Math.abs(pts[i][0] - pc[0]) * kpx, dy = Math.abs(pts[i][1] - pc[1]) * kpx;
-    if (dx < CROWN_SIDE_PX && dy < NAME_ROOM_PX) return true;
-    for (let j = i + 1; j < pts.length; j++) {
-      if (Math.hypot(pts[i][0] - pts[j][0], pts[i][1] - pts[j][1]) * kpx < NAME_ROOM_PX) return true;
+// ------------------------------------------------------------ map coordinates and placement
+let popAt = null;
+// Fit at most two lines to the circular opening. Keep the full source name on the focusable node.
+function missionNameLines(name, fits) {
+  let rest = name.trim().replace(/\s+/g, ' ');
+  const lines = [];
+  for (let i = 0; rest && i < 2; i++) {
+    if (fits(rest)) { lines.push(rest); break; }
+    const suffix = i === 1 ? '…' : '';
+    let part = '';
+    for (const ch of rest) {
+      if (!fits(part + ch + suffix)) break;
+      part += ch;
     }
+    const wordBreak = part.lastIndexOf(' ');
+    if (!suffix && wordBreak > 0 && rest[part.length] !== ' ') part = part.slice(0, wordBreak);
+    lines.push(part.trimEnd() + suffix);
+    rest = rest.slice(part.length).trimStart();
   }
-  return false;
+  return lines;
+}
+function labelMission(s, name) {
+  if (s.labelName === name) return;
+  s.labelName = name;
+  s.name.textContent = '';
+  const first = svgEl('tspan', {x: 0}, s.name);
+  const lines = missionNameLines(name, text => {
+    first.textContent = text;
+    return first.getComputedTextLength() <= 61;
+  });
+  lines.forEach((line, i) => {
+    const span = i ? svgEl('tspan', {x: 0}, s.name) : first;
+    span.setAttribute('y', (i - (lines.length - 1) / 2) * 14 + 4.3);
+    span.textContent = line;
+  });
 }
 function project() {
-  const cy = Math.cos(cam.yaw * RAD), sy = Math.sin(cam.yaw * RAD), cp = Math.cos(cam.pitch * RAD), sp = Math.sin(cam.pitch * RAD);
-  const P = (x, y, z) => { const xr = x * cy - y * sy, yr = x * sy + y * cy; return [xr, yr * cp - z * sp, yr * sp + z * cp]; };
+  const P = (x, y) => [x, y];
   const f = v => v.toFixed(1);
-  const pts = (arr, z) => arr.map(p => { const q = P(p[0], p[1], z); return f(q[0]) + ',' + f(q[1]); }).join(' ');
-  const ell = (el, x, y, z, r) => { const q = P(x, y, z); el.setAttribute('cx', f(q[0])); el.setAttribute('cy', f(q[1])); el.setAttribute('rx', f(r)); el.setAttribute('ry', f(Math.max(.01, r * cp))); return q; };
-  const drawMarker = (marker, x, y, radius) => {
-    ell(marker.base, x, y, 0, radius);
-    const top = ell(marker.face, x, y, radius * .12, radius);
-    window.CovenAtlasCrown.draw(marker.crown, {x: top[0], y: top[1], size: radius * Math.min(1.05, 1.65 * cp)});
-  };
+  const drawMarker = (marker, x, y, radius) => window.CovenAtlasCrown.draw(marker, {x, y, radius});
   const seg = (el, a, b, ox, oy) => { el.setAttribute('x1', f(a[0] + (ox || 0))); el.setAttribute('y1', f(a[1] + (oy || 0))); el.setAttribute('x2', f(b[0] + (ox || 0))); el.setAttribute('y2', f(b[1] + (oy || 0))); };
-  const hex = (el, p, rot, h) => { let d = ''; for (let i = 0; i < 6; i++) { const a = (rot + 30 + 60 * i) * RAD, v = P(p[0] + h * Math.cos(a), p[1] + h * Math.sin(a), p[2]); d += f(v[0]) + ',' + f(v[1]) + ' '; } el.setAttribute('points', d); };
   const vw = 784 / cam.zoom, screenScale = Math.max(.001, Math.min(stage.clientWidth, stage.clientHeight) / vw), kpx = Math.max(.05, screenScale), U = clamp(Math.pow(kpx, .35), .8, 1.2) / kpx;
   const minHit = (narrow.matches ? 44 : 24) / screenScale;
   const squareHit = el => {
@@ -2879,54 +2599,28 @@ function project() {
   plan.setAttribute('viewBox', `${f(cam.px - vw / 2)} ${f(cam.py - vw / 2)} ${f(vw)} ${f(vw)}`);
 
   const pp = arr => arr.map(q => f(q[0]) + ',' + f(q[1])).join(' ');
-  const flat = cp > .985; if (flat !== sc.flat) { sc.flat = flat; plan.classList.toggle('flat', flat); }
-  const vd = [sy * sp, cy * sp, cp];                 // the direction that faces the viewer; a face shows when it looks that way
-  const putSolid = (solid, x, y, z, size, origin) => {
-    const scale = size * solid.scale;
-    const points = solid.mesh.V.map(([vx, vy, vz]) => {
-      const q = P(x + vx * scale, y + vy * scale, z + vz * scale);
-      return [q[0] - origin[0], q[1] - origin[1]];
-    });
-    solid.mesh.F.forEach((face, i) => {
-      const el = solid.faces[i];
-      const facing = face.n[0] * vd[0] + face.n[1] * vd[1] + face.n[2] * vd[2] > .001;
-      el.style.display = facing ? '' : 'none';
-      if (facing) el.setAttribute('points', pp(face.i.map(j => points[j])));
-    });
-  };
-  const far = atlasScope === 'coven'; if (far !== sc.far) { sc.far = far; plan.classList.toggle('far', far); $('vAll').setAttribute('aria-pressed', String(far)); if (window.CovenAtlas) window.CovenAtlas.update(); }
-  const hi = sc.outline.map(p => P(p[0], p[1], 0)), lo = sc.outline.map(p => P(p[0], p[1], -ZPL));
-  sc.plinth.forEach((el, i) => { const j = (i + 1) % hi.length; el.setAttribute('points', pp([hi[i], hi[j], lo[j], lo[i]])); });   // the slab the fort stands on
-  { const mk = 1 + .1 / sc.g; sc.moat.setAttribute('points', pp(sc.outline.map(p => P(p[0] * mk, p[1] * mk, -ZPL)))); }
-  sc.floor.setAttribute('points', pp(hi));
-  ell(sc.glow, 0, 0, 0, 260 * sc.g);
-  { const q = P(0, sc.a + 44, -ZPL); sc.home.setAttribute('x', f(q[0])); sc.home.setAttribute('y', f(q[1] + 14 * U)); }
-  sc.runs.forEach(run => run.edge.setAttribute('points', pts(run.points, 0)));
-  const castle = far ? sc.overviewCastle : sc.projectCastle;
-  window.CovenCastleMap.draw(castle, P, cam.yaw, cam.pitch, 560 * screenScale > 100);
+  const far = atlasScope === 'coven'; if (far !== sc.far) { sc.far = far; plan.classList.toggle('far', far); $('vAll').setAttribute('aria-pressed', String(far)); $('vProject').setAttribute('aria-pressed', String(!far)); if (window.CovenAtlas) window.CovenAtlas.update(); }
   sc.ghosts.forEach(gh => {
-    const origin = P(gh.ox, gh.oy, 0);
-    gh.castle.setAttribute('transform', `translate(${f(origin[0])},${f(origin[1])})`);
-    const at = (x, y, z) => P(gh.ox + x, gh.oy + y, z);
-    gh.floor.setAttribute('points', pp(gh.runs.flat().map(p => at(p[0], p[1], 0))));
-    gh.runs.forEach((rp, i) => gh.base[i].setAttribute('points', pp(rp.map(q => at(q[0], q[1], 0)))));
+    const at = ([x, y]) => [gh.ox + x, gh.oy + y];
+    gh.floor.setAttribute('points', pp(gh.runs.flat().map(at)));
+    gh.runs.forEach((run, i) => gh.base[i].setAttribute('points', pp(run.map(at))));
     atlasProjectGhost(gh, P, f);
   });
   { const cv = sc.cov, layout = atlasWorldLayout(), origin = worldOf(active);
     const set = (t, q, dy) => { t.setAttribute('x', f(q[0])); t.setAttribute('y', f(q[1] + dy)); };
-    const hq = P(cv.x, cv.y, 0), hubU = Math.min(U, 8);
+    const hq = P(cv.x, cv.y), hubU = Math.min(U, 8);
     drawMarker(cv.marker, cv.x, cv.y, layout.hub.radius);
     cv.g.style.setProperty('--u', hubU.toFixed(3));
-    set(cv.sub, hq, layout.hub.radius * cp + 14 * hubU); set(cv.need, hq, layout.hub.radius * cp + 29 * hubU);
+    set(cv.sub, hq, layout.hub.radius + 14 * hubU); set(cv.need, hq, layout.hub.radius + 29 * hubU);
     const byK = new Map(sc.ghosts.map(g => [g.k, g]));
     cv.links.forEach(L => {
       const route = layout.byRoute.get(L.k); if (!route) return;
-      const points = route.points.map(p => P(p[0] - origin[0], p[1] - origin[1], 0).slice(0, 2));
+      const points = route.points.map(p => P(p[0] - origin[0], p[1] - origin[1]));
       const path = atlasRoutePath(points, layout.maxCornerRadius);
       L.road.setAttribute('d', path); L.lanes.forEach(x => x.el.setAttribute('d', path));
       const gh = byK.get(L.k); if (!gh) return;
-      const gate = P(route.gate.x - origin[0], route.gate.y - origin[1], 0);
-      const center = P(L.ox, L.oy, 0);
+      const gate = P(route.gate.x - origin[0], route.gate.y - origin[1]);
+      const center = P(L.ox, L.oy);
       const pixels = 560 * screenScale;
       const expanded = detailVisible(L.expandedBadge, pixels, narrow.matches ? 84 : 64, narrow.matches ? 76 : 56);
       if (expanded !== L.expandedBadge) {
@@ -2948,7 +2642,7 @@ function project() {
       L.decisionBox.setAttribute('width', f(side)); L.decisionBox.setAttribute('height', f(side));
       L.decisionBox.setAttribute('rx', f(side * .10)); L.decisionCount.setAttribute('y', f(side * .18));
       L.decisionCount.style.fontSize = (side * .54).toFixed(1) + 'px';
-      const boundaryY = Math.max(...gh.runs.flat().map(p => P(L.ox + p[0], L.oy + p[1], 0)[1])) + 30 * cp;
+      const boundaryY = Math.max(...gh.runs.flat().map(p => P(L.ox + p[0], L.oy + p[1])[1])) + 5;
       const edge = L.decision.style.display === 'none' ? boundaryY : Math.max(boundaryY, gate[1] + side / 2);
       const labelU = Math.min(U, gh.density === 'full' ? 9 : 6), fontWidth = 14 * labelU * .58 * fsz;
       const maxChars = Math.max(7, Math.floor(850 / fontWidth)), name = L.k.length > maxChars ? L.k.slice(0, maxChars - 1) + '…' : L.k;
@@ -2958,7 +2652,7 @@ function project() {
     });
   }
   sc.gateL.forEach(g => {
-    const q = P(g.x, g.y, 0); g.t.setAttribute('x', f(q[0])); g.t.setAttribute('y', f(q[1] + 4));
+    const q = P(g.x, g.y); g.t.setAttribute('x', f(q[0])); g.t.setAttribute('y', f(q[1] - 17 * U));
     const badgeSize = clamp(20 * Math.max(.8, U) * screenScale, 20, 28) / screenScale;
     g.mark.setAttribute('transform', `translate(${f(q[0])},${f(q[1])})`);
     g.sx = q[0]; g.sy = q[1];
@@ -2969,111 +2663,82 @@ function project() {
     g.count.style.fontSize = f(badgeSize * .54) + 'px';
   });
 
-  const showAgents = detailVisible(sc.agentDetail, HEX_D * .866 * cp * screenScale, 11, 9);
+  const showAgents = detailVisible(sc.agentDetail, HEX_D * .866 * screenScale, 11, 9);
   if (showAgents !== sc.agentDetail) {
     sc.agentDetail = showAgents;
     const focusedAgent = document.activeElement?.closest?.('#plan .agent');
     plan.classList.toggle('atlas-agent-detail', showAgents);
     if (!showAgents && focusedAgent) sc.missions.get(cur().sel)?.node.focus({preventScroll: true});
   }
-  const depth = [];
-  const pc = P(0, 0, ZP);
-  drawMarker(sc.psy.marker, 0, 0, 29);
+  const pc = P(0, 0);
+  drawMarker(sc.psy.marker, 0, 0, 49);
   sc.psy.sx = pc[0]; sc.psy.sy = pc[1];
-  ell(sc.pBase, 0, 0, 0, 24); seg(sc.pStem, P(0, 0, 0), pc);
-  depth.push([pc[2], sc.psy.g]);
-
-  const outline = (pts, z) => pts.length ? pts.map((v, i) => { const g = P(v[0], v[1], z); return (i ? 'L' : 'M') + f(g[0]) + ',' + f(g[1]); }).join('') + 'Z' : '';
-  ell(sc.pDais, 0, 0, ZT - 1, 46);
   sc.missions.forEach(s => {
-    const q = P(s.x, s.y, ZL);
+    const q = P(s.x, s.y);
     const mission = cur().world.missions.get(s.id);
     s.seal.g.style.opacity = sc.hl && mission && !mission.seats.includes(sc.hl) ? '.76' : '1';
-    s.court.setAttribute('d', outline(s.hull, ZT - 1)); s.courtSh.setAttribute('d', outline(s.hull, 0));
     s.node.setAttribute('transform', `translate(${f(q[0])},${f(q[1])})`);
     const selected = cur().sel === s.id;
     s.hit.setAttribute('r', f(minHit / 2));
-    s.relief = detailVisible(s.relief, 44 * screenScale * cp, 22, 18);
-    const ext = s.seal.data ? drawSeal(s.seal, s.seal.data, s, q, {P, f, cp, sel: selected, compact: !s.relief}) : [-20, 20];
-    const lab = missionLabelAt(q, pc, ext, U);
-    s.name.setAttribute('x', f(lab.x)); s.name.setAttribute('y', f(lab.y)); s.name.style.textAnchor = lab.anchor;
-    const labelY = lab.y;
-    s.labelY = labelY;
-    s.ext = ext;
-    s.stateLabel.style.textAnchor = lab.anchor; s.stateLabel.setAttribute('x', f(lab.x)); s.stateLabel.setAttribute('y', f(labelY + 14 * U));
-    s.g.classList.toggle('atlas-compact-seal', !s.relief);
+    if (!far && mission) labelMission(s, mission.name);
+    const radius = 43, diameter = 2 * radius * screenScale;
+    const faceScale = clamp(68 / diameter, 1, sc.missions.size <= 4 ? 1.44 : 1.16);
+    s.face.style.setProperty('--mission-size', faceScale);
+    s.diameter = diameter * faceScale;
+    s.readable = detailVisible(s.readable, s.diameter, 54, 50);
+    s.g.classList.toggle('atlas-compact-seal', !s.readable);
+    const reveal = Math.max(faceScale, 34 / (radius * screenScale));
+    s.face.style.setProperty('--mission-reveal', f(reveal));
+    s.stateLabel.setAttribute('x', f(q[0]));
+    s.stateLabel.setAttribute('y', f(q[1] + radius * (s.readable ? faceScale : reveal) + 12 * U));
     s.g.classList.toggle('atlas-mission-current', selected);
-    s.stem.style.display = 'none';
     const a = pc, b = q, [nx, ny] = unit(-(b[1] - a[1]), b[0] - a[0]);
     seg(s.thread, a, b); seg(s.out, a, b); seg(s.inn, a, b, -nx * 2.2, -ny * 2.2);   // instructions go out on one lane, reports come back on the other
-    ell(s.shadow, s.x, s.y, 0, 15); seg(s.stem, P(s.x, s.y, 0), q);
     s.sx = q[0]; s.sy = q[1];
-    depth.push([q[2], s.g]);
   });
-  const tight = missionNamesTight([...sc.missions.values()].map(s => [s.sx, s.sy]), pc, kpx);
-  if (tight !== sc.tight) { sc.tight = tight; plan.classList.toggle('tight', tight); }
   const cc = cur();
+  sc.familiarLabels = detailVisible(sc.familiarLabels, 28 * screenScale, 13, 11);
+  plan.classList.toggle('compact-familiars', !sc.familiarLabels);
   sc.seats.forEach(s => {
-    s.pad.setAttribute('d', outline(s.hull, ZT - .5));
-    const q = ell(s.disc, s.x, s.y, ZT, s.R), b = P(s.x, s.y, ZT - TH), ry = Math.max(.01, s.R * cp), M = sc.missions.get(s.m), R = f(s.R), Ry = f(ry);
-    s.side.setAttribute('d', `M${f(q[0] - s.R)},${f(q[1])}L${f(b[0] - s.R)},${f(b[1])}A${R},${Ry} 0 0 0 ${f(b[0] + s.R)},${f(b[1])}L${f(q[0] + s.R)},${f(q[1])}A${R},${Ry} 0 0 1 ${f(q[0] - s.R)},${f(q[1])}Z`);
-    ell(s.rim, s.x, s.y, ZT, s.R + 3.5);
-    let d = '';
-    if (s.frac > 0) { const n = Math.max(2, Math.ceil(44 * s.frac)); for (let i = 0; i <= n; i++) { const a = (s.rot + 180 + 360 * Math.min(s.frac, .9999) * i / n) * RAD, g = P(s.x + (s.R + 3.5) * Math.cos(a), s.y + (s.R + 3.5) * Math.sin(a), ZT); d += (i ? 'L' : 'M') + f(g[0]) + ',' + f(g[1]); } }
-    s.gauge.setAttribute('d', d);
-    const labelPos = cc.sel === s.m ? q : P(s.bx, s.by, ZS);
-    s.labelX = labelPos[0]; s.labelY = labelPos[1] + (cc.sel === s.m ? ry + 8 : 17) + 11 * U;
+    const M = sc.missions.get(s.m), badge = P(s.bx, s.by);
+    s.labelX = badge[0];
+    const above = cc.sel === s.m && s.y > s.by && Math.abs(s.x - s.bx) < 26;
+    s.labelY = badge[1] + (above ? -17 : 15 + 11 * U);
     s.label.setAttribute('x', f(s.labelX)); s.label.setAttribute('y', f(s.labelY));
-    const on = sc.plated !== s.m; if (on !== s.lshow) { s.lshow = on; s.label.classList.toggle('show', on); }
-    ell(s.shadow, s.x, s.y, 0, s.R * .92); seg(s.stem, P(s.x, s.y, 0), b);
-    const bq = P(s.bx, s.by, ZS);
-    s.badge.setAttribute('transform', `translate(${f(bq[0])},${f(bq[1])})`); seg(s.bstem, P(s.bx, s.by, ZT), bq);
-    if (!flat) { const g0 = P(s.bx, s.by, ZT); s.foot.setAttribute('cx', f(g0[0] - bq[0])); s.foot.setAttribute('cy', f(g0[1] - bq[1])); s.foot.setAttribute('rx', 15); s.foot.setAttribute('ry', f(Math.max(.01, 15 * cp))); putSolid(s.solid, s.bx, s.by, ZT, .72, bq); }
-    s.bstem.style.display = flat ? '' : 'none';
-    s.bsx = bq[0]; s.bsy = bq[1]; s.cx = q[0]; s.cy = q[1]; s.ry = ry;
-    if (M) { const a = P(M.x, M.y, ZL); seg(s.link, a, bq); seg(s.lflow, a, bq); }
-    depth.push([q[2], s.g]);
+    s.label.style.visibility = '';
+    s.hit.setAttribute('r', f(clamp(minHit / 2, 15, 27)));
+    s.badge.setAttribute('transform', `translate(${f(badge[0])} ${f(badge[1])})`);
+    s.bsx = badge[0]; s.bsy = badge[1]; s.cx = s.x; s.cy = s.y; s.ry = s.R;
+    if (M) { const a = P(M.x, M.y); seg(s.link, a, badge); seg(s.lflow, a, badge); }
   });
   sc.agents.forEach(s => {
-    const q = P(s.p[0], s.p[1], s.p[2]);
+    const q = P(s.p[0], s.p[1]);
     const radius = Math.min(HEX_D * .44, (s.state === 'idle' ? 4.5 : 6) / screenScale);
-    const hit = Math.max(radius, Math.min(10 / screenScale, HEX_D * .4 * cp));
-    s.halo.setAttribute('cx', f(q[0])); s.halo.setAttribute('cy', f(q[1]));
-    s.halo.setAttribute('rx', f(hit)); s.halo.setAttribute('ry', f(hit));
-    s.cog.setAttribute('transform', `translate(${f(q[0])} ${f(q[1])}) scale(${radius} ${radius * cp})`);
-    s.side.setAttribute('transform', `translate(0 ${.38 * sp / cp})`);
-    if (s.ghost && s.home) ell(s.ghost, s.home[0], s.home[1], s.home[2], 4.6);
+    const hit = Math.max(radius, Math.min(10 / screenScale, HEX_D * .4));
+    s.halo.setAttribute('cx', f(q[0])); s.halo.setAttribute('cy', f(q[1])); s.halo.setAttribute('r', f(hit));
+    s.mark.setAttribute('transform', `translate(${f(q[0])} ${f(q[1])}) scale(${radius})`);
+    if (s.ghost && s.home) {
+      s.ghost.setAttribute('cx', f(s.home[0])); s.ghost.setAttribute('cy', f(s.home[1])); s.ghost.setAttribute('r', '4.6');
+    }
     s.sx = q[0]; s.sy = q[1];
-    if (s.state === 'gate') depth.push([q[2] + 400, s.el]);
   });
-  sc.colinks.forEach(r => { const A2 = sc.seats.get(r.a), B2 = sc.seats.get(r.b); if (!A2 || !B2) return; const pa = P(A2.bx, A2.by, ZS), pb = P(B2.bx, B2.by, ZS); seg(r.l1, pa, pb); seg(r.l2, pa, pb); });
-  const els = depth.sort((a, b) => a[0] - b[0]).map(d => d[1]);
-  let same = !sc.dirty && sc.orderEls && sc.orderEls.length === els.length;
-  if (same) for (let i = 0; i < els.length; i++) if (sc.orderEls[i] !== els[i]) { same = false; break; }
-  if (!same) { els.forEach(e => sc.sorted.appendChild(e)); sc.orderEls = els; sc.dirty = false; }
-
+  sc.colinks.forEach(r => { const A2 = sc.seats.get(r.a), B2 = sc.seats.get(r.b); if (!A2 || !B2) return; const pa = P(A2.bx, A2.by), pb = P(B2.bx, B2.by); seg(r.l1, pa, pb); seg(r.l2, pa, pb); });
   if (packets.length) {
     const now = performance.now();
     packets = packets.filter(pk => {
       const M = sc.missions.get(pk.m), st = sc.seats.get(pk.seat), u = (now - pk.t0) / pk.dur;
       if (!M || u >= 1) { pk.el.remove(); return false; }
       if (u < 0) return true;
-      const path = [[0, 0, ZP], [M.x, M.y, ZL]];
-      if (st) path.push([st.bx, st.by, ZS]);
+      const path = [[0, 0], [M.x, M.y]];
+      if (st) path.push([st.bx, st.by]);
       const e = u < .5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2, w = pk.dir === 'out' ? e : 1 - e, n = path.length - 1;
       const at = Math.min(n - 1e-6, w * n), i = Math.floor(at), tt = at - i, A = path[i], B2 = path[i + 1];
-      const g = P(A[0] + (B2[0] - A[0]) * tt, A[1] + (B2[1] - A[1]) * tt, A[2] + (B2[2] - A[2]) * tt);
+      const g = P(A[0] + (B2[0] - A[0]) * tt, A[1] + (B2[1] - A[1]) * tt);
       pk.el.setAttribute('cx', f(g[0])); pk.el.setAttribute('cy', f(g[1])); pk.el.setAttribute('opacity', Math.min(1, Math.sin(Math.PI * u) * 2.2).toFixed(2));
       return true;
     });
   }
 
-  [['gx', 'gxl', P(1, 0, 0)], ['gy', 'gyl', P(0, 1, 0)], ['gz', 'gzl', P(0, 0, 1)]].forEach(([ln, lb, v]) => {
-    $(ln).setAttribute('x2', f(23 + v[0] * 15)); $(ln).setAttribute('y2', f(23 + v[1] * 15));
-    $(lb).setAttribute('x', f(23 + v[0] * 20.5)); $(lb).setAttribute('y', f(23 + v[1] * 20.5 + 2.6));
-  });
-  const now3d = cam.pitch > 2 || camT.pitch > 2;
-  if (now3d !== is3d || far !== sc.far2) { is3d = now3d; sc.far2 = far; $('vPlan').setAttribute('aria-pressed', String(!is3d && !far)); $('v3d').setAttribute('aria-pressed', String(is3d && !far)); $('gcap').hidden = !is3d; }
   if (!far) layoutMapLabels();
   placePop(); placeCard();
 }
@@ -3083,45 +2748,27 @@ function layoutMapLabels() {
   const stageRect = stage.getBoundingClientRect(), scale = matrix.a;
   const stageX = matrix.e - stageRect.left, stageY = matrix.f - stageRect.top;
   const X = value => stageX + value * scale, Y = value => stageY + value * scale;
-  const c = cur(), selected = sc.missions.get(c.sel), occupied = [];
+  const c = cur(), occupied = [];
   const frame = atlasViewportFrame(true);
   const reserve = (x, y, width, height, gate) => occupied.push({x: x - width / 2, y: y - height / 2, width, height, gate});
   sc.missions.forEach(s => {
-    const extent = s.ext || [-22, 22];
-    reserve(X(s.sx), Y(s.sy + (extent[0] + extent[1]) / 2), 48 * scale, (extent[1] - extent[0] + 8) * scale);
+    const diameter = Math.max(s.diameter, s.id === c.sel && !s.readable ? 68 : 0);
+    reserve(X(s.sx), Y(s.sy), diameter, diameter);
   });
-  reserve(X(sc.psy.sx), Y(sc.psy.sy), 58 * scale, 60 * scale);
+  reserve(X(sc.psy.sx), Y(sc.psy.sy), 98 * scale, 98 * scale);
   sc.gateL.forEach(g => { if (g.mark.style.display !== 'none') reserve(X(g.sx), Y(g.sy), 30, 30, g); });
-  const offer = (el, x, y, detail) => {
-    const text = el.getBoundingClientRect();
-    if (!(text.width > 0)) return;
-    const caption = detail?.getBoundingClientRect();
-    const ascent = Y(y) + stageRect.top - text.top;
-    const captionAscent = caption ? Y(Number(detail.getAttribute('y'))) + stageRect.top - caption.top : 0;
-    const width = Math.max(text.width, caption?.width || 0) + 8;
-    const gap = 8, offset = (text.height - ascent + gap + captionAscent) / scale;
-    const height = text.height + (caption ? caption.height + gap : 0) + 6;
-    const anchor = {x: X(x), y: Y(y)};
-    const pos = placeAnnotation(anchor, {width, height}, frame, occupied, 2, false);
-    el.style.visibility = pos || detail ? '' : 'hidden';
-    const labelX = pos ? (pos.x + width / 2 - stageX) / scale : x;
-    const row = pos ? (pos.y + 3 + ascent - stageY) / scale : y;
-    el.setAttribute('x', labelX);
-    el.setAttribute('y', row);
-    if (detail) {
-      detail.setAttribute('x', labelX);
-      detail.setAttribute('y', row + offset);
-    }
-    if (pos) occupied.push({x: pos.x, y: pos.y, width, height});
-  };
-  const missions = selected ? [selected, ...[...sc.missions.values()].filter(s => s !== selected)] : [...sc.missions.values()];
-  missions.forEach(s => {
-    if (!s.relief && s !== selected) { s.name.style.visibility = ''; return; }
-    offer(s.name, s.sx, s.labelY, s === selected ? s.stateLabel : null);
-  });
   sc.seats.forEach(s => {
-    if (c.sel !== s.m || !s.lshow) return;
-    offer(s.label, s.labelX, s.labelY);
+    if (c.sel !== s.m) return;
+    const text = s.label.getBoundingClientRect();
+    if (!(text.width > 0)) return;
+    const anchor = {x: X(s.labelX), y: Y(s.labelY)}, width = text.width + 8, height = text.height + 6;
+    const pos = placeAnnotation(anchor, {width, height}, frame, occupied, 2, false);
+    s.label.style.visibility = pos ? '' : 'hidden';
+    if (!pos) return;
+    const ascent = anchor.y + stageRect.top - text.top;
+    s.label.setAttribute('x', (pos.x + width / 2 - stageX) / scale);
+    s.label.setAttribute('y', (pos.y + 3 + ascent - stageY) / scale);
+    occupied.push({x: pos.x, y: pos.y, width, height});
   });
   sc.labelBoxes = occupied;
 }
@@ -3138,15 +2785,15 @@ function placePop() {
 }
 function easeCam(dt) {
   const k = reduce ? 1 : 1 - Math.exp(-dt / 150); let busy = false;
-  ['yaw', 'pitch', 'zoom', 'px', 'py'].forEach(p => { const d = camT[p] - cam[p]; if (Math.abs(d) > (p === 'zoom' ? .002 : .08)) { cam[p] += d * k; busy = true; } else cam[p] = camT[p]; });
+  ['zoom', 'px', 'py'].forEach(p => { const d = camT[p] - cam[p]; if (Math.abs(d) > (p === 'zoom' ? .002 : .08)) { cam[p] += d * k; busy = true; } else cam[p] = camT[p]; });
   return busy;
 }
 function stepAgents(dt) {
   const k = reduce ? 1 : 1 - Math.exp(-dt / 170); let busy = false;
   sc.agents.forEach(s => {
-    const dx = s.q[0] - s.p[0], dy = s.q[1] - s.p[1], dz = s.q[2] - s.p[2];
-    if (Math.abs(dx) + Math.abs(dy) + Math.abs(dz) > .3) { s.p[0] += dx * k; s.p[1] += dy * k; s.p[2] += dz * k; busy = true; }
-    else { s.p[0] = s.q[0]; s.p[1] = s.q[1]; s.p[2] = s.q[2]; }
+    const dx = s.q[0] - s.p[0], dy = s.q[1] - s.p[1];
+    if (Math.abs(dx) + Math.abs(dy) > .3) { s.p[0] += dx * k; s.p[1] += dy * k; busy = true; }
+    else { s.p[0] = s.q[0]; s.p[1] = s.q[1]; }
   });
   return busy;
 }
@@ -3166,22 +2813,25 @@ function frame(ts) {
     }
     busy = easeCam(dt) || busy;
     busy = stepAgents(dt) || busy;
-    sealAnimating = false;
     project();
-    busy = sealAnimating || packets.length > 0 || busy;
+    busy = packets.length > 0 || busy;
   } finally {
     framing = false;
   }
   if (busy && !raf) raf = requestAnimationFrame(frame);
 }
-function saveView() { store.set('coven-compass-view', {yaw: camT.yaw, pitch: camT.pitch, zoom: camT.zoom, px: camT.px, py: camT.py, locked: cam.locked}); }
-const viewOf = name => { const v = VIEWS[name], g = cur().layout.g; return Object.assign({}, v, {zoom: v.zoom / g, py: v.py * g}); };   // a bigger fort is framed from further back
-function setView(name) {
+function saveView() { store.set('coven-compass-view', {zoom: camT.zoom, px: camT.px, py: camT.py, locked: cam.locked}); }
+function restoreView(v) {
+  if (v && [v.zoom, v.px, v.py].every(Number.isFinite)) {
+    Object.assign(camT, {zoom: clamp(v.zoom, ZMIN, 6), px: clamp(v.px, -PAN, PAN), py: clamp(v.py, -PAN, PAN)});
+    Object.assign(cam, camT);
+  }
+  setLock(v?.locked === true);
+}
+function setView() {
   if (cam.locked) return;
-  atlasScope = 'project'; atlasAutoFit = true;
-  atlasGestureMode = name === 'plan' ? 'pan' : 'orbit';
-  cam.yaw = ((cam.yaw + 180) % 360 + 360) % 360 - 180;
-  Object.assign(camT, viewOf(name)); atlasFitScene(false); if (window.CovenAtlas) window.CovenAtlas.update(); atlasWriteRoute();
+  atlasScope = 'project'; document.body.dataset.atlasScope = 'project';
+  atlasFitScene(false); if (window.CovenAtlas) window.CovenAtlas.update(); atlasWriteRoute();
 }
 function zoomBy(fac, cx, cy) {
   if (cam.locked) return;
@@ -3202,12 +2852,11 @@ function setLock(on) {
   const b = $('lock'); b.innerHTML = on ? ICON.lock : ICON.unlock;
   b.setAttribute('aria-pressed', String(on)); b.setAttribute('aria-label', on ? 'Unlock the view' : 'Lock the view');
   stage.classList.toggle('locked', on);
-  ['vPlan', 'v3d', 'vAll', 'zIn', 'zOut'].forEach(id => $(id).disabled = on);
+  ['vProject', 'vAll', 'zIn', 'zOut'].forEach(id => $(id).disabled = on);
   saveView();
   if (window.CovenAtlas) window.CovenAtlas.update();
 }
-$('vPlan').addEventListener('click', () => setView('plan'));
-$('v3d').addEventListener('click', () => setView('3d'));
+$('vProject').addEventListener('click', setView);
 // Fit the complete Coven inside the measured chrome-safe frame.
 $('vAll').addEventListener('click', () => {
   if (cam.locked) return;
@@ -3221,11 +2870,11 @@ $('vAll').addEventListener('click', () => {
 $('zIn').addEventListener('click', () => zoomBy(1.35));
 $('zOut').addEventListener('click', () => zoomBy(1 / 1.35));
 $('lock').addEventListener('click', () => setLock(!cam.locked));
-let drag = null, dragged = false, atlasGestureMode = 'orbit', lastGestureAt = -Infinity;
+let drag = null, dragged = false, lastGestureAt = -Infinity;
 const mapPointers = new Map(); let previousPointers = [];
 stage.addEventListener('pointerdown', ev => {
   if (ev.button > 1 || cam.locked || !ev.target.closest('#plan') || ev.target.closest('button,input,textarea,select,summary,[contenteditable],.pop,.lcard,.empty,.hud,.plate')) return;
-  if (!mapPointers.size) { drag = {pan: ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button === 1, moved: false, travel: 0}; dragged = false; }
+  if (!mapPointers.size) { drag = {moved: false, travel: 0}; dragged = false; }
   mapPointers.set(ev.pointerId, {id: ev.pointerId, x: ev.clientX, y: ev.clientY}); previousPointers = [...mapPointers.values()];
   if (mapPointers.size > 1 && drag) { drag.moved = dragged = true; mapPointers.forEach((_, id) => { try { stage.setPointerCapture(id); } catch (e) {} }); }
 });
@@ -3238,13 +2887,12 @@ stage.addEventListener('pointermove', ev => {
   previousPointers = currentPointers;
   if (!drag.moved) {
     if (drag.travel < 5) return;
-    drag.moved = dragged = true; hintDone();
+    drag.moved = dragged = true;
     mapPointers.forEach((_, id) => { try { stage.setPointerCapture(id); } catch (e) {} });
   }
   if (delta.reset) return;
-  const mode = drag.pan || camT.pitch <= 2 ? 'pan' : atlasGestureMode;
-  stage.classList.toggle('panning', mode === 'pan' || delta.count > 1); stage.classList.toggle('orbiting', mode === 'orbit' && delta.count === 1);
-  const next = window.CovenMobileInteractions.applyCameraGesture(cam, delta, stage.getBoundingClientRect(), {mode, minPitch: mode === 'orbit' ? 6 : 0, maxPitch: atlasScope === 'coven' ? 45 : 78, minZoom: ZMIN, maxZoom: 6, panLimit: PAN});
+  stage.classList.add('panning');
+  const next = window.CovenMobileInteractions.applyCameraGesture(cam, delta, stage.getBoundingClientRect(), {minZoom: ZMIN, maxZoom: 6, panLimit: PAN});
   atlasAutoFit = false; Object.assign(cam, next); Object.assign(camT, next);
   if (ev.cancelable) ev.preventDefault();
   kick(); if (window.CovenAtlas) window.CovenAtlas.update();
@@ -3254,19 +2902,12 @@ const endDrag = ev => {
   if (drag && drag.moved) { saveView(); lastGestureAt = performance.now(); atlasWriteRoute(true); }
   if (ev) mapPointers.delete(ev.pointerId); else mapPointers.clear();
   previousPointers = [...mapPointers.values()];
-  if (!mapPointers.size) { drag = null; stage.classList.remove('orbiting', 'panning'); }
+  if (!mapPointers.size) { drag = null; stage.classList.remove('panning'); }
 };
 stage.addEventListener('pointerup', endDrag); stage.addEventListener('pointercancel', () => endDrag()); stage.addEventListener('lostpointercapture', endDrag);
 addEventListener('blur', () => endDrag());
 stage.addEventListener('click', ev => { if (dragged && performance.now() - lastGestureAt < 350 && (ev.target === stage || ev.target.closest('#plan'))) { dragged = false; ev.stopPropagation(); ev.preventDefault(); } }, true);
 stage.addEventListener('click', () => { const c = cur(); if (c.pick) clearPick(); else if (c.sel && c.detail === 'card') select(null); });
-function hintDone() { if ($('ghint').hidden) return; $('ghint').hidden = true; store.set('coven-compass-hint', 1); }
-function updateGestureHint() { $('ghint').textContent = narrow.matches ? 'Drag to move in 2D. Choose Orbit in 3D. Pinch with two fingers to zoom.' : `Drag to orbit, ${MAC ? '\u2318' : 'Ctrl'}-drag to move, scroll to zoom`; }
-updateGestureHint(); narrow.addEventListener('change', updateGestureHint);
-$('ghint').hidden = !!store.get('coven-compass-hint');
-addEventListener('keydown', ev => { if ((ev.key === 'Meta' || ev.key === 'Control') && !cam.locked) stage.classList.add('panning'); });
-addEventListener('keyup', ev => { if ((ev.key === 'Meta' || ev.key === 'Control') && !drag) stage.classList.remove('panning'); });
-addEventListener('blur', () => stage.classList.remove('panning'));
 stage.addEventListener('dblclick', ev => {               // fly in on the point under the cursor
   if (cam.locked || !ev.target.closest('#plan') || ev.target.closest('.pop,.lcard,.empty,.agent,.lead-node,.seat,[role="button"]')) return;
   const r = plan.getBoundingClientRect(), z = clamp(camT.zoom * 1.7, ZMIN, 6), k0 = Math.min(r.width, r.height) / (784 / cam.zoom);
@@ -3275,13 +2916,12 @@ stage.addEventListener('dblclick', ev => {               // fly in on the point 
   if (window.CovenAtlas) window.CovenAtlas.update(); atlasWriteRoute(true);
 });
 stage.addEventListener('keydown', ev => {
-  if (ev.target !== stage) return;                  // typing in a card on the stage is not steering
   if (ev.target !== stage || cam.locked || ev.metaKey || ev.ctrlKey || ev.altKey) return;
   const step = 60 / cam.zoom, k = ev.key; let used = true;
-  if (k === 'ArrowLeft') ev.shiftKey ? camT.yaw -= 10 : camT.px = clamp(camT.px - step, -PAN, PAN);
-  else if (k === 'ArrowRight') ev.shiftKey ? camT.yaw += 10 : camT.px = clamp(camT.px + step, -PAN, PAN);
-  else if (k === 'ArrowUp') ev.shiftKey ? camT.pitch = clamp(camT.pitch + 8, 0, atlasScope === 'coven' ? 45 : 78) : camT.py = clamp(camT.py - step, -PAN, PAN);
-  else if (k === 'ArrowDown') ev.shiftKey ? camT.pitch = clamp(camT.pitch - 8, 0, atlasScope === 'coven' ? 45 : 78) : camT.py = clamp(camT.py + step, -PAN, PAN);
+  if (k === 'ArrowLeft') camT.px = clamp(camT.px - step, -PAN, PAN);
+  else if (k === 'ArrowRight') camT.px = clamp(camT.px + step, -PAN, PAN);
+  else if (k === 'ArrowUp') camT.py = clamp(camT.py - step, -PAN, PAN);
+  else if (k === 'ArrowDown') camT.py = clamp(camT.py + step, -PAN, PAN);
   else if (k === '+' || k === '=') camT.zoom = clamp(camT.zoom * 1.25, ZMIN, 6);
   else if (k === '-' || k === '_') camT.zoom = clamp(camT.zoom / 1.25, ZMIN, 6);
   else if (k === '0') atlasFitScene(true);
@@ -3298,13 +2938,13 @@ stage.addEventListener('wheel', ev => {
 function go(k) {
   if (!projects[k] || k === active) return;
   if (cur().sel) select(null, null, null, {history: false, focus: false});
-  const a = worldOf(active), b = worldOf(k), dx = b[0] - a[0], dy = b[1] - a[1], cyw = Math.cos(cam.yaw * RAD), syw = Math.sin(cam.yaw * RAD);
-  const sx = dx * cyw - dy * syw, sy = (dx * syw + dy * cyw) * Math.cos(cam.pitch * RAD);
+  const a = worldOf(active), b = worldOf(k), dx = b[0] - a[0], dy = b[1] - a[1];
   atlasScope = 'project'; atlasAutoFit = true; active = k;
   enter(true);
-  if (!cam.locked) { cam.px -= sx; cam.py -= sy; const v = viewOf(cam.pitch > 2 || camT.pitch > 2 ? '3d' : 'plan'); camT.px = v.px; camT.py = v.py; camT.zoom = v.zoom; if (reduce) Object.assign(cam, camT); saveView(); }
-  else { cam.px = camT.px = clamp(cam.px - sx, -PAN, PAN); cam.py = camT.py = clamp(cam.py - sy, -PAN, PAN); }
-  if (!cam.locked) atlasFitScene(false);
+  cam.px = clamp(cam.px - dx, -PAN, PAN);
+  cam.py = clamp(cam.py - dy, -PAN, PAN);
+  if (cam.locked) { camT.px = cam.px; camT.py = cam.py; }
+  else { atlasFitScene(false); if (reduce) Object.assign(cam, camT); }
   kick(); atlasWriteRoute();
 }
 addEventListener('hashchange', () => atlasRestoreRoute(false));
@@ -3390,10 +3030,7 @@ function drawSummary() {
   $('psub').textContent = w.missions.size ? `One channel to ${plural(w.missions.size, 'council')}` : 'No missions yet';
 }
 // ------------------------------------------------------------ the mission seal
-// A mission is drawn as a seal. One wedge per familiar on its council, in that familiar's color: its angle is the share of
-// the mission's agents it leads, its height how far the targets its roles own have come, its top bright while it has agents
-// working. The lavender signet in the middle carries the mission's state and nothing else. The rim around the base is the
-// tightest limit: how much of the time, the tokens or the budget is used, coral from 85%. A dark pip marks the lead's wedge.
+// Each segment spans a familiar's share of assigned agents. Its bright arc measures role-owned target progress.
 const TARGET_ROLES = {sources: ['Researcher'], tests: ['Hacker', 'DevOps Engineer'], reviews: ['Reviewer', 'Correspondent'], minutes: [],
   report: ['Correspondent', 'Researcher'], codebase: ['Hacker', 'DevOps Engineer'], website: ['Designer', 'Hacker'], video: ['Recorder'], database: ['Database Engineer', 'Data Engineer', 'Researcher']};
 const SEAL_STATE = {planned: ['Planned', 'opened, no agents yet'], active: ['Active', 'agents are working'], needsYou: ['Needs you', 'a request is in the Inbox'], stalled: ['Stalled', 'a familiar is blocked or a limit is near'], sealed: ['Sealed', 'every target met'], broken: ['Broken', 'stopped at a limit']};
@@ -3419,75 +3056,43 @@ function sealOf(w, M) {
     sig: state + '|' + Math.round(burn * 50) + '|' + wd.map(x => [x.k, Math.round(x.share * 90), Math.round(x.progress * 40), x.live ? 1 : 0, x.live, x.blocked ? 1 : 0, x.asking ? 1 : 0].join('.')).join('/')};
 }
 const sealLabel = d => SEAL_STATE[d.state][0] + (d.state === 'stalled' && d.tight && d.burn >= WARN_AT ? ` · ${d.tight.label.toLowerCase()} at ${Math.round(d.tight.frac * 100)}%` : '');
-// the small, flat seal: wedges and the signet's form only
+// Share and progress use the same clockwise scale on the map, in lists and in the lab.
 function sealSvg(d, px) {
-  const R = 10, pt = (a, r) => { const q = pol(r, a); return q[0].toFixed(2) + ',' + q[1].toFixed(2); };
-  const wed = d.wedges.map(x => { const cls = 'sw' + (x.blocked || d.state === 'broken' ? ' dim' : '') + (x.asking ? ' ask' : '') + (x.live ? ' live' : ''), full = x.a1 - x.a0 >= 359.9;
-    return full ? `<circle class="${cls}" r="${R}" style="--hue:${fam(x.k).hue}"/>` : `<path class="${cls}" style="--hue:${fam(x.k).hue}" d="M0,0L${pt(x.a0, R)}A${R},${R} 0 ${x.a1 - x.a0 > 180 ? 1 : 0} 1 ${pt(x.a1, R)}Z"/>`; }).join('');
-  const sg = d.state === 'sealed' ? '<circle class="sg" r="4.6"/><circle class="sg-in" r="2.6"/>' : d.state === 'needsYou' ? '<circle class="sg-halo" r="5"/><circle class="sg" r="2.9"/>'
-    : d.state === 'stalled' ? '<circle class="sg hollow" r="3.4"/><path class="sg-pause" d="M-1,-1.6v3.2m2,-3.2v3.2"/>'
-    : d.state === 'broken' ? '<circle class="sg hollow" r="2.9"/><path class="sg-slash" d="M-3.4,3.4L3.4,-3.4"/>' : `<circle class="sg${d.state === 'planned' ? ' hollow' : ''}" r="2.9"/>`;
-  return `<svg class="seal2 st-${d.state}${d.warn ? ' warn' : ''}" viewBox="-11.5 -11.5 23 23" width="${px}" height="${px}" aria-hidden="true">${wed}${sg}</svg>`;
+  const svg = svgEl('svg', {class: 'seal2', viewBox: '-47 -47 94 94', width: px, height: px, 'aria-hidden': 'true'});
+  const seal = {g: svgEl('g', {}, svg)};
+  buildSeal(seal, d);
+  drawSeal(seal, d);
+  return svg.outerHTML;
 }
-// the seal on the map: an extruded disc, drawn back to front
 function buildSeal(se, d) {
   se.g.textContent = '';
-  se.baseWall = svgEl('path', {class: 'se-base-wall'}, se.g);
-  se.baseTop = svgEl('path', {class: 'se-base-top'}, se.g);
-  se.selection = svgEl('path', {class: 'se-selection'}, se.g);
-  se.rimBg = svgEl('path', {class: 'se-rim-bg'}, se.g); se.rim = svgEl('path', {class: 'se-rim'}, se.g); se.pips = svgEl('g', {class: 'se-pips'}, se.g); se.wg = svgEl('g', {}, se.g);
-  se.wedges = d.wedges.map(x => { const g = svgEl('g', {class: 'se-w'}, se.wg); g.style.setProperty('--hue', fam(x.k).hue);
-    const o = {g, sa: svgEl('path', {class: 'se-side'}, g), sb: svgEl('path', {class: 'se-side'}, g), wall: svgEl('path', {class: 'se-wall'}, g), top: svgEl('path', {class: 'se-top'}, g), pip: x.lead && d.wedges.length > 1 ? svgEl('ellipse', {class: 'se-lead'}, g) : null};
-    svgEl('title', {}, o.top).textContent = `${fam(x.k).name}, ${(fam(x.k).roles || []).join(', ')}`; return o; });
-  se.sgSide = svgEl('path', {class: 'se-sg-side'}, se.g); se.halo = svgEl('ellipse', {class: 'se-halo'}, se.g); se.sgTop = svgEl('ellipse', {class: 'se-sg'}, se.g); se.sgIn = svgEl('ellipse', {class: 'se-sg-in'}, se.g); se.slash = svgEl('line', {class: 'se-slash'}, se.g);
-  se.pause = svgEl('path', {class: 'se-pause'}, se.g);
-  se.hit = svgEl('path', {class: 'se-hit'}, se.g); se.order = ''; se.pipKey = ''; se.pipEls = [];
-}
-function drawSeal(se, d, s, q, o) {
-  const P = o.P, f = o.f, cp = o.cp, tier = o.far ? 's' : o.sel ? 'l' : 'm', R = o.radius || (tier === 's' ? 52 : 22), profile = sealDepth(R, tier === 's' || o.compact),
-    HM = profile.progress, zb = ZT + profile.base, r0 = R * .26;
-  if (se.tier !== tier) { se.tier = tier; se.g.setAttribute('data-tier', tier); }
-  const at = (x, y, z) => { const g = P(s.x + x, s.y + y, z); return [g[0] - q[0], g[1] - q[1], g[2]]; };
-  const arc = (a0, a1, r, z) => { const n = Math.max(2, Math.ceil((a1 - a0) / 9)), out = []; for (let i = 0; i <= n; i++) { const a = (a0 + (a1 - a0) * i / n) * RAD; out.push(at(r * Math.cos(a), r * Math.sin(a), z)); } return out; };
-  const line = pts => 'M' + pts.map(v => f(v[0]) + ',' + f(v[1])).join('L'), path = pts => line(pts) + 'Z';
-  const base = arc(-90, 270, R, zb);
-  se.baseTop.setAttribute('d', path(base));
-  se.baseWall.setAttribute('d', profile.base && cp < .999 ? path(base.concat(arc(-90, 270, R, ZT).reverse())) : '');
-  se.selection.setAttribute('d', path(arc(-90, 270, R + 7, zb)));
-  let top = 0, mean = 0; const order = [];
-  d.wedges.forEach((x, i) => {
-    const el = se.wedges[i]; if (!el) return;
-    const targetProgress = d.state === 'planned' ? 0 : x.progress;
-    const progress = o.noEase ? targetProgress : atlasEaseProgress(se, x.k, targetProgress, !!HM);
-    const h = HM * progress, z1 = zb + h, gap = d.wedges.length > 1 ? 1.4 : 0, a0 = x.a0 + gap / 2, a1 = x.a1 - gap / 2; top = Math.max(top, h); mean += h * x.share;
-    const oT = arc(a0, a1, R, z1), iT = arc(a0, a1, r0, z1).reverse();
-    el.top.setAttribute('d', path(oT.concat(iT)));
-    if (h > 0) { const side = a => { const c = Math.cos(a * RAD), sn = Math.sin(a * RAD); return path([at(r0 * c, r0 * sn, z1), at(R * c, R * sn, z1), at(R * c, R * sn, zb), at(r0 * c, r0 * sn, zb)]); };
-      el.wall.setAttribute('d', path(oT.concat(arc(a0, a1, R, zb).reverse()))); el.sa.setAttribute('d', gap ? side(a0) : ''); el.sb.setAttribute('d', gap ? side(a1) : ''); }
-    else { el.wall.setAttribute('d', ''); el.sa.setAttribute('d', ''); el.sb.setAttribute('d', ''); }
-    const am = (a0 + a1) / 2 * RAD, mid = at(R * .64 * Math.cos(am), R * .64 * Math.sin(am), z1);
-    if (el.pip) { el.pip.setAttribute('cx', f(mid[0])); el.pip.setAttribute('cy', f(mid[1])); el.pip.setAttribute('rx', f(R * .085)); el.pip.setAttribute('ry', f(Math.max(.01, R * .085 * cp))); }
-    order.push([mid[2], i]);
+  se.selection = svgEl('circle', {class: 'se-selection', r: 46.3}, se.g);
+  se.face = svgEl('circle', {class: 'se-face', r: 41.5}, se.g);
+  svgEl('circle', {class: 'se-track', r: 36.8}, se.g);
+  se.wedges = d.wedges.map(() => {
+    const g = svgEl('g', {}, se.g);
+    const arc = cls => svgEl('circle', {class: cls, r: 36.8, pathLength: 360}, g);
+    return {g, share: arc('se-share'), progress: arc('se-progress'), title: svgEl('title', {}, g)};
   });
-  const ord = order.sort((x, y) => x[0] - y[0]).map(x => x[1]).join(); if (ord !== se.order) { se.order = ord; order.forEach(x => se.wg.appendChild(se.wedges[x[1]].g)); }
-  // the signet: a cap over the middle, lifted when the mission needs you, wide and flush when it is sealed
-  const rs = d.state === 'sealed' ? R * .46 : r0, zs = zb + mean, c1 = at(0, 0, zs), c0 = at(0, 0, d.state === 'needsYou' ? zs - 2.6 : zb), ry = Math.max(.01, rs * cp);
-  [[se.sgTop, 1], [se.halo, 2.1], [se.sgIn, .55]].forEach(([el, k]) => { el.setAttribute('cx', f(c1[0])); el.setAttribute('cy', f(c1[1])); el.setAttribute('rx', f(rs * k)); el.setAttribute('ry', f(ry * k)); });
-  se.sgSide.setAttribute('d', zs > zb && cp < .985 ? `M${f(c1[0] - rs)},${f(c1[1])}L${f(c0[0] - rs)},${f(c0[1])}A${f(rs)},${f(ry)} 0 0 0 ${f(c0[0] + rs)},${f(c0[1])}L${f(c1[0] + rs)},${f(c1[1])}Z` : '');
-  se.slash.setAttribute('x1', f(c1[0] - rs * .95)); se.slash.setAttribute('y1', f(c1[1] + ry * .95)); se.slash.setAttribute('x2', f(c1[0] + rs * .95)); se.slash.setAttribute('y2', f(c1[1] - ry * .95));
-  const pauseBars = [-.26, .26].map(offset => `M${f(c1[0] + rs * offset)},${f(c1[1] - ry * .45)}v${f(ry * .9)}`);
-  se.pause.setAttribute('d', pauseBars.join(''));
-  // the rim: how much of the tightest limit is used, swept from twelve o'clock
-  const RR = R + 3.8, ring = arc(-90, 270, RR, zb), sweep = d.state === 'sealed' ? 1 : d.state === 'planned' ? 0 : d.burn;
-  se.rimBg.setAttribute('d', path(ring)); se.rim.setAttribute('d', sweep >= .999 ? path(ring) : sweep > .004 ? line(arc(-90, -90 + 360 * sweep, RR, zb)) : '');
-  se.hit.setAttribute('d', path(arc(-90, 270, R + 5, zb)) + path(arc(-90, 270, R + 2, zb + top)));
-  // large only: one pip outside the edge for each agent working, by familiar
-  const pk = tier === 'l' && !o.compact ? d.wedges.map(x => x.live).join() : '';
-  if (pk !== se.pipKey) { se.pipKey = pk; se.pips.textContent = ''; se.pipEls = [];
-    if (pk) d.wedges.forEach(x => { const n = Math.min(x.live, 12), span = x.a1 - x.a0; for (let i = 0; i < n; i++) { const el = svgEl('circle', {class: 'se-pip', r: 1.5}, se.pips); el.style.setProperty('--hue', fam(x.k).hue); se.pipEls.push({el, a: x.a0 + span * (i + .5) / n}); } }); }
-  (se.pipEls || []).forEach(pe => { const v = at((RR + 5.5) * Math.cos(pe.a * RAD), (RR + 5.5) * Math.sin(pe.a * RAD), zb); pe.el.setAttribute('cx', f(v[0])); pe.el.setAttribute('cy', f(v[1])); });
-  let lo = c1[1] - ry * (d.state === 'needsYou' ? 2.1 : 1), hi = -1e9; ring.forEach(v => { if (v[1] > hi) hi = v[1]; if (v[1] < lo) lo = v[1]; });
-  return [lo, hi + profile.base * Math.sqrt(Math.max(0, 1 - cp * cp))];
+  svgEl('circle', {class: 'se-status', r: 41.5}, se.g);
+  svgEl('circle', {class: 'se-status-inner', r: 32}, se.g);
+  se.limit = svgEl('circle', {class: 'se-limit', r: 43.4, pathLength: 360, transform: 'rotate(-90)'}, se.g);
+}
+function drawSeal(se, d) {
+  const length = value => value.toFixed(3) + ' 360';
+  se.g.setAttribute('class', 'seal st-' + d.state + (d.warn ? ' warn' : ''));
+  d.wedges.forEach((x, i) => {
+    const wedge = se.wedges[i];
+    wedge.g.style.setProperty('--hue', fam(x.k).hue);
+    // Single-member councils have no seam. The gap is small enough to preserve the minimum share.
+    const gap = d.wedges.length > 1 ? 2 : 0;
+    const span = x.a1 - x.a0 - gap;
+    wedge.g.setAttribute('transform', 'rotate(' + (x.a0 + gap / 2) + ')');
+    wedge.share.setAttribute('stroke-dasharray', length(span));
+    wedge.progress.setAttribute('stroke-dasharray', length(span * (x.progress || 0)));
+    wedge.title.textContent = fam(x.k).name + ', ' + (x.agents || 0) + ' assigned, ' + (x.live || 0) + ' working, ' + Math.round((x.progress || 0) * 100) + '% target progress';
+  });
+  se.limit.setAttribute('stroke-dasharray', length(Math.max(0, Math.min(1, d.burn || 0)) * 360));
 }
 // the first layer: one card per mission, showing who sits on its council
 let leadSig = '';
@@ -3546,15 +3151,16 @@ function select(m, k, mode, options) {
 function fitTarget(c) {
   const M = c.world.missions.get(c.sel), ms = M && sc.missions.get(M.id);
   if (!ms) return null;
-  const cyw = Math.cos(camT.yaw * RAD), syw = Math.sin(camT.yaw * RAD), cp = Math.cos(camT.pitch * RAD), sp = Math.sin(camT.pitch * RAD);
   let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
-  const add = (x, y, z, r) => { const xr = x * cyw - y * syw, yr = x * syw + y * cyw, sy = yr * cp - z * sp; x0 = Math.min(x0, xr - r); x1 = Math.max(x1, xr + r); y0 = Math.min(y0, sy - r); y1 = Math.max(y1, sy + r); };
-  add(ms.x, ms.y, ZL, 26);
-  M.seats.forEach(k => { const s = sc.seats.get(seatId(M.id, k)); if (s) { add(s.x, s.y, ZT, s.R + 6); add(s.bx, s.by, ZS, 16); } });
-  c.world.agents.forEach(a => { if (a.mission === M.id && a.state === 'gate') { const s = sc.agents.get(a.id); if (s) add(s.q[0], s.q[1], 0, 14); } });
-  const frame = atlasViewportFrame(true), target = window.CovenAtlasViewport.fit({x0: x0 - 16, y0: y0 - 28, x1: x1 + 16, y1: y1 + 28}, {width: stage.clientWidth, height: stage.clientHeight, frame, fill: .88});
-  const zoom = clamp(target.zoom, ZMIN, 2.3), scale = zoom * Math.min(stage.clientWidth, stage.clientHeight) / 784;
-  return {zoom, px: clamp((x0 + x1) / 2 - (frame.cx - stage.clientWidth / 2) / scale, -PAN, PAN), py: clamp((y0 + y1) / 2 - (frame.cy - stage.clientHeight / 2) / scale, -PAN, PAN)};
+  const add = (x, y, r) => {
+    x0 = Math.min(x0, x - r); x1 = Math.max(x1, x + r);
+    y0 = Math.min(y0, y - r); y1 = Math.max(y1, y + r);
+  };
+  add(ms.x, ms.y, 43);
+  M.seats.forEach(k => { const s = sc.seats.get(seatId(M.id, k)); if (s) { add(s.x, s.y, s.R + 6); add(s.bx, s.by, 16); } });
+  c.world.agents.forEach(a => { if (a.mission === M.id && a.state === 'gate') { const s = sc.agents.get(a.id); if (s) add(s.q[0], s.q[1], 14); } });
+  const target = window.CovenAtlasViewport.fit({x0: x0 - 16, y0: y0 - 28, x1: x1 + 16, y1: y1 + 28}, {width: stage.clientWidth, height: stage.clientHeight, frame: atlasViewportFrame(true), fill: .88, minZoom: ZMIN, maxZoom: 2.3});
+  return {zoom: target.zoom, px: clamp(target.px, -PAN, PAN), py: clamp(target.py, -PAN, PAN)};
 }
 // A selected mission is written into the space it occupies: a title plate for the mission, a plate beside each council
 // seat listing that familiar's tasks, and a tag on anything of its waiting at a gate.
@@ -3591,12 +3197,12 @@ function fillHudBrief() {
 const hotTask = (id, on) => cur().world.agents.forEach(a => { if (a.task === id) { const s = sc.agents.get(a.id); if (s) s.el.classList.toggle('is-hot', on); } });
 function drawLeadCard(force) {
   const c = cur(), w = c.world, layer = $('notes'), M = c.sel ? w.missions.get(c.sel) : null;
-  if (!M) { if (lcSig) { layer.textContent = ''; notes = []; hud = null; lcSig = ''; sc.plated = null; } return; }
+  if (!M) { if (lcSig) { layer.textContent = ''; notes = []; hud = null; lcSig = ''; } return; }
   const asks = openAsks(w).filter(q => q.mission === M.id), tasks = [...w.tasks.values()].filter(t => t.mission === M.id), side = c.detail === 'side', wide = stage.clientWidth >= 700 && !side;
   const next = primaryRequest(asks, c.noteTop);
   const sig = [active, M.id, c.fam || '', side, wide, M.seats.join('+'), next?.id, asks.length, tasks.map(t => t.id).join(',')].join('|');
   if (force || sig !== lcSig) {
-    lcSig = sig; layer.textContent = ''; notes = []; hud = null; sc.plated = side ? null : M.id;
+    lcSig = sig; layer.textContent = ''; notes = []; hud = null;
     const col = wide ? html('div', 'manifest') : layer, leaders = wide ? svgEl('svg', {class: 'leaders', 'aria-hidden': 'true'}) : null;
     if (!side) {
       const h = html('div', 'hud'), top = html('div', 'hud-top'), ttl = html('div'), stats = html('div', 'hud-stats'), bar = html('span', 'bar'), act = html('div', 'hud-act'), nums = {};
@@ -4253,7 +3859,7 @@ TABS.forEach(t => $(TAB_ID[t]).addEventListener('click', () => setTab(t, false, 
 document.querySelector('.p-tabs').addEventListener('keydown', ev => { const d = ev.key === 'ArrowRight' ? 1 : ev.key === 'ArrowLeft' ? -1 : 0; if (!d) return; ev.preventDefault(); setTab(TABS[(TABS.indexOf(railTab) + d + TABS.length) % TABS.length], true, true); });
 // ------------------------------------------------------------ familiars: who Psyche coordinates, what each is for, how each is drawn
 const famsOpen = new Set(), famSec = {}; let famTry = '';
-const saveFams = () => { const o = {}; Object.keys(FAM_DEF).forEach(k => { o[k] = {roles: FAM[k].roles, sym: FAM[k].sym, solid: FAM[k].solid, color: FAM[k].color}; }); store.set('coven-compass-fams', o); };
+const saveFams = () => { const o = {}; Object.keys(FAM_DEF).forEach(k => { o[k] = {roles: FAM[k].roles, sym: FAM[k].sym, color: FAM[k].color}; }); store.set('coven-compass-fams', o); };
 function famChanged(focusId) {                       // a familiar's mark is drawn in many places, so everything that shows one is redrawn
   saveFams(); Object.keys(FAM_DEF).forEach(k => { FAM[k].role = FAM[k].roles.join(', '); document.documentElement.style.setProperty('--fam-' + k, FAM[k].color); });
   $('nmLeads').querySelectorAll('.nm-lead').forEach(b => { const k = b.dataset.k; b.innerHTML = avatar(k); b.append(FAM[k].name); });
@@ -4303,28 +3909,13 @@ function drawFams(focusId) {
       b2.append(mine, html('div', 'fm-h', 'Add a role'), more);
     });
     // symbol and color: taking one that another familiar holds swaps the two
-    sect('sym', `<svg viewBox="-10 -10 20 20" aria-hidden="true">${sigil(k)}</svg>`, '2D symbol', SYMS[f.sym] || '', b2 => {
+    sect('sym', `<svg viewBox="-10 -10 20 20" aria-hidden="true">${sigil(k)}</svg>`, 'Symbol', SYMS[f.sym] || '', b2 => {
       const yg = html('div', 'fm-grid');
       Object.keys(SYMS).forEach(sy => { const held = Object.keys(FAM_DEF).find(x => FAM[x].sym === sy), b = html('button', 'fm-sym'); b.type = 'button'; b.dataset.id = `y-${k}-${sy}`; b.setAttribute('aria-pressed', String(f.sym === sy));
         b.innerHTML = `<svg viewBox="-10 -10 20 20" aria-hidden="true">${SIGIL[sy]}</svg>`; b.append(SYMS[sy]); b.setAttribute('aria-label', `${SYMS[sy]}${held && held !== k ? ', held by ' + FAM[held].name + ', swaps' : ''}`);
         if (held && held !== k) { b.title = `Swaps with ${FAM[held].name}`; const tag = html('i', null, FAM[held].name.charAt(0)); tag.style.setProperty('--hue', FAM[held].hue); b.appendChild(tag); }
         b.addEventListener('click', () => { if (f.sym !== sy) swap('sym', sy); picked('sym'); }); yg.appendChild(b); });
       b2.appendChild(yg);
-    });
-    sect('solid', solidPreview(f.solid), '3D solid', f.solid, body => {
-      const grid = html('div', 'fm-grid');
-      SOLID_NAMES.forEach(name => {
-        const option = html('button', 'fm-sym');
-        option.type = 'button';
-        option.innerHTML = solidPreview(name);
-        option.append(name);
-        option.setAttribute('aria-pressed', String(f.solid === name));
-        const owner = Object.values(FAM).find(other => other !== f && other.solid === name);
-        if (owner) option.title = option.ariaLabel = name + ', swaps with ' + owner.name;
-        option.addEventListener('click', () => { swap('solid', name); picked('solid'); });
-        grid.appendChild(option);
-      });
-      body.appendChild(grid);
     });
     { const sw = html('i', 'fm-dot'); sw.style.background = f.color;
       sect('color', sw, 'Color', HUES[f.color] || f.color, b2 => {
@@ -4347,7 +3938,7 @@ function drawFams(focusId) {
     d.append(sm, body); list.appendChild(d);
   });
   box.appendChild(list);
-  const foot = html('div', 'fm-foot'), changed = Object.keys(FAM_DEF).some(k => JSON.stringify([FAM[k].roles, FAM[k].sym, FAM[k].solid, FAM[k].color]) !== JSON.stringify([FAM_DEF[k].roles, FAM_DEF[k].sym, FAM_DEF[k].solid, FAM_DEF[k].color])), rb = html('button', 'btn sm', 'Reset to defaults');
+  const foot = html('div', 'fm-foot'), changed = Object.keys(FAM_DEF).some(k => JSON.stringify([FAM[k].roles, FAM[k].sym, FAM[k].color]) !== JSON.stringify([FAM_DEF[k].roles, FAM_DEF[k].sym, FAM_DEF[k].color])), rb = html('button', 'btn sm', 'Reset to defaults');
   rb.type = 'button'; rb.disabled = !changed; rb.addEventListener('click', () => { applyFams(null); famChanged(); });
   foot.append(html('span', null, 'Kept in this browser. Familiars are shared by every project.'), rb); box.appendChild(foot);
   box.scrollTop = y;
@@ -4732,7 +4323,7 @@ function drawNew() {
 }
 function openNew(editId) {
   const c = cur(), M = editId ? c.world.missions.get(editId) : null;
-  if (!M && c.sel) select(null); if (atlasScope === 'coven') setView('3d');
+  if (!M && c.sel) select(null); if (atlasScope === 'coven') setView();
   nm.edit = M ? M.id : null; nm.open = M ? 'deliver' : null;
   if (M) { nm.brief = M.brief ? JSON.parse(JSON.stringify(M.brief)) : (NM_BRIEF[M.seats[0]] || NM_BRIEF.echo)(); if (!nm.brief.deliver.length) nm.brief.deliver.push({kind: 'report', formats: ['md'], langs: []}); Object.keys(CAP).forEach(k => { if (!nm.brief.atMost[k]) nm.brief.atMost[k] = (NM_BRIEF.echo().atMost)[k]; }); nm.briefTouched = true; $('nmName').value = M.name;
     const t0 = M.tpl ? allTpl().find(t => M.tpl.indexOf(t.name) === 0) : null; nm.tpl = t0 ? t0.id : null; nm.tplEdited = !!t0 && M.tpl !== t0.name; }
@@ -4925,7 +4516,7 @@ function openKey() {
   const dots = $('kzDots'), fams = $('kzFams'); dots.textContent = fams.textContent = '';
   Object.keys(FAM).forEach(k => { const f = FAM[k], d = html('i', 'kd'), r = html('span', 'kz-f'); d.style.setProperty('--hue', f.hue); dots.appendChild(d);
     r.style.setProperty('--hue', f.hue); r.innerHTML = avatar(k); r.append(html('b', null, f.name), html('span', null, (f.roles || [f.role]).join(', '))); fams.appendChild(r); });
-  { const demo = (state, o) => { const ks = Object.keys(FAM).slice(0, 3), sh = [.45, .33, .22]; let a = -90; return Object.assign({state, burn: .4, warn: false, wedges: ks.map((k, i) => { const x = {k, share: sh[i], a0: a, a1: a + sh[i] * 360, live: state === 'active' ? 1 : 0, blocked: state === 'stalled' && i === 1, asking: state === 'needsYou' && i === 1, lead: !i}; a = x.a1; return x; })}, o || {}); };
+  { const demo = (state, o) => { const ks = Object.keys(FAM).slice(0, 3), sh = [.45, .33, .22]; let a = -90; return Object.assign({state, burn: .4, warn: false, wedges: ks.map((k, i) => { const x = {k, share: sh[i], progress: state === 'sealed' ? 1 : state === 'planned' ? 0 : [0.7, 0.45, 0.2][i], a0: a, a1: a + sh[i] * 360, live: state === 'active' ? 1 : 0, blocked: state === 'stalled' && i === 1, asking: state === 'needsYou' && i === 1, lead: !i}; a = x.a1; return x; })}, o || {}); };
     $('kzSealMark').innerHTML = sealSvg(demo('active'), 16); const box = $('kzStates'); box.textContent = '';
     Object.keys(SEAL_STATE).forEach(st => { const r = html('div', 'kz-st'); r.innerHTML = sealSvg(demo(st, {warn: st === 'broken'}), 26); r.append(html('b', null, SEAL_STATE[st][0])); r.title = SEAL_STATE[st][0] + ': ' + SEAL_STATE[st][1]; box.appendChild(r); }); }
   $('keyIc').innerHTML = $('keyBtn').innerHTML; $('keyModal').hidden = false; $('keyBtn').setAttribute('aria-expanded', 'true'); $('keyX').focus();
@@ -5005,7 +4596,7 @@ function removeProject(k) {
     if (cur().sel) select(null, null, null, {history: false, focus: false});
     active = ks[i ? i - 1 : 1]; delete projects[k];
     enter();
-    if (!cam.locked) { const v = viewOf(cam.pitch > 2 || camT.pitch > 2 ? '3d' : 'plan'); camT.px = v.px; camT.py = v.py; camT.zoom = v.zoom; if (reduce) Object.assign(cam, camT); saveView(); }
+    if (!cam.locked) { atlasFitScene(false); if (reduce) Object.assign(cam, camT); }
   } else { delete projects[k]; rebuild(); }
   atlasQueueFit(); atlasWriteRoute(true); return true;
 }
@@ -5032,7 +4623,7 @@ function drawProjectForm() {
 }
 function openProjectForm(editKey) {
   document.querySelectorAll('details.pill[open]').forEach(d => d.open = false);
-  const c = cur(); if (c.composing) closeNew(); if (c.sel) select(null); if (atlasScope === 'coven') setView('3d');
+  const c = cur(); if (c.composing) closeNew(); if (c.sel) select(null); if (atlasScope === 'coven') setView();
   const m = editKey ? metaOf(projects[editKey]) || {} : {};
   Object.assign(cz, {open: true, edit: editKey || null, touched: {}, tried: false, rm: false});
   $('czName').value = editKey || ''; $('czRepo').value = m.repo || ''; $('czRoot').value = m.root || '';
@@ -5357,10 +4948,8 @@ function enter(preserveTime = false) {
   buildScene(); refresh();
 }
 {
-  const v = store.get('coven-compass-view'), p = store.get('coven-compass-psyche') || {};
-  if (v && isFinite(v.yaw + v.pitch + v.zoom + v.px + v.py)) { Object.assign(camT, {yaw: v.yaw, pitch: clamp(v.pitch, 0, 78), zoom: clamp(v.zoom, ZMIN, 6), px: clamp(v.px, -PAN, PAN), py: clamp(v.py, -PAN, PAN)}); Object.assign(cam, camT); }
-  else if (reduce) Object.assign(cam, camT);
-  setLock(!!(v && v.locked));
+  const p = store.get('coven-compass-psyche') || {};
+  restoreView(store.get('coven-compass-view'));
   setDockW(isFinite(p.w) ? p.w : psy.w);
   setFloat(isFinite(p.fw) ? p.fw : psy.fw, isFinite(p.fh) ? p.fh : psy.fh);
   buildScene();
@@ -5443,22 +5032,11 @@ function atlasProjectGhost(gh, P, f) {
   const pending = openAsks(w).length;
   gh.g.setAttribute('aria-label', gh.k + ', ' + plural(w.missions.size, 'mission') + ', ' + plural(w.agents.size, 'agent') +
     (pending ? ', ' + plural(pending, 'pending decision') : '') + '. Open project');
-  const center = P(gh.ox, gh.oy, 51);
+  const center = P(gh.ox, gh.oy);
   gh.aggregate.textContent = String(w.missions.size);
   gh.aggregate.setAttribute('x', f(center[0]));
   gh.aggregate.setAttribute('y', f(center[1] + 4 / scale));
   gh.aggregate.style.fontSize = f(clamp(pixels * .28, 8, 16) / scale) + 'px';
-}
-function atlasEaseProgress(se, key, target, hasHeight) {
-  if (reduce || !hasHeight) return target;
-  const now = performance.now(), states = se.easeProgress || (se.easeProgress = new Map());
-  let v = states.get(key);
-  if (!v) { v = {from: target, to: target, at: now, value: target}; states.set(key, v); }
-  if (v.to !== target) { v.from = v.value; v.to = target; v.at = now; }
-  const t = clamp((now - v.at) / 400, 0, 1), eased = t * t * (3 - 2 * t);
-  v.value = v.from + (v.to - v.from) * eased;
-  if (t < 1 && Math.abs(v.to - v.from) > .0001) sealAnimating = true;
-  return v.value;
 }
 function atlasOpenProject(k) {
   if (!projects[k]) return false;
@@ -5515,7 +5093,6 @@ function atlasOverview() {
   const restoring = atlasRestoringRoute, locked = cam.locked; atlasRestoringRoute = true;
   if (locked) setLock(false);
   document.body.dataset.atlasScope = 'coven'; document.body.classList.remove('atlas-browse-open');
-  camT.yaw = 0; camT.pitch = 24; atlasGestureMode = 'pan';
   $('vAll').click();
   if (locked) setLock(true);
   atlasRestoringRoute = restoring;
@@ -5525,13 +5102,9 @@ function atlasOverview() {
 function atlasCamera(action) {
   if (action === 'lock') { setLock(!cam.locked); if (window.CovenAtlas) window.CovenAtlas.update(); return; }
   if (cam.locked) return;
-  if (action === 'move') atlasGestureMode = 'pan';
-  else if (action === 'orbit') { atlasGestureMode = 'orbit'; if (camT.pitch <= 2) { camT.pitch = 24; if (atlasAutoFit) atlasFitScene(false); } }
-  else if (action === 'plan' || action === '3d') {
-    camT.pitch = action === 'plan' ? 0 : 24; atlasGestureMode = action === 'plan' ? 'pan' : 'orbit';
-    atlasFitScene(false);
-  } else if (action === 'in' || action === 'out') zoomBy(action === 'in' ? 1.3 : 1 / 1.3);
+  if (action === 'in' || action === 'out') zoomBy(action === 'in' ? 1.3 : 1 / 1.3);
   else if (action === 'fit') atlasFitScene(true);
+  else return;
   saveView(); kick(); if (window.CovenAtlas) window.CovenAtlas.update(); atlasWriteRoute(true);
 }
 function atlasFocusSelection(preferOpen, previousMission) {
@@ -5599,16 +5172,15 @@ function atlasSnapshot(includeMissions) {
     by.forEach((n, f) => { if (!fs.has(f)) fs.set(f, {key: f, name: fam(f).name, color: fam(f).hue, avatar: avatar(f), projects: 0, agents: 0}); const item = fs.get(f); item.projects++; item.agents += n; });
   });
   const c = cur(), M = c.sel && c.world.missions.get(c.sel), scope = atlasScope === 'coven' ? 'coven' : M ? 'mission' : 'project';
-  return {active, scope, projects: ps, familiars: [...fs.values()], missions, missionItems, agents, needs, highlight: sc.hl || null, mission: M ? M.name : null, missionId: M ? M.id : null, detail: c.detail, view: panelView, camera: {is3d: camT.pitch > 2, locked: cam.locked, gestureMode: camT.pitch <= 2 ? 'pan' : atlasGestureMode}};
+  return {active, scope, projects: ps, familiars: [...fs.values()], missions, missionItems, agents, needs, highlight: sc.hl || null, mission: M ? M.name : null, missionId: M ? M.id : null, detail: c.detail, view: panelView, camera: {locked: cam.locked}};
 }
 if (window.CovenProjection) window.CovenProjection.register(window.CovenProjection.createSimulationSource({worlds: () => Object.keys(projects).map(k => [k, projects[k].world]), summarize: SimModel.summarize}));
 if (window.CovenAtlas) {
   window.CovenAtlas.mount({snapshot: atlasSnapshot, overview: atlasOverview, openProject: atlasOpenProject, openMission: atlasOpenMission, setProjectCount: atlasSetProjectCount, newProject: () => openProjectForm(), camera: atlasCamera, highlight: covHl, legend: () => $('keyBtn').click()});
   $('plan').setAttribute('role', 'group');
-  $('gcap').textContent = 'Angular boundaries contain projects. Seals are missions; glyphs identify familiars. Wedge height shows progress on owned targets.';
   atlasRestoreRoute(true);
 }
-if (window.CovenSealLab) window.CovenSealLab.mount({svgEl, html, fam, sigil, sealSvg, buildSeal, drawSeal, SEAL_STATE, MIN_WEDGE, WARN_AT, reduce});
+if (window.CovenSealLab) window.CovenSealLab.mount({svgEl, fam, sigil, buildSeal, drawSeal, WARN_AT});
 if (window.CovenMobileUI) window.CovenMobileUI.mount({
   openActivity: () => { openPsyche(); setTab('chat', false); },
   close: {

@@ -60,35 +60,23 @@
   function optionsOf(options) {
     options = options || {};
     var minZoom = bounded(options.minZoom, .04, .00001, 1000);
-    var minPitch = bounded(options.minPitch, 0, 0, 89);
     return {
       minZoom: minZoom,
       maxZoom: bounded(options.maxZoom, 6, minZoom, 1000),
-      minPitch: minPitch,
-      maxPitch: bounded(options.maxPitch, 78, minPitch, 89),
       panLimit: bounded(options.panLimit, 12000, 0, MAX_COORDINATE),
       baseSize: bounded(options.baseSize, 784, 1, MAX_COORDINATE),
-      yawPerPixel: bounded(options.yawPerPixel, .4, 0, 10),
-      pitchPerPixel: bounded(options.pitchPerPixel, .3, 0, 10),
-      mode: options.mode === 'pan' ? 'pan' : 'orbit',
       locked: options.locked === true
     };
-  }
-
-  function wrapYaw(yaw) {
-    return ((yaw + 180) % 360 + 360) % 360 - 180;
   }
 
   // Return a new camera pose. The viewport is the map's client bounding rectangle.
   // For two pointers, zoom and translation are computed together so the world
   // point beneath the old centroid lands beneath the new centroid, even at a
-  // zoom limit. Rotation is reserved for one-finger orbit mode.
+  // zoom limit. A single pointer translates the map.
   function applyCameraGesture(camera, delta, rect, options) {
     camera = camera || {};
     var limits = optionsOf(options);
     var pose = {
-      yaw: wrapYaw(bounded(camera.yaw, 0, -MAX_COORDINATE, MAX_COORDINATE)),
-      pitch: bounded(camera.pitch, 0, limits.minPitch, limits.maxPitch),
       zoom: bounded(camera.zoom, 1, limits.minZoom, limits.maxZoom),
       px: bounded(camera.px, 0, -limits.panLimit, limits.panLimit),
       py: bounded(camera.py, 0, -limits.panLimit, limits.panLimit)
@@ -109,12 +97,9 @@
       pose.px = bounded(pose.px + (from.x - cx) / k0 - (to.x - cx) / k1, pose.px, -limits.panLimit, limits.panLimit);
       pose.py = bounded(pose.py + (from.y - cy) / k0 - (to.y - cy) / k1, pose.py, -limits.panLimit, limits.panLimit);
       pose.zoom = zoom;
-    } else if (limits.mode === 'pan') {
+    } else {
       pose.px = bounded(pose.px - dx / k0, pose.px, -limits.panLimit, limits.panLimit);
       pose.py = bounded(pose.py - dy / k0, pose.py, -limits.panLimit, limits.panLimit);
-    } else {
-      pose.yaw = wrapYaw(pose.yaw + dx * limits.yawPerPixel);
-      pose.pitch = bounded(pose.pitch - dy * limits.pitchPerPixel, pose.pitch, limits.minPitch, limits.maxPitch);
     }
     return pose;
   }

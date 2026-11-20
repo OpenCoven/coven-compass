@@ -340,6 +340,24 @@ function checkMarkdown(file) {
 }
 
 const dist = walk(path.join(root, 'dist'));
+// The decision to support only a plan view applies to every shipped renderer, including previews.
+const spatialRendering = [
+  /\b(?:matrix3d|rotate[XY]|rotate3d|translateZ|translate3d|scaleZ|scale3d|perspective)\s*\(/i,
+  /(?:^|[;{\s])perspective(?:-origin)?\s*:|transform-style\s*:\s*preserve-3d/i,
+  /\b(?:WebGL2?RenderingContext|GPUCanvasContext)\b|\bnavigator\.gpu\b|getContext\s*\(\s*['"](?:experimental-webgl|webgl2?|webgpu)['"]|\b(?:WebGLRenderer|PerspectiveCamera|OrbitControls)\b/i,
+  /<fe(?:SpecularLighting|DiffuseLighting|DistantLight|PointLight|SpotLight)\b/i,
+  /\b(?:atlasOrbit|v3d|sealDepth|drawSolid|solidPreview|CovenCastleMap)\b|['"](?:3d|orbit)['"]/i,
+];
+for (const file of dist.filter(file => /\.(?:html?|css|svg|m?js)$/i.test(file))) {
+  const raw = read(file);
+  if (raw === null) continue;
+  // Handoff includes historical prose and code specimens. Check its executable/style surfaces only.
+  const runtime = relative(file).startsWith('dist/handoff/') && /\.html?$/.test(file)
+    ? htmlTags(raw, file).filter(tag => ['script', 'style'].includes(tag.name)).map(tag => tag.body).join('\n')
+    : raw;
+  const match = spatialRendering.map(rule => rule.exec(runtime)).find(Boolean);
+  if (match) fail(file, '2D-only presentation restriction: ' + match[0] + '. See AGENTS.md for the owner override process.');
+}
 const support = ['scripts', 'tests', 'examples', 'docs/handoff', 'docs/discovery'].flatMap(directory => walk(path.join(root, directory)));
 const rootMarkdown = fs.readdirSync(root, { withFileTypes: true })
   .filter(entry => entry.isFile() && entry.name.endsWith('.md')).map(entry => path.join(root, entry.name));

@@ -3,15 +3,15 @@
   "evidence_level": "static + unit (Node with DOM facades). Not browser, device, daemon, packaged CLI, or remote Host.",
   "tests": {
     "files": 17,
-    "tests": 253,
-    "pass": 253,
+    "tests": 254,
+    "pass": 254,
     "fail": 0,
     "cancelled": 0,
     "skipped": 0,
     "todo": 0
   },
   "crown": {
-    "view_size_combinations": 84
+    "view_size_combinations": 12
   },
   "package": {
     "files": 94,

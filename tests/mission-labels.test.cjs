@@ -1,7 +1,5 @@
 'use strict';
-// Mission names in project scope sit between each seal and Psyche, anchored away from the centre
-// line so they clear the crown and the name across from them; when seals sit too close on screen,
-// names hide (#plan.tight) and return on keyboard focus, hover or selection. These run the page's own functions.
+// Run the Site's own line fitting algorithm against a deterministic glyph-width model.
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -18,48 +16,26 @@ function extract(name) {
   }
   throw new Error(`Could not extract ${name}`);
 }
-const constants = /^const NAME_ROOM_PX = \d+, CROWN_SIDE_PX = \d+;$/m.exec(source);
-assert.ok(constants, 'the spacing constants are one line in dist/index.html');
 const ctx = vm.createContext({});
-new vm.Script(`${constants[0].replace(/^const /, 'var ')}\n${extract('missionLabelAt')}\n${extract('missionNamesTight')}`).runInContext(ctx);
-const { missionLabelAt, missionNamesTight, NAME_ROOM_PX, CROWN_SIDE_PX } = ctx;
+new vm.Script(extract('missionNameLines')).runInContext(ctx);
+const lines = (name, width) => Array.from(ctx.missionNameLines(name, text => Array.from(text).length <= width));
 
-const pc = [0, 0], ext = [-20, 20], U = 1;
-
-test('a name sits on the side of its seal facing Psyche', () => {
-  assert.equal(missionLabelAt([-40, -30], pc, ext, U).y, -30 + 20 + 20, 'a seal above the crown has its name below it, clear of the familiar labels under the seal');
-  assert.equal(missionLabelAt([-40, 30], pc, ext, U).y, 30 - 20 - 8, 'a seal below the crown has its name above it');
+test('mission names wrap at word boundaries within the ring and retain short names on one line', () => {
+  assert.deepEqual(lines('Config refactor', 9), ['Config', 'refactor']);
+  assert.deepEqual(lines('Review readiness', 9), ['Review', 'readiness']);
+  assert.deepEqual(lines('  Source   survey  ', 13), ['Source survey']);
+  assert.deepEqual(lines('Release', 7), ['Release']);
 });
 
-test('off-axis names are anchored at their seal and run away from the centre line', () => {
-  assert.deepEqual(['end', 'start', 'end', 'start'], [[-40, -30], [40, -30], [-40, 30], [40, 30]].map(q => missionLabelAt(q, pc, ext, U).anchor));
-  for (const q of [[-40, -30], [40, 30]]) assert.equal(missionLabelAt(q, pc, ext, U).x, q[0], 'the anchor is the seal itself');
-  assert.equal(missionLabelAt([5, -60], pc, ext, U).anchor, 'middle', 'a seal on the centre line keeps a centred name');
-  // An end-anchored name ends at its seal and a start-anchored one begins there, so a seal at least
-  // CROWN_SIDE_PX to the side keeps its whole name off the crown's centre line.
-  assert.ok(CROWN_SIDE_PX > 12 * 1.2, 'any seal the crown rule lets through is past the centred-name threshold (12U, U ≤ 1.2 px)');
+test('unbroken, international and long user-supplied mission names fit two lines', () => {
+  assert.deepEqual(lines('OpenCovenCompass', 8), ['OpenCove', 'nCompass']);
+  assert.deepEqual(lines('One two three four five', 7), ['One two', 'three…']);
+  assert.deepEqual(lines('🪐'.repeat(18), 6), ['🪐'.repeat(6), '🪐'.repeat(5) + '…']);
+  assert.deepEqual(lines('', 7), []);
 });
 
-test('names hide when seals crowd each other or the crown on screen', () => {
-  const grid = d => [[-d, -d], [d, -d], [-d, d], [d, d]].map(([x, y]) => [x / 2, y / 2]);
-  assert.equal(NAME_ROOM_PX, 56, 'measured: names fit at 63 px (1440x900) and collide at 44 px (390x844)');
-  assert.equal(missionNamesTight(grid(63), pc, 1), false, 'a 2x2 grid 63 px apart (1440x900) has room');
-  assert.equal(missionNamesTight(grid(63), pc, 44 / 63), true, 'the same grid at 44 px apart (390x844) does not');
-  assert.equal(missionNamesTight(grid(63), pc, 12 / 63), true, 'nor at 12 px apart (844x390)');
-  assert.equal(missionNamesTight(grid(NAME_ROOM_PX), pc, 1), false, 'exactly the room needed is enough');
-  assert.equal(missionNamesTight(grid(NAME_ROOM_PX - 1), pc, 1), true);
-  assert.equal(missionNamesTight([[-30, -20]], pc, 1), false, 'one seal well to the side of the crown keeps its name');
-  assert.equal(missionNamesTight([[-6, -20]], pc, 1), true, 'one seal almost over the crown hides its name');
-  assert.equal(missionNamesTight([[-6, -60]], pc, 1), false, 'unless it is far enough above it');
-  assert.equal(missionNamesTight([], pc, 1), false);
-});
-
-test('the scene applies both rules, and #plan.tight hides names except on keyboard focus, hover or selection', () => {
-  assert.match(source, /const lab = missionLabelAt\(q, pc, ext, U\);\n\s+s\.name\.setAttribute\('x', f\(lab\.x\)\); s\.name\.setAttribute\('y', f\(lab\.y\)\); s\.name\.style\.textAnchor = lab\.anchor;/);
-  assert.match(source, /const tight = missionNamesTight\(\[\.\.\.sc\.missions\.values\(\)\]\.map\(s => \[s\.sx, s\.sy\]\), pc, kpx\);\n\s+if \(tight !== sc\.tight\) \{ sc\.tight = tight; plan\.classList\.toggle\('tight', tight\); \}/);
-  assert.match(source, /,#plan\.tight \.lead-name:not\(\.gname\)\{opacity:0\}/);
-  assert.match(source, /#plan\.many \.lead-node:focus-visible\+\.lead-name,#plan\.tight \.lead-node:focus-visible\+\.lead-name,[^{}]+\{opacity:1\}/);
-  assert.match(source, /#plan\.tight \.lead-node:hover\+\.lead-name,#plan\.tight \.lead-node\.sel\+\.lead-name\{opacity:1\}/);
-  assert.match(source, /\n#plan\.tight \.atlas-squad>\.task-l,#plan\.tight \.atlas-local-psyche \.psy-l\{opacity:0\}\n/, 'familiar labels and the PSYCHE caption hide too');
-  assert.match(source, /\n#plan\.tight \.atlas-squad:hover>\.task-l\{opacity:1\}\n/, 'a squad label returns on hover');
+test('ring text sits on the interactive face while its accessible name retains the full mission name and state', () => {
+  assert.match(source, /s\.name = svgEl\('text', \{class: 'lead-name', 'aria-hidden': 'true'\}, s\.face\)/);
+  assert.match(source, /ms\.node\.setAttribute\('aria-label', M2\.name \+ ', ' \+ stateName/);
+  assert.match(source, /labelMission\(s, mission\.name\)/);
 });

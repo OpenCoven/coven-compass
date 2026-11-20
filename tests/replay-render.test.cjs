@@ -81,7 +81,7 @@ function world() {
 
 function fixture(trace = []) {
   const c = { trace, world: world(), applied: 0, sel: null, fam: null, pick: null,
-    layout: { lead: 100, ang: new Map(), seat: new Map() } };
+    layout: { lead: 100, ang: new Map(), seat: new Map([['m1/astra', {x: 120, y: 90, rot: 0, bx: 112, by: 65}]]) } };
   const sc = { missions: new Map(), seats: new Map(), agents: new Map(), colinks: new Map(),
     lines: new Element(), courts: new Element(), sorted: new Element(), glow: new Element(),
     gateL: [], ghosts: [], hl: null, layoutSignature: 'replay-render-fixture' };
@@ -107,33 +107,24 @@ function fixture(trace = []) {
     missionXY: () => [80, 40], seatR: () => 30,
     pol: (radius, degrees) => [radius * Math.cos(degrees * Math.PI / 180), radius * Math.sin(degrees * Math.PI / 180)],
     unit: (x, y) => { const length = Math.hypot(x, y) || 1; return [x / length, y / length]; },
-    atlasEaseProgress: (_seal, _key, target) => target,
     ...require('../dist/atlas-presentation.js'),
     clamp: (n, min, max) => Math.min(max, Math.max(min, n)),
-    atlasFocusable() {}, makeSolid: () => ({}), sigil: () => '', SIGIL: { mission: '' },
+    atlasFocusable() {}, sigil: () => '', SIGIL: { mission: '' },
     drawNew() {}, syncCoven() {}, applySel() {}, fxFor() {},
     $: id => { if (!elements.has(id)) elements.set(id, new Element()); return elements.get(id); },
   });
   const constants = source.slice(source.indexOf('const TARGET_ROLES ='), source.indexOf('function sealOf('));
-  const ringStart = source.indexOf('const ring =');
-  const ring = source.slice(ringStart, source.indexOf('\n', ringStart));
   context.SimModel = loadSimulationModel({ normBrief: () => null, fam: context.fam });
-  const names = ['seek', 'hullOf', 'sync', 'sealOf', 'buildSeal', 'drawSeal',
+  const names = ['seek', 'sync', 'sealOf', 'buildSeal', 'drawSeal',
     'atlasProjectGhost'];
-  new vm.Script(`${constants}\n${ring}\n${names.map(extract).join('\n')}`, {
+  new vm.Script(`${constants}\n${names.map(extract).join('\n')}`, {
     filename: 'actual-replay-render-functions.js',
   }).runInContext(context);
-  const cp = Math.cos(.65), sp = Math.sin(.65);
-  const P = (x, y, z) => [x, y * cp - z * sp, y * sp + z * cp];
+  const P = (x, y) => [x, y];
   const f = number => number.toFixed(4);
-  function renderActive(options = {}) {
+  function renderActive() {
     context.sync();
-    for (const mission of sc.missions.values()) {
-      const bounds = context.drawSeal(mission.seal, mission.seal.data, mission,
-        P(mission.x, mission.y, 0), { P, f, cp, noEase: true, ...options });
-      assert.ok(Array.from(bounds).every(Number.isFinite), 'Seal bounds must be finite');
-      finiteAttributes(mission.seal.g);
-    }
+    for (const mission of sc.missions.values()) finiteAttributes(mission.seal.g);
   }
   function renderGhost() {
     context.atlasProjectGhost(ghost, P, f);
@@ -151,16 +142,14 @@ function finiteAttributes(element) {
 
 const opened = { t: 1000, type: 'mission.opened', mission: 'm1', name: 'Opening a mission' };
 
-test('an active mission renders before its first council seat at every map tier', () => {
+test('a planned mission renders before its first council seat', () => {
   const { c, sc, context, renderActive } = fixture([opened]);
   context.seek(c, 1000, true);
   assert.equal(c.world.missions.get('m1').seats.length, 0);
-  for (const options of [{}, { far: true }, { sel: true }]) {
-    assert.doesNotThrow(() => renderActive(options));
-  }
+  assert.doesNotThrow(renderActive);
   const seal = sc.missions.get('m1').seal;
   assert.equal(seal.wedges.length, 0);
-  assert.ok(seal.sgTop.attributes.rx, 'The planned mission has a rendered center');
+  assert.ok(Number(seal.face.attributes.r) > 0, 'The planned mission has a circular face before any assignments');
 });
 
 test('an overview count is available before the mission seats its first familiar', () => {

@@ -10,7 +10,7 @@
 //
 // Append --keyboard-only for mission discovery, inspector return, route reload and the compact-label control.
 // The desktop compact check imports eight mission.opened JSON Lines via Trace > Load a recording.
-// Its negative control removes only the two keyboard-focus selectors from this browser page.
+// Its negative control removes the keyboard-focus visibility selector from the disposable page.
 // It checks simulation mode (default and ?source=simulation) at 1440x900, 390x844 and 844x390,
 // and every ?source=fixture scenario plus ?source=live. It writes a JSON report and screenshots.
 // Keep screenshots out of the repository; commit the dated JSON to tests/evidence/.
@@ -45,7 +45,14 @@ const missionNameClashes = () => {
   const hit = (a, b) => a.x < b.x2 - 1 && b.x < a.x2 - 1 && a.y < b.y2 - 1 && b.y < a.y2 - 1;
   const psy = document.querySelector('#plan .atlas-local-psyche');
   const crownParts = psy ? [...psy.querySelectorAll('path, polygon, text')].filter(shown).map(box) : [];
-  const names = [...document.querySelectorAll('#plan .atlas-mission-group > .lead-name')].filter(shown).map(el => ({ t: el.textContent, ...box(el) }));
+  const labels = [...document.querySelectorAll('#plan .atlas-mission-group .lead-name')];
+  const names = labels.filter(shown).map(el => {
+    const face = box(el.closest('.mission-face').querySelector('.se-face')), text = box(el);
+    const centered = Math.abs((text.x + text.x2 - face.x - face.x2) / 2) < 1;
+    const inside = text.x > face.x && text.y > face.y && text.x2 < face.x2 && text.y2 < face.y2;
+    const pixels = parseFloat(getComputedStyle(el).fontSize) * el.getScreenCTM().a;
+    return { t: [...el.children].map(line => line.textContent).join(' '), centered, inside, pixels, ...text };
+  });
   const crown = names.filter(n => crownParts.some(c => hit(n, c))).map(n => n.t);
   const pairs = [];
   names.forEach((a, i) => names.slice(i + 1).forEach(b => { if (hit(a, b)) pairs.push(`${a.t} / ${b.t}`); }));
@@ -53,7 +60,7 @@ const missionNameClashes = () => {
   const squads = [...document.querySelectorAll('#plan .atlas-squad > .task-l')].filter(shown).map(el => ({ t: el.textContent, ...box(el) }));
   const squadPairs = [];
   squads.forEach((a, i) => squads.slice(i + 1).concat(names).forEach(b => { if (hit(a, b)) squadPairs.push(`${a.t} / ${b.t}`); }));
-  return { shown: names.length, crown, pairs, squads: squads.length, squadPairs };
+  return { total: labels.length, shown: names.length, centers: names.filter(n => n.centered && n.inside).length, smallestFont: Math.min(...names.map(n => n.pixels)), crown, pairs, squads: squads.length, squadPairs };
 };
 
 const browser = await chromium.launch();
@@ -196,43 +203,50 @@ async function compactMissionLabel() {
     })).join('\n');
     await (await fileChoice).setFiles({name: 'eight-missions.jsonl', mimeType: 'text/plain', buffer: Buffer.from(recording)});
     await page.waitForFunction(() => document.getElementById('traceKind').textContent === 'loaded' &&
-      document.querySelectorAll('#plan.many .lead-node').length === 8);
-    // Zoom until individual seals have room. The eight-mission density rule still hides their names.
-    for (let i = 0; i < 3; i++) await page.locator('#zIn').click();
-    await page.waitForSelector('#plan.many .atlas-mission-group:not(.atlas-compact-seal) .lead-node');
+      document.querySelectorAll('#plan .lead-node').length === 8);
+    const compact = '#plan .atlas-compact-seal .lead-node';
+    for (let i = 0; i < 10 && !(await page.locator(compact).count()); i++) {
+      await page.locator('#atlasZoomOut').click();
+      await page.waitForTimeout(180);
+    }
+    await page.locator(compact).first().waitFor();
     await page.mouse.move(0, 0);
-    const target = page.locator('#plan.many .lead-node:focus-visible');
+    const target = page.locator(compact + ':focus-visible');
     for (let i = 0; i < 100 && !(await target.count()); i++) await page.keyboard.press('Tab');
     await target.waitFor({timeout: 3000});
-    const label = target.locator('xpath=following-sibling::*[1]');
-    const name = await label.textContent();
+    const label = target.locator('.lead-name');
+    const name = (await target.getAttribute('aria-label')).split(',')[0];
     if (!/^Mission [1-8]$/.test(name) || !await target.evaluate(el => !el.matches(':hover,.sel'))) throw new Error('Expected an unselected, keyboard-focused recording mission');
     const visibleLabel = () => label.evaluate(el => {
       const box = el.getBoundingClientRect(), style = getComputedStyle(el);
       return Number(style.opacity) > .9 && style.visibility === 'visible' && box.width > 0 && box.height > 0 &&
         box.bottom > 0 && box.right > 0 && box.top < innerHeight && box.left < innerWidth;
     });
-    await page.waitForFunction(() => Number(getComputedStyle(document.activeElement.nextElementSibling).opacity) > .9, null, {timeout: 3000});
-    check(mode, vp.name, 'focused compact label visible', await visibleLabel(), name);
+    const lettering = await label.evaluate(el => {
+      const face = el.closest('.mission-face').querySelector('.se-face').getBoundingClientRect();
+      const box = el.getBoundingClientRect();
+      const centerError = Math.abs((box.left + box.right - face.left - face.right) / 2);
+      const fontPixels = parseFloat(getComputedStyle(el).fontSize) * el.getScreenCTM().a;
+      return {centerError, fontPixels, fits: box.width < face.width && box.height < face.height};
+    });
+    check(mode, vp.name, 'focused compact label visible and centered inside ring', await visibleLabel() &&
+      lettering.centerError < 1 && lettering.fontPixels >= 10 && lettering.fits, JSON.stringify({name, ...lettering}));
     await shot(page, 'desktop-compact-keyboard-label');
-    // Mutate the two selectors in this disposable page, keeping the node, focus, zoom and all other CSS identical.
+    // Keep the same mission, zoom, focus and hover state. Remove only the focus visibility rule.
     await page.evaluate(() => {
-      const selectors = ['#plan.many .lead-node:focus-visible+.lead-name', '#plan.tight .lead-node:focus-visible+.lead-name'];
+      const focus = 'body.atlas-enhanced #plan .atlas-compact-seal .lead-node:focus-visible .lead-name';
       for (const sheet of document.styleSheets) {
-        if (sheet.href) continue;
+        if (sheet.href && !sheet.href.startsWith(location.origin)) continue;
         for (const rule of sheet.cssRules) {
-          if (!rule.selectorText) continue;
-          const parts = rule.selectorText.split(',').map(s => s.trim());
-          const kept = parts.filter(s => !selectors.includes(s.replace(/\s*\+\s*/g, '+')));
-          if (parts.length - kept.length !== selectors.length) continue;
-          rule.selectorText = kept.join(', ');
-          return;
+          if (!rule.selectorText?.includes(focus)) continue;
+          rule.selectorText = rule.selectorText.replace(', ' + focus, '').replace(',\n' + focus, '');
+          if (!rule.selectorText.includes(focus)) return;
         }
       }
-      throw new Error('Both compact focus selectors must exist before running the control');
+      throw new Error('Compact label focus visibility selector was unavailable');
     });
-    await page.waitForFunction(() => Number(getComputedStyle(document.activeElement.nextElementSibling).opacity) < .05, null, {timeout: 3000});
-    check(mode, vp.name, 'same focused label fails visibility without its focus selectors', await target.count() === 1 && !await visibleLabel(), name);
+    await page.waitForFunction(() => getComputedStyle(document.activeElement.querySelector('.lead-name')).visibility === 'hidden');
+    check(mode, vp.name, 'same focused label hidden without keyboard-focus rule', await target.count() === 1 && !await visibleLabel(), name);
     check(mode, vp.name, 'no console errors', !errors.length, errors.join(' | '));
   } catch (error) {
     check(mode, vp.name, 'recording import and focus control', false, error.message);
@@ -281,6 +295,10 @@ for (const vp of VIEWPORTS) {
       check(mode, vp.name, 'open a Project', hash1.startsWith('#/project/'), `${how}; hash ${hash1}`);
       await page.waitForTimeout(2500);
       const named = await page.evaluate(missionNameClashes);
+      const minimumText = vp.height < 400 ? 8.5 : 10;
+      check(mode, vp.name, 'every sample mission name is readable inside its ring at Project fit',
+        named.total > 0 && named.centers === named.total && named.smallestFont >= minimumText,
+        `${named.centers} of ${named.total} centered names, smallest text ${named.smallestFont.toFixed(1)}px`);
       check(mode, vp.name, 'mission names clear the crown and each other', !named.crown.length && !named.pairs.length,
         `${named.shown} names shown; over the crown: ${named.crown.join(', ') || 'none'}; overlapping: ${named.pairs.join('; ') || 'none'}`);
       check(mode, vp.name, 'familiar labels clear each other and the mission names', !named.squadPairs.length,
@@ -322,6 +340,13 @@ for (const vp of VIEWPORTS) {
         await page.click('#atlasLab');
         await page.waitForTimeout(500);
         const lab = await visible(page, '#covenSealLab');
+        await page.locator('.csl-state-btn[data-state="active"]').click();
+        const progress = page.locator('.csl-scene .se-progress').first();
+        const before = await progress.getAttribute('stroke-dasharray');
+        await page.locator('#cslProgress0').press('ArrowRight');
+        const after = await progress.getAttribute('stroke-dasharray');
+        check(mode, vp.name, 'Seal lab extends a familiar’s progress arc', parseFloat(after) > parseFloat(before),
+          `${before} to ${after}`);
         if (!query) await shot(page, `${tag}-seal-lab`);
         await page.keyboard.press('Escape');
         await page.waitForTimeout(300);
