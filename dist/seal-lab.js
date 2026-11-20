@@ -2,6 +2,7 @@
 (() => {
   'use strict';
 
+  const MISSION_NAME = 'Config refactor';
   const ORDER = ['planned', 'active', 'needsYou', 'stalled', 'sealed', 'broken'];
   const COUNCIL = [
     { key: 'astra', agents: 7 },
@@ -103,7 +104,7 @@
       const assigned = state === 'planned' ? 0 : member.agents;
       return `${api.fam(member.key).name}, ${assigned} assigned, ${values.working[i]} working, ${values.progress[i]}% target progress`;
     });
-    ui.scene.setAttribute('aria-label', [`Config refactor. Mission state ${stateName}`, ...council, `${values.limit}% of token limit used`].join('. '));
+    ui.scene.setAttribute('aria-label', [`${MISSION_NAME}. Mission state ${stateName}`, ...council, `${values.limit}% of token limit used`].join('. '));
     ui.limit.value = values.limit;
     ui.limit.disabled = frozen;
     ui.limitValue.textContent = `${values.limit}%`;
@@ -175,9 +176,7 @@
     ui.scene = api.svgEl('svg', { class: 'csl-scene', viewBox: '-50 -50 100 100', role: 'img' });
     seal = { g: api.svgEl('g', {}, ui.scene) };
     api.buildSeal(seal, data());
-    const name = api.svgEl('text', { class: 'csl-mission-name' }, ui.scene);
-    api.svgEl('tspan', { x: 0, y: -2.7 }, name).textContent = 'Config';
-    api.svgEl('tspan', { x: 0, y: 11.3 }, name).textContent = 'refactor';
+    ui.mission = {name: api.svgEl('text', {class: 'csl-mission-name', 'aria-hidden': 'true'}, ui.scene)};
     specimen.append(ui.scene);
     preview.append(specimen);
 
@@ -297,7 +296,7 @@
 
   function mount(renderer) {
     if (dialog) return;
-    for (const key of ['svgEl', 'fam', 'buildSeal', 'drawSeal']) {
+    for (const key of ['svgEl', 'fam', 'labelMission', 'buildSeal', 'drawSeal']) {
       if (typeof renderer[key] !== 'function') throw new Error(`Mission seal explorer needs renderer.${key}`);
     }
     api = renderer;
@@ -310,6 +309,7 @@
     if (dialog.open) return;
     returnFocus = invoker || document.activeElement;
     dialog.showModal();
+    api.labelMission(ui.mission, MISSION_NAME);
     document.body.classList.add('csl-open');
     refresh();
     dialog.scrollTop = 0;

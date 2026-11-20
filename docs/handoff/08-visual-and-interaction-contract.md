@@ -36,7 +36,7 @@ At Coven scale, project enclosures surround Psyche. All projects use the same ov
 
 Overview positions come from an aspect-aware compact lattice with opposite pairs, reserved Project/label rectangles, and shared routing corridors. The inward-facing gate terminates the route for that Project. Location is presentation structure, not priority or execution topology. Preserve stable caller ordering; at unchanged geometry options, appending projects retains existing positions. Resizing or explicitly reordering the collection can change placement and must not imply that canonical ownership changed. [Current positioning contract](15-scalable-atlas-layout.md)
 
-Inside a project, mission seals connect to familiar groups. Selecting a mission reveals its individual agents, reserved positions, task detail, and relevant requests. A round hub identifies an unassigned agent. A square hub identifies an assigned task. Working marks are larger and filled. Idle marks are smaller and hollow. Dashed outlines reserve places for agents at gates. Waiting agents remain inside the boundary. The boundary marker invites review; it does not depict an operation already crossing the boundary.
+Inside a Project, mission seals connect to familiar groups. Each mission with recorded tasks has a shared capsule of familiar-colored task cogs before selection. Activating it opens the full task list, including unstaffed tasks. Selecting a mission reveals its individual agents, reserved positions, task detail, and relevant requests. A round hub identifies an unassigned agent. A square hub identifies an assigned task. Working marks are larger and filled. Idle marks are smaller and hollow. Dashed outlines reserve places for agents at gates. Waiting agents remain inside the boundary. The boundary marker invites review; it does not depict an operation already crossing the boundary.
 
 Within the overview, a boundary marker aggregates pending decisions for that project at its coordination-facing gate. Within a project, markers correspond to the simulation's gate locations and selected-mission scope. A future implementation must map this deliberately from canonical decision data; do not assign a new permission category based on north/east/south/west placement.
 
@@ -60,7 +60,7 @@ Current progress ownership uses `TARGET_ROLES` in the prototype. Production inte
 
 ## 5. Progressive detail and control placement
 
-The Coven view carries boundaries, exact mission counts, decision badges, and a compact identity filter. The Projects drawer is closed by default and overlays the map without changing its dimensions. Project view reveals useful controls and group counts. Mission selection opens task/agent detail. Retain the existing replay and Seal lab as clearly scoped controls.
+The Coven view shows Project previews, exact mission counts, decision badges, and a compact identity filter. The Projects drawer is closed by default and overlays the map without changing its dimensions. Project view reveals useful controls and group counts. Mission selection opens task/agent detail. Retain the existing replay and Seal lab as clearly scoped controls.
 
 Project view shows connected mission rings and familiar badges. Selection exposes agent and task detail. The Inbox retains every pending decision.
 

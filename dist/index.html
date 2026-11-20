@@ -1672,7 +1672,7 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
       <p class="key-context">Local simulation · Decisions and chat affect sample data only.</p>
 <div class="kz-r"><span class="kz-m"><svg viewBox="0 0 20 20" aria-hidden="true"><path class="kl" d="M5 3h10l2 2v10l-2 2H5l-2-2V5Z"/></svg></span><div><b>Project</b><p>Open a Project outline to explore its missions. The number inside is its mission count.</p></div></div>
 <div class="kz-r"><span class="kz-m"><svg viewBox="-9 -9 18 18" aria-hidden="true" style="color:var(--primary)"><use href="#crown" x="-8.4" y="-8.1" width="16.8" height="15.5" fill="currentColor"/></svg></span><div><b>Psyche</b><p>Open the crown to talk to Psyche.</p></div></div>
-<div class="kz-r"><span class="kz-m" id="kzSealMark"></span><div><b>Mission</b><p>Select a seal to see its familiars, tasks and agents.</p></div></div>
+<div class="kz-r"><span class="kz-m" id="kzSealMark"></span><div><b>Mission</b><p>Each cog beside a seal is a task. Open the group to see task names and assigned agents.</p></div></div>
 <div class="kz-r"><span class="kz-m"><svg viewBox="0 0 18 18" aria-hidden="true"><rect x="3" y="3" width="12" height="12" rx="1" fill="none" stroke="var(--attention)"/><path d="M9 6v6" stroke="var(--attention)"/></svg></span><div><b>Decision</b><p>Open a numbered gate to review pending requests.</p></div></div>
 <details class="key-topic" name="map-key-topic"><summary>Familiars, tasks and agents</summary><div><div id="kzFams" class="kz-fams"></div><div class="kz-r"><span class="kz-m" id="kzDots"></span><div><b>Familiar color</b><p>Connects the familiar to its mission and agents. Moving highlights indicate working agents.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="-1.2 -1.2 2.4 2.4" aria-hidden="true"><circle r=".96" fill="var(--fam-astra)"/><rect x="-.28" y="-.28" width=".56" height=".56" fill="var(--card)"/></svg></span><div><b>Agent and assignment</b><p>Each dot is an agent. A square center marks a task assignment. Working agents are filled. Idle agents are hollow.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 14 14" aria-hidden="true"><circle class="kc on" cx="7" cy="7" r="4.5"/><circle cx="7" cy="7" r="2" fill="var(--fam-cody)"/></svg></span><div><b>Shared task</b><p>A second hub color identifies a co-leading familiar. A dashed spot reserves a waiting agent’s place.</p></div></div></div></details>
 <details class="key-topic" name="map-key-topic"><summary>Mission progress and limits</summary><div>
@@ -2159,8 +2159,9 @@ function timelineHasEvents(c) {
 }
 function tStart(c) {
   const traces = c.recorded ? [c] : Object.values(projects).filter(other => !other.recorded);
-  const starts = traces.filter(other => other.trace.length).map(other => other.trace[0].t - 15000);
-  return starts.length ? Math.min(...starts) : tEnd(c) - 60000;
+  let start = Infinity;
+  for (const other of traces) if (other.trace.length) start = Math.min(start, other.trace[0].t - 15000);
+  return start === Infinity ? tEnd(c) - 60000 : start;
 }
 const canAct = () => live && !cur().recorded;
 // One replay position for every visible Project, including the overview.
@@ -2192,7 +2193,7 @@ const PAN = 1000000, ZMIN = .00001;
 // A measured, compact arrangement around Psyche; branch aisles carry coordination.
 const HUB_R = 330, HUB_M = 520;
 let atlasScope = 'project', atlasLayoutCache = null, atlasAutoFit = true, atlasResizeFrame = 0;
-const worldOf = k => { const n = atlasWorldLayout().byKey.get(k); return n ? [n.x, n.y] : [0, 0]; };
+const worldOf = (k, layout = atlasWorldLayout()) => { const n = layout.byKey.get(k); return n ? [n.x, n.y] : [0, 0]; };
 // The SVG keeps its full-stage coordinates. Chrome contributes measured safe insets.
 function atlasViewportFrame(selection) {
   const rect = stage.getBoundingClientRect(), width = Math.max(1, rect.width), height = Math.max(1, rect.height), occluders = [];
@@ -2235,10 +2236,9 @@ function atlasFitScene(remeasure) {
   const width = Math.max(1, stage.clientWidth), height = Math.max(1, stage.clientHeight);
   let bounds;
   if (atlasScope === 'coven') {
-    const layout = atlasWorldLayout(remeasure), origin = worldOf(active), rectangles = layout.nodes.map(n => ({x0: n.x - n.width / 2, y0: n.y - n.height / 2, x1: n.x + n.width / 2, y1: n.y + n.height / 2}));
-    rectangles.push({x0: -500, y0: -575, x1: 500, y1: 575});
-    layout.routes.forEach(r => r.points.forEach(p => rectangles.push({x0: p[0] - 60, y0: p[1] - 60, x1: p[0] + 60, y1: p[1] + 60})));
-    bounds = window.CovenAtlasViewport.projectedBounds(rectangles, {originX: origin[0], originY: origin[1]});
+    const layout = atlasWorldLayout(remeasure), origin = worldOf(active, layout);
+    // Layout bounds already contain every node and route with aisle padding.
+    bounds = window.CovenAtlasViewport.projectedBounds([layout.bounds, {x0: -500, y0: -575, x1: 500, y1: 575}], {originX: origin[0], originY: origin[1]});
     if (sc && sc.layoutSignature !== layout.signature) { buildScene(); sync(); }
   } else if (cur().sel) {
     const target = fitTarget(cur()); if (target) Object.assign(camT, target);
@@ -2291,9 +2291,9 @@ function buildScene() {
   sc = {missions: new Map(), seats: new Map(), agents: new Map(), colinks: new Map(), hl: highlight || null};
   { const L0 = cur().layout; sc.n = L0.n; sc.g = L0.g; }
   sc.world = svgEl('g', {class: 'atlas-overview'}, plan);
-  const layout = atlasWorldLayout(), here = worldOf(active); sc.layoutSignature = layout.signature;
+  const layout = atlasWorldLayout(), here = worldOf(active, layout); sc.layoutSignature = layout.signature;
   // Every project has the same overview representation. Position expresses containment and coordination.
-  const cv = sc.cov = {x: -here[0], y: -here[1], links: []};
+  const cv = sc.cov = {x: -here[0], y: -here[1], hubRadius: layout.hub.radius, links: []};
   cv.g = svgEl('g', {class: 'hub'}, sc.world);
   cv.marker = coordinationMarker(cv.g);
   cv.sub = svgEl('text', {class: 'task-l gsub show faronly'}, cv.g); cv.need = svgEl('text', {class: 'task-l gsub show gneed faronly'}, cv.g);
@@ -2301,16 +2301,26 @@ function buildScene() {
   cv.g.addEventListener('click', ev => { ev.stopPropagation(); openPsyche(); });
   atlasFocusable(cv.g, 'Psyche, coordination across all Projects. Open simulated conversation', () => openPsyche());
   cv.roadG = svgEl('g', {class: 'atlas-roads'}, sc.world); cv.laneG = svgEl('g', {class: 'atlas-lanes'}, sc.world);
-  Object.keys(projects).forEach(k => { const o = worldOf(k); cv.links.push({k, ox: o[0] - here[0], oy: o[1] - here[1], road: svgEl('path', {class: 'road'}, cv.roadG), lanes: [], sig: null}); });
-  const overviewBoundary = projectBoundary(4);
-  sc.ghosts = Object.keys(projects).map(k => {
-    const o = worldOf(k), c2 = projects[k], g = svgEl('g', {class: 'ghostfort' + (c2.world.agents.size ? '' : ' dormant')}, sc.world);
-    const rec = {k, ox: o[0] - here[0], oy: o[1] - here[1], g, floor: svgEl('polygon', {class: 'gfloor'}, g), runs: overviewBoundary};
-    rec.base = rec.runs.map(() => svgEl('polyline', {class: 'wall base'}, g));
+  layout.nodes.forEach(node => {
+    const route = layout.byRoute.get(node.key);
+    const points = route.points.map(([x, y]) => [x - here[0], y - here[1]]);
+    const path = atlasRoutePath(points, layout.maxCornerRadius);
+    cv.links.push({k: node.key, ox: node.x - here[0], oy: node.y - here[1], gx: route.gate.x - here[0], gy: route.gate.y - here[1],
+      path, road: svgEl('path', {class: 'road', d: path}, cv.roadG), lanes: [], sig: null});
+  });
+  const overviewBoundary = projectBoundary(4), outline = overviewBoundary.flat();
+  const bottom = Math.max(...outline.map(p => p[1]));
+  sc.ghosts = layout.nodes.map(({key: k, x, y}) => {
+    const c2 = projects[k], g = svgEl('g', {class: 'ghostfort' + (c2.world.agents.size ? '' : ' dormant')}, sc.world);
+    const ox = x - here[0], oy = y - here[1];
+    const points = run => run.map(([px, py]) => (ox + px).toFixed(1) + ',' + (oy + py).toFixed(1)).join(' ');
+    svgEl('polygon', {class: 'gfloor', points: points(outline)}, g);
+    overviewBoundary.forEach(run => svgEl('polyline', {class: 'wall base', points: points(run)}, g));
+    const rec = {k, ox, oy, g, boundaryY: oy + bottom + 5};
     rec.name = svgEl('text', {class: 'lead-name gname'}, g); rec.name.textContent = k;
     rec.sub = svgEl('text', {class: 'task-l gsub show'}, g);
     rec.aggregate = svgEl('text', {class: 'atlas-aggregate', 'aria-hidden': 'true'}, g);
-    svgEl('title', {}, g).textContent = 'Go to ' + k;
+    rec.title = svgEl('title', {}, g);
     g.addEventListener('click', ev => { ev.stopPropagation(); atlasOpenProject(k); });
     atlasFocusable(g, k + ', Project', () => atlasOpenProject(k));
     return rec;
@@ -2385,10 +2395,62 @@ function fxFor(e) {
   else if (e.type === 'gate.requested') packet(e.mission, e.familiar, 'in', 'q');                                     // a question for you, white
   else if (e.type === 'gate.resolved') { const q = cur().world.asks.get(e.ask); if (q) packet(q.mission, q.fam, 'out', 'q'); }
 }
+// Each glyph represents one recorded task, including tasks that have no agents yet.
+const taskCogPath = (() => {
+  const points = [];
+  for (let tooth = 0; tooth < 8; tooth++) {
+    for (const [offset, radius] of [[0, 3.5], [.18, 4.8], [.55, 4.8], [.73, 3.5]]) {
+      const angle = (tooth + offset) * Math.PI / 4;
+      points.push((Math.cos(angle) * radius).toFixed(2) + ',' + (Math.sin(angle) * radius).toFixed(2));
+    }
+  }
+  return 'M' + points.join('L') + 'ZM1.5,0a1.5,1.5 0 1,0 -3,0a1.5,1.5 0 1,0 3,0Z';
+})();
+function syncTaskTray(s, mission, tasks) {
+  if (!tasks.length) {
+    s.taskSummary = '';
+    if (s.tray) { if (s.tray.contains(document.activeElement)) s.node.focus(); s.tray.remove(); s.tray = null; }
+    return;
+  }
+  const visible = tasks.slice(0, 3);
+  const description = plural(tasks.length, 'task') + ' on ' + mission.name + ': ' + visible.map(t => t.name).join(', ') +
+    (tasks.length > visible.length ? ', and ' + (tasks.length - visible.length) + ' more' : '');
+  const signature = JSON.stringify([description, visible.map(t => [t.id, t.fam])]);
+  if (s.tray && s.taskSignature === signature) return;
+  s.taskSignature = signature;
+  s.taskSummary = visible.map(task => task.name).join(' · ') + (tasks.length > visible.length ? ' · +' + (tasks.length - visible.length) : '');
+  if (!s.tray) {
+    s.tray = svgEl('g', {class: 'mission-tasks'}, s.g);
+    const open = () => { panelView = 'tasks'; select(s.id, null, 'side'); };
+    atlasFocusable(s.tray, description, open);
+    s.tray.addEventListener('click', ev => { ev.stopPropagation(); open(); });
+  }
+  s.tray.textContent = '';
+  s.tray.setAttribute('aria-label', description + '. Open task list');
+  svgEl('title', {}, s.tray).textContent = description;
+  const extra = tasks.length - visible.length, suffix = extra ? '+' + extra : '';
+  const caption = tasks.length === 1 ? 'Task' : 'Tasks';
+  const captionWidth = caption.length * 5.5 + 4;
+  const width = captionWidth + visible.length * 13 + 10 + suffix.length * 6;
+  s.trayWidth = width;
+  svgEl('rect', {class: 'task-tray-hit', x: -width / 2 - 2, y: -13, width: width + 4, height: 26, rx: 8}, s.tray);
+  svgEl('rect', {class: 'task-tray-bg', x: -width / 2, y: -8, width, height: 16, rx: 8}, s.tray);
+  svgEl('text', {class: 'task-caption', x: 6 - width / 2, y: 3}, s.tray).textContent = caption;
+  visible.forEach((task, index) => {
+    const glyph = svgEl('path', {class: 'task-cog', d: taskCogPath, 'fill-rule': 'evenodd', transform: 'translate(' + (captionWidth + 11 + index * 13 - width / 2) + ' 0)'}, s.tray);
+    glyph.style.setProperty('--hue', fam(task.fam).hue);
+  });
+  if (extra) svgEl('text', {class: 'task-overflow', x: width / 2 - 5, y: 3}, s.tray).textContent = suffix;
+}
 function sync() {
   if (sc.layoutSignature !== atlasWorldLayout().signature) { buildScene(); if (atlasAutoFit) atlasQueueFit(); }
   const c = cur(), w = c.world, tally = new Map(), liveSeats = new Set();
   w.agents.forEach(a => { let t = tally.get(a.seat); if (!t) tally.set(a.seat, t = {tot: 0, work: 0}); t.tot++; if (a.state === 'work') t.work++; });
+  const missionTasks = new Map();
+  w.tasks.forEach(task => {
+    if (!missionTasks.has(task.mission)) missionTasks.set(task.mission, []);
+    missionTasks.get(task.mission).push(task);
+  });
   w.missions.forEach(M => {
     if (!sc.missions.has(M.id)) {
       const id = M.id, [x, y] = missionXY(c, id);
@@ -2399,13 +2461,14 @@ function sync() {
       s.hit = svgEl('circle', {class: 'atlas-map-hit'}, s.node);
       s.face = svgEl('g', {class: 'mission-face'}, s.node);
       s.seal = {g: svgEl('g', {}, s.face)};
-      svgEl('title', {}, s.node).textContent = M.name + ', mission';
+      s.title = svgEl('title', {}, s.node);
       s.node.addEventListener('click', ev => { ev.stopPropagation(); select(id); });
       atlasFocusable(s.node, M.name + ', mission. Show its agents and tasks', () => select(id));
       s.name = svgEl('text', {class: 'lead-name', 'aria-hidden': 'true'}, s.face);
       s.stateLabel = svgEl('text', {class: 'atlas-mission-state', 'aria-hidden': 'true'}, s.g);
       sc.missions.set(id, s);
     }
+    syncTaskTray(sc.missions.get(M.id), M, missionTasks.get(M.id) || []);
     M.seats.forEach(k => {
       const id = seatId(M.id, k); liveSeats.add(id);
       let s = sc.seats.get(id);
@@ -2442,6 +2505,7 @@ function sync() {
     const stateName = SEAL_STATE[d.state][0];
     ms.ln.classList.toggle('working', d.wedges.some(wedge => wedge.live));
     if (ms.stateLabel) ms.stateLabel.textContent = stateName + (d.warn ? ' · Limit' : '');
+    ms.title.textContent = M2.name + ', ' + stateName;
     ms.node.setAttribute('aria-label', M2.name + ', ' + stateName + (d.warn ? ', resource limit warning' : '') + '. Show its agents and tasks');
     if (council !== se.council) { se.council = council; buildSeal(se, d); }
     drawSeal(se, d);
@@ -2496,19 +2560,32 @@ function sync() {
   { const hot = new Set(openAsks(w).map(q => nearestGate(sc.n, COMPASS[q.gate] != null ? COMPASS[q.gate] : -90)));
     sc.gateL.forEach(g => g.t.classList.toggle('on', hot.has(g.k))); }
   syncCoven();
-  sc.ghosts.forEach(gh => { const g2 = projects[gh.k].world, t = g2.agents.size ? `${plural(g2.missions.size, 'mission')} · ${g2.agents.size} agents` : g2.missions.size ? plural(g2.missions.size, 'planned mission') : 'dormant'; if (gh.sub.textContent !== t) gh.sub.textContent = t; gh.g.classList.toggle('dormant', !g2.missions.size); });
+  sc.ghosts.forEach(gh => {
+    const project = projects[gh.k], w = project.world;
+    const count = w.missions.size, summary = plural(count, 'mission') + ' · ' + plural(w.agents.size, 'agent');
+    gh.sub.textContent = summary;
+    gh.g.classList.toggle('dormant', !count);
+    const names = [];
+    for (const mission of w.missions.values()) {
+      if (names.length === 8) break;
+      names.push(mission.name);
+    }
+    if (count > names.length) names.push('+' + (count - names.length) + ' more');
+    gh.title.textContent = 'Open ' + gh.k + (count ? ' · ' + names.join(', ') : ' · No missions');
+  });
   applySel();
 }
 // a selected mission lights its council; a selected familiar lights every seat it holds, across councils
 // the Coven's own figures: who works where and how much, and which projects are waiting on you
 function syncCoven() {
   const cv = sc.cov; if (!cv) return;
+  cv.scale = null;
   let agents = 0, need = 0;
   cv.links.forEach(L => {
     const w2 = projects[L.k].world, by = new Map();
     w2.agents.forEach(a => by.set(a.fam, (by.get(a.fam) || 0) + 1));
     const ks = Object.keys(FAM).filter(k => by.has(k)).concat([...by.keys()].filter(k => !FAM[k])), sig = ks.join('+');
-    if (sig !== L.sig) { L.sig = sig; L.lanes.forEach(x => x.el.remove()); L.lanes = ks.map(k => { const el = svgEl('path', {class: 'lane'}, cv.laneG); el.style.setProperty('--hue', fam(k).hue); return {k, el}; }); }
+    if (sig !== L.sig) { L.sig = sig; L.lanes.forEach(x => x.el.remove()); L.lanes = ks.map(k => { const el = svgEl('path', {class: 'lane', d: L.path}, cv.laneG); el.style.setProperty('--hue', fam(k).hue); return {k, el}; }); }
     L.road.classList.toggle('dormant', !w2.agents.size);
     L.road.classList.toggle('off', !!sc.hl && !by.has(sc.hl));
     L.lanes.forEach(x => { x.o = 0; x.el.style.display = sc.hl === x.k ? '' : 'none'; });
@@ -2552,22 +2629,48 @@ function applySel() {
 let popAt = null;
 // Fit at most two lines to the circular opening. Keep the full source name on the focusable node.
 function missionNameLines(name, fits) {
-  let rest = name.trim().replace(/\s+/g, ' ');
-  const lines = [];
-  for (let i = 0; rest && i < 2; i++) {
-    if (fits(rest)) { lines.push(rest); break; }
-    const suffix = i === 1 ? '…' : '';
-    let part = '';
-    for (const ch of rest) {
-      if (!fits(part + ch + suffix)) break;
-      part += ch;
+  const words = name.trim().split(/\s+/u).filter(Boolean);
+  const ellipsize = word => {
+    if (!fits('…')) return '';
+    let prefix = '';
+    if (typeof Intl.Segmenter === 'function') {
+      for (const {segment} of new Intl.Segmenter(undefined, {granularity: 'grapheme'}).segment(word)) {
+        if (!fits(prefix + segment + '…')) break;
+        prefix += segment;
+      }
     }
-    const wordBreak = part.lastIndexOf(' ');
-    if (!suffix && wordBreak > 0 && rest[part.length] !== ' ') part = part.slice(0, wordBreak);
-    lines.push(part.trimEnd() + suffix);
-    rest = rest.slice(part.length).trimStart();
+    return prefix + '…';
+  };
+  const lines = [];
+  let next = 0;
+  while (next < words.length && lines.length < 2) {
+    const first = words[next++];
+    if (!fits(first)) { lines.push(ellipsize(first)); continue; }
+    const lastLine = lines.length === 1;
+    let line = first;
+    while (next < words.length) {
+      const candidate = line + ' ' + words[next];
+      const hasMore = next + 1 < words.length;
+      if (!fits(candidate + (lastLine && hasMore ? '…' : ''))) break;
+      line = candidate;
+      next++;
+    }
+    if (lastLine && next < words.length) line = fits(line + '…') ? line + '…' : ellipsize(first);
+    lines.push(line);
   }
   return lines;
+}
+// Inline boxes keep a token together even when it contains punctuation, a soft hyphen or CJK characters.
+// CSS ellipsizes a token wider than its container and leaves the full text in the accessibility tree.
+function setMissionName(el, name) {
+  if (el.title === name && el.childElementCount) return el;
+  el.textContent = '';
+  el.title = name;
+  name.split(/(\s+)/u).forEach(part => {
+    if (/\S/u.test(part)) el.append(html('span', 'mission-word', part));
+    else if (part) el.append(part);
+  });
+  return el;
 }
 function labelMission(s, name) {
   if (s.labelName === name) return;
@@ -2599,28 +2702,21 @@ function project() {
   if (Math.abs(U - (sc.u || 0)) > .002) { sc.u = U; plan.style.setProperty('--u', U.toFixed(4)); }
   plan.setAttribute('viewBox', `${f(cam.px - vw / 2)} ${f(cam.py - vw / 2)} ${f(vw)} ${f(vw)}`);
 
-  const pp = arr => arr.map(q => f(q[0]) + ',' + f(q[1])).join(' ');
   const far = atlasScope === 'coven'; if (far !== sc.far) { sc.far = far; plan.classList.toggle('far', far); $('vAll').setAttribute('aria-pressed', String(far)); $('vProject').setAttribute('aria-pressed', String(!far)); if (window.CovenAtlas) window.CovenAtlas.update(); }
-  sc.ghosts.forEach(gh => {
-    const at = ([x, y]) => [gh.ox + x, gh.oy + y];
-    gh.floor.setAttribute('points', pp(gh.runs.flat().map(at)));
-    gh.runs.forEach((run, i) => gh.base[i].setAttribute('points', pp(run.map(at))));
-    atlasProjectGhost(gh, P, f);
-  });
-  { const cv = sc.cov, layout = atlasWorldLayout(), origin = worldOf(active);
+  const cv = sc.cov;
+  // Panning moves the viewBox. The overview's local geometry changes only
+  // with scale, font size, input target size, or a synchronized world update.
+  const overviewChanged = cv.scale !== screenScale || cv.fontSize !== fsz || cv.narrow !== narrow.matches;
+  if (far && overviewChanged) {
+    cv.scale = screenScale; cv.fontSize = fsz; cv.narrow = narrow.matches;
+    sc.ghosts.forEach(gh => atlasProjectGhost(gh, P, f));
     const set = (t, q, dy) => { t.setAttribute('x', f(q[0])); t.setAttribute('y', f(q[1] + dy)); };
     const hq = P(cv.x, cv.y), hubU = Math.min(U, 8);
-    drawMarker(cv.marker, cv.x, cv.y, layout.hub.radius);
+    drawMarker(cv.marker, cv.x, cv.y, cv.hubRadius);
     cv.g.style.setProperty('--u', hubU.toFixed(3));
-    set(cv.sub, hq, layout.hub.radius + 14 * hubU); set(cv.need, hq, layout.hub.radius + 29 * hubU);
-    const byK = new Map(sc.ghosts.map(g => [g.k, g]));
-    cv.links.forEach(L => {
-      const route = layout.byRoute.get(L.k); if (!route) return;
-      const points = route.points.map(p => P(p[0] - origin[0], p[1] - origin[1]));
-      const path = atlasRoutePath(points, layout.maxCornerRadius);
-      L.road.setAttribute('d', path); L.lanes.forEach(x => x.el.setAttribute('d', path));
-      const gh = byK.get(L.k); if (!gh) return;
-      const gate = P(route.gate.x - origin[0], route.gate.y - origin[1]);
+    set(cv.sub, hq, cv.hubRadius + 14 * hubU); set(cv.need, hq, cv.hubRadius + 29 * hubU);
+    cv.links.forEach((L, i) => {
+      const gh = sc.ghosts[i], gate = P(L.gx, L.gy);
       const center = P(L.ox, L.oy);
       const pixels = 560 * screenScale;
       const expanded = detailVisible(L.expandedBadge, pixels, narrow.matches ? 84 : 64, narrow.matches ? 76 : 56);
@@ -2643,14 +2739,22 @@ function project() {
       L.decisionBox.setAttribute('width', f(side)); L.decisionBox.setAttribute('height', f(side));
       L.decisionBox.setAttribute('rx', f(side * .10)); L.decisionCount.setAttribute('y', f(side * .18));
       L.decisionCount.style.fontSize = (side * .54).toFixed(1) + 'px';
-      const boundaryY = Math.max(...gh.runs.flat().map(p => P(L.ox + p[0], L.oy + p[1])[1])) + 5;
-      const edge = L.decision.style.display === 'none' ? boundaryY : Math.max(boundaryY, gate[1] + side / 2);
+      const edge = L.decision.style.display === 'none' ? gh.boundaryY : Math.max(gh.boundaryY, gate[1] + side / 2);
       const labelU = Math.min(U, gh.density === 'full' ? 9 : 6), fontWidth = 14 * labelU * .58 * fsz;
       const maxChars = Math.max(7, Math.floor(850 / fontWidth)), name = L.k.length > maxChars ? L.k.slice(0, maxChars - 1) + '…' : L.k;
       if (gh.name.textContent !== name) gh.name.textContent = name;
       gh.g.style.setProperty('--u', labelU.toFixed(3));
       set(gh.name, [center[0], edge], 14 * labelU); set(gh.sub, [center[0], edge], 30 * labelU);
     });
+  }
+  if (far) {
+    const width = stage.clientWidth, height = stage.clientHeight;
+    if (overviewChanged || cv.px !== cam.px || cv.py !== cam.py || cv.width !== width || cv.height !== height) {
+      updateVisibleProjectPreviews(sc.ghosts, cam, screenScale, width, height);
+      cv.px = cam.px; cv.py = cam.py; cv.width = width; cv.height = height;
+    }
+  } else {
+    cv.scale = null;
   }
   sc.gateL.forEach(g => {
     const q = P(g.x, g.y); g.t.setAttribute('x', f(q[0])); g.t.setAttribute('y', f(q[1] - 17 * U));
@@ -2690,6 +2794,15 @@ function project() {
     s.g.classList.toggle('atlas-compact-seal', !s.readable);
     const reveal = Math.max(faceScale, 34 / (radius * screenScale));
     s.face.style.setProperty('--mission-reveal', reveal);
+    if (s.tray) {
+      const size = clamp(1 / screenScale, .75, 1.9);
+      const direction = s.y > 0 ? -1 : 1;
+      const ring = radius * (selected && !s.readable ? reveal : faceScale);
+      const stateGap = selected && direction > 0 ? 15 * U : 0;
+      const y = q[1] + direction * (ring + 13 * size + stateGap);
+      s.trayBox = {x: q[0], y, width: s.trayWidth * size, height: 16 * size};
+      s.tray.setAttribute('transform', `translate(${f(q[0])} ${f(y)}) scale(${size})`);
+    }
     s.stateLabel.setAttribute('x', f(q[0]));
     s.stateLabel.setAttribute('y', f(q[1] + radius * (s.readable ? faceScale : reveal) + 12 * U));
     s.g.classList.toggle('atlas-mission-current', selected);
@@ -2755,6 +2868,7 @@ function layoutMapLabels() {
   sc.missions.forEach(s => {
     const diameter = Math.max(s.diameter, s.id === c.sel && !s.readable ? 68 : 0);
     reserve(X(s.sx), Y(s.sy), diameter, diameter);
+    if (s.tray && s.trayBox) reserve(X(s.trayBox.x), Y(s.trayBox.y), s.trayBox.width * scale, s.trayBox.height * scale);
   });
   reserve(X(sc.psy.sx), Y(sc.psy.sy), 98 * scale, 98 * scale);
   sc.gateL.forEach(g => { if (g.mark.style.display !== 'none') reserve(X(g.sx), Y(g.sy), 30, 30, g); });
@@ -2845,7 +2959,6 @@ function zoomBy(fac, cx, cy) {
     cam.zoom = z;
   }
   camT.zoom = z; saveView(); kick();
-  if (window.CovenAtlas) window.CovenAtlas.update();
   atlasWriteRoute(true);
 }
 function setLock(on) {
@@ -2896,7 +3009,7 @@ stage.addEventListener('pointermove', ev => {
   const next = window.CovenMobileInteractions.applyCameraGesture(cam, delta, stage.getBoundingClientRect(), {minZoom: ZMIN, maxZoom: 6, panLimit: PAN});
   atlasAutoFit = false; Object.assign(cam, next); Object.assign(camT, next);
   if (ev.cancelable) ev.preventDefault();
-  kick(); if (window.CovenAtlas) window.CovenAtlas.update();
+  kick();
 });
 const endDrag = ev => {
   if (ev && !mapPointers.has(ev.pointerId)) return;
@@ -2914,7 +3027,7 @@ stage.addEventListener('dblclick', ev => {               // fly in on the point 
   const r = plan.getBoundingClientRect(), z = clamp(camT.zoom * 1.7, ZMIN, 6), k0 = Math.min(r.width, r.height) / (784 / cam.zoom);
   camT.px = clamp(cam.px + (ev.clientX - (r.left + r.width / 2)) / k0, -PAN, PAN); camT.py = clamp(cam.py + (ev.clientY - (r.top + r.height / 2)) / k0, -PAN, PAN);
   atlasAutoFit = false; camT.zoom = z; saveView(); kick();
-  if (window.CovenAtlas) window.CovenAtlas.update(); atlasWriteRoute(true);
+  atlasWriteRoute(true);
 });
 stage.addEventListener('keydown', ev => {
   if (ev.target !== stage || cam.locked || ev.metaKey || ev.ctrlKey || ev.altKey) return;
@@ -2927,7 +3040,7 @@ stage.addEventListener('keydown', ev => {
   else if (k === '-' || k === '_') camT.zoom = clamp(camT.zoom / 1.25, ZMIN, 6);
   else if (k === '0') atlasFitScene(true);
   else used = false;
-  if (used) { if (k !== '0') atlasAutoFit = false; ev.preventDefault(); saveView(); kick(); if (window.CovenAtlas) window.CovenAtlas.update(); atlasWriteRoute(true); }
+  if (used) { if (k !== '0') atlasAutoFit = false; ev.preventDefault(); saveView(); kick(); atlasWriteRoute(true); }
 });
 stage.addEventListener('wheel', ev => {
   const scrolls = document.documentElement.scrollHeight > innerHeight + 2;
@@ -3107,6 +3220,7 @@ function syncLeads() {
       b.type = 'button'; b.dataset.mission = M.id;
       top.append(html('span', 'lc-seal'), html('span', 'who', M.name), html('span', 'n'));
       M.seats.forEach(k => { council.insertAdjacentHTML('beforeend', avatar(k)); const sg = html('b'); sg.style.setProperty('--hue', fam(k).hue); sg.dataset.seat = seatId(M.id, k); bar.appendChild(sg); });
+      council.appendChild(html('span', 'lc-task-names'));
       b.append(top, council, bar);
       b.addEventListener('click', () => select(M.id));
       box.appendChild(b);
@@ -3114,6 +3228,9 @@ function syncLeads() {
   }
   box.querySelectorAll('.lead-card').forEach(b => {
     const id = b.dataset.mission, M = w.missions.get(id); if (!M) return;
+    const preview = b.querySelector('.lc-task-names'), names = sc.missions.get(id)?.taskSummary || '';
+    if (preview.textContent !== names) { preview.textContent = names; preview.title = names; }
+    b.querySelector('.who').textContent = M.name;
     { const sl = b.querySelector('.lc-seal'), d = sealOf(w, M); if (sl && sl.dataset.sig !== d.sig) { sl.dataset.sig = d.sig; sl.innerHTML = sealSvg(d, 22); sl.title = sealLabel(d); } }
     const tot = countOf(w, a => a.mission === id), wk = countOf(w, a => a.mission === id && a.state === 'work'), g = countOf(w, a => a.mission === id && a.state === 'gate');
     b.setAttribute('aria-pressed', String(c.sel === id));
@@ -3167,8 +3284,8 @@ function fitTarget(c) {
 // seat listing that familiar's tasks, and a tag on anything of its waiting at a gate.
 function selHead(c) {
   const M = c.world.missions.get(c.sel), head = html('div', 'i-head'), who = html('div', 'who');
-  const title = html('h2', 'mission-title', c.fam ? fam(c.fam).name : M.name); title.id = 'missionDetailTitle'; title.tabIndex = -1;
-  if (c.fam) { const f = fam(c.fam); head.innerHTML = avatar(c.fam); who.append(title, html('span', 'role', `${f.role} · on ${M.name}`)); }
+  const title = setMissionName(html('h2', 'mission-title'), c.fam ? fam(c.fam).name : M.name); title.id = 'missionDetailTitle'; title.tabIndex = -1;
+  if (c.fam) { const f = fam(c.fam); head.innerHTML = avatar(c.fam); who.append(title, setMissionName(html('span', 'role'), `${f.role} · on ${M.name}`)); }
   else { head.innerHTML = avatar('mission'); who.append(title, html('span', 'role', `Mission · council of ${M.seats.length}`)); }
   head.appendChild(who); return head;
 }
@@ -3207,7 +3324,7 @@ function drawLeadCard(force) {
     const col = wide ? html('div', 'manifest') : layer, leaders = wide ? svgEl('svg', {class: 'leaders', 'aria-hidden': 'true'}) : null;
     if (!side) {
       const h = html('div', 'hud'), top = html('div', 'hud-top'), ttl = html('div'), stats = html('div', 'hud-stats'), bar = html('span', 'bar'), act = html('div', 'hud-act'), nums = {};
-      const title = html('h2', null, M.name); title.id = 'missionSummaryTitle'; title.tabIndex = -1;
+      const title = setMissionName(html('h2'), M.name); title.id = 'missionSummaryTitle'; title.tabIndex = -1;
       top.innerHTML = avatar('mission'); ttl.append(title, html('p', null, `${active} · council of ${M.seats.length}`)); top.append(ttl, xBtn('Back to project', () => select(null)));
       [['work', 'working'], ['idle', 'idle'], ['gate', 'at gate']].forEach(([st, label]) => { const sp = html('span', st), b = html('b'); nums[st] = b; sp.append(b, label); stats.appendChild(sp); });
       M.seats.forEach(k => { const sg = html('b'); sg.style.setProperty('--hue', fam(k).hue); sg.dataset.seat = seatId(M.id, k); bar.appendChild(sg); });
@@ -3233,7 +3350,7 @@ function drawLeadCard(force) {
         });
         el.append(head, list);
         const others = c.fam === k ? councilsOf(w, k).filter(m => m.id !== M.id) : [];
-        if (others.length) { const row = html('div', 'lc-also plate-also'); row.append('Also on'); others.forEach(m => { const b = html('button', null, m.name); b.type = 'button'; b.addEventListener('click', () => select(m.id, k, cur().detail)); row.appendChild(b); }); el.appendChild(row); }
+        if (others.length) { const row = html('div', 'lc-also plate-also'); row.append('Also on'); others.forEach(m => { const b = setMissionName(html('button'), m.name); b.type = 'button'; b.addEventListener('click', () => select(m.id, k, cur().detail)); row.appendChild(b); }); el.appendChild(row); }
         if (leaders) {
           ['pointerenter', 'pointerleave', 'focusin', 'focusout'].forEach(event => el.addEventListener(event, kick));
           rec.line = svgEl('line', {}, leaders); rec.dot = svgEl('circle', {r: 3}, leaders); rec.line.style.setProperty('--hue', f.hue); rec.dot.style.setProperty('--hue', f.hue); }
@@ -3331,7 +3448,7 @@ function syncInspect(force) {
   const seats = c.fam ? councilsOf(w, c.fam).sort((a, b) => (b.id === M.id) - (a.id === M.id)).map(m => ({m, k: c.fam})) : M.seats.map(k => ({m: M, k}));
   const seatIds = seats.map(x => seatId(x.m.id, x.k)), order = new Map(seatIds.map((id, i) => [id, i]));
   const rank = id => order.has(id) ? order.get(id) : 99;
-  const tasks = [...w.tasks.values()].filter(t => t.leads.some(k => order.has(seatId(t.mission, k)))).sort((a, b) => rank(seatId(a.mission, a.fam)) - rank(seatId(b.mission, b.fam)));
+  const tasks = [...w.tasks.values()].filter(t => c.fam ? t.leads.some(k => order.has(seatId(t.mission, k))) : t.mission === M.id).sort((a, b) => rank(seatId(a.mission, a.fam)) - rank(seatId(b.mission, b.fam)));
   const taskIds = new Set(tasks.map(t => t.id));      // a familiar's scope includes the agents of tasks it shares, wherever they sit
   const all = [...w.agents.values()].filter(a => order.has(a.seat) || (a.task && taskIds.has(a.task))).sort((a, b) => rank(a.seat) - rank(b.seat) || slotOf(a) - slotOf(b));
   const sig = (panelView === 'brief' ? briefSig(briefState(w, M), M) + Math.floor((w.t - M.t0) / 60000) + canAct() : '') + active + M.id + '/' + (c.fam || '') + '|' + panelView + '|' + seatIds.join(',') + '|' + tasks.map(t => t.id).join(',') + '|' + all.map(a => a.id + ':' + (a.task || '')).join(',');
@@ -3344,7 +3461,7 @@ function syncInspect(force) {
     box.hidden = false;
     box.setAttribute('aria-label', c.fam ? fam(c.fam).name + ' on ' + M.name : M.name + ' mission details');
     box.setAttribute('aria-labelledby', 'missionDetailTitle'); box.tabIndex = -1;
-    const context = html('p', 'mission-context', active + (c.fam ? ' / ' + M.name : ' / Mission details'));
+    const context = setMissionName(html('p', 'mission-context'), active + (c.fam ? ' / ' + M.name : ' / Mission details'));
     const backRow = html('nav', 'mission-return'); backRow.setAttribute('aria-label', 'Mission navigation');
     const back = html('button', 'btn sm', c.fam ? '← Back to mission' : '← All missions'); back.type = 'button'; back.dataset.focus = 'mission-back';
     back.addEventListener('click', () => {
@@ -3396,7 +3513,8 @@ function syncInspect(force) {
     const seatLink = x => {
       const link = html('button', 'rowlink'); link.type = 'button'; if (!c.fam) link.innerHTML = avatar(x.k);
       link.dataset.focus = 'seat-' + x.m.id + '-' + x.k;
-      link.append(c.fam ? x.m.name : fam(x.k).name); if (c.fam && x.m.id === M.id) link.setAttribute('aria-current', 'true');
+      if (c.fam) link.append(setMissionName(html('span'), x.m.name)); else link.append(fam(x.k).name);
+      if (c.fam && x.m.id === M.id) link.setAttribute('aria-current', 'true');
       link.addEventListener('click', () => select(x.m.id, x.k, 'side')); return link;
     };
     if (panelView === 'brief') {
@@ -3422,7 +3540,7 @@ function syncInspect(force) {
     } else if (panelView === 'tasks') {                      // each task with the subagents on it
       tasks.forEach(t => {
         const title = html('span', 'tname'), TM = w.missions.get(t.mission); title.innerHTML = '<span class="avs">' + t.leads.map(avatar).join('') + '</span>'; title.append(t.name);
-        if (c.fam && TM) title.appendChild(html('em', null, TM.name));
+        if (c.fam && TM) title.appendChild(setMissionName(html('em'), TM.name));
         group(fam(t.fam).hue, title, all.filter(a => a.task === t.id));
       });
       const loose = all.filter(a => !a.task || !w.tasks.has(a.task));
@@ -3799,14 +3917,16 @@ function drawNeeds() {
     if (x) {
       const top = html('div', 'cf-n'), mt = html('span', 'meter'), bar = html('i'); bar.style.width = Math.min(100, x.frac * 100) + '%'; mt.appendChild(bar);
       top.append(html('b', null, fmtN(x.k, x.used)), ` of ${capText(x.k, x.max)} used`, html('span', null, Math.round(x.frac * 100) + '%'));
-      lead.append(top, mt, html('p', null, `${M.name} has stopped. Raising lets it carry on, up to ${capText(x.k, nextCap(w, M, x.k))}.`));
+      const explanation = html('p');
+      explanation.append(setMissionName(html('span'), M.name), ` has stopped. Raising lets it carry on, up to ${capText(x.k, nextCap(w, M, x.k))}.`);
+      lead.append(top, mt, explanation);
     } else {
       const what = html('p', 'cf-w'); linkify(q.detail || q.title, what); lead.appendChild(what);
       lead.appendChild(html('p', null, (RULE[kind] != null ? `${f.name} may not ${WARD.must[RULE[kind]].toLowerCase()} alone. ` : '') + 'Your answer applies to this request only.'));
     }
     const ref = (k, nodes) => { const sp = html('span'); sp.appendChild(html('i', null, k)); nodes.forEach(n => sp.appendChild(n)); refs.appendChild(sp); };
     ref('From', [rf(f.name, () => select(q.mission, q.fam), 'hue')]);
-    if (M) ref('Mission', [rf(M.name, () => select(q.mission))]);
+    if (M) ref('Mission', [setMissionName(rf(M.name, () => select(q.mission)), M.name)]);
     ref('Gate', [rf(cap(GATE_NAME[q.gate]), () => showAgent(q, q.agents[0]))]);
     if (q.agents.length) ref(q.agents.length === 1 ? 'Agent' : 'Agents', q.agents.map(id => rf(id, () => showAgent(q, id), 'mono')));
     if (!x && RULE[kind] != null) ref('Ward', [rf('Requires approval', () => openWard('must'))]);
@@ -4014,7 +4134,10 @@ function drawStream() {
     else if (it.kind === 'you') {
       const M = it.mission ? w.missions.get(it.mission) : null, about = M ? (it.fam ? `${fam(it.fam).name} on ${M.name}` : M.name) : '';
       e = html('div', 'msg you'); const b = html('div', 'body');
-      b.append(html('p', null, it.text), html('div', 'meta', `You${about ? ' · about ' + about : ''} · ${hm(it.t)}`)); e.appendChild(b);
+      const meta = html('div', 'meta', 'You');
+      if (about) meta.append(' · about ', setMissionName(html('span'), about));
+      meta.append(' · ' + hm(it.t));
+      b.append(html('p', null, it.text), meta); e.appendChild(b);
     } else {
       const M = it.mission ? w.missions.get(it.mission) : null, b = html('div', 'body'), mh = html('div', 'mh'), src = html('span', 'src'), tm = html('time', null, hm(it.t)), p = html('p', null, it.text);
       e = html('div', 'msg'); e.innerHTML = avatar(it.from || 'psyche');
@@ -5023,6 +5146,140 @@ function atlasFocusable(el, label, action) {
     ev.preventDefault(); ev.stopPropagation(); action();
   });
 }
+// Preview geometry is local to its Project. All counts and memberships come from the replay world.
+function createProjectPreview(gh) {
+  const group = svgEl('g', {class: 'project-preview', transform: `translate(${gh.ox} ${gh.oy})`, 'pointer-events': 'none', 'aria-hidden': 'true'}, gh.g);
+  gh.g.insertBefore(group, gh.name);
+  const graph = svgEl('g', {}, group);
+  const links = svgEl('g', {class: 'preview-links'}, graph);
+  const nodes = svgEl('g', {}, graph);
+  svgEl('circle', {class: 'preview-hub', r: 20}, graph);
+  const more = svgEl('g', {class: 'preview-overflow'}, graph);
+  svgEl('circle', {r: 43}, more);
+  const moreLabel = svgEl('text', {y: 8}, more);
+  const empty = svgEl('text', {class: 'preview-empty', y: 10}, group);
+  empty.textContent = 'No missions';
+  const emptyMark = svgEl('path', {class: 'preview-empty-mark', d: 'M-35 0H35'}, group);
+  return {group, graph, links, nodes, more, moreLabel, empty, emptyMark, missions: new Map()};
+}
+
+function syncProjectPreview(preview, project, compact = false) {
+  const w = project.world;
+  if (preview.world === w && preview.applied === project.applied && preview.time === w.t && preview.compact === compact) return;
+  preview.world = w; preview.applied = project.applied; preview.time = w.t; preview.compact = compact;
+  const pack = window.CovenAtlasLayout.missionPacking(w.missions.size, {radius: 160, sealRadius: 65});
+  const shown = new Map();
+  for (const mission of w.missions.values()) {
+    if (shown.size === pack.visible) break;
+    shown.set(mission.id, mission);
+  }
+  for (const [id, item] of preview.missions) {
+    if (shown.has(id)) continue;
+    item.node.remove(); item.link.remove(); preview.missions.delete(id);
+  }
+  preview.graph.style.display = shown.size ? '' : 'none';
+  preview.empty.style.display = preview.emptyMark.style.display = shown.size ? 'none' : '';
+  if (!shown.size) return;
+
+  const slots = pack.visible + Number(Boolean(pack.more));
+  const distributed = pack.hidden > 0 || project.layout.n > 8;
+  const bearing = (id, i) => distributed ? -90 + i * 360 / slots : project.layout.ang.get(id) ?? -90;
+  const reach = slots > 4 ? 174 : 142;
+  const radius = Math.min(pack.sealRadius, (274 - reach) / 2.26, 148 * Math.sin(Math.PI / Math.max(2, slots)) * .68);
+  const first = shown.keys().next().value, [fx, fy] = pol(reach, bearing(first, 0));
+  // A single mission and its hub share the middle of the preview.
+  preview.graph.setAttribute('transform', slots === 1 ? `translate(${-.68 * fx} ${-.68 * fy})` : 'translate(0 0)');
+
+  const owners = new Map();
+  if (!compact) for (const task of w.tasks.values()) {
+    if (!shown.has(task.mission)) continue;
+    let council = owners.get(task.mission);
+    if (!council) owners.set(task.mission, council = new Set());
+    for (const lead of task.leads) council.add(lead);
+  }
+  let index = 0;
+  for (const [id, mission] of shown) {
+    const angle = bearing(id, index++), [x, y] = pol(reach, angle);
+    let item = preview.missions.get(id);
+    if (!item) {
+      const node = svgEl('g', {class: 'preview-mission', 'data-preview-mission': id}, preview.nodes);
+      item = {node, link: svgEl('line', {}, preview.links)};
+      preview.missions.set(id, item);
+    }
+    item.link.setAttribute('x2', x); item.link.setAttribute('y2', y);
+    item.node.setAttribute('transform', `translate(${x} ${y})`);
+    if (item.compact !== compact) {
+      item.node.textContent = '';
+      item.compact = compact; item.labelName = null;
+      item.members = new Map();
+      if (compact) {
+        item.disc = svgEl('circle', {class: 'preview-compact-ring'}, item.node);
+        item.seal = item.branches = item.face = item.name = null;
+      } else {
+        item.disc = svgEl('circle', {class: 'preview-group'}, item.node);
+        item.branches = svgEl('g', {class: 'preview-members'}, item.node);
+        item.face = svgEl('g', {}, item.node);
+        item.seal = {g: svgEl('g', {}, item.face)};
+        item.name = svgEl('text', {class: 'preview-name'}, item.face);
+      }
+    }
+    item.fullName = mission.name;
+    if (compact) {
+      item.disc.setAttribute('r', radius);
+      item.disc.style.setProperty('--hue', mission.seats.length ? fam(mission.seats[0]).hue : 'var(--primary)');
+      continue;
+    }
+    const [cx, cy] = pol(radius * .48, angle);
+    item.disc.setAttribute('cx', cx); item.disc.setAttribute('cy', cy);
+    item.disc.setAttribute('r', radius * 1.55);
+    const d = sealOf(w, mission);
+    if (!item.seal.wedges || item.seal.wedges.length !== d.wedges.length) buildSeal(item.seal, d);
+    drawSeal(item.seal, d);
+    item.face.setAttribute('transform', `scale(${radius / 43})`);
+    const members = mission.seats.slice(0, 4);
+    for (const [key, mark] of item.members) if (!members.includes(key)) { mark.group.remove(); item.members.delete(key); }
+    for (const [i, k] of members.entries()) {
+      let mark = item.members.get(k);
+      if (!mark) {
+        const group = svgEl('g', {'data-preview-familiar': k}, item.branches);
+        mark = {group, path: svgEl('path', {class: 'preview-member'}, group), task: svgEl('rect', {class: 'preview-task', width: 12, height: 12, rx: 2}, group)};
+        item.members.set(k, mark);
+      }
+      const spread = members.length === 1 ? 0 : (i / (members.length - 1) - .5) * Math.min(110, (members.length - 1) * 70);
+      const direction = angle + spread, [sx, sy] = pol(radius * 1.8, direction), r = radius * .22;
+      mark.path.setAttribute('d', `M0 0 L${sx} ${sy} M${sx - r} ${sy} a${r} ${r} 0 1 0 ${2 * r} 0 a${r} ${r} 0 1 0 ${-2 * r} 0`);
+      mark.group.style.setProperty('--hue', fam(k).hue);
+      const [tx, ty] = pol(radius * 2.26, direction);
+      mark.task.setAttribute('x', tx - 6); mark.task.setAttribute('y', ty - 6);
+      mark.task.style.display = owners.get(id)?.has(k) ? '' : 'none';
+    }
+  }
+  preview.more.style.display = pack.more ? '' : 'none';
+  if (pack.more) {
+    const [x, y] = pol(reach, bearing(null, pack.visible));
+    preview.more.setAttribute('transform', `translate(${x} ${y})`);
+    const label = '+' + pack.hidden;
+    preview.moreLabel.textContent = label;
+    preview.moreLabel.style.fontSize = Math.min(27, 116 / label.length) + 'px';
+  }
+}
+
+function updateVisibleProjectPreviews(ghosts, camera, scale, width, height) {
+  const halfWidth = width / (2 * scale) + 280, halfHeight = height / (2 * scale) + 280;
+  for (const gh of ghosts) {
+    const visible = 560 * scale >= 20 && Math.abs(gh.ox - camera.px) <= halfWidth && Math.abs(gh.oy - camera.py) <= halfHeight;
+    if (!visible) {
+      if (gh.preview) { gh.preview.group.remove(); gh.preview = null; }
+      continue;
+    }
+    if (!gh.preview) gh.preview = createProjectPreview(gh);
+    syncProjectPreview(gh.preview, projects[gh.k], 560 * scale < 40);
+    if (560 * scale >= 320) {
+      for (const item of gh.preview.missions.values()) labelMission(item, item.fullName);
+    }
+  }
+}
+
 function atlasProjectGhost(gh, P, f) {
   const w = projects[gh.k].world;
   const scale = Math.max(.001, Math.min(stage.clientWidth, stage.clientHeight) * cam.zoom / 784);
@@ -5030,13 +5287,16 @@ function atlasProjectGhost(gh, P, f) {
   gh.named = detailVisible(gh.named, pixels, 50, 44);
   gh.density = gh.named ? 'full' : 'tiny';
   gh.g.setAttribute('data-density', gh.density);
+  gh.g.setAttribute('data-preview-size', pixels >= 90 ? 'detail' : pixels >= 40 ? 'map' : pixels >= 20 ? 'mini' : 'number');
+  gh.g.setAttribute('data-preview-names', String(pixels >= 320));
   const pending = openAsks(w).length;
   gh.g.setAttribute('aria-label', gh.k + ', ' + plural(w.missions.size, 'mission') + ', ' + plural(w.agents.size, 'agent') +
     (pending ? ', ' + plural(pending, 'pending decision') : '') + '. Open project');
   const center = P(gh.ox, gh.oy);
   gh.aggregate.textContent = String(w.missions.size);
   gh.aggregate.setAttribute('x', f(center[0]));
-  gh.aggregate.setAttribute('y', f(center[1] + 4 / scale));
+  const underPreview = pixels >= 20 && !gh.named;
+  gh.aggregate.setAttribute('y', f(center[1] + (underPreview ? 280 + 10 / scale : 4 / scale)));
   gh.aggregate.style.fontSize = f(clamp(pixels * .28, 8, 16) / scale) + 'px';
 }
 function atlasOpenProject(k) {
@@ -5073,21 +5333,41 @@ function atlasOpenMission(k, id, mode, row) {
   atlasRestoringRoute = restoring; atlasWriteRoute();
   return opened;
 }
-function atlasSetProjectCount(requested) {
-  const count = Number(requested); if (!Number.isInteger(count) || count < 0 || count > 128) return false;
-  const base = Object.keys(projects).filter(k => !projects[k].layoutDemo), target = Math.max(base.length, count), now = Date.now();
-  const demos = Object.keys(projects).filter(k => projects[k].layoutDemo);
-  while (base.length + demos.length > target) delete projects[demos.pop()];
+let atlasSampleRequest = 0;
+async function atlasSetProjectCount(requested) {
+  const count = Number(requested);
+  if (!Number.isSafeInteger(count) || count < 0) return false;
+  const request = ++atlasSampleRequest, now = Date.now(), prepared = [];
   let index = 1;
-  while (base.length + demos.length < target) {
+  const nextKey = () => {
     let key; do { key = 'atlas-' + String(index++).padStart(3, '0'); } while (projects[key]);
-    const template = ['ui', 'coven-cave', 'psyche-build', 'brand'][demos.length % 4];
-    const c = makeProject(key, sampleTrace(template, now), false); c.layoutDemo = true; c.sample = true;
-    projects[key] = c; seek(c, now, true); demos.push(key);
+    return key;
+  };
+  let current = Object.keys(projects), demos = current.filter(k => projects[k].layoutDemo);
+  let deadline = performance.now() + 16;
+  // Prepare new worlds off the map. The last request wins if a new preset or
+  // reset arrives while a large population is yielding to browser input.
+  while (current.length + prepared.length < count) {
+    const template = ['ui', 'coven-cave', 'psyche-build', 'brand'][(demos.length + prepared.length) % 4];
+    const c = makeProject(nextKey(), sampleTrace(template, now), false); c.layoutDemo = true; c.sample = true;
+    seek(c, now, true); prepared.push(c);
+    if (performance.now() >= deadline) {
+      await new Promise(resolve => setTimeout(resolve, 0));
+      if (request !== atlasSampleRequest) return false;
+      current = Object.keys(projects); demos = current.filter(k => projects[k].layoutDemo);
+      deadline = performance.now() + 16;
+    }
   }
-  if (!projects[active]) active = base[0];
+  let total = current.length;
+  while (total > count && demos.length) { delete projects[demos.pop()]; total--; }
+  for (const c of prepared) {
+    if (total >= count) break;
+    if (projects[c.key]) c.key = nextKey();
+    projects[c.key] = c; total++;
+  }
+  if (!projects[active]) active = Object.keys(projects)[0];
   enter(); atlasOverview();
-  if (window.CovenAtlas) window.CovenAtlas.announce(Object.keys(projects).length + ' Projects in the simulation. Your existing Projects are preserved.');
+  if (window.CovenAtlas) window.CovenAtlas.announce(total + ' Projects in the simulation. Your existing Projects are preserved.');
   return true;
 }
 function atlasOverview() {
@@ -5106,7 +5386,7 @@ function atlasCamera(action) {
   if (action === 'in' || action === 'out') zoomBy(action === 'in' ? 1.3 : 1 / 1.3);
   else if (action === 'fit') atlasFitScene(true);
   else return;
-  saveView(); kick(); if (window.CovenAtlas) window.CovenAtlas.update(); atlasWriteRoute(true);
+  saveView(); kick(); atlasWriteRoute(true);
 }
 function atlasFocusSelection(preferOpen, previousMission) {
   const c = cur(); let target = null;
@@ -5163,7 +5443,12 @@ function atlasSnapshot(includeMissions) {
   let missions = 0, agents = 0, needs = 0;
   Object.keys(projects).forEach(k => {
     const w = projects[k].world, q = openAsks(w).length, by = new Map();
-    ps.push({key: k, missions: w.missions.size, agents: w.agents.size, needs: q});
+    const previewNames = [];
+    for (const mission of w.missions.values()) {
+      previewNames.push(mission.name);
+      if (previewNames.length === 2) break;
+    }
+    ps.push({key: k, missions: w.missions.size, agents: w.agents.size, needs: q, previewNames});
     if (includeMissions || ($('atlasMissionBrowser') && !$('atlasMissionBrowser').hidden)) w.missions.forEach(M => {
       const seal = sealOf(w, M);
       missionItems.push({project: k, id: M.id, name: M.name, state: seal.state, stateLabel: SEAL_STATE[seal.state][0], agents: countOf(w, a => a.mission === M.id), needs: openAsks(w).filter(q => q.mission === M.id).length, council: M.seats.map(f => fam(f).name).join(', '), seal: sealSvg(seal, 30)});
@@ -5177,11 +5462,11 @@ function atlasSnapshot(includeMissions) {
 }
 if (window.CovenProjection) window.CovenProjection.register(window.CovenProjection.createSimulationSource({worlds: () => Object.keys(projects).map(k => [k, projects[k].world]), summarize: SimModel.summarize}));
 if (window.CovenAtlas) {
-  window.CovenAtlas.mount({snapshot: atlasSnapshot, overview: atlasOverview, openProject: atlasOpenProject, openMission: atlasOpenMission, setProjectCount: atlasSetProjectCount, newProject: () => openProjectForm(), camera: atlasCamera, highlight: covHl, legend: () => $('keyBtn').click()});
+  window.CovenAtlas.mount({setMissionName, snapshot: atlasSnapshot, overview: atlasOverview, openProject: atlasOpenProject, openMission: atlasOpenMission, setProjectCount: atlasSetProjectCount, newProject: () => openProjectForm(), camera: atlasCamera, highlight: covHl, legend: () => $('keyBtn').click()});
   $('plan').setAttribute('role', 'group');
   atlasRestoreRoute(true);
 }
-if (window.CovenSealLab) window.CovenSealLab.mount({svgEl, fam, sigil, buildSeal, drawSeal, WARN_AT});
+if (window.CovenSealLab) window.CovenSealLab.mount({svgEl, fam, sigil, labelMission, buildSeal, drawSeal, WARN_AT});
 if (window.CovenMobileUI) window.CovenMobileUI.mount({
   openActivity: () => { openPsyche(); setTab('chat', false); },
   close: {

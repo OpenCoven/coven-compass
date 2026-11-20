@@ -117,6 +117,35 @@ body.atlas-enhanced #plan .lane {
 }
 body.atlas-enhanced #plan .road.dormant { stroke-opacity: 1; }
 
+/* A Project preview shares the rings and familiar colors of the open map. */
+.project-preview { pointer-events: none; }
+.preview-links line { stroke: #ad98cf; stroke-width: 7; }
+.preview-hub { fill: #a899cc; stroke: #393144; stroke-width: 5; }
+.preview-compact-ring { fill: #242029; stroke: var(--hue); stroke-width: 12; }
+.preview-group { fill: #2b2830; stroke: #423c4b; stroke-width: 2; }
+.preview-member { fill: #211f27; stroke: var(--hue); stroke-width: 6; stroke-linecap: round; }
+.preview-task { fill: var(--hue); }
+.preview-mission .se-status { stroke-width: 3; }
+.preview-mission .se-track, .preview-mission .se-share, .preview-mission .se-progress { stroke-width: 8; }
+.preview-overflow circle { fill: #292631; stroke: #8f839f; stroke-width: 3; }
+.preview-overflow text, .preview-empty {
+  fill: #cfc8d9;
+  text-anchor: middle;
+  font: 500 27px var(--f-body);
+}
+.preview-empty { fill: #c4bccb; font-size: 48px; }
+.preview-empty-mark { display: none; stroke: #aca6b6; stroke-width: 13; stroke-linecap: round; }
+.ghostfort:is([data-preview-size="mini"], [data-preview-size="map"]) .preview-empty-mark { display: inline; }
+.ghostfort:is([data-preview-size="mini"], [data-preview-size="map"]) .preview-empty { display: none; }
+.preview-name { display: none; fill: #eeeaf2; text-anchor: middle; font: 500 11px var(--f-body); }
+.ghostfort[data-preview-names="true"] .preview-name { display: inline; }
+.ghostfort:not([data-preview-size="detail"]) :is(.preview-task, .preview-group) { display: none; }
+.ghostfort[data-preview-size="mini"] .preview-members { display: none; }
+.ghostfort[data-preview-size="number"] .project-preview { display: none; }
+.ghostfort:not([data-preview-size="number"]) .atlas-aggregate { display: none; }
+.ghostfort[data-density="tiny"]:not(:hover, :focus-visible) .atlas-aggregate { display: inline; }
+.ghostfort[data-density="tiny"][data-preview-size="number"] .atlas-aggregate { display: inline; }
+
 /* Overview detail follows available pixels; counts and drill-down remain exact. */
 body.atlas-enhanced #plan .atlas-aggregate {
   fill: #b9b0cf;
@@ -161,7 +190,8 @@ body.atlas-enhanced #plan .ghostfort[data-density="tiny"]:focus-visible .gname {
 .lead-node.sel .se-selection, .lead-node:hover .se-selection, .lead-node:focus-visible .se-selection { display: inline; }
 .lead-node:focus-visible .se-selection { stroke: #fff; }
 .mission-face { transform: scale(var(--mission-size, 1)); }
-body.atlas-enhanced #plan .mission-face .lead-name { font: 550 13px var(--f-body); text-anchor: middle; stroke: none; fill: #f5f3f8; pointer-events: none; }
+body.atlas-enhanced #plan .mission-face .lead-name { font: 500 13px var(--f-body); text-anchor: middle; stroke: none; fill: #d3cfdb; pointer-events: none; }
+body.atlas-enhanced #plan .lead-node:is(:focus-visible, :hover, .sel) .mission-face .lead-name { fill: #f5f3f8; }
 body.atlas-enhanced #plan .atlas-compact-seal .lead-name { visibility: hidden; }
 body.atlas-enhanced #plan .atlas-compact-seal .lead-node:is(:hover, .sel) .lead-name,
 body.atlas-enhanced #plan .atlas-compact-seal .lead-node:focus-visible .lead-name { visibility: visible; }
@@ -253,3 +283,12 @@ body.atlas-enhanced #plan .agent:not(.assigned) .agent-task { display: none; }
 body.atlas-enhanced #plan .agent.idle .agent-task { fill: var(--hue); }
 body.atlas-enhanced #plan .agent.gate .agent-task { fill: var(--attention); }
 body.atlas-enhanced #plan .agent.co .agent-task { fill: var(--hue2); }
+
+/* A shared capsule groups each mission’s recorded tasks at rest and during replay. */
+.mission-tasks { cursor: pointer; }
+.task-tray-hit { fill: transparent; pointer-events: all; }
+.task-tray-bg { fill: #282631; stroke: #585464; stroke-width: 1; }
+.task-cog { fill: var(--hue); }
+.task-caption { fill: #c6c1cf; font: 500 9px var(--f-body); }
+.task-overflow { fill: #dfdbe6; font: 500 9px var(--f-body); text-anchor: end; }
+.mission-tasks:is(:hover, :focus-visible) .task-tray-bg { stroke: var(--attention); stroke-width: 1.6; }

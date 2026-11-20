@@ -104,3 +104,5 @@ For a function-level map of `dist/index.html`, see [chapter 01 §4](docs/handoff
 - [docs/handoff/05-implementation-plan.md](docs/handoff/05-implementation-plan.md): phases W01–W14
 - [docs/handoff/09-security-and-authority.md](docs/handoff/09-security-and-authority.md): authority boundaries
 - [docs/handoff/15-scalable-atlas-layout.md](docs/handoff/15-scalable-atlas-layout.md): layout, crown, and presentation contract
+
+Run `scripts/project-preview-qa.mjs` using the same external Playwright installation as `scripts/browser-qa.mjs`. Serve `dist/`, copy the script beside that installation, and run `node project-preview-qa.mjs http://127.0.0.1:8000/` to exercise Coven previews and task inspection on desktop and portrait layouts. The test imports its own recording with unstaffed tasks.

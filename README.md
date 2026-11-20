@@ -32,7 +32,7 @@ The tests include their exact reference fixture and work without Git history. Th
 
 The Coven overview shows an exact mission count within each Project enclosure and a separate badge for pending decisions. The mission browser and Project drilldown retain all known missions. The map reduces detail based on projected spacing while preserving the underlying collection.
 
-Open **Projects → Try a larger Coven** for 8, 16, 32, 64, or 128-Project sample presets. **Remove extra samples** removes only generated layout samples and preserves existing baseline and user-created Projects. A preset never reduces the user's existing collection to meet its target, so the actual total can exceed the requested preset. These samples explore composition; 128 is neither a production capacity claim nor an architectural limit.
+Open **Projects → Try a larger Coven** to choose a sample preset or enter a custom Project total. Each Project previews its missions on the Coven map. Within a Project, the grouped cogs beside a mission open its task list. **Remove extra samples** removes only generated layout samples and preserves existing baseline and user-created Projects. A preset never reduces the user's existing collection to meet its target, so the actual total can exceed the requested preset. These samples explore composition; 128 is neither a production capacity claim nor an architectural limit.
 
 Compass uses a strictly 2D map. Pan and zoom frame the current scope. Fit accounts for the header, drawers and labels, and resizing preserves a manually adjusted view. The same upright crown identifies Psyche throughout the interface. Changing this restriction requires an explicit override from Val, recorded with the change. [Presentation policy](AGENTS.md#invariants-never-break)
 
@@ -46,7 +46,7 @@ Compass uses a strictly 2D map. Pan and zoom frame the current scope. Fit accoun
 - **Psyche badge:** the lavender crown marks the coordinator. Spokes connect it to the work in the current scope.
 - **Coral seal rim:** the tightest time, token, or budget limit has reached 85%, or the mission is broken after stopping at a limit.
 
-The Coven overview shows Project boundaries, exact mission counts, and pending-decision badges. Entering a Project reveals mission seals and familiar glyphs. Selecting a mission shows its state, one decision preview, and individual agent marks when spacing allows. The Inbox holds all pending decisions, and mission details retain exact counts. Zoom changes presentation density while preserving the current scope.
+The Coven overview previews each Project’s mission rings, familiar branches and task ownership when there is room. At smaller sizes it keeps the exact mission count. Entering a Project reveals the mission seals, familiar glyphs and task groups. Selecting a mission shows its state, one decision preview, and individual agent marks when spacing allows. The Inbox holds all pending decisions, and mission details retain exact counts. Zoom changes presentation density while preserving the current scope.
 
 The council ring summarizes agent shares with a minimum visible segment. Mission details give the exact counts, progress, working agents, state and limits.
 

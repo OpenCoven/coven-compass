@@ -87,9 +87,10 @@
     }
     filter.value = missionProject;
     $('atlasMissionState').value = missionState;
-    var needle = missionQuery.trim().toLocaleLowerCase(), shown = 0;
+    var needle = missionQuery.trim().toLocaleLowerCase(), shown = 0, present = new Set();
     items.forEach(function (m) {
       var key = JSON.stringify([m.project, m.id]), row = missionNodes.get(key);
+      present.add(key);
       if (!row) {
         row = button('', '', function () {
           closeMissions(false);
@@ -111,14 +112,14 @@
       row.dataset.state = m.state;
       row.setAttribute('aria-current', String(s.active === m.project && s.missionId === m.id));
       row.setAttribute('aria-label', m.name + ', ' + m.project + ', ' + m.stateLabel + ', ' + m.agents + ' agents. Open mission details');
-      row.querySelector('.atlas-mission-title').textContent = m.name;
+      api.setMissionName(row.querySelector('.atlas-mission-title'), m.name);
       row.querySelector('.atlas-mission-meta').textContent = m.project + ' · ' + m.stateLabel;
       row.querySelector('.atlas-mission-stats').textContent = m.agents + ' agents · ' + m.council + (m.needs ? ' · ' + m.needs + ' pending' : '');
       var emblem = row.querySelector('.atlas-mission-seal');
       if (emblem.dataset.seal !== m.seal) { emblem.dataset.seal = m.seal; emblem.innerHTML = m.seal; }
     });
     missionNodes.forEach(function (row, key) {
-      if (!items.some(function (m) { return JSON.stringify([m.project, m.id]) === key; })) {
+      if (!present.has(key)) {
         var focused = row.contains(document.activeElement);
         row.remove(); missionNodes.delete(key);
         if (focused && !$('atlasMissionBrowser').hidden) $('atlasMissionSearch').focus({ preventScroll: true });
@@ -201,12 +202,32 @@
     var newProject = button('atlasNewProject', '+ New Project', function () { closeBrowse(false); api.newProject(); });
     var simulation = node('details', 'atlas-layout-simulation'), simulationTitle = node('summary', '', 'Try a larger Coven');
     var presets = node('div', 'atlas-layout-presets');
+    var custom = node('form', 'atlas-layout-custom'), label = node('label', '', 'Total Projects');
+    var total = node('input'), apply = node('button', 'atlas-button', 'Set total');
+    total.id = 'atlasCustomCount'; total.type = 'number'; total.min = '1'; total.step = '1'; total.required = true;
+    total.addEventListener('input', function () { total.setCustomValidity(''); });
+    label.htmlFor = total.id; apply.type = 'submit'; custom.append(label, total, apply);
+    var progress = node('p'); progress.id = 'atlasLayoutStatus'; progress.setAttribute('role', 'status');
+    async function populate(count) {
+      progress.textContent = count ? 'Preparing a Coven with ' + count + ' Projects…' : 'Removing extra samples…';
+      try {
+        if (await api.setProjectCount(count)) { progress.textContent = ''; closeBrowse(true); }
+      } catch (error) {
+        progress.textContent = 'Could not finish preparing the sample Projects. ' + error.message;
+      }
+    }
+    custom.addEventListener('submit', function (event) {
+      event.preventDefault();
+      var count = total.valueAsNumber;
+      if (!Number.isSafeInteger(count) || count < 1) { total.setCustomValidity('Enter a positive whole number within the safe integer range.'); total.reportValidity(); return; }
+      populate(count);
+    });
     [8, 16, 32, 64, 128].forEach(function (count) {
-      var preset = button('', String(count), function () { closeBrowse(false); api.setProjectCount(count); });
+      var preset = button('', String(count), function () { populate(count); });
       preset.setAttribute('aria-label', 'Simulate a Coven with ' + count + ' Projects'); presets.append(preset);
     });
-    var reset = button('atlasResetLayout', 'Remove extra samples', function () { closeBrowse(false); api.setProjectCount(0); });
-    simulation.append(simulationTitle, node('p', '', 'Adds sample Projects to explore the layout. Your own projects stay intact.'), presets, reset);
+    var reset = button('atlasResetLayout', 'Remove extra samples', function () { populate(0); });
+    simulation.append(simulationTitle, node('p', '', 'Adds sample Projects to explore the layout. Your own projects stay intact.'), presets, custom, reset, progress);
     var legend = button('atlasLegend', 'Legend', function () { closeBrowse(true); api.legend(); });
     var mobileHandoff = node('a', 'atlas-button atlas-handoff-link', 'Source and implementation handoff');
     mobileHandoff.id = 'atlasHandoffDrawer'; mobileHandoff.href = 'handoff/';
@@ -318,7 +339,9 @@
     var signature = JSON.stringify([s.projects, s.familiars, s.highlight, s.active]);
     if (force || signature !== lastSignature) {
       lastSignature = signature;
+      var currentKeys = new Set();
       s.projects.forEach(function (p) {
+        currentKeys.add(p.key);
         var b = projectNodes.get(p.key);
         if (!b) {
           b = button('', '', function () {
@@ -328,7 +351,7 @@
           b.dataset.project = p.key;
           var icon = node('span', 'atlas-project-icon'); icon.innerHTML = projectIcon;
           var copy = node('span', 'atlas-project-copy'); copy.append(node('b'), node('span'));
-          b.append(icon, copy, node('span', 'atlas-project-state'));
+          b.append(icon, copy, node('span', 'atlas-project-state'), node('span', 'atlas-project-preview-names'));
           $('atlasProjects').append(b); projectNodes.set(p.key, b);
         }
         b.querySelector('b').textContent = p.key;
@@ -339,9 +362,14 @@
         b.dataset.active = String(p.key === s.active);
         b.setAttribute('aria-current', p.key === s.active ? 'true' : 'false');
         var projectLabel = p.key + ', ' + p.missions + (p.missions === 1 ? ' mission' : ' missions') + ', ' + p.agents + ' agents' + (p.needs ? ', ' + p.needs + ' requests need you' : '');
+        var names = p.previewNames || [], remaining = p.missions - names.length;
+        var preview = b.querySelector('.atlas-project-preview-names');
+        preview.hidden = !names.length;
+        preview.textContent = names.join(' · ') + (names.length && remaining > 0 ? ' · +' + remaining : '');
+        if (names.length) projectLabel += '. Missions: ' + names.join(', ') + (remaining ? ', and ' + remaining + ' more' : '');
         b.setAttribute('aria-label', projectLabel); b.title = projectLabel;
       });
-      projectNodes.forEach(function (b, k) { if (!s.projects.some(function (p) { return p.key === k; })) { b.remove(); projectNodes.delete(k); } });
+      projectNodes.forEach(function (b, k) { if (!currentKeys.has(k)) { b.remove(); projectNodes.delete(k); } });
       filterProjects();
       s.familiars.forEach(function (f) {
         var b = familiarNodes.get(f.key);
