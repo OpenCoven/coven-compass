@@ -1,0 +1,400 @@
+{
+  "run": {
+    "revision": "c15823626a073540c3a8a5bff08f018eb360a091",
+    "base": "http://127.0.0.1:18743/",
+    "mode": "soak",
+    "started": "2026-11-20T10:30:22.052Z",
+    "node": "v24.22.0",
+    "runnerSha256": "a75e5a455ca9117a530b2b1b91ec7507fbeb4235ff6b61cd1676894583f05816",
+    "platform": "darwin",
+    "release": "27.2.0",
+    "arch": "arm64",
+    "cpu": "Apple M5 Max",
+    "logicalCpus": 18,
+    "ramBytes": 137438953472,
+    "browser": "130.0.6723.31",
+    "playwright": "1.48.2",
+    "model": "Mac17,6",
+    "macOS": "27.2.1",
+    "finished": "2026-11-20T11:00:30.180Z",
+    "failures": 0
+  },
+  "cells": {
+    "narrow-128": {
+      "scenarios": 1,
+      "passed": 1,
+      "workloads": [
+        {
+          "projects": 128,
+          "missions": 224,
+          "agents": 3648,
+          "tasks": 736,
+          "seatedFamiliars": [
+            "astra",
+            "charm",
+            "cody",
+            "echo"
+          ]
+        }
+      ],
+      "initialLoadEventEndMs": {
+        "n": 1,
+        "min": 361.9,
+        "median": 361.9,
+        "p95": 361.9,
+        "max": 361.9
+      },
+      "latencyMs": {
+        "setup": {
+          "populate overview": {
+            "n": 1,
+            "min": 124.4,
+            "median": 124.4,
+            "p95": 124.4,
+            "max": 124.4
+          }
+        },
+        "first journey": {
+          "open Projects": {
+            "n": 1,
+            "min": 75.6,
+            "median": 75.6,
+            "p95": 75.6,
+            "max": 75.6
+          },
+          "filter Projects": {
+            "n": 1,
+            "min": 21.5,
+            "median": 21.5,
+            "p95": 21.5,
+            "max": 21.5
+          },
+          "enter Project": {
+            "n": 1,
+            "min": 78.9,
+            "median": 78.9,
+            "p95": 78.9,
+            "max": 78.9
+          },
+          "pan": {
+            "n": 1,
+            "min": 41.6,
+            "median": 41.6,
+            "p95": 41.6,
+            "max": 41.6
+          },
+          "zoom": {
+            "n": 1,
+            "min": 43.1,
+            "median": 43.1,
+            "p95": 43.1,
+            "max": 43.1
+          },
+          "open Missions": {
+            "n": 1,
+            "min": 114.5,
+            "median": 114.5,
+            "p95": 114.5,
+            "max": 114.5
+          },
+          "filter missions": {
+            "n": 1,
+            "min": 32.6,
+            "median": 32.6,
+            "p95": 32.6,
+            "max": 32.6
+          },
+          "focus mission": {
+            "n": 1,
+            "min": 24.2,
+            "median": 24.2,
+            "p95": 24.2,
+            "max": 24.2
+          },
+          "inspect mission": {
+            "n": 1,
+            "min": 102.7,
+            "median": 102.7,
+            "p95": 102.7,
+            "max": 102.7
+          },
+          "inspect tasks": {
+            "n": 1,
+            "min": 35.7,
+            "median": 35.7,
+            "p95": 35.7,
+            "max": 35.7
+          },
+          "return to result": {
+            "n": 1,
+            "min": 87.5,
+            "median": 87.5,
+            "p95": 87.5,
+            "max": 87.5
+          },
+          "return to launcher": {
+            "n": 1,
+            "min": 58.4,
+            "median": 58.4,
+            "p95": 58.4,
+            "max": 58.4
+          },
+          "start and advance replay": {
+            "n": 1,
+            "min": 88.4,
+            "median": 88.4,
+            "p95": 88.4,
+            "max": 88.4
+          },
+          "restore live sample": {
+            "n": 1,
+            "min": 106.6,
+            "median": 106.6,
+            "p95": 106.6,
+            "max": 106.6
+          },
+          "return to overview": {
+            "n": 1,
+            "min": 159.2,
+            "median": 159.2,
+            "p95": 159.2,
+            "max": 159.2
+          }
+        },
+        "soak": {
+          "open Projects": {
+            "n": 146,
+            "min": 44.6,
+            "median": 71.45,
+            "p95": 86.1,
+            "max": 100.7
+          },
+          "filter Projects": {
+            "n": 146,
+            "min": 12,
+            "median": 22.8,
+            "p95": 28.8,
+            "max": 44.5
+          },
+          "enter Project": {
+            "n": 146,
+            "min": 68.1,
+            "median": 79.55,
+            "p95": 102,
+            "max": 111.5
+          },
+          "pan": {
+            "n": 146,
+            "min": 33.4,
+            "median": 43.3,
+            "p95": 44.5,
+            "max": 48.5
+          },
+          "zoom": {
+            "n": 146,
+            "min": 36.4,
+            "median": 43.1,
+            "p95": 45.8,
+            "max": 58.9
+          },
+          "open Missions": {
+            "n": 146,
+            "min": 46.7,
+            "median": 53.1,
+            "p95": 109.8,
+            "max": 128
+          },
+          "filter missions": {
+            "n": 146,
+            "min": 20.4,
+            "median": 26.45,
+            "p95": 37.6,
+            "max": 48.9
+          },
+          "focus mission": {
+            "n": 146,
+            "min": 16.2,
+            "median": 23.35,
+            "p95": 34.7,
+            "max": 115.3
+          },
+          "inspect mission": {
+            "n": 146,
+            "min": 73.9,
+            "median": 86.0,
+            "p95": 113.4,
+            "max": 125.9
+          },
+          "inspect tasks": {
+            "n": 146,
+            "min": 20.7,
+            "median": 36.95,
+            "p95": 54.3,
+            "max": 62.2
+          },
+          "return to result": {
+            "n": 146,
+            "min": 67.2,
+            "median": 80.0,
+            "p95": 97.9,
+            "max": 109
+          },
+          "return to launcher": {
+            "n": 146,
+            "min": 28.8,
+            "median": 44.2,
+            "p95": 55.2,
+            "max": 63.4
+          },
+          "start and advance replay": {
+            "n": 146,
+            "min": 67.7,
+            "median": 88.75,
+            "p95": 107.9,
+            "max": 121.8
+          },
+          "restore live sample": {
+            "n": 146,
+            "min": 37.2,
+            "median": 43.2,
+            "p95": 58.1,
+            "max": 77.5
+          },
+          "return to overview": {
+            "n": 146,
+            "min": 89.9,
+            "median": 100.95,
+            "p95": 124.3,
+            "max": 149.5
+          }
+        }
+      },
+      "frameIntervalsMs": {
+        "setup": {
+          "n": 29,
+          "min": 16.6,
+          "median": 16.7,
+          "p95": 116.6,
+          "max": 116.7
+        },
+        "first journey": {
+          "n": 218,
+          "min": 16.6,
+          "median": 16.7,
+          "p95": 50,
+          "max": 116.6
+        },
+        "soak": {
+          "n": 98904,
+          "min": 16.5,
+          "median": 16.7,
+          "p95": 33.3,
+          "max": 233.7
+        }
+      },
+      "longTaskDurationMs": {
+        "setup": {
+          "n": 2,
+          "min": 76,
+          "median": 90.5,
+          "p95": 105,
+          "max": 105
+        },
+        "first journey": {
+          "n": 7,
+          "min": 52,
+          "median": 67,
+          "p95": 86,
+          "max": 86
+        },
+        "soak": {
+          "n": 909,
+          "min": 50,
+          "median": 62,
+          "p95": 81,
+          "max": 110
+        }
+      },
+      "attachedElements": {
+        "setup": {
+          "n": 1,
+          "min": 5947,
+          "median": 5947,
+          "p95": 5947,
+          "max": 5947
+        },
+        "first journey": {
+          "n": 1,
+          "min": 12315,
+          "median": 12315,
+          "p95": 12315,
+          "max": 12315
+        },
+        "soak": {
+          "n": 146,
+          "min": 11754,
+          "median": 11954.0,
+          "p95": 12244,
+          "max": 12904
+        }
+      },
+      "usedHeapBytes": {
+        "setup": {
+          "n": 1,
+          "min": 6938644,
+          "median": 6938644,
+          "p95": 6938644,
+          "max": 6938644
+        },
+        "first journey": {
+          "n": 1,
+          "min": 12033552,
+          "median": 12033552,
+          "p95": 12033552,
+          "max": 12033552
+        },
+        "soak": {
+          "n": 146,
+          "min": 7700736,
+          "median": 9692494.0,
+          "p95": 12924216,
+          "max": 14767984
+        }
+      },
+      "soakElapsedMs": 1801723.527125,
+      "soakCheckpoints": {
+        "first": {
+          "phase": "soak",
+          "iteration": 1,
+          "elapsedMs": 19872.844833,
+          "attachedElements": 12134,
+          "route": "#/coven",
+          "replaySpeed": "30\u00d7",
+          "cursor": 1000,
+          "live": "true",
+          "documents": 1,
+          "nodes": 24451,
+          "jsEventListeners": 2843,
+          "usedHeapBytes": 8644084,
+          "totalHeapBytes": 25722880
+        },
+        "last": {
+          "phase": "soak",
+          "iteration": 146,
+          "elapsedMs": 1807893.726083,
+          "attachedElements": 11954,
+          "route": "#/coven",
+          "replaySpeed": "30\u00d7",
+          "cursor": 1000,
+          "live": "true",
+          "documents": 1,
+          "nodes": 27207,
+          "jsEventListeners": 2863,
+          "usedHeapBytes": 10732644,
+          "totalHeapBytes": 29655040
+        }
+      }
+    }
+  },
+  "failures": []
+}
