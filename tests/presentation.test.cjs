@@ -138,7 +138,8 @@ function presentationFixture() {
     sc.missions.set(M.id, { g, node: svgEl('g', {}, g), court: svgEl('path', { 'data-m': M.id }, plan) });
     M.seats.forEach(k => {
       const seat = svgEl('g', { 'data-m': M.id, 'data-fam': k }, plan);
-      sc.seats.set(`${M.id}:${k}`, { m: M.id, fam: k, g: seat, badge: svgEl('g', {}, seat) });
+      const id = M.id + ':' + k, plane = svgEl('g', {}, seat);
+      sc.seats.set(id, { id, m: M.id, fam: k, g: seat, plane, floor: svgEl('rect', {}, plane), slots: {}, badge: svgEl('g', {}, seat) });
     });
   });
   agents.forEach(a => {
@@ -179,6 +180,7 @@ function presentationFixture() {
 test('agents and reserved places are hidden without a selected mission', () => {
   const { context, sc, c, plan } = presentationFixture();
   context.applySel();
+  for (const seat of sc.seats.values()) assert.equal(seat.plane.style.display, 'none');
   for (const agent of sc.agents.values()) {
     assert.equal(agent.el.style.display, 'none');
     if (agent.ghost) assert.equal(agent.ghost.style.display, 'none');
@@ -192,6 +194,7 @@ test('selection reveals only that mission’s agents and keeps all pending gate 
   const { context, sc, c } = presentationFixture();
   for (const mission of ['m1', 'm2']) {
     c.sel = mission; context.applySel();
+    for (const seat of sc.seats.values()) assert.equal(seat.plane.style.display, seat.m === c.sel ? '' : 'none');
     for (const [id, agent] of sc.agents) {
       const expected = c.world.agents.get(id).mission === mission ? '' : 'none';
       assert.equal(agent.el.style.display, expected, `${id} agent visibility`);

@@ -237,13 +237,17 @@ body.atlas-enhanced #plan .atlas-compact-decision text { display: none; }
 
 
 
-/* The same small, screen-sized marker identifies Psyche at both map scopes. */
+/* Crown views summarize this scope. Point keeps a fixed footprint. */
 body.atlas-enhanced #plan .coord-face { fill: var(--background); stroke: transparent; }
 body.atlas-enhanced #plan :is(.coord-crown, .coord-point) { fill: var(--primary); }
 body.atlas-enhanced #plan :is(.coord-name, .coord-point) { display: none; }
-body[data-psyche-marker="point"] #plan .coord-crown { display: none; }
+body[data-psyche-marker="point"] #plan .coord-artwork { display: none; }
 body[data-psyche-marker="point"] #plan .coord-point { display: inline; }
-body[data-psyche-marker="point"] #plan .coord-face { r: 12px; }
+body.atlas-enhanced #plan :is(.coord-track, .coord-band) { fill: none; stroke-width: 3; }
+body.atlas-enhanced #plan .coord-track { stroke: #3a3643; }
+body.atlas-enhanced #plan .coord-work { stroke: #a39bbe; }
+body.atlas-enhanced #plan .coord-attention { stroke: var(--attention); }
+body.atlas-enhanced #plan :is(.hub, .atlas-local-psyche):focus-visible .coord-point { stroke: var(--attention); stroke-width: 2; }
 body[data-psyche-marker="labeled"] #plan .coord-face { stroke: #787183; }
 body[data-psyche-marker="labeled"] #plan .coord-name { display: inline; fill: var(--foreground); font-family: var(--f-body); }
 body.atlas-enhanced #plan :is(.hub, .atlas-local-psyche):is(:hover, :focus-visible) .coord-face { stroke: var(--primary); stroke-width: 2; }
@@ -264,19 +268,40 @@ body.atlas-enhanced #plan .atlas-squad-lines .link { stroke: var(--hue); }
     stroke-width: 2; stroke-dasharray: 3 12; vector-effect: non-scaling-stroke; animation: flow 2s linear infinite;
   }
 }
-#keyModal .modal-card { width: min(420px, 100%); }
+#keyModal .modal-card { width: min(38rem, 100%); height: min(30rem, 100%); min-height: 0; }
 #keyModal .hd-t { flex: 1; }
-.key-reader { padding: 10px 18px 14px; overflow-y: auto; overscroll-behavior: contain; }
-.key-reader > .kz-r { align-items: center; padding: 8px 0; }
-.key-reader .kz-m svg { height: 18px; }
-.key-topic { border-top: 1px solid var(--border); }
-.key-topic:first-of-type { margin-top: 12px; }
-.key-topic summary { cursor: pointer; padding: 12px 2px; min-height: 44px; font-weight: 500; }
-.key-topic > div { padding-bottom: 12px; }
-.key-topic .kz-fams { margin: 0 0 10px; padding: 0; border: 0; }
-
-.key-context { margin: 2px 0 8px; color: var(--muted-foreground); font-size: .85em; }
-
+.key-tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); flex: none; padding: 0 12px; border-bottom: 1px solid var(--border); }
+.key-tabs button { min-height: 44px; padding: 0 2px; font: inherit; color: var(--muted-foreground); background: transparent; border: 0; border-bottom: 2px solid transparent; cursor: pointer; }
+.key-tabs button:hover { color: var(--foreground); background: var(--muted); }
+.key-tabs button[aria-selected="true"] { color: var(--primary); border-bottom-color: currentColor; font-weight: 600; }
+.key-tabs button:focus-visible, .key-panel:focus-visible { outline-offset: -3px; }
+.key-reader { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
+.key-panel { padding: 18px; }
+.key-panel h3 { margin: 0 0 14px; font-size: 1.15em; font-weight: 580; }
+.key-panel .kz-r { align-items: center; padding: 8px 0; }
+.key-panel .kz-m svg { height: 24px; max-width: 100%; }
+.key-panel .kz-r p { line-height: 1.48; }
+#key-panel-map .key-entries { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+#key-panel-map .kz-r { align-content: start; grid-template-columns: 1fr; gap: 8px; padding: 14px; background: var(--card-raised); border: 1px solid var(--border); border-radius: var(--radius); }
+#key-panel-map .kz-m { width: 36px; height: 36px; color: var(--primary); }
+#key-panel-map .kz-m svg { height: 32px; }
+.key-panel .kz-fams { margin: 0 0 10px; padding: 0; border: 0; }
+.key-panel .kz-f span { white-space: normal; overflow-wrap: anywhere; }
+.key-panel .kz-st span { grid-column: 1 / -1; margin-top: 4px; color: var(--muted-foreground); }
+.key-panel .kz-k { min-height: 36px; border-bottom: 1px solid var(--border); }
+.key-context { flex: none; margin: 0; padding: 10px 18px; border-top: 1px solid var(--border); color: var(--muted-foreground); font-size: .85em; }
+@media (max-width: 540px) {
+  #keyModal .modal-card { height: min(36rem, 100%); }
+  .key-panel { padding: 14px; }
+  .key-tabs { padding: 0 4px; }
+  #key-panel-map .key-entries { grid-template-columns: 1fr; }
+  #key-panel-map .kz-r { grid-template-columns: 36px minmax(0, 1fr); padding: 10px; gap: 12px; }
+  .key-panel .kz-states { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 360px) {
+  #keyModal { padding-inline: 6px; }
+  .key-panel .kz-fams { grid-template-columns: 1fr; }
+}
 
 body.atlas-enhanced #plan .agent-mark .o { stroke-width: .16; }
 body.atlas-enhanced #plan .agent-task { fill: var(--card); }
@@ -288,7 +313,19 @@ body.atlas-enhanced #plan .agent.co .agent-task { fill: var(--hue2); }
 /* A shared capsule groups each mission’s recorded tasks at rest and during replay. */
 .mission-tasks { cursor: pointer; }
 .task-tray-hit { fill: transparent; pointer-events: all; }
-.task-tray-bg { fill: #282631; stroke: #585464; stroke-width: 1; }
+.task-tray-bg { fill: #27242d; stroke: #625a6c; stroke-width: 1; }
+.task-tray-well { fill: #19171e; stroke: #423b4b; stroke-width: .6; }
+.squad-plane rect { fill: color-mix(in srgb, var(--hue) 10%, #19181e); stroke: color-mix(in srgb, var(--hue) 38%, #302d38); }
+.squad-plane :is(rect, line) { vector-effect: non-scaling-stroke; stroke-width: 1; }
+.squad-plane rect { cursor: pointer; }
+.squad-plane rect[aria-pressed="true"], .squad-plane rect:focus-visible { stroke: var(--hue); stroke-width: 2; fill: color-mix(in srgb, var(--hue) 19%, #19181e); outline: none; }
+.cell-ghost { pointer-events: none; }
+.squad-plane .task-region { overflow: hidden; }
+.squad-plane .task-region line { stroke: var(--hue); stroke-opacity: .48; stroke-width: 2; }
+.squad-plane .task-region text { fill: var(--foreground); font-family: var(--f-body); font-weight: 550; text-anchor: start; }
+body.atlas-enhanced #plan .agent.picked .hot { stroke: var(--foreground); stroke-opacity: 1; stroke-width: 2; vector-effect: non-scaling-stroke; }
+.squad-plane line { stroke: var(--hue); stroke-opacity: .45; }
+body.atlas-enhanced #plan:not(.atlas-agent-detail) .squad-plane { display: none; }
 .task-cog { fill: var(--hue); }
 .task-caption { fill: #c6c1cf; font: 500 9px var(--f-body); }
 .task-overflow { fill: #dfdbe6; font: 500 9px var(--f-body); text-anchor: end; }
@@ -296,3 +333,31 @@ body.atlas-enhanced #plan .agent.co .agent-task { fill: var(--hue2); }
 
 .seal-reference { display: none; fill: #fff; stroke: #27242d; stroke-width: 2.5; paint-order: stroke; text-anchor: middle; font: 500 13px var(--f-body); }
 .atlas-compact-seal .lead-node:not(:hover, :focus-visible, .sel) .seal-reference { display: inline; }
+
+/* Focus follows the mark. HTML controls retain their normal focus outline. */
+body.atlas-enhanced #plan :is(.lead-node, .seat, .agent, .mission-tasks, .hub, .atlas-local-psyche, .ghostfort, .atlas-decision):focus-visible { outline: none; }
+body.atlas-enhanced #plan .se-selection { vector-effect: non-scaling-stroke; stroke-width: 1.6; stroke-dasharray: 14 11; stroke-dashoffset: 7; stroke-linecap: round; }
+body.atlas-enhanced #plan .lead-node:focus-visible .se-selection { stroke: var(--attention); stroke-width: 2; }
+body.atlas-enhanced #plan .agent:focus-visible { opacity: 1; }
+body.atlas-enhanced #plan .agent:focus-visible .hot { stroke: var(--attention); stroke-opacity: 1; stroke-width: 2; vector-effect: non-scaling-stroke; }
+body.atlas-enhanced #plan .ghostfort:focus-visible .wall.base,
+body.atlas-enhanced #plan .seat:focus-visible .familiar-disc,
+body.atlas-enhanced #plan .mission-tasks:focus-visible .task-tray-bg { stroke-width: 2.5; vector-effect: non-scaling-stroke; }
+body.atlas-enhanced #plan.atlas-selected :is(.atlas-mission-group, .atlas-squad).dim { opacity: .32; }
+body.atlas-enhanced #plan.atlas-selected :is(.atlas-mission-group, .atlas-squad).dim:is(:hover, :focus-within) { opacity: 1; }
+body.atlas-enhanced #plan.atlas-selected :is(.atlas-mission-lines, .atlas-squad-lines).dim { opacity: .13; }
+@media (prefers-contrast: more) {
+  body.atlas-enhanced #plan.atlas-selected :is(.atlas-mission-group, .atlas-squad).dim { opacity: .75; }
+}
+
+@media (forced-colors: active) {
+  body.atlas-enhanced #plan [data-map-item]:focus-visible :is(.se-selection, .familiar-disc, .hot, .task-tray-bg, .coord-face, .coord-point, .wall.base, rect:not(.atlas-map-hit)) { stroke: Highlight; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #plan :is(.atlas-mission-group, .atlas-squad) { transition: none; }
+}
+
+/* Keep the selected seal prominent while retaining the coordinator's readings. */
+body.atlas-enhanced #plan.atlas-selected :is(.coord-track, .coord-band) { stroke-width: 2; }
+body.atlas-enhanced #plan.atlas-selected .coord-attention { stroke: #c6bdd9; }
+body.atlas-enhanced #plan .atlas-mission-group.dim:not(:hover, :focus-within) :is(.task-tray-bg, .task-tray-well) { fill: transparent; stroke: transparent; }

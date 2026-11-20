@@ -91,17 +91,25 @@ for (const [name, width, height, mobile] of [['desktop', 1440, 900, false], ['ph
       if (mobile) await page.locator('#atlasMobileView').click();
       const hub = page.locator('.atlas-local-psyche');
       const crown = hub.locator('.coord-crown');
+      const verifyBandSize = async () => {
+        const size = (await hub.locator('.coord-face').boundingBox()).width;
+        const faces = await page.locator('.atlas-project-detail .mission-face .se-face').evaluateAll(nodes => nodes.map(n => n.getBoundingClientRect().width));
+        const average = faces.reduce((a, b) => a + b, 0) / faces.length;
+        assert.ok(Math.abs(size - average) < 2, 'Psyche bands match the average mission disc');
+        assert.match(await hub.getAttribute('aria-label'), /Inner band: \d+ of \d+ agents working/);
+      };
       assert.equal(await select.inputValue(), 'crown');
-      assert.equal(Math.round((await crown.boundingBox()).width), 32);
+      await verifyBandSize();
       await page.locator('#atlasZoomIn').click();
       const camera = await readView(page);
-      assert.equal(Math.round((await crown.boundingBox()).width), 32);
+      await verifyBandSize();
       await select.selectOption('point');
-      assert.equal(await crown.isVisible(), false);
+      assert.equal(await hub.locator('.coord-artwork').evaluate(el => getComputedStyle(el).display), 'none');
       assert.equal(Math.round((await hub.locator('.coord-point').boundingBox()).width), 16);
       assert.equal(Math.round((await hub.locator('.atlas-map-hit').boundingBox()).width), 44);
       assert.deepEqual(await readView(page), camera);
       await select.selectOption('labeled');
+      assert.notEqual(await hub.locator('.coord-artwork').evaluate(el => getComputedStyle(el).display), 'none');
       assert.equal(await crown.isVisible(), true);
       assert.equal(await hub.locator('.coord-name').isVisible(), true);
       await page.goto(new URL('#/coven', base).href);
@@ -109,7 +117,8 @@ for (const [name, width, height, mobile] of [['desktop', 1440, 900, false], ['ph
       await overview.locator('.coord-name').waitFor();
       await page.reload();
       await overview.locator('.coord-name').waitFor();
-      await page.waitForFunction(() => Math.round(document.querySelector('.hub .coord-crown')?.getBoundingClientRect().width) === 32);
+      await page.waitForFunction(() => document.querySelector('.hub .coord-artwork')?.hasAttribute('transform'));
+      assert.ok((await overview.locator('.coord-attention').boundingBox()).width > 0);
       if (mobile && !(await select.isVisible())) await page.locator('#atlasMobileView').click();
       assert.equal(await select.inputValue(), 'labeled');
       await overview.focus();
@@ -203,11 +212,12 @@ test('landscape Project makes use of the map height alongside its controls', asy
     await verifyGeometry(page);
     const observed = await page.evaluate(() => {
       const stage = document.querySelector('#plan').getBoundingClientRect();
-      const controls = ['#atlasHeader', '#atlasFamiliars'].map(id => document.querySelector(id).getBoundingClientRect());
+      const header = document.querySelector('#atlasHeader').getBoundingClientRect();
+      const familiars = document.querySelector('#atlasFamiliars').getBoundingClientRect();
       const discs = [...document.querySelectorAll('.atlas-project-detail .familiar-disc')].map(el => el.getBoundingClientRect());
       const left = Math.min(...discs.map(r => r.left)), right = Math.max(...discs.map(r => r.right));
       const top = Math.min(...discs.map(r => r.top)), bottom = Math.max(...discs.map(r => r.bottom));
-      return {clear: left > Math.max(...controls.map(r => r.right)) && right <= stage.right && top >= stage.top && bottom <= stage.bottom,
+      return {clear: header.bottom <= stage.top && left > familiars.right && right <= stage.right && top >= stage.top && bottom <= stage.bottom,
         heightUsed: (bottom - top) / stage.height};
     });
     assert.equal(observed.clear, true);
