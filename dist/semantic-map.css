@@ -10,8 +10,6 @@ body.atlas-enhanced #plan .atlas-project-detail .faronly,
 body.atlas-enhanced #plan .plinth,
 body.atlas-enhanced #plan .moat,
 body.atlas-enhanced #plan .court-sh,
-body.atlas-enhanced #plan .atlas-gplate,
-body.atlas-enhanced #plan .atlas-gwall,
 body.atlas-enhanced #plan .atlas-court,
 body.atlas-enhanced #plan .atlas-court-mission,
 body.atlas-enhanced #plan .atlas-court-squad,
@@ -47,9 +45,9 @@ body.atlas-enhanced #plan .lead-node > .sig {
 }
 body.atlas-enhanced #plan .wall.base {
   display: inline;
-  stroke: #9c95b2;
-  stroke-width: 1.15;
-  stroke-opacity: .52;
+  stroke: #797487;
+  stroke-width: 1.25;
+  stroke-opacity: 1;
   vector-effect: non-scaling-stroke;
 }
 body.atlas-enhanced #plan .gfloor,
@@ -59,7 +57,7 @@ body.atlas-enhanced #plan .floor {
   stroke: none;
 }
 body.atlas-enhanced #plan.far .ghostfort { opacity: 1; }
-body.atlas-enhanced #plan.far .ghostfort.dormant { opacity: .48; }
+body.atlas-enhanced #plan.far .ghostfort.dormant .wall.base { stroke-dasharray: 2 4; }
 body.atlas-enhanced #plan.far .ghostfort:hover .wall.base,
 body.atlas-enhanced #plan.far .ghostfort:focus-visible .wall.base {
   stroke: var(--primary);
@@ -79,13 +77,13 @@ body.atlas-enhanced #plan .gsub { stroke-width: calc(3px * var(--u, 1)); }
 
 /* Connections mean coordination. Familiar color is introduced only by a filter. */
 body.atlas-enhanced #plan .road {
-  stroke: #8e879e;
+  stroke: #726d80;
   stroke-width: 1.2;
   stroke-opacity: .34;
   stroke-dasharray: none;
 }
 body.atlas-enhanced #plan .road.dormant { stroke-dasharray: 2 7; stroke-opacity: .24; }
-body.atlas-enhanced #plan .road.off { opacity: .35; }
+body.atlas-enhanced #plan .road.off { opacity: .82; }
 body.atlas-enhanced #plan .lane {
   stroke-width: 1.8;
   stroke-opacity: .85;
@@ -104,7 +102,7 @@ body.atlas-enhanced #plan .hub .gsub { font-size: calc(10px * var(--u, 1) * var(
 
 /* A white square at a boundary is a pending human decision, never a completed action. */
 body.atlas-enhanced #plan .atlas-decision { cursor: pointer; }
-body.atlas-enhanced #plan .atlas-decision rect {
+body.atlas-enhanced #plan .atlas-decision rect:not(.atlas-map-hit) {
   fill: #23212a;
   stroke: var(--attention);
   stroke-width: 1.15;
@@ -119,8 +117,8 @@ body.atlas-enhanced #plan .atlas-decision text {
   pointer-events: none;
   font-variant-numeric: tabular-nums;
 }
-body.atlas-enhanced #plan .atlas-decision:hover rect,
-body.atlas-enhanced #plan .atlas-decision:focus-visible rect { fill: #3b354c; stroke-width: 1.8; }
+body.atlas-enhanced #plan .atlas-decision:hover rect:not(.atlas-map-hit),
+body.atlas-enhanced #plan .atlas-decision:focus-visible rect:not(.atlas-map-hit) { fill: #3b354c; stroke-width: 1.8; }
 
 /* Each familiar keeps the same glyph at every angle. */
 body.atlas-enhanced #plan .seat > .sig { display: inline; }
@@ -143,13 +141,13 @@ body.atlas-enhanced #plan .psy-boundary {
 }
 body.atlas-enhanced #plan .atlas-local-psyche .crown { filter: none; }
 body.atlas-enhanced #plan .atlas-local-psyche .psy-l { font-size: 10px; letter-spacing: 2.5px; }
-body.atlas-enhanced #plan .atlas-mission-lines .thread { stroke: #777183; stroke-width: .9; stroke-opacity: .3; stroke-dasharray: none; }
+body.atlas-enhanced #plan .atlas-mission-lines .thread { stroke: #726d80; stroke-width: 1.15; stroke-opacity: 1; stroke-dasharray: none; }
 body.atlas-enhanced #plan .atlas-squad-lines .link { stroke-width: 1; stroke-opacity: .42; }
 body.atlas-enhanced #plan .atlas-squad > .task-l { fill: var(--hue); font-size: calc(10.5px * var(--u, 1)); }
 body.atlas-enhanced #plan .atlas-squad > .task-l .n { fill: #95909f; font-size: calc(9px * var(--u, 1)); }
 body.atlas-enhanced #plan .atlas-mission-group > .lead-name { font-size: calc(13px * var(--u, 1)); }
-body.atlas-enhanced #plan .atlas-mission-group.dim { opacity: .35; }
-body.atlas-enhanced #plan .atlas-squad.dim { opacity: .2; }
+body.atlas-enhanced #plan .atlas-mission-group.dim { opacity: .84; }
+body.atlas-enhanced #plan .atlas-squad.dim { opacity: .68; }
 body.atlas-enhanced #plan .colink { opacity: .4; }
 
 /* Dots are agents. Selection controls their visibility in applySel(). */
@@ -161,7 +159,7 @@ body.atlas-enhanced #plan .cell-ghost { stroke-opacity: .35; }
 body.atlas-enhanced #plan .pk { filter: none; }
 
 /* One shared opacity keeps overlapping coordination corridors equally quiet. */
-body.atlas-enhanced #plan .atlas-roads { opacity: .4; }
+body.atlas-enhanced #plan .atlas-roads { opacity: 1; }
 body.atlas-enhanced #plan .atlas-lanes { opacity: .85; }
 body.atlas-enhanced #plan .road,
 body.atlas-enhanced #plan .lane {
@@ -171,7 +169,7 @@ body.atlas-enhanced #plan .lane {
   stroke-opacity: 1;
   vector-effect: non-scaling-stroke;
 }
-body.atlas-enhanced #plan .road.dormant { stroke-opacity: .6; }
+body.atlas-enhanced #plan .road.dormant { stroke-opacity: 1; }
 body.atlas-enhanced #plan .hub > .court.psy { stroke-opacity: .24; fill: #17151d; }
 body.atlas-enhanced #plan .atlas-crown-3d { filter: none; }
 
@@ -185,36 +183,83 @@ body.atlas-enhanced #plan .atlas-aggregate {
   pointer-events: none;
   font-variant-numeric: tabular-nums;
 }
-body.atlas-enhanced #plan .ghostfort[data-density="full"] .atlas-aggregate,
-body.atlas-enhanced #plan .ghostfort[data-density="compact"] .atlas-ghost-mission,
-body.atlas-enhanced #plan .ghostfort[data-density="tiny"] .atlas-ghost-mission,
-body.atlas-enhanced #plan .ghostfort[data-density="compact"] .gsub,
-body.atlas-enhanced #plan .ghostfort[data-density="tiny"] .gsub,
-body.atlas-enhanced #plan .ghostfort[data-label-detail="compact"] .gsub { display: none; }
+body.atlas-enhanced #plan .ghostfort[data-density="tiny"] .gsub { display: none; }
 body.atlas-enhanced #plan .ghostfort[data-density="tiny"] .gname { visibility: hidden; }
 body.atlas-enhanced #plan .ghostfort[data-density="tiny"]:hover .gname,
 body.atlas-enhanced #plan .ghostfort[data-density="tiny"]:focus-visible .gname { visibility: visible; }
-body.atlas-enhanced #plan .atlas-mission-more { cursor: pointer; }
-body.atlas-enhanced #plan .atlas-mission-more circle {
-  fill: #24202e;
-  stroke: #9e91be;
-  stroke-width: 1;
-  vector-effect: non-scaling-stroke;
-}
-body.atlas-enhanced #plan .atlas-mission-more text {
-  fill: #e0d7f1;
-  font-family: var(--f-body);
-  font-size: 29px;
-  font-weight: 500;
-  text-anchor: middle;
-  dominant-baseline: middle;
-  pointer-events: none;
-}
-body.atlas-enhanced #plan .atlas-mission-more:hover circle,
-body.atlas-enhanced #plan .atlas-mission-more:focus-visible circle { fill: #3b324b; stroke: #dfd3f3; }
 
 @media (prefers-contrast: more) {
   body.atlas-enhanced #plan .wall.base { stroke-opacity: .9; }
   body.atlas-enhanced #plan .gsub { fill: #c0b9ce; }
   body.atlas-enhanced #plan .road { stroke-opacity: .6; }
 }
+
+/* The map shares the lab's graphite base. Colored faces identify familiars. */
+.se-base-top { fill: #272630; stroke: #797487; stroke-width: 1.15; vector-effect: non-scaling-stroke; }
+.se-base-wall { fill: #17161c; stroke: #797487; stroke-width: 1; vector-effect: non-scaling-stroke; }
+.se-selection { display: none; fill: none; stroke: var(--attention); stroke-width: 1.6; vector-effect: non-scaling-stroke; }
+.lead-node.sel .se-selection,
+.lead-node:focus-visible .se-selection { display: inline; }
+.csl-render[data-tier="l"] .se-selection { display: inline; }
+.se-wall, .se-side { fill: color-mix(in srgb, var(--hue) 64%, #17161c); }
+.se-top, .se-side, .se-wall { stroke: #24222c; stroke-width: 1; }
+.se-rim-bg { stroke: #797487; stroke-width: 1.35; stroke-opacity: 1; }
+.se-rim { stroke: #aaa6b6; stroke-width: 1.6; }
+.seal.st-sealed .se-rim { stroke: #aaa6b6; }
+.seal.warn .se-rim { stroke: var(--warn); stroke-width: 2; }
+.se-sg, .seal.st-planned .se-sg, .seal.st-broken .se-sg { stroke: var(--attention); }
+.se-sg { fill: var(--attention); }
+.se-sg-side { fill: #9a95a5; }
+.seal.st-planned .se-sg, .seal.st-broken .se-sg { fill: var(--card); }
+.seal.st-broken .se-slash, .seal2 .sg-slash { stroke: var(--attention); }
+#plan.live .seal:not(.st-sealed) .se-w.live .se-top,
+.csl-render:not(.st-sealed) .se-w.live .se-top { animation: none; }
+
+body.atlas-enhanced #plan .atlas-map-hit { fill: transparent; stroke: none; pointer-events: all; }
+body.atlas-enhanced #plan .atlas-mission-state {
+  display: none;
+  fill: #ccc8d6;
+  stroke: var(--card);
+  stroke-width: calc(3px * var(--u, 1));
+  paint-order: stroke;
+  text-anchor: middle;
+  font: 500 calc(10.5px * var(--u, 1)) var(--f-body);
+  pointer-events: none;
+}
+body.atlas-enhanced #plan .atlas-mission-current .atlas-mission-state { display: inline; }
+body.atlas-enhanced #plan .atlas-mission-current .lead-name { font-weight: 650; opacity: 1; }
+body.atlas-enhanced #plan .atlas-mission-group .lead-name { stroke-linejoin: round; }
+body.atlas-enhanced #plan:not(.atlas-agent-detail) .agent,
+body.atlas-enhanced #plan:not(.atlas-agent-detail) .cell-ghost { display: none; }
+body.atlas-enhanced #plan .agent.idle .o { stroke-opacity: 1; }
+body.atlas-enhanced #plan .agent.gate .o { stroke-width: 1.4; }
+body.atlas-enhanced .plate.ask-note {
+  color: var(--foreground);
+  background: #23222b;
+  border: 1px solid #797487;
+  box-shadow: 0 6px 16px #0006;
+  min-height: 44px;
+  z-index: 3;
+}
+body.atlas-enhanced .plate.ask-note::before { display: none; }
+body.atlas-enhanced .plate.ask-note:hover,
+body.atlas-enhanced .plate.ask-note:focus-visible { border-color: var(--attention); box-shadow: 0 6px 16px #0006; }
+body.atlas-enhanced .plate.ask-note:focus-visible { outline: 2px solid var(--attention); outline-offset: 2px; }
+body.atlas-enhanced .atlas-request-leader { pointer-events: none; }
+body.atlas-enhanced .atlas-request-leader line { stroke: var(--attention); stroke-opacity: .8; stroke-width: 1.15; }
+
+.se-pause, .seal2 .sg-pause { display: none; fill: none; stroke: var(--attention); stroke-linecap: round; stroke-width: 1.1; }
+.seal.st-stalled .se-pause,
+.seal2.st-stalled .sg-pause { display: inline; }
+.seal.st-stalled .se-sg { fill: var(--card); }
+.seal.st-needsYou .se-halo { animation: none; stroke-opacity: 1; }
+
+body.atlas-enhanced.atlas-adaptive-mobile #notes > .ask-note { display: grid; }
+body.atlas-enhanced.atlas-adaptive-mobile #notes > .atlas-request-leader { display: block; }
+
+body.atlas-enhanced #plan .atlas-compact-decision { pointer-events: none; }
+body.atlas-enhanced #plan .atlas-compact-decision .atlas-map-hit,
+body.atlas-enhanced #plan .atlas-compact-decision text { display: none; }
+
+body.atlas-enhanced #plan .atlas-compact-seal:not(.atlas-mission-current) .lead-name { visibility: hidden; }
+body.atlas-enhanced #plan .atlas-compact-seal:has(.lead-node:is(:hover, :focus-visible)) .lead-name { visibility: visible; opacity: 1; }

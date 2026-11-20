@@ -1,4 +1,4 @@
-/* Mission seal explorer. Geometry is supplied by the v27 renderer. */
+/* Seal Lab previews the same mission seal renderer used on the map. */
 (() => {
   'use strict';
 
@@ -9,12 +9,12 @@
     { key: 'echo', agents: 6 },
   ];
   const COPY = {
-    planned: ['Planned', 'The council is seated. No agents have been assigned yet.'],
-    active: ['Active', 'Agents are working. Each familiar’s wedge shows its share and progress.'],
-    needsYou: ['Needs you', 'Echo has a request waiting in the Inbox. The lifted signet and near-white halo call for your attention.'],
-    stalled: ['Stalled', 'A limit is near, or no agents are working. The mission needs attention before it can continue normally.'],
-    sealed: ['Sealed', 'Every required target is met and every deliverable is delivered. The signet sits wide and flush.'],
-    broken: ['Broken', 'A limit was reached and the decision was to keep the mission stopped. The lead wedge is hollow and the signet is slashed.'],
+    planned: ['Planned', 'Dashed wedges show where the council sits. No agents have been assigned yet.'],
+    active: ['Active', 'The council is working. Wedges brighten while their agents are at work.'],
+    needsYou: ['Needs you', 'A pale double ring around the signet marks an Inbox request.'],
+    stalled: ['Stalled', 'Pause bars on the signet show that no agents are working.'],
+    sealed: ['Sealed', 'The signet sits wide and flush when all targets and deliverables are complete.'],
+    broken: ['Broken', 'A hollow lead wedge and slashed signet show the decision to keep the mission stopped.'],
   };
   const PRESETS = {
     planned: { progress: [0, 0, 0], working: [0, 0, 0], limit: 0 },
@@ -25,6 +25,11 @@
     broken: { progress: [62, 92, 50], working: [0, 0, 0], limit: 100 },
   };
   const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, Number.isFinite(+n) ? +n : lo));
+  const MODES = {
+    coven: ['Coven', 'Flat wedges show each familiar’s share.'],
+    project: ['Project', 'The height of each wedge shows target progress.'],
+    selected: ['Selected', 'Each pip marks a working agent.'],
+  };
   let api = null;
   let dialog = null;
   let returnFocus = null;
@@ -126,10 +131,8 @@
       P: (x, y, z) => [x, y * cp - z * sp, y * sp + z * cp],
       f: n => n.toFixed(2), cp,
       sel: view === 'selected', far: view === 'coven',
-      noEase: true, radius: view === 'coven' ? 32 : undefined,
+      noEase: true, radius: 32,
     });
-    ui.scene.setAttribute('viewBox', view === 'coven' ? '-47 -43 94 86' : '-55 -47 110 94');
-    ui.scene.setAttribute('aria-label', `${COPY[state][0]} mission seal. ${model.wedges.map((w, i) => `${api.fam(w.k).name}: ${w.agents} agents, ${Math.round(values.progress[i])}% target progress`).join('. ')}. Tightest limit ${values.limit}%.`);
   }
 
   function paint(animate) {
@@ -155,30 +158,37 @@
   }
 
   function refresh(animate) {
+    const warning = values.limit / 100 >= api.WARN_AT;
     const frozen = ['planned', 'sealed', 'broken'].includes(state);
     ui.stateButtons.forEach((node, i) => node.setAttribute('aria-pressed', String(ORDER[i] === state)));
     ui.modeButtons.forEach(node => node.setAttribute('aria-pressed', String(node.dataset.mode === view)));
-    ui.stateName.textContent = COPY[state][0];
-    ui.stateCopy.textContent = COPY[state][1];
+    const stateName = COPY[state][0];
+    const stateCopy = state === 'stalled' && warning
+      ? 'The signet shows pause bars, and the rim turns coral at the token warning.'
+      : COPY[state][1];
+    if (ui.stateName.textContent !== stateName) ui.stateName.textContent = stateName;
+    if (ui.stateCopy.textContent !== stateCopy) ui.stateCopy.textContent = stateCopy;
     ui.stateCard.dataset.state = state;
-    ui.mini.innerHTML = api.sealSvg(data(), 30);
-    ui.total.textContent = state === 'planned' ? '3 familiars · no agents yet' : '3 familiars · 23 delegated agents';
-    const modeCopy = {
-      coven: 'Coven view · flat wedges and signet',
-      project: 'Project view · progress in relief',
-      selected: 'Selected mission · working agents at the edge',
-    };
-    ui.modeCopy.textContent = modeCopy[view];
+    ui.modeCopy.textContent = MODES[view][1];
+    const council = COUNCIL.map((member, i) => {
+      const assigned = state === 'planned' ? 0 : member.agents;
+      return `${api.fam(member.key).name}, ${assigned} assigned, ${values.working[i]} working, ${values.progress[i]}% target progress`;
+    });
+    ui.scene.setAttribute('aria-label', [`${MODES[view][0]} view. Mission state ${stateName}`, ...council, `${values.limit}% of token limit used`].join('. '));
     ui.limit.value = values.limit;
     ui.limit.disabled = frozen;
     ui.limitValue.textContent = `${values.limit}%`;
-    ui.limitBlock.classList.toggle('is-warning', values.limit / 100 >= api.WARN_AT);
-    ui.limitValue.classList.toggle('is-warning', values.limit / 100 >= api.WARN_AT);
-    ui.limitFill.style.width = `${values.limit}%`;
-    ui.limitNote.textContent = state === 'planned' ? 'No resources used yet.' : state === 'broken' ? 'Limit reached. The mission was kept stopped.' : state === 'sealed' ? 'All targets and deliverables are complete.' : values.limit / 100 >= api.WARN_AT ? `Warning begins at ${Math.round(api.WARN_AT * 100)}%.` : `Coral appears from ${Math.round(api.WARN_AT * 100)}%.`;
+    ui.limitBlock.classList.toggle('is-warning', warning);
+    ui.limit.style.setProperty('--csl-progress', String(values.limit / 100));
+    const threshold = Math.round(api.WARN_AT * 100);
+    ui.limitNote.textContent = frozen
+      ? 'Preview values are fixed in this state.'
+      : state === 'needsYou'
+        ? 'Echo’s Inbox request keeps the mission in Needs you.'
+        : `Stalls at ${threshold}% or when no agents are working.`;
     rows.forEach((row, i) => {
       const n = state === 'planned' ? 0 : COUNCIL[i].agents;
-      row.count.textContent = `${n} agents`;
+      row.count.textContent = `${n} assigned`;
       row.progress.value = values.progress[i];
       row.progress.disabled = frozen;
       row.percent.textContent = `${values.progress[i]}%`;
@@ -186,9 +196,8 @@
       row.working.setAttribute('aria-label', `${api.fam(COUNCIL[i].key).name}: ${values.working[i]} of ${n} agents working`);
       row.minus.disabled = frozen || values.working[i] === 0 || (state === 'needsYou' && i === 2);
       row.plus.disabled = frozen || values.working[i] === n || (state === 'needsYou' && i === 2);
-      row.range.style.setProperty('--csl-progress', `${values.progress[i]}%`);
+      row.progress.style.setProperty('--csl-progress', String(values.progress[i] / 100));
     });
-    ui.rule.textContent = frozen ? 'Choose another state to explore different values.' : state === 'needsYou' ? 'Echo’s request keeps this mission in Needs you.' : 'Cross 85% to move between Active and Stalled.';
     paint(animate);
   }
 
@@ -204,76 +213,86 @@
     dialog.setAttribute('aria-describedby', 'cslSubtitle');
     const header = el('header', 'csl-header');
     const titleBlock = el('div');
-    const eyebrow = el('p', 'csl-eyebrow', 'THE VISUAL LANGUAGE');
-    const title = el('h2', '', 'Mission seal');
+    const title = el('h2', '', 'Seal lab');
     title.id = 'cslTitle';
-    const subtitle = el('p', 'csl-subtitle', 'Explore how one mission tells its story.');
+    const subtitle = el('p', 'csl-subtitle', 'Inspect a simulated mission seal.');
     subtitle.id = 'cslSubtitle';
-    titleBlock.append(eyebrow, title, subtitle);
+    titleBlock.append(title, subtitle);
     const close = button('csl-close', '×', () => dialog.close());
-    close.setAttribute('aria-label', 'Close mission seal explorer');
+    close.setAttribute('aria-label', 'Close Seal lab');
     header.append(titleBlock, close);
 
     const stateNav = el('div', 'csl-states');
     stateNav.setAttribute('role', 'group');
-    stateNav.setAttribute('aria-label', 'Preview a mission state');
+    stateNav.setAttribute('aria-labelledby', 'cslStatesLabel');
+    const stateLabel = el('span', '', 'Mission state');
+    stateLabel.id = 'cslStatesLabel';
+    const stateOptions = el('div', 'csl-state-options');
+    stateNav.append(stateLabel, stateOptions);
     ui.stateButtons = ORDER.map(key => {
       const node = button('csl-state-btn', '', () => chooseState(key));
       node.dataset.state = key;
-      node.append(el('i', 'csl-state-dot'), el('span', '', COPY[key][0]));
-      stateNav.append(node);
+      const mark = el('i', 'csl-state-mark');
+      mark.setAttribute('aria-hidden', 'true');
+      node.append(mark, el('span', '', COPY[key][0]));
+      stateOptions.append(node);
       return node;
     });
 
     const body = el('div', 'csl-body');
     const preview = el('section', 'csl-preview');
     preview.setAttribute('aria-label', 'Mission seal preview');
-    const previewHead = el('div', 'csl-preview-head');
-    previewHead.append(el('span', 'csl-section-label', 'ILLUSTRATIVE COUNCIL'));
-    ui.total = el('span', 'csl-total');
-    previewHead.append(ui.total);
-    preview.append(previewHead);
+    const specimen = el('div', 'csl-specimen');
     const mode = el('div', 'csl-modes');
     mode.setAttribute('role', 'group');
     mode.setAttribute('aria-label', 'Seal detail level');
-    ui.modeButtons = [['coven', 'Coven'], ['project', 'Project'], ['selected', 'Selected']].map(([key, label]) => {
+    ui.modeButtons = Object.entries(MODES).map(([key, [label]]) => {
       const node = button('', label, () => { view = key; refresh(false); });
       node.dataset.mode = key;
       mode.append(node);
       return node;
     });
-    preview.append(mode);
-    const sceneWrap = el('div', 'csl-scene-wrap');
-    ui.scene = api.svgEl('svg', { class: 'csl-scene', viewBox: '-55 -59 110 94', role: 'img' });
-    const guides = api.svgEl('g', { class: 'csl-guides', 'aria-hidden': 'true' }, ui.scene);
-    [35, 44, 52].forEach(r => api.svgEl('ellipse', { cx: 0, cy: 5, rx: r, ry: r * 0.58, fill: 'none' }, guides));
+    ui.scene = api.svgEl('svg', { class: 'csl-scene', viewBox: '-46 -44 92 88', role: 'img' });
     seal = { g: api.svgEl('g', { class: 'seal' }, ui.scene), wedges: [], data: null, built: '' };
     api.buildSeal(seal, data());
-    sceneWrap.append(ui.scene);
-    preview.append(sceneWrap);
     ui.modeCopy = el('p', 'csl-mode-copy');
-    preview.append(ui.modeCopy);
+    specimen.append(mode, ui.scene, ui.modeCopy);
+    preview.append(specimen);
+
     ui.stateCard = el('div', 'csl-state-card');
-    ui.mini = el('div', 'csl-mini');
-    const stateText = el('div');
+    ui.stateCard.setAttribute('aria-live', 'polite');
+    ui.stateCard.setAttribute('aria-atomic', 'true');
     ui.stateName = el('h3');
-    ui.stateName.setAttribute('aria-live', 'polite');
     ui.stateCopy = el('p');
-    stateText.append(ui.stateName, ui.stateCopy);
-    ui.stateCard.append(ui.mini, stateText);
+    ui.stateCard.append(ui.stateName, ui.stateCopy);
     preview.append(ui.stateCard);
 
     const anatomy = el('dl', 'csl-anatomy');
-    [['Angle', 'Agents led by each familiar'], ['Height', 'Progress of its owned targets'], ['Rim', 'The tightest resource limit']].forEach(([key, explanation]) => {
+    [
+      ['wedge', 'Wedge', 'Share of assigned agents'],
+      ['height', 'Height', 'Target progress'],
+      ['signet', 'Signet', 'Mission state'],
+      ['rim', 'Rim', 'Tightest limit'],
+      ['pips', 'Pips', 'Working agents'],
+      ['lead', 'Lead mark', 'Familiar leading the mission'],
+    ].forEach(([kind, name, explanation]) => {
       const row = el('div');
-      row.append(el('dt', '', key), el('dd', '', explanation));
+      const term = el('dt');
+      const mark = el('i', `csl-anatomy-mark csl-anatomy-${kind}`);
+      mark.setAttribute('aria-hidden', 'true');
+      term.append(mark, el('span', '', name));
+      row.append(term, el('dd', '', explanation));
       anatomy.append(row);
     });
     preview.append(anatomy);
 
     const controls = el('section', 'csl-controls');
+    controls.setAttribute('aria-labelledby', 'cslCouncilTitle');
     const councilHead = el('div', 'csl-control-heading');
-    councilHead.append(el('h3', '', 'The council'), el('span', '', 'Target progress and working agents'));
+    const councilTitle = el('h3', '', 'Council');
+    councilTitle.id = 'cslCouncilTitle';
+    const reset = button('csl-reset', 'Reset values', () => chooseState(state));
+    councilHead.append(councilTitle, reset);
     controls.append(councilHead);
     COUNCIL.forEach((member, i) => {
       const f = api.fam(member.key);
@@ -281,7 +300,11 @@
       card.style.setProperty('--csl-hue', f.hue || f.color || 'var(--primary)');
       const top = el('div', 'csl-familiar-top');
       const identity = el('div', 'csl-identity');
-      const marker = el('span', 'csl-identity-mark', String(i + 1).padStart(2, '0'));
+      const marker = el('span', 'csl-identity-mark');
+      marker.setAttribute('aria-hidden', 'true');
+      const glyph = api.svgEl('svg', { viewBox: '-10 -10 20 20' }, marker);
+      if (typeof api.sigil === 'function') glyph.innerHTML = api.sigil(member.key);
+      else api.svgEl('circle', { r: 3, fill: 'currentColor' }, glyph);
       const who = el('b', '', f.name);
       identity.append(marker, who);
       if (i === 0) identity.append(el('span', 'csl-lead-label', 'Lead'));
@@ -314,40 +337,30 @@
       fields.append(range, workingGroup);
       card.append(top, fields);
       controls.append(card);
-      rows.push({ count, progress, percent, working, minus, plus, range });
+      rows.push({ count, progress, percent, working, minus, plus });
     });
     ui.limitBlock = el('div', 'csl-limit');
     const limitHead = el('div', 'csl-limit-head');
     const limitLabel = el('label', '', 'Tightest limit');
+    limitLabel.append(el('span', '', 'Tokens'));
     limitLabel.htmlFor = 'cslLimit';
     ui.limitValue = el('output', 'csl-limit-value');
     ui.limitValue.setAttribute('for', 'cslLimit');
     limitHead.append(limitLabel, ui.limitValue);
     ui.limit = el('input', 'csl-range csl-limit-range');
     Object.assign(ui.limit, { id: 'cslLimit', type: 'range', min: 0, max: 100, step: 1 });
-    ui.limit.setAttribute('aria-label', 'Percent of the tightest limit used');
+    ui.limit.setAttribute('aria-label', 'Percent of token limit used');
     ui.limit.addEventListener('input', () => { values.limit = clamp(ui.limit.value, 0, 100); reconcile(); refresh(false); });
-    const limitTrack = el('div', 'csl-limit-track');
-    limitTrack.setAttribute('aria-hidden', 'true');
-    ui.limitFill = el('i');
-    const threshold = el('b');
-    threshold.style.left = `${api.WARN_AT * 100}%`;
-    limitTrack.append(ui.limitFill, threshold);
-    const axis = el('div', 'csl-limit-axis');
-    axis.append(el('span', '', '0%'), el('span', '', '85% warning'), el('span', '', '100%'));
+    const limitScale = el('div', 'csl-limit-scale');
+    limitScale.style.setProperty('--csl-warning-point', String(api.WARN_AT));
+    limitScale.append(ui.limit);
     ui.limitNote = el('p', 'csl-limit-note');
-    ui.limitBlock.append(limitHead, ui.limit, limitTrack, axis, ui.limitNote);
+    ui.limitNote.id = 'cslLimitNote';
+    ui.limit.setAttribute('aria-describedby', ui.limitNote.id);
+    ui.limitBlock.append(limitHead, limitScale, ui.limitNote);
     controls.append(ui.limitBlock);
-    ui.rule = el('p', 'csl-rule');
-    controls.append(ui.rule);
     body.append(preview, controls);
-
-    const footer = el('footer', 'csl-footer');
-    const footText = el('div');
-    footText.append(el('b', '', 'Local preview'), el('span', '', `Wedges have a ${api.MIN_WEDGE}° minimum. Selected view shows up to 12 working-agent pips per familiar.`));
-    const reset = button('csl-reset', 'Reset state', () => chooseState(state));
-    footer.append(footText, reset);
-    dialog.append(header, stateNav, body, footer);
+    dialog.append(header, stateNav, body);
     document.body.append(dialog);
     // The workspace also handles Escape; native dialog dismissal must stay local.
     dialog.addEventListener('keydown', event => {
@@ -362,14 +375,15 @@
       cancelAnimationFrame(frame);
       frame = 0;
       document.body.classList.remove('csl-open');
-      if (returnFocus && returnFocus.isConnected) returnFocus.focus();
+      if (returnFocus && returnFocus.isConnected) returnFocus.focus({ preventScroll: true });
+      returnFocus = null;
     });
     refresh(false);
   }
 
   function mount(renderer) {
     if (dialog) return;
-    for (const key of ['svgEl', 'fam', 'sealSvg', 'buildSeal', 'drawSeal']) {
+    for (const key of ['svgEl', 'fam', 'buildSeal', 'drawSeal']) {
       if (typeof renderer[key] !== 'function') throw new Error(`Mission seal explorer needs renderer.${key}`);
     }
     api = renderer;
@@ -377,14 +391,15 @@
     build();
   }
 
-  function open() {
+  function open(invoker) {
     if (!dialog) return;
     if (dialog.open) return;
-    returnFocus = document.activeElement;
+    returnFocus = invoker || document.activeElement;
     dialog.showModal();
     document.body.classList.add('csl-open');
     refresh(false);
-    ui.stateButtons[ORDER.indexOf(state)].focus();
+    dialog.scrollTop = 0;
+    ui.stateButtons[ORDER.indexOf(state)].focus({ preventScroll: true });
   }
 
   window.CovenSealLab = Object.freeze({ mount, open });

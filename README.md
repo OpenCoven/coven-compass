@@ -30,7 +30,7 @@ The tests include their exact reference fixture and work without Git history. Th
 
 **Implemented; combined source-level verification passed.** The current refinement uses uniform four-corner Projects in an aspect-aware compact lattice, paired positions, and shared branch corridors that meet each project's inward-facing gate. Routes show coordination, not execution dependencies or authority. Read [the scalable layout and crown guide](docs/handoff/15-scalable-atlas-layout.md) for implementation and integration details.
 
-At full overview detail, each Project shows up to eight mission seals plus an explicit overflow count. Compact and tiny density modes replace unreadable miniatures with an exact mission aggregate; all missions remain reachable through search and project drilldown. The full mission browser retains exact known totals. The previous cosmetic 16-Project and 12-mission creation caps have been removed; rendering detail stays bounded independently of the underlying collection. Mission resource bounds and protected decision/brief rules retain their separate semantics.
+The Coven overview shows an exact mission count within each Project enclosure and a separate badge for pending decisions. The mission browser and Project drilldown retain all known missions. The map reduces detail based on projected spacing while preserving the underlying collection.
 
 Open **Projects → Try a larger Coven** for 8, 16, 32, 64, or 128-Project sample presets. **Remove extra samples** removes only generated layout samples and preserves existing baseline and user-created Projects. A preset never reduces the user's existing collection to meet its target, so the actual total can exceed the requested preset. These samples explore composition; 128 is neither a production capacity claim nor an architectural limit.
 
@@ -46,7 +46,7 @@ Coven/project scope is explicit and separate from camera zoom. Fit uses measured
 - **Central Psyche crown:** coordination within the current scope. Its relief is decorative, while project connections remain neutral until a familiar filter highlights that familiar's assignments.
 - **Coral seal rim:** the tightest time, token, or budget limit has reached 85%, or the mission is broken after stopping at a limit.
 
-Detail appears with explicit scope and available screen space: the Coven overview shows project boundaries with bounded seals or aggregate counts; entering a project reveals its familiar groups and seal relief; selecting a mission reveals its agents and requests. Selected seals also show working-agent pips at the edge. Zoom changes presentation density without silently changing Coven/project scope.
+The Coven overview shows Project boundaries, exact mission counts, and pending-decision badges. Entering a Project reveals mission seals and familiar glyphs. Selecting a mission shows its state, one decision preview, and individual agent dots when spacing allows. The Inbox holds all pending decisions, and mission details retain exact counts. Zoom changes presentation density while preserving the current scope.
 
 The v27 seal constraints remain: a 12-degree minimum wedge angle, at most eight rendered council wedges, and at most twelve working pips per familiar. The minimum angle can enlarge very small shares; exact agent counts remain available in detail views.
 

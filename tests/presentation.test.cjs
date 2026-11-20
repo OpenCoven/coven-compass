@@ -10,7 +10,6 @@ const { createHash } = require('node:crypto');
 const test = require('node:test');
 
 const SITE = path.resolve(__dirname, '..');
-const atlasLayout = require(path.join(SITE, 'dist/atlas-layout.js'));
 const BASELINE = '494a08f6bf10c9a0606c82e86821fed8a253f066';
 const source = fs.readFileSync(path.join(SITE, 'dist/index.html'), 'utf8');
 const baselineMetadata = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures/baseline.json'), 'utf8'));
@@ -148,7 +147,6 @@ function presentationFixture() {
       id: a.id,
       el: svgEl('g', { 'data-m': a.mission, 'data-fam': a.fam }, a.state === 'gate' ? plan : seat.g),
       ghost: a.state === 'gate' ? svgEl('ellipse', {}, seat.g) : null,
-      glink: a.state === 'gate' ? svgEl('line', { 'data-m': a.mission, 'data-fam': a.fam }, plan) : null,
     });
   });
   ['N', 'E', 'S', 'W'].forEach((letter, k) => {
@@ -178,67 +176,19 @@ function presentationFixture() {
   return { context, c, sc, plan, calls };
 }
 
-test('overview adds, removes, and restores mission seals while wall count stays four', () => {
-  const M1 = { id: 'm1', name: 'One', seats: ['astra'] };
-  const M2 = { id: 'm2', name: 'Two', seats: ['cody'] };
-  const M3 = { id: 'm3', name: 'Three', seats: ['echo'] };
-  const c = { world: { missions: new Map([['m1', M1], ['m2', M2]]) }, layout: { n: 4, lead: 118, ang: new Map([['m1', -135], ['m2', -45], ['m3', 45]]) } };
-  const gh = { k: 'coven-cave', g: svgEl('g'), missions: [] };
-  const opens = [];
-  const context = loadFunctions(['atlasFocusable', 'atlasSyncOverviewMissions'], {
-    projects: { 'coven-cave': c }, svgEl, pol,
-    window: { CovenAtlasLayout: atlasLayout },
-    atlasOpenMission: (...args) => opens.push(args),
-  });
-  const sync = () => context.atlasSyncOverviewMissions(gh);
-  const ids = () => Array.from(gh.missions, m => m.id);
-  sync();
-  assert.deepEqual(ids(), ['m1', 'm2']);
-  const first = gh.missions[0], second = gh.missions[1];
-  c.world.missions.set('m3', M3);
-  sync();
-  assert.equal(c.layout.n, 4);
-  assert.deepEqual(ids(), ['m1', 'm2', 'm3']);
-  assert.equal(gh.g.children.length, 3);
-  assert.equal(gh.missions[0], first, 'unchanged seals keep their DOM record');
-  gh.missions[2].g.dispatch('click');
-  gh.missions[2].g.dispatch('keydown', { key: 'Enter' });
-  assert.deepEqual(opens, [['coven-cave', 'm3'], ['coven-cave', 'm3']]);
-  const third = gh.missions[2];
-  c.world.missions = new Map([['m1', M1]]); // Replay before the other missions existed.
-  sync();
-  assert.deepEqual(ids(), ['m1']);
-  assert.equal(second.g.parent, null);
-  assert.equal(third.g.parent, null);
-  assert.equal(gh.g.children.length, 1);
-  c.world.missions = new Map([['m1', M1], ['m2', M2], ['m3', M3]]);
-  sync(); sync(); // Replay forward, then an idempotent refresh.
-  assert.equal(c.layout.n, 4);
-  assert.deepEqual(ids(), ['m1', 'm2', 'm3']);
-  assert.equal(gh.g.children.length, 3);
-  assert.equal(gh.missions[0], first);
-  const expected = atlasLayout.missionPacking(3, {limit: 8, radius: 150});
-  assert.equal(gh.packing.total, 3, 'the packing contract retains the full mission total');
-  gh.missions.forEach((mission, i) => {
-    near(mission.x, expected.items[i].x, `${mission.id} stable packed replay x`);
-    near(mission.y, expected.items[i].y, `${mission.id} stable packed replay y`);
-  });
-});
-
-test('agents, reserved places, and gate links are hidden without a selected mission', () => {
+test('agents and reserved places are hidden without a selected mission', () => {
   const { context, sc, c, plan } = presentationFixture();
   context.applySel();
   for (const agent of sc.agents.values()) {
     assert.equal(agent.el.style.display, 'none');
     if (agent.ghost) assert.equal(agent.ghost.style.display, 'none');
-    if (agent.glink) assert.equal(agent.glink.style.display, 'none');
   }
   c.sel = 'm1'; context.applySel(); c.sel = null; context.applySel();
   assert.equal(plan.classList.contains('atlas-selected'), false);
   for (const agent of sc.agents.values()) assert.equal(agent.el.style.display, 'none');
 });
 
-test('selection reveals only that mission’s agents, reserved places, links, and gate decisions', () => {
+test('selection reveals only that mission’s agents and keeps all pending gate counts reachable', () => {
   const { context, sc, c } = presentationFixture();
   for (const mission of ['m1', 'm2']) {
     c.sel = mission; context.applySel();
@@ -246,9 +196,8 @@ test('selection reveals only that mission’s agents, reserved places, links, an
       const expected = c.world.agents.get(id).mission === mission ? '' : 'none';
       assert.equal(agent.el.style.display, expected, `${id} agent visibility`);
       if (agent.ghost) assert.equal(agent.ghost.style.display, expected, `${id} reserved place`);
-      if (agent.glink) assert.equal(agent.glink.style.display, expected, `${id} gate link`);
     }
-    assert.deepEqual(sc.gateL.filter(g => g.mark.style.display !== 'none').map(g => g.t.textContent), [mission === 'm1' ? 'N' : 'E']);
+    assert.deepEqual(sc.gateL.filter(g => g.mark.style.display !== 'none').map(g => g.t.textContent), ['N', 'E']);
   }
 });
 
@@ -297,6 +246,7 @@ function sealContext(text) {
     openAsks: w => [...w.asks.values()].filter(q => q.status === 'open'),
     briefState: (_w, M) => M.fixtureBrief,
     atlasEaseProgress: (_seal, _key, target) => target,
+    sealDepth: require('../dist/atlas-presentation.js').sealDepth,
   }, text, constants(text));
 }
 function sealFixture(state, counts = [7, 10, 6]) {
@@ -326,8 +276,8 @@ function tree(element) {
   };
 }
 
-test('v27 seal functions and constants are unchanged from the v2 baseline; only the global ground origin changed', () => {
-  for (const name of ['sealOf', 'buildSeal', 'drawSeal']) assert.equal(extract(source, name), extract(baseline, name), `${name} source equality`);
+test('seal state, numeric semantics, and configured bounds match the pinned v2 baseline', () => {
+  assert.equal(extract(source, 'sealOf'), extract(baseline, 'sealOf'), 'Model source equality');
   assert.equal(constants(source), constants(baseline), 'target ownership, states, threshold, and wedge limits');
   assert.equal(groundZT(baseline), 30);
   assert.equal(groundZT(source), 0);
@@ -350,28 +300,32 @@ test('v27 seal functions and constants are unchanged from the v2 baseline; only 
   near(small.wedges[2].share * 360, 12, 'minimum Echo wedge');
 });
 
-test('rendered seal geometry matches the v2 baseline in all six states and three tiers after ground normalization', () => {
-  const current = sealContext(source), old = sealContext(baseline);
+test('rendered seals keep the same base for every Project state and selected tier', () => {
+  const context = sealContext(source);
   const cp = Math.cos(.65), sp = Math.sin(.65);
-  function render(context, text, data, tier) {
-    const se = { g: svgEl('g') };
-    context.buildSeal(se, data);
-    const z0 = groundZT(text);
-    const bounds = context.drawSeal(se, data, { x: 0, y: 0 }, [0, 0], {
-      P: (x, y, z) => [x, y * cp - (z - z0) * sp, y * sp + (z - z0) * cp],
-      f: n => n.toFixed(5), cp, far: tier === 'coven', sel: tier === 'selected', noEase: true,
-    });
-    return { geometry: tree(se.g), bounds: Array.from(bounds), pips: se.pipEls?.length || 0 };
-  }
+  let projectBase;
   for (const state of ['planned', 'active', 'needsYou', 'stalled', 'sealed', 'broken']) {
     const fixture = sealFixture(state, [17, 2, 1]);
-    const data = current.sealOf(fixture.w, fixture.M);
+    const data = context.sealOf(fixture.w, fixture.M);
     for (const tier of ['coven', 'project', 'selected']) {
-      const actual = render(current, source, data, tier), expected = render(old, baseline, data, tier);
-      assert.deepEqual(actual.geometry, expected.geometry, `${state}/${tier} paths and attributes`);
-      actual.bounds.forEach((bound, i) => near(bound, expected.bounds[i], `${state}/${tier} bounds`));
-      if (tier !== 'selected') assert.equal(actual.pips, 0);
-      else if (!['planned', 'broken'].includes(state)) assert.equal(actual.pips, 15, '17 working Astra agents are capped at12 pips, plus2 and1');
+      const se = {g: svgEl('g')};
+      context.buildSeal(se, data);
+      const bounds = context.drawSeal(se, data, {x: 0, y: 0}, [0, 0], {
+        P: (x, y, z) => [x, y * cp - z * sp, y * sp + z * cp],
+        f: n => n.toFixed(5), cp, far: tier === 'coven', sel: tier === 'selected', noEase: true,
+      });
+      assert(bounds.every(Number.isFinite));
+      assert.doesNotMatch(JSON.stringify(tree(se.g)), /NaN|Infinity/);
+      assert(se.baseTop.getAttribute('d'));
+      assert(se.selection.getAttribute('d'));
+      if (tier === 'coven') assert.equal(se.baseWall.getAttribute('d'), '');
+      else {
+        projectBase ??= se.baseWall.getAttribute('d');
+        assert(projectBase);
+        assert.equal(se.baseWall.getAttribute('d'), projectBase, 'Only the wedge height varies with progress.');
+      }
+      if (tier !== 'selected') assert.equal(se.pipEls.length, 0);
+      else if (!['planned', 'broken'].includes(state)) assert.equal(se.pipEls.length, 15);
     }
   }
 });
