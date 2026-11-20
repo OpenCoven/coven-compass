@@ -39,7 +39,7 @@ Keep `tests/fixtures/` (the pinned baseline) and the dated audits in `tests/evid
 3. **No live daemon transport.** D03 is unresolved: the daemon's loopback TCP listener is unauthenticated and sends no CORS headers, so a static page can't safely reach it.
 4. **No outward actions without explicit authorization.** That means no deploys or Site publishes, no edits to other OpenCoven repos, and no messages outside GitHub. Linked issues are how you reach other repos.
 5. **Report evidence exactly:** command, exit code, and counts. List skipped checks as skipped. Don't loosen a test or gate just to get to green.
-6. **Vocabulary:** *Projects contain Castles.* The map's enclosure is a **Project**. A **Castle** is a hosted place where a familiar runs work (`coven-castles`). Don't reintroduce "Castle" for the enclosure.
+6. **Vocabulary:** *Projects contain Castles.* The map's enclosure is a **Project**. A **Castle** is a bounded, hosted place where a Project's work runs and its results come back, with exactly one execution owner (Val's definition, 2026-11-19, recorded in [D01](docs/handoff/11-open-decisions.md)). `coven-host` provides a Castle's folder surface and `coven-castles` checks whether a sandbox is fit to back one. A Project has zero or more Castles. A Castle is never the Project and keeps its own ID, so don't reintroduce "Castle" for the enclosure, and don't treat a Castle's folder path or `castle.json` as a Project identity. Which object backs a Project is still open (D01 ownership).
 
 ## Generated files: never hand-edit
 
