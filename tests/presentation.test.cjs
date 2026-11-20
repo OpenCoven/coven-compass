@@ -295,7 +295,7 @@ test('seal state, numeric semantics, and configured bounds match the pinned v2 b
   near(small.wedges[2].share * 360, 12, 'minimum Echo wedge');
 });
 
-test('a flat seal assigns the circumference by share, fills each segment by progress and tracks resource limits', () => {
+test('a flat seal fills its face by council share and keeps progress and limits on the rim', () => {
   const context = sealContext(source);
   for (const state of ['planned', 'active', 'needsYou', 'stalled', 'sealed', 'broken']) {
     const fixture = sealFixture(state, [17, 2, 1]);
@@ -313,7 +313,10 @@ test('a flat seal assigns the circumference by share, fills each segment by prog
     se.wedges.forEach((segment, i) => {
       const member = data.wedges[i];
       assert.equal(segment.share.tag, 'circle');
-      assert.equal(segment.share.getAttribute('r'), segment.progress.getAttribute('r'));
+      const radius = Number(segment.share.getAttribute('r'));
+      assert.equal(Number(segment.share.getAttribute('stroke-width')), 2 * radius, 'the colored slice reaches the center');
+      assert.ok(2 * radius < Number(segment.progress.getAttribute('r')), 'progress runs along the outer edge');
+      assert.ok(2 * radius >= Number(se.face.getAttribute('r')) * .85, 'slices cover most of the face');
       const span = member.share * 360 - 2;
       assert(Math.abs(length(segment.share) - span) <= .001);
       assert(Math.abs(length(segment.progress) - span * member.progress) <= .001);

@@ -189,7 +189,7 @@
 
     const anatomy = el('dl', 'csl-anatomy');
     [
-      ['Segment span', 'Share of assigned agents'],
+      ['Colored slice', 'Share of assigned agents'],
       ['Bright arc', 'Progress on owned targets'],
       ['Outline', 'Mission state'],
       ['Coral arc', 'Resource limit warning'],

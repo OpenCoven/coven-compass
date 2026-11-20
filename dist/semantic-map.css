@@ -121,12 +121,12 @@ body.atlas-enhanced #plan .road.dormant { stroke-opacity: 1; }
 .project-preview { pointer-events: none; }
 .preview-links line { stroke: #ad98cf; stroke-width: 7; }
 .preview-hub { fill: #a899cc; stroke: #393144; stroke-width: 5; }
-.preview-compact-ring { fill: #242029; stroke: var(--hue); stroke-width: 12; }
+.preview-compact-ring { fill: color-mix(in srgb, var(--hue) 52%, #302c38); stroke: var(--hue); stroke-width: 12; }
 .preview-group { fill: #2b2830; stroke: #423c4b; stroke-width: 2; }
 .preview-member { fill: #211f27; stroke: var(--hue); stroke-width: 6; stroke-linecap: round; }
 .preview-task { fill: var(--hue); }
 .preview-mission .se-status { stroke-width: 3; }
-.preview-mission .se-track, .preview-mission .se-share, .preview-mission .se-progress { stroke-width: 8; }
+.preview-mission .se-track, .preview-mission .se-progress { stroke-width: 8; }
 .preview-overflow circle { fill: #292631; stroke: #8f839f; stroke-width: 3; }
 .preview-overflow text, .preview-empty {
   fill: #cfc8d9;
@@ -168,10 +168,10 @@ body.atlas-enhanced #plan .ghostfort[data-density="tiny"]:focus-visible .gname {
 }
 
 /* The same flat circular mark is used at every scale. */
-.se-face { fill: #211f27; }
-.se-track, .se-share, .se-progress { fill: none; stroke-width: 5; }
+.se-face { fill: #393541; }
+.se-track, .se-progress { fill: none; stroke-width: 5; }
 .se-track { stroke: #36333f; }
-.se-share { stroke: color-mix(in srgb, var(--hue) 43%, #302c38); }
+.se-share { fill: none; stroke: color-mix(in srgb, var(--hue) 52%, #302c38); }
 .se-progress { stroke: var(--hue); }
 .se-status, .se-status-inner, .se-selection, .se-limit { fill: none; stroke-width: 1.6; }
 .se-status { stroke: #847687; }
@@ -293,5 +293,5 @@ body.atlas-enhanced #plan .agent.co .agent-task { fill: var(--hue2); }
 .task-overflow { fill: #dfdbe6; font: 500 9px var(--f-body); text-anchor: end; }
 .mission-tasks:is(:hover, :focus-visible) .task-tray-bg { stroke: var(--attention); stroke-width: 1.6; }
 
-.seal-reference { display: none; fill: #d3cfdb; text-anchor: middle; font: 500 13px var(--f-body); }
+.seal-reference { display: none; fill: #fff; stroke: #27242d; stroke-width: 2.5; paint-order: stroke; text-anchor: middle; font: 500 13px var(--f-body); }
 .atlas-compact-seal .lead-node:not(:hover, :focus-visible, .sel) .seal-reference { display: inline; }
