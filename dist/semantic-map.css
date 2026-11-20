@@ -293,11 +293,6 @@ body.atlas-enhanced #plan .atlas-squad-lines .link { stroke: var(--hue); }
 }
 body.atlas-enhanced #plan:not(.flat) .seat > .solid { display: inline; pointer-events: none; }
 body.atlas-enhanced #plan:not(.flat) .seat > .sig { display: none; }
-body.atlas-enhanced #plan .agent .assignment { display: none; }
-body.atlas-enhanced #plan .agent.assigned .assignment { display: inline; fill: var(--hue); stroke: var(--hue); stroke-width: 1; }
-body.atlas-enhanced #plan .agent.assigned .o { visibility: hidden; }
-body.atlas-enhanced #plan .agent.assigned.idle .assignment { fill: var(--card); }
-body.atlas-enhanced #plan .agent.assigned.gate .assignment { fill: var(--card); stroke: var(--attention); }
 
 #keyModal .modal-card { width: min(420px, 100%); }
 #keyModal .hd-t { flex: 1; }
@@ -312,5 +307,18 @@ body.atlas-enhanced #plan .agent.assigned.gate .assignment { fill: var(--card); 
 
 .key-context { margin: 2px 0 8px; color: var(--muted-foreground); font-size: .85em; }
 
-body.atlas-enhanced #plan .assignment-depth { display: none; }
-body.atlas-enhanced #plan:not(.flat) .assigned .assignment-depth { display: inline; fill: color-mix(in srgb, var(--hue) 58%, var(--card)); }
+
+.agent-cog { pointer-events: none; }
+.cog-face { fill: var(--hue); stroke: color-mix(in srgb, var(--hue) 74%, white); stroke-width: .09; }
+.cog-side { fill: color-mix(in srgb, var(--hue) 52%, #16151a); }
+.flat .cog-side, .agent:not(.assigned) .cog-drive, .agent.assigned .cog-bore { display: none; }
+.cog-bore, .cog-drive, .agent.idle .cog-face, .agent.gate .cog-face { fill: var(--card); }
+.agent.gate .cog-face { stroke: var(--attention); stroke-width: .18; }
+.agent.gate :is(.cog-bore,.cog-drive) { fill: var(--attention); }
+.agent.co .cog-drive { fill: var(--hue2); }
+@keyframes cog-turn { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: no-preference) {
+  #plan.atlas-agent-detail .agent.work .cog-rotor { animation: cog-turn 9s linear infinite paused; }
+  #plan.atlas-agent-detail.map-running .agent.work .cog-rotor { animation-play-state: running; }
+  #plan.atlas-agent-detail .agent.work.reverse-cog .cog-rotor { animation-direction: reverse; }
+}

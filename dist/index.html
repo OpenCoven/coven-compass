@@ -366,7 +366,7 @@ h1,h2,h3,p,dl,dd{margin:0}
 .seat .disc{fill:url(#disc);stroke:var(--hue,var(--primary));stroke-width:1.3}
 .seat:hover .halo,.seat.sel .halo{stroke-opacity:.85}
 .seat.sel .disc{fill:var(--hue,var(--primary))}
-.seat.sel .sig{color:var(--primary-foreground)}
+.seat .sig{color:var(--hue,var(--primary))}
 .leads{grid-template-columns:repeat(auto-fit,minmax(168px,1fr))}
 .lead-card{display:flex;flex-direction:column;align-items:stretch;gap:9px}
 .lc-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;min-width:0}
@@ -1082,8 +1082,6 @@ body{letter-spacing:-.006em;font-feature-settings:"ss01","cv11";text-rendering:o
 .so-ring.far{stroke-opacity:.45}
 .so-foot{fill:var(--hue,var(--primary));fill-opacity:.12;stroke:var(--hue,var(--primary));stroke-opacity:0;stroke-width:1.2;vector-effect:non-scaling-stroke;transition:stroke-opacity .2s,fill-opacity .2s}
 .seat:hover .so-foot,.seat.sel .so-foot{stroke-opacity:.9;fill-opacity:.3}
-.seat.sel .so-face,.seat.sel .so-ball{stroke:var(--foreground)}
-.hubfam:hover .so-face,.hubfam.on .so-face,.hubfam:hover .so-ball,.hubfam.on .so-ball{stroke:var(--foreground)}
 .fl-base{fill:var(--primary);fill-opacity:.14;stroke:var(--primary);stroke-opacity:.5;stroke-width:1.2;vector-effect:non-scaling-stroke;transition:fill-opacity .2s,stroke-opacity .2s}
 .fl-pole{stroke:var(--foreground);stroke-opacity:.8;stroke-width:1.6;stroke-linecap:round;vector-effect:non-scaling-stroke}
 .fl-hit{fill:transparent;pointer-events:all}
@@ -1666,7 +1664,7 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
         <div class="plan-head">
           <div class="ctl crumb">
           <details class="pill" id="proj">
-            <summary class="btn"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 2l2 1.6h6L12 2l-1.6 2v6L12 12l-2-1.6H4L2 12l1.6-2V4z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg><span class="sr">Project: </span><span class="nm" id="projName"></span><svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
+            <summary class="btn"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M6 2H4L2 4v6l2 2h6l2-2V4l-2-2H8" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg><span class="sr">Project: </span><span class="nm" id="projName"></span><svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
             <div class="pill-body glass" id="projBody"></div>
           </details>
           <span class="crumb-sep" id="crumbSep" aria-hidden="true">/</span>
@@ -1835,7 +1833,7 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
 <div class="kz-r"><span class="kz-m"><svg viewBox="-9 -9 18 18" aria-hidden="true" style="color:var(--primary)"><use href="#crown" x="-8.4" y="-8.1" width="16.8" height="15.5" fill="currentColor"/></svg></span><div><b>Psyche</b><p>Open the crown to talk to Psyche.</p></div></div>
 <div class="kz-r"><span class="kz-m" id="kzSealMark"></span><div><b>Mission</b><p>Select a seal to see its familiars, tasks and agents.</p></div></div>
 <div class="kz-r"><span class="kz-m"><svg viewBox="0 0 18 18" aria-hidden="true"><rect x="3" y="3" width="12" height="12" rx="1" fill="none" stroke="var(--attention)"/><path d="M9 6v6" stroke="var(--attention)"/></svg></span><div><b>Decision</b><p>Open a numbered gate to review pending requests.</p></div></div>
-<details class="key-topic" name="map-key-topic"><summary>Familiars, tasks and agents</summary><div><div id="kzFams" class="kz-fams"></div><div class="kz-r"><span class="kz-m" id="kzDots"></span><div><b>Familiar color</b><p>Connects the familiar to its mission and agents. Moving highlights indicate working agents.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 34 14" aria-hidden="true"><circle class="kc on" cx="6" cy="7" r="4"/><circle class="kc" cx="17" cy="7" r="4"/><rect class="kc on" x="24" y="3" width="8" height="8" rx="1"/></svg></span><div><b>Agent and assignment</b><p>A circle is unassigned. A tile carries a task. Working agents are larger and filled. Idle agents are smaller and hollow.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 14 14" aria-hidden="true"><circle class="kc on" cx="7" cy="7" r="4.5"/><circle cx="7" cy="7" r="2" fill="var(--fam-cody)"/></svg></span><div><b>Shared task</b><p>A second color identifies a co-leading familiar. A dashed spot reserves a waiting agent’s place.</p></div></div></div></details>
+<details class="key-topic" name="map-key-topic"><summary>Familiars, tasks and agents</summary><div><div id="kzFams" class="kz-fams"></div><div class="kz-r"><span class="kz-m" id="kzDots"></span><div><b>Familiar color</b><p>Connects the familiar to its mission and agents. Moving highlights indicate working agents.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="-1.2 -1.2 2.4 2.4" aria-hidden="true"><use href="#agent-cog-profile" fill="var(--fam-astra)"/><rect x="-.28" y="-.28" width=".56" height=".56" fill="var(--card)"/></svg></span><div><b>Agent and assignment</b><p>Each cog is an agent. A square hub means it has a task. Working cogs turn together. Idle cogs are smaller and hollow.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 14 14" aria-hidden="true"><circle class="kc on" cx="7" cy="7" r="4.5"/><circle cx="7" cy="7" r="2" fill="var(--fam-cody)"/></svg></span><div><b>Shared task</b><p>A second hub color identifies a co-leading familiar. A dashed spot reserves a waiting agent’s place.</p></div></div></div></details>
 <details class="key-topic" name="map-key-topic"><summary>Mission progress and limits</summary><div><div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><path d="M0,0L0,-10A10,10 0 0 1 9.5,3.1Z" fill="var(--fam-astra)"/><path d="M0,0L9.5,3.1A10,10 0 0 1 -8.7,5Z" fill="var(--fam-cody)" opacity=".45"/><path d="M0,0L-8.7,5A10,10 0 0 1 0,-10Z" fill="var(--fam-echo)" opacity=".45"/></svg></span><div><b>Wedge</b><p>Width shows a familiar’s share of agents. Height shows progress on its targets.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><circle r="10" fill="none" stroke="var(--border-strong)"/><circle r="3.2" fill="var(--primary)"/></svg></span><div><b>Center mark</b><p>Shows the mission state.</p></div></div><div class="kz-states" id="kzStates"></div><div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><circle r="9" fill="none" stroke="var(--primary)" stroke-opacity=".2" stroke-width="2"/><path d="M0,-9A9,9 0 1 1 -8.6,2.8" fill="none" stroke="var(--warn)" stroke-width="2" stroke-linecap="round"/></svg></span><div><b>Resource rim</b><p>Coral marks a limit at or above 85% of time, tokens or budget.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><path d="M0,0L0,-10A10,10 0 0 1 9.5,3.1Z" fill="var(--fam-astra)"/><circle cx="3.6" cy="-4.4" r="1.5" fill="#4B4390"/></svg></span><div><b>Lead familiar</b><p>The dot marks the lead familiar’s wedge.</p></div></div></div></details>
 <details class="key-topic" name="map-key-topic"><summary>Connections and messages</summary><div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M2 7h22" stroke="var(--muted-foreground)" stroke-width="1.3"/></svg></span><div><b>Project connection</b><p>Psyche coordinates this Project. Filter by familiar to highlight its missions.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M2 7h22" stroke="var(--muted-foreground)" stroke-width="1.3" stroke-dasharray="2 4"/></svg></span><div><b>Dormant connection</b><p>No agents are assigned to this Project.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 26 14" aria-hidden="true"><path class="kl dim" d="M2 7h14" stroke-dasharray="1.5 3"/><circle cx="20" cy="7" r="2.6" fill="var(--primary)"/></svg></span><div><b>Message in transit</b><p>Lavender goes out from Psyche. Familiar colors come back. White marks a request for you.</p></div></div></div></details>
 <details class="key-topic" name="map-key-topic"><summary>Keyboard and text size</summary><div><div class="kz-k"><kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd><span>Move</span></div>
@@ -1983,7 +1981,7 @@ Object.assign(ICON, {
   direct: '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M1.8 7h6.6M5.9 4.3 8.6 7 5.9 9.7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="11.2" cy="7" r="1.5" fill="currentColor"/></svg>',
   layers: '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 2 12 4.6 7 7.2 2 4.6zM2 7.2 7 9.8l5-2.6M2 9.7l5 2.6 5-2.6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/></svg>',
   role: '<svg viewBox="0 0 14 14" aria-hidden="true"><rect x="2.3" y="2.8" width="9.4" height="8.4" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="7" cy="6" r="1.3" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M4.7 9.3c.5-1 1.3-1.4 2.3-1.4s1.8.4 2.3 1.4" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>',
-  fort: '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 2l2 1.6h6L12 2l-1.6 2v6L12 12l-2-1.6H4L2 12l1.6-2V4z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>',
+  fort: '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M6 2H4L2 4v6l2 2h6l2-2V4l-2-2H8" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>',
   flag: '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 12.2V2.2M3.5 2.8h6.8L8.6 5.3l1.7 2.5H3.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   pulse: '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M1.5 7h2.5l1.7-4 2.6 8 1.7-4h2.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   kinds: '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 3.5h9M2.5 7h6M2.5 10.5h3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>',
@@ -2054,12 +2052,15 @@ function colorIssue(c) {                             // a familiar's color has t
   if (far([242, 131, 107]) < 42) return 'Coral is kept for warnings. Pick something further from it.';
   return '';
 }
-const FAM_DEF = {astra: {roles: ['Researcher'], sym: 'astra', color: '#9CC2F2'}, cody: {roles: ['Hacker'], sym: 'cody', color: '#E8C99A'}, echo: {roles: ['Correspondent', 'Reviewer'], sym: 'echo', color: '#EBAACB'}, charm: {roles: ['Recorder'], sym: 'charm', color: '#A3DCC3'}};
+const SOLID_NAMES = ['Tetrahedron', 'Cube', 'Octahedron', 'Dodecahedron', 'Icosahedron'];
+const FAM_DEF = {astra: {roles: ['Researcher'], sym: 'astra', solid: 'Octahedron', color: '#9CC2F2'}, cody: {roles: ['Hacker'], sym: 'cody', solid: 'Cube', color: '#E8C99A'}, echo: {roles: ['Correspondent', 'Reviewer'], sym: 'echo', solid: 'Icosahedron', color: '#EBAACB'}, charm: {roles: ['Recorder'], sym: 'charm', solid: 'Tetrahedron', color: '#A3DCC3'}};
 function applyFams(saved) {
   Object.keys(FAM_DEF).forEach(k => { const d = FAM_DEF[k], v = (saved && saved[k]) || {}, f = FAM[k];
     const roles = (Array.isArray(v.roles) ? v.roles : d.roles).filter(r => ROLES[r]); f.roles = roles.length ? roles : d.roles.slice(); f.role = f.roles.join(', ');
+    f.solid = SOLID_NAMES.includes(v.solid) ? v.solid : d.solid;
     f.sym = SYMS[v.sym] ? v.sym : d.sym; { const pc = parseColor(v.color); f.color = pc && !colorIssue(pc) ? colorText(pc) : d.color; } });
   const ks = Object.keys(FAM_DEF), dup = key => new Set(ks.map(k => FAM[k][key])).size < ks.length;       // never two familiars with one mark
+  if (dup('solid')) ks.forEach(k => { FAM[k].solid = FAM_DEF[k].solid; });
   if (dup('sym')) ks.forEach(k => { FAM[k].sym = FAM_DEF[k].sym; }); if (dup('color')) ks.forEach(k => { FAM[k].color = FAM_DEF[k].color; });
   ks.forEach(k => document.documentElement.style.setProperty('--fam-' + k, FAM[k].color));
 }
@@ -2445,32 +2446,42 @@ const SOLID = (() => {
     if (u[0] * cen[0] + u[1] * cen[1] + u[2] * cen[2] < 0) u = u.map(x => -x);
     return {i: fc, n: u, lit: .26 + .74 * Math.max(0, u[0] * -.35 + u[1] * .45 + u[2] * .82)};
   })}; };
-  const box = (x, y, z, hx, hy, hz) => mk([[x - hx, y - hy, z - hz], [x + hx, y - hy, z - hz], [x + hx, y + hy, z - hz], [x - hx, y + hy, z - hz], [x - hx, y - hy, z + hz], [x + hx, y - hy, z + hz], [x + hx, y + hy, z + hz], [x - hx, y + hy, z + hz]], [[0, 1, 2, 3], [4, 5, 6, 7], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]]);
-  const frustum = (z0, r0, z1, r1) => mk([[-r0, -r0, z0], [r0, -r0, z0], [r0, r0, z0], [-r0, r0, z0], [-r1, -r1, z1], [r1, -r1, z1], [r1, r1, z1], [-r1, r1, z1]], [[0, 1, 2, 3], [4, 5, 6, 7], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]]);
-  const spire = (z0, r, z1) => mk([[-r, -r, z0], [r, -r, z0], [r, r, z0], [-r, r, z0], [0, 0, z1]], [[0, 1, 2, 3], [0, 1, 4], [1, 2, 4], [2, 3, 4], [3, 0, 4]]);
-  const prism = (r, z0, z1, n) => { const V = [], F = [[], []]; for (let j = 0; j < 2; j++) for (let i = 0; i < n; i++) V.push([r * Math.cos(i / n * 2 * Math.PI + .3), r * Math.sin(i / n * 2 * Math.PI + .3), j ? z1 : z0]);
-    for (let i = 0; i < n; i++) { F[0].push(i); F[1].push(n + i); F.push([i, (i + 1) % n, n + (i + 1) % n, n + i]); } return mk(V, F); };
-  const cone = (r, z0, z1, n) => { const V = [[0, 0, z1]], F = [[]]; for (let i = 0; i < n; i++) V.push([r * Math.cos(i / n * 2 * Math.PI + .5), r * Math.sin(i / n * 2 * Math.PI + .5), z0]);
-    for (let i = 0; i < n; i++) { F[0].push(1 + i); F.push([0, 1 + i, 1 + (i + 1) % n]); } return mk(V, F); };
-  const crystal = (r, top, bot, n = 6) => { const V = [[0, 0, top], [0, 0, bot]], F = []; for (let i = 0; i < n; i++) V.push([r * Math.cos(i / n * 2 * Math.PI + .3), r * Math.sin(i / n * 2 * Math.PI + .3), 2]);
-    for (let i = 0; i < n; i++) { F.push([0, 2 + i, 2 + (i + 1) % n]); F.push([1, 2 + (i + 1) % n, 2 + i]); } return mk(V, F); };
+  // Regular Cartesian vertex sets. Each face lists its perimeter in cyclic order.
+  const phi = (1 + Math.sqrt(5)) / 2, inv = 1 / phi;
   return {
-    astra: [crystal(8.5, 19, -13)],                                   // a six-sided crystal: research, things seen through
-    cody: [box(0, 0, -5, 9, 9, 6), box(-2.5, -2.5, 6.5, 5.5, 5.5, 5.5)],        // stacked blocks: things built
-    charm: [frustum(-11, 10.5, 1, 5.5), spire(4, 4.2, 15)],         // a capped pyramid: things captured and kept
-    hex: [prism(10, -11, 3, 6), prism(5.5, 3, 12, 6)],              // a stepped hexagon
-    tri: [cone(11.5, -12, 17, 3)],                                  // a three-sided pyramid
-    gem: [crystal(10, 13, -13, 4)],                                 // an octahedron
-    tower: [box(0, 0, -8, 9.5, 9.5, 3.6), box(0, 0, -.8, 7, 7, 3.6), box(0, 0, 6.4, 4.6, 4.6, 3.6), box(0, 0, 13, 2.4, 2.4, 3)],
-    obelisk: [frustum(-12, 5.2, 12, 3.4), spire(12, 3.4, 19)],      // a tall needle
-    pillar: [prism(7.2, -12, 13, 12)],                              // a round column
+    Tetrahedron: mk(
+      [[-1, -1, 1], [-1, 1, -1], [1, -1, -1], [1, 1, 1]],
+      [[2, 0, 1], [1, 0, 3], [3, 0, 2], [2, 1, 3]]),
+    Cube: mk(
+      [[-1, -1, -1], [-1, -1, 1], [-1, 1, -1], [-1, 1, 1], [1, -1, -1], [1, -1, 1], [1, 1, -1], [1, 1, 1]],
+      [[2, 0, 1, 3], [1, 0, 4, 5], [4, 0, 2, 6], [3, 1, 5, 7], [6, 2, 3, 7], [5, 4, 6, 7]]),
+    Octahedron: mk(
+      [[1, 0, 0], [0, 1, 0], [0, 0, 1], [-1, 0, 0], [0, -1, 0], [0, 0, -1]],
+      [[2, 0, 1], [1, 0, 5], [4, 0, 2], [5, 0, 4], [2, 1, 3], [3, 1, 5], [4, 2, 3], [4, 3, 5]]),
+    Dodecahedron: mk(
+      [[-1, -1, -1], [-1, -1, 1], [-1, 1, -1], [-1, 1, 1], [1, -1, -1], [1, -1, 1], [1, 1, -1], [1, 1, 1], [0, -inv, -phi], [-phi, 0, -inv], [-inv, -phi, 0], [0, -inv, phi], [phi, 0, -inv], [-inv, phi, 0], [0, inv, -phi], [-phi, 0, inv], [inv, -phi, 0], [0, inv, phi], [phi, 0, inv], [inv, phi, 0]],
+      [[15, 9, 0, 10, 1], [14, 8, 0, 9, 2], [16, 10, 0, 8, 4], [3, 15, 1, 11, 17], [5, 11, 1, 10, 16], [3, 13, 2, 9, 15], [6, 14, 2, 13, 19], [19, 13, 3, 17, 7], [5, 16, 4, 12, 18], [6, 12, 4, 8, 14], [17, 11, 5, 18, 7], [18, 12, 6, 19, 7]]),
+    Icosahedron: mk(
+      [[0, -1, -phi], [-phi, 0, -1], [-1, -phi, 0], [0, -1, phi], [phi, 0, -1], [-1, phi, 0], [0, 1, -phi], [-phi, 0, 1], [1, -phi, 0], [0, 1, phi], [phi, 0, 1], [1, phi, 0]],
+      [[1, 0, 2], [6, 0, 1], [2, 0, 8], [4, 0, 6], [8, 0, 4], [7, 1, 2], [6, 1, 5], [5, 1, 7], [7, 2, 3], [3, 2, 8], [7, 3, 9], [10, 3, 8], [9, 3, 10], [11, 4, 6], [8, 4, 10], [10, 4, 11], [6, 5, 11], [9, 5, 7], [11, 5, 9], [11, 9, 10]]),
   };
 })();
-function makeSolid(parent, k) {                      // Echo is a sphere inside its own rings: correspondence, things carried outward
-  const g = svgEl('g', {class: 'solid'}, parent), ped = {side: svgEl('path', {class: 'so-ped side'}, g), top: svgEl('ellipse', {class: 'so-ped'}, g)}, parts = symOf(k) === 'echo' ? null : (SOLID[symOf(k)] || SOLID.cody);
-  if (!parts) return {g, ped, parts, rings: [22, 17, 12].map((r, i) => ({r, el: svgEl('ellipse', {class: 'so-ring r' + i}, g)})), ball: svgEl('circle', {class: 'so-ball'}, g), shine: svgEl('circle', {class: 'so-shine'}, g), front: svgEl('path', {class: 'so-ring r2 front'}, g)};
-  return {g, ped, parts, faces: parts.map(pt => pt.F.map(fc => { const el = svgEl('polygon', {class: 'so-face'}, g);
-    el.style.fill = fc.lit > .9 ? 'color-mix(in srgb, #fff 26%, var(--hue, #B3AAEB))' : `color-mix(in srgb, var(--hue, #B3AAEB) ${Math.round(fc.lit * 100)}%, #0C0C0D)`; return el; }))};
+function solidPreview(name) {
+  const mesh = SOLID[name];
+  const points = mesh.V.map(([x,y,z]) => [x * .8 - y * .6, x * .3 + y * .4 - z * Math.sqrt(.75)]);
+  const radius = Math.hypot(...mesh.V[0]);
+  const faces = mesh.F.filter(face => face.n[0] * .6 * Math.sqrt(.75) + face.n[1] * .8 * Math.sqrt(.75) + face.n[2] * .5 > 0);
+  return `<svg viewBox="-1 -1 2 2" aria-hidden="true">${faces.map(face => `<polygon points="${face.i.map(i => points[i].map(v => v / radius).join(',')).join(' ')}" fill="currentColor" fill-opacity="${face.lit}" stroke="currentColor" stroke-width=".045"/>`).join('')}</svg>`;
+}
+function makeSolid(parent, k) {
+  const name = FAM[k]?.solid || 'Cube', mesh = SOLID[name];
+  const g = svgEl('g', {class: 'solid', 'data-solid': name}, parent);
+  const faces = mesh.F.map(face => {
+    const el = svgEl('polygon', {class: 'so-face'}, g);
+    el.style.fill = `color-mix(in srgb, var(--hue, #B3AAEB) ${Math.round(face.lit * 100)}%, #16151a)`;
+    return el;
+  });
+  return {mesh, faces, scale: 15 / Math.hypot(...mesh.V[0])};
 }
 function coordinationMarker(parent) {
   return {
@@ -2479,12 +2490,18 @@ function coordinationMarker(parent) {
     crown: window.CovenAtlasCrown.create(parent, svgEl)
   };
 }
+// A single eight-tooth profile serves every agent at every map density.
+const cogOutline = Array.from({length: 8}, (_, tooth) => [0, 8, 21, 29].map((offset, i) => {
+  const angle = (tooth * 45 + offset) * RAD, r = i === 1 || i === 2 ? 1 : .78;
+  return [r * Math.cos(angle), r * Math.sin(angle)].map(v => v.toFixed(3)).join(',');
+}).join(' ')).join(' ');
 function buildScene() {
   plan.textContent = '';
   const highlight = sc && sc.hl;
   sc = {missions: new Map(), seats: new Map(), agents: new Map(), colinks: new Map(), orderEls: null, dirty: true, plated: null, hl: highlight || null};
   { const L0 = cur().layout; sc.n = L0.n; sc.g = L0.g; sc.a = L0.a; sc.fort = projectBoundary(L0.n); sc.outline = sc.fort.flat(); }
   const defs = svgEl('defs', {}, plan);
+  svgEl('polygon', {id: 'agent-cog-profile', points: cogOutline}, defs);
   const glow = svgEl('radialGradient', {id: 'glow'}, defs);
   [['0', '.2'], ['.4', '.05'], ['1', '0']].forEach(([o, op]) => svgEl('stop', {offset: o, class: 's-glow', 'stop-opacity': op}, glow));
   const disc = svgEl('linearGradient', {id: 'disc', x1: 0, y1: 0, x2: 0, y2: 1}, defs);
@@ -2698,8 +2715,14 @@ function sync() {
     if (!s) {
       const e = svgEl('g', {class: 'agent', 'data-m': a.mission, 'data-fam': a.fam});
       e.style.setProperty('--hue', fam(a.fam).hue);
-      e.style.setProperty('--dur', (4 + rand() * 4).toFixed(1) + 's'); e.style.setProperty('--delay', (-rand() * 6).toFixed(1) + 's');
-      s = {id: a.id, el: e, halo: svgEl('ellipse', {class: 'hot'}, e), cell: svgEl('ellipse', {class: 'o'}, e), assignmentDepth: svgEl('path', {class: 'assignment-depth'}, e), assignment: svgEl('rect', {class: 'assignment', rx: 1}, e), core: svgEl('ellipse', {class: 'core'}, e), dot: svgEl('circle', {class: 'i', r: 1.8}, e), co: null,
+      const halo = svgEl('ellipse', {class: 'hot'}, e);
+      const cog = svgEl('g', {class: 'agent-cog'}, e);
+      const side = svgEl('g', {class: 'cog-side'}, cog);
+      svgEl('use', {href: '#agent-cog-profile', class: 'cog-rotor'}, side);
+      svgEl('use', {href: '#agent-cog-profile', class: 'cog-rotor cog-face'}, cog);
+      svgEl('circle', {class: 'cog-bore', r: .35}, cog);
+      svgEl('rect', {class: 'cog-drive', x: -.28, y: -.28, width: .56, height: .56}, cog);
+      s = {id: a.id, el: e, halo, cog, side, co: null,
         p: reduce || !tg ? q.slice() : [tg.bx, tg.by, ZS], q, state: null, ghost: null, home: null};
       svgEl('title', {}, e).textContent = a.id + ' · ' + fam(a.fam).name;
       e.addEventListener('click', ev => { ev.stopPropagation(); pick(a.id, 'plan'); });
@@ -2711,6 +2734,7 @@ function sync() {
     const description = [a.id, fam(a.fam).name, task ? task.name : 'Unassigned', a.state === 'gate' ? 'Waiting at gate' : a.state === 'work' ? 'Working' : 'Idle'].join(' · ');
     s.el.setAttribute('aria-label', description);
     s.el.querySelector('title').textContent = description;
+    s.el.classList.toggle('reverse-cog', (c.layout.slot.get(a.id) || 0) % 2 === 1);
     s.q = q; s.seat = a.seat; s.rot = lt ? lt.rot : 0;
     const co = coLead(w, a); if (co !== s.co) { s.co = co; s.el.classList.toggle('co', !!co); if (co) s.el.style.setProperty('--hue2', fam(co).hue); }
     if (s.state !== a.state) { s.el.classList.remove('work', 'idle', 'gate'); s.el.classList.add(a.state); s.state = a.state; }
@@ -2852,25 +2876,17 @@ function project() {
   const pp = arr => arr.map(q => f(q[0]) + ',' + f(q[1])).join(' ');
   const flat = cp > .985; if (flat !== sc.flat) { sc.flat = flat; plan.classList.toggle('flat', flat); }
   const vd = [sy * sp, cy * sp, cp];                 // the direction that faces the viewer; a face shows when it looks that way
-  const cyl = (pc0, x, y, z0, h, r, o) => {            // a short drum: its top and the side that faces the viewer
-    const t = P(x, y, z0 + h), b = P(x, y, z0), ry = Math.max(.01, r * cp), tx = t[0] - o[0], ty = t[1] - o[1], by = b[1] - o[1];
-    pc0.top.setAttribute('cx', f(tx)); pc0.top.setAttribute('cy', f(ty)); pc0.top.setAttribute('rx', f(r)); pc0.top.setAttribute('ry', f(ry));
-    pc0.side.setAttribute('d', `M${f(tx - r)},${f(ty)}L${f(tx - r)},${f(by)}A${f(r)},${f(ry)} 0 0 0 ${f(tx + r)},${f(by)}L${f(tx + r)},${f(ty)}A${f(r)},${f(ry)} 0 0 1 ${f(tx - r)},${f(ty)}Z`);
-  };
-  const putSolid = (so, x, y, z0, k, o) => {         // z0 = the ground it stands on; the solid hovers just above its pedestal
-    cyl(so.ped, x, y, z0, 4.5 * k, 10.5 * k, o);
-    const z = z0 + 4.5 * k + (so.parts ? 17 : 14) * k;
-    if (!so.parts) {
-      const c0 = P(x, y, z), cx0 = c0[0] - o[0], cy0 = c0[1] - o[1];
-      so.ball.setAttribute('cx', f(cx0)); so.ball.setAttribute('cy', f(cy0)); so.ball.setAttribute('r', f(8.5 * k));
-      so.shine.setAttribute('cx', f(cx0 - 3 * k)); so.shine.setAttribute('cy', f(cy0 - 3.2 * k)); so.shine.setAttribute('r', f(2.6 * k));
-      so.rings.forEach(R => { R.el.setAttribute('cx', f(cx0)); R.el.setAttribute('cy', f(cy0)); R.el.setAttribute('rx', f(R.r * k)); R.el.setAttribute('ry', f(Math.max(.01, R.r * k * cp))); });
-      const r2 = so.rings[2].r * k, ry2 = Math.max(.01, r2 * cp); so.front.setAttribute('d', `M${f(cx0 - r2)},${f(cy0)}A${f(r2)},${f(ry2)} 0 0 0 ${f(cx0 + r2)},${f(cy0)}`);   // the near half of the inner ring passes in front
-      return;
-    }
-    so.parts.forEach((pt, pi) => {
-      const V = pt.V.map(v => { const q = P(x + v[0] * k, y + v[1] * k, z + v[2] * k); return [q[0] - o[0], q[1] - o[1]]; });
-      pt.F.forEach((fc, i) => { const show = fc.n[0] * vd[0] + fc.n[1] * vd[1] + fc.n[2] * vd[2] > .001, el = so.faces[pi][i]; if (show !== el._on) { el._on = show; el.style.display = show ? '' : 'none'; } if (show) el.setAttribute('points', pp(fc.i.map(j => V[j]))); });
+  const putSolid = (solid, x, y, z, size, origin) => {
+    const scale = size * solid.scale;
+    const points = solid.mesh.V.map(([vx, vy, vz]) => {
+      const q = P(x + vx * scale, y + vy * scale, z + vz * scale);
+      return [q[0] - origin[0], q[1] - origin[1]];
+    });
+    solid.mesh.F.forEach((face, i) => {
+      const el = solid.faces[i];
+      const facing = face.n[0] * vd[0] + face.n[1] * vd[1] + face.n[2] * vd[2] > .001;
+      el.style.display = facing ? '' : 'none';
+      if (facing) el.setAttribute('points', pp(face.i.map(j => points[j])));
     });
   };
   const far = atlasScope === 'coven'; if (far !== sc.far) { sc.far = far; plan.classList.toggle('far', far); $('vAll').setAttribute('aria-pressed', String(far)); if (window.CovenAtlas) window.CovenAtlas.update(); }
@@ -3011,21 +3027,12 @@ function project() {
   });
   sc.agents.forEach(s => {
     const q = P(s.p[0], s.p[1], s.p[2]);
-    const dotR = (s.state === 'idle' ? 2.8 : 3.6) / screenScale, spacedHit = Math.min(10, HEX_D * .4 * cp * screenScale) / screenScale;
-    const dot = (el, radius) => {
-      el.setAttribute('cx', f(q[0])); el.setAttribute('cy', f(q[1]));
-      el.setAttribute('rx', f(radius)); el.setAttribute('ry', f(radius));
-    };
-    dot(s.cell, dotR); dot(s.halo, Math.max(dotR, spacedHit));
-    if (s.el.classList.contains('assigned') && !flat) {
-      const y = q[1] + dotR * cp, lip = dotR * (s.state === 'work' ? .7 : .32) * sp;
-      s.assignmentDepth.setAttribute('d', `M${f(q[0] - dotR)},${f(y)}h${f(2 * dotR)}v${f(lip)}h-${f(2 * dotR)}Z`);
-    }
-    s.assignment.setAttribute('x', f(q[0] - dotR)); s.assignment.setAttribute('width', f(dotR * 2));
-    s.assignment.setAttribute('y', f(q[1] - dotR * cp)); s.assignment.setAttribute('height', f(dotR * cp * 2));
-    if (s.co) dot(s.core, dotR * .52);
-    s.dot.setAttribute('r', f(dotR * .42));
-    s.dot.setAttribute('cx', f(q[0])); s.dot.setAttribute('cy', f(q[1]));
+    const radius = Math.min(HEX_D * .44, (s.state === 'idle' ? 4.5 : 6) / screenScale);
+    const hit = Math.max(radius, Math.min(10 / screenScale, HEX_D * .4 * cp));
+    s.halo.setAttribute('cx', f(q[0])); s.halo.setAttribute('cy', f(q[1]));
+    s.halo.setAttribute('rx', f(hit)); s.halo.setAttribute('ry', f(hit));
+    s.cog.setAttribute('transform', `translate(${f(q[0])} ${f(q[1])}) scale(${radius} ${radius * cp})`);
+    s.side.setAttribute('transform', `translate(0 ${.38 * sp / cp})`);
     if (s.ghost && s.home) ell(s.ghost, s.home[0], s.home[1], s.home[2], 4.6);
     s.sx = q[0]; s.sy = q[1];
     if (s.state === 'gate') depth.push([q[2] + 400, s.el]);
@@ -4222,7 +4229,7 @@ TABS.forEach(t => $(TAB_ID[t]).addEventListener('click', () => setTab(t, false, 
 document.querySelector('.p-tabs').addEventListener('keydown', ev => { const d = ev.key === 'ArrowRight' ? 1 : ev.key === 'ArrowLeft' ? -1 : 0; if (!d) return; ev.preventDefault(); setTab(TABS[(TABS.indexOf(railTab) + d + TABS.length) % TABS.length], true, true); });
 // ------------------------------------------------------------ familiars: who Psyche coordinates, what each is for, how each is drawn
 const famsOpen = new Set(), famSec = {}; let famTry = '';
-const saveFams = () => { const o = {}; Object.keys(FAM_DEF).forEach(k => { o[k] = {roles: FAM[k].roles, sym: FAM[k].sym, color: FAM[k].color}; }); store.set('coven-compass-fams', o); };
+const saveFams = () => { const o = {}; Object.keys(FAM_DEF).forEach(k => { o[k] = {roles: FAM[k].roles, sym: FAM[k].sym, solid: FAM[k].solid, color: FAM[k].color}; }); store.set('coven-compass-fams', o); };
 function famChanged(focusId) {                       // a familiar's mark is drawn in many places, so everything that shows one is redrawn
   saveFams(); Object.keys(FAM_DEF).forEach(k => { FAM[k].role = FAM[k].roles.join(', '); document.documentElement.style.setProperty('--fam-' + k, FAM[k].color); });
   $('nmLeads').querySelectorAll('.nm-lead').forEach(b => { const k = b.dataset.k; b.innerHTML = avatar(k); b.append(FAM[k].name); });
@@ -4272,13 +4279,28 @@ function drawFams(focusId) {
       b2.append(mine, html('div', 'fm-h', 'Add a role'), more);
     });
     // symbol and color: taking one that another familiar holds swaps the two
-    sect('sym', `<svg viewBox="-10 -10 20 20" aria-hidden="true">${sigil(k)}</svg>`, 'Symbol', SYMS[f.sym] || '', b2 => {
+    sect('sym', `<svg viewBox="-10 -10 20 20" aria-hidden="true">${sigil(k)}</svg>`, '2D symbol', SYMS[f.sym] || '', b2 => {
       const yg = html('div', 'fm-grid');
       Object.keys(SYMS).forEach(sy => { const held = Object.keys(FAM_DEF).find(x => FAM[x].sym === sy), b = html('button', 'fm-sym'); b.type = 'button'; b.dataset.id = `y-${k}-${sy}`; b.setAttribute('aria-pressed', String(f.sym === sy));
         b.innerHTML = `<svg viewBox="-10 -10 20 20" aria-hidden="true">${SIGIL[sy]}</svg>`; b.append(SYMS[sy]); b.setAttribute('aria-label', `${SYMS[sy]}${held && held !== k ? ', held by ' + FAM[held].name + ', swaps' : ''}`);
         if (held && held !== k) { b.title = `Swaps with ${FAM[held].name}`; const tag = html('i', null, FAM[held].name.charAt(0)); tag.style.setProperty('--hue', FAM[held].hue); b.appendChild(tag); }
         b.addEventListener('click', () => { if (f.sym !== sy) swap('sym', sy); picked('sym'); }); yg.appendChild(b); });
       b2.appendChild(yg);
+    });
+    sect('solid', solidPreview(f.solid), '3D solid', f.solid, body => {
+      const grid = html('div', 'fm-grid');
+      SOLID_NAMES.forEach(name => {
+        const option = html('button', 'fm-sym');
+        option.type = 'button';
+        option.innerHTML = solidPreview(name);
+        option.append(name);
+        option.setAttribute('aria-pressed', String(f.solid === name));
+        const owner = Object.values(FAM).find(other => other !== f && other.solid === name);
+        if (owner) option.title = option.ariaLabel = name + ', swaps with ' + owner.name;
+        option.addEventListener('click', () => { swap('solid', name); picked('solid'); });
+        grid.appendChild(option);
+      });
+      body.appendChild(grid);
     });
     { const sw = html('i', 'fm-dot'); sw.style.background = f.color;
       sect('color', sw, 'Color', HUES[f.color] || f.color, b2 => {
@@ -4301,7 +4323,7 @@ function drawFams(focusId) {
     d.append(sm, body); list.appendChild(d);
   });
   box.appendChild(list);
-  const foot = html('div', 'fm-foot'), changed = Object.keys(FAM_DEF).some(k => JSON.stringify([FAM[k].roles, FAM[k].sym, FAM[k].color]) !== JSON.stringify([FAM_DEF[k].roles, FAM_DEF[k].sym, FAM_DEF[k].color])), rb = html('button', 'btn sm', 'Reset to defaults');
+  const foot = html('div', 'fm-foot'), changed = Object.keys(FAM_DEF).some(k => JSON.stringify([FAM[k].roles, FAM[k].sym, FAM[k].solid, FAM[k].color]) !== JSON.stringify([FAM_DEF[k].roles, FAM_DEF[k].sym, FAM_DEF[k].solid, FAM_DEF[k].color])), rb = html('button', 'btn sm', 'Reset to defaults');
   rb.type = 'button'; rb.disabled = !changed; rb.addEventListener('click', () => { applyFams(null); famChanged(); });
   foot.append(html('span', null, 'Kept in this browser. Familiars are shared by every project.'), rb); box.appendChild(foot);
   box.scrollTop = y;
@@ -4759,38 +4781,46 @@ function drawProject() {
   const box = $('castPane'); if (railTab !== 'project') { if (box.firstChild) { box.textContent = ''; castSig = ''; } return; }
   const c = cur(), w = c.world, m = metaOf(c) || {}, ms = [...w.missions.values()], open = openAsks(w), work = countOf(w, a => a.state === 'work'), keys = Object.keys(projects);
   const sum = k => ms.reduce((t, M) => t + (M.prog[k] || 0), 0), capSum = k => ms.reduce((t, M) => t + ((M.brief && M.brief.atMost[k]) || 0), 0);
-  const sig = [active, keys.join(), w.agents.size, work, open.length, ms.map(M => M.id + M.name + (M.paused || '') + (M.tpl || '') + sealOf(w, M).sig).join(), w.stopped, m.repo, m.root, c.recorded, live, Math.round(sum('tokens') / 5000), Math.floor(c.trace.length / 20),
+  const sig = [active, keys.join(), w.agents.size, work, open.length, ms.map(M => M.id + M.name + (M.paused || '') + (M.tpl || '') + sealOf(w, M).sig).join(), w.stopped, m.repo, m.root, c.recorded, live, sum('tokens'), sum('usd'), capSum('tokens'), capSum('usd'), c.trace.length,
     keys.map(k => projects[k].world.agents.size + '.' + openAsks(projects[k].world).length).join(), Object.keys(FAM).map(k => FAM[k].color + FAM[k].sym + FAM[k].role).join()].join('|');
   if (sig === castSig) return; castSig = sig;
+  const expandedLocation = box.dataset.project === active && !!box.querySelector('.cs-location[open]');
+  box.dataset.project = active;
   const y = box.scrollTop, fid = document.activeElement && box.contains(document.activeElement) ? document.activeElement.dataset.id : null; box.textContent = '';
   const sec = (icon, name, note, count) => { const sh = html('div', 'n-sec cs-h'), ic = html('span', 'n-si'); ic.innerHTML = ICON[icon]; sh.append(ic, html('b', null, name), html('span', null, note || '')); if (count != null) sh.appendChild(html('i', null, String(count))); box.appendChild(sh); const b = html('div', 'cs-b'); box.appendChild(b); return b; };
   // who it is, and its state
   const state = c.recorded ? ['Recorded', 'off'] : w.stopped ? ['Stopped', 'q'] : !w.agents.size ? ['Dormant', 'off'] : live ? ['Live', 'on'] : ['Replaying', 'q'];
   const head = html('div', 'cs-top'), mark = html('span', 'cs-mark'), tt = html('div'), eb = html('button', 'btn sm', 'Edit'); mark.innerHTML = ICON.fort; eb.type = 'button'; eb.dataset.id = 'cs-edit'; eb.disabled = c.recorded; eb.addEventListener('click', () => openProjectForm(active));
   tt.append(html('h2', null, active), html('p', null, m.repo ? repoShort(m.repo) || m.repo : 'No repository set')); head.append(mark, tt, html('span', 'hd-s ' + state[1], state[0]), eb); box.appendChild(head);
-  // now: four numbers
-  const tiles = html('div', 'cs-tiles'), tile = (n, label, cls, fn) => { const t = html(fn ? 'button' : 'div', 'cs-tile' + (cls ? ' ' + cls : '')); if (fn) { t.type = 'button'; t.dataset.id = 'cs-t-' + label; t.addEventListener('click', fn); } t.append(html('b', null, String(n)), html('span', null, label)); tiles.appendChild(t); };
-  tile(ms.length, ms.length === 1 ? 'mission' : 'missions'); tile(w.agents.size, 'agents'); tile(work, 'working'); tile(open.length, 'in the Inbox', open.length ? 'q' : '', () => setTab('needs', true, true)); box.appendChild(tiles);
-  // place: the repository it works on and the folder it is rooted in
-  const pl = sec('repo', 'Place', 'where it lives');
-  const copy = text => { const b = html('button', 'cs-copy'); b.type = 'button'; b.innerHTML = '<svg viewBox="0 0 14 14" aria-hidden="true"><rect x="4.5" y="4.5" width="7" height="7" rx="1.3" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M9.5 2.5h-6a1 1 0 0 0-1 1v6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>'; b.setAttribute('aria-label', 'Copy ' + text); b.title = 'Copy';
+  box.appendChild(html('p', 'cs-summary', plural(w.agents.size, 'agent') + ' · ' + work + ' working'));
+  if (open.length) {
+    const review = html('button', 'cs-review');
+    review.type = 'button'; review.dataset.id = 'cs-review';
+    review.append(html('b', null, plural(open.length, 'pending decision')), html('span', null, 'Review →'));
+    review.addEventListener('click', () => setTab('needs', true, true)); box.appendChild(review);
+  }
+  const location = html('details', 'cs-location'), summary = html('summary', null, 'Repository and trace');
+  summary.dataset.id = 'cs-location'; location.open = expandedLocation;
+  const pl = html('div', 'cs-b'); location.append(summary, pl);
+  const copy = text => { const b = html('button', 'cs-copy'); b.type = 'button'; b.innerHTML = '<svg viewBox="0 0 14 14" aria-hidden="true"><rect x="4.5" y="4.5" width="7" height="7" rx="1.3" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M9.5 2.5h-6a1 1 0 0 0-1 1v6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>'; b.setAttribute('aria-label', 'Copy ' + text); b.title = 'Copy'; b.dataset.id = 'copy-' + text;
     b.addEventListener('click', () => { const done = () => { b.classList.add('ok'); setTimeout(() => b.classList.remove('ok'), 1200); }; try { navigator.clipboard.writeText(text).then(done, () => {}); } catch (e) {} }); return b; };
   const line = (icon, k, v) => { const r = html('div', 'cs-kv'), ic = html('span', 'cs-ki'), val = html('code', v ? '' : 'off', v ? v.replace(/^https:\/\//, '') : 'Not set'); if (v) val.title = v; ic.innerHTML = ICON[icon]; r.append(ic, html('span', null, k), val); if (v) r.appendChild(copy(v)); pl.appendChild(r); };
   line('repo', 'Repository', m.repo); line('folder', 'Location', m.root);
   { const f0 = c.trace.find(e => e.type === 'project.founded'), r = html('div', 'cs-kv'), ic = html('span', 'cs-ki'); ic.innerHTML = ICON.fort; r.append(ic, html('span', null, 'Trace'), html('code', null, `${c.trace.length} events${f0 ? ' since ' + hm(f0.t) : ''}${c.recorded ? ', recorded' : c.sample ? ', sample' : ''}`)); pl.appendChild(r); }
   // missions: one row each, to open it
-  const mb = sec('flag', 'Missions', ms.length ? 'open one to see its council' : 'none yet', ms.length);
+  const mb = sec('flag', 'Missions', ms.length ? '' : 'None yet', ms.length);
   ms.forEach(M => { const row = html('button', 'cs-m'), dots = html('span', 'opt-dots'), n = countOf(w, a => a.mission === M.id), wk = countOf(w, a => a.mission === M.id && a.state === 'work'), q = open.filter(x => x.mission === M.id).length, tx = html('span', 'cs-mt');
     const sd = sealOf(w, M); row.type = 'button'; row.dataset.id = 'cs-m-' + M.id; dots.className = 'opt-seal'; dots.innerHTML = sealSvg(sd, 24);
-    tx.append(html('b', null, M.name), html('span', null, sealLabel(sd) + ' · ' + (M.tpl || 'Custom brief') + (M.paused === 'you' ? ' · paused by you' : '')));
-    row.append(dots, tx); if (q) row.appendChild(html('span', 'opt-q', String(q))); row.appendChild(html('span', 'cs-n', `${wk}/${n}`)); row.insertAdjacentHTML('beforeend', CHEV);
+    tx.append(html('b', null, M.name), html('span', null, sealLabel(sd) + ' · ' + wk + ' of ' + n + ' working' + (M.paused === 'you' ? ' · paused by you' : '')));
+    row.append(dots, tx); if (q) row.appendChild(html('span', 'opt-q', q + ' waiting')); row.title = M.tpl || 'Custom brief'; row.insertAdjacentHTML('beforeend', CHEV);
     row.addEventListener('click', () => select(M.id)); mb.appendChild(row); });
   { const add = html('button', 'cs-m add', '+ New mission'); add.type = 'button'; add.dataset.id = 'cs-new'; add.disabled = !canAct(); add.addEventListener('click', () => openNew()); mb.appendChild(add); }
   // usage against the limits the briefs set, summed
-  if (ms.some(M => M.brief)) { const ub = sec('gauge', 'Usage', 'against every brief here');
-    [['tokens', 'Tokens'], ['usd', 'Spend']].forEach(([k, label]) => { const u = sum(k), cp2 = capSum(k), r = html('div', 'bfl' + (cp2 && u / cp2 >= .9 ? ' near' : '')), mt = html('i', 'meter'), fi = html('i'); fi.style.width = (cp2 ? Math.min(100, u / cp2 * 100) : 0) + '%'; mt.appendChild(fi);
-      r.append(html('span', null, label), html('b', null, cp2 ? `${fmtN(k, u)} of ${fmtN(k, cp2)}` : fmtN(k, u)), mt); ub.appendChild(r); });
+  if (ms.some(M => M.brief)) { const ub = sec('gauge', 'Usage', 'Project totals');
+    [['tokens', 'Tokens'], ['usd', 'Spend']].forEach(([k, label]) => { const u = sum(k), cp2 = capSum(k), r = html('div', 'bfl' + (cp2 && u / cp2 >= .85 ? ' near' : '')), mt = html('i', 'meter'), fi = html('i'); fi.style.width = (cp2 ? Math.min(100, u / cp2 * 100) : 0) + '%'; mt.appendChild(fi);
+      r.append(html('span', null, label + (cp2 && u > cp2 ? ' · Over limit' : cp2 && u === cp2 ? ' · At limit' : cp2 && u / cp2 >= .85 ? ' · Near limit' : '')), html('b', null, cp2 ? `${fmtN(k, u)} of ${fmtN(k, cp2)}` : fmtN(k, u)), mt); ub.appendChild(r); });
     ub.appendChild(html('p', 'fm-n', c.sample ? 'Sample figures, not read from a daemon.' : 'Figures come from this project’s trace.')); }
+  box.appendChild(location);
   // who works here
   const seated = Object.keys(FAM).filter(k => ms.some(M => M.seats.includes(k)));
   if (seated.length) { const fb = sec('role', 'Familiars here', '', seated.length);
@@ -4801,7 +4831,7 @@ function drawProject() {
     keys.filter(k => k !== active).forEach(k => { const cw = projects[k].world, q = openAsks(cw).length, row = html('button', 'cs-m'), tx = html('span', 'cs-mt'), km = metaOf(projects[k]); row.type = 'button'; row.dataset.id = 'cs-c-' + k;
       tx.append(html('b', null, k), html('span', null, km && km.repo ? repoShort(km.repo) || km.repo : 'No repository set')); row.append(html('i', 'opt-d' + (cw.agents.size ? '' : ' off')), tx); if (q) row.appendChild(html('span', 'opt-q', String(q)));
       row.appendChild(html('span', 'cs-n', cw.agents.size ? `${cw.agents.size} agents` : 'Dormant')); row.insertAdjacentHTML('beforeend', CHEV); row.addEventListener('click', () => go(k)); ob.appendChild(row); }); }
-  box.scrollTop = y; if (fid) { const el = box.querySelector(`[data-id="${fid}"]`); if (el && !el.disabled) el.focus(); }
+  box.scrollTop = y; if (fid) { const el = box.querySelector(`[data-id="${CSS.escape(fid)}"]`); if (el && !el.disabled) el.focus(); }
 }
 $('castPane').addEventListener('click', ev => ev.stopPropagation());
 // ------------------------------------------------------------ the color wheel: hue around, saturation outward, then brightness and opacity

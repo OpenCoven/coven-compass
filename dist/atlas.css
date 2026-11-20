@@ -782,3 +782,14 @@ body.atlas-enhanced .plan-head #wardCtl:has(#ward[open]) { opacity: 1; }
 @media (max-width: 700px), (pointer: coarse) {
   #wardBody .ward-review { min-height: 44px; }
 }
+
+#castPane .cs-summary { margin: -3px 14px 12px; color: var(--muted-foreground); font-size: .875em; }
+#castPane .cs-review { display: flex; justify-content: space-between; gap: 8px; align-items: center; width: calc(100% - 28px); margin: 0 14px 12px; padding: 8px 12px; min-height: 44px; color: var(--foreground); background: #282532; border: 1px solid #575064; border-radius: var(--radius); }
+#castPane .cs-review span { color: var(--primary-hi); }
+#castPane .cs-h { background: var(--card); box-shadow: none; }
+#castPane .cs-m { min-height: 44px; }
+#castPane .cs-m .opt-q { font-size: .85em; }
+#castPane .cs-location { border-block: 1px solid var(--border); }
+#castPane .cs-location summary { padding: 12px 14px; cursor: pointer; min-height: 44px; }
+#castPane .bfl.near > span { color: var(--warn); }
+#castPane :is(summary,button):focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }
