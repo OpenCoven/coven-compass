@@ -1676,7 +1676,7 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
       <p class="key-context">Local simulation · Decisions and chat affect sample data only.</p>
 <div class="kz-r"><span class="kz-m"><svg viewBox="0 0 20 20" aria-hidden="true"><path class="kl" d="M5 3h10l2 2v10l-2 2H5l-2-2V5Z"/></svg></span><div><b>Project</b><p>Open a Project outline to explore its missions. The number inside is its mission count.</p></div></div>
 <div class="kz-r"><span class="kz-m"><svg viewBox="-9 -9 18 18" aria-hidden="true" style="color:var(--primary)"><use href="#crown" x="-8.4" y="-8.1" width="16.8" height="15.5" fill="currentColor"/></svg></span><div><b>Psyche</b><p>Open the center marker to talk to Psyche. Its inner band shows the share of agents working. Its outer band shows the share of missions waiting for you.</p></div></div>
-<div class="kz-r"><span class="kz-m" id="kzSealMark"></span><div><b>Mission</b><p>Each cog beside a seal is a task. Open the group to see task names and assigned agents.</p></div></div>
+<div class="kz-r"><span class="kz-m" id="kzSealMark"></span><div><b>Mission</b><p>Each cog beside a seal is a task. Open the group to see its tasks and agents. Selecting a mission reveals a tinted plane for each familiar’s agents.</p></div></div>
 <div class="kz-r"><span class="kz-m"><svg viewBox="0 0 18 18" aria-hidden="true"><rect x="3" y="3" width="12" height="12" rx="1" fill="none" stroke="var(--attention)"/><path d="M9 6v6" stroke="var(--attention)"/></svg></span><div><b>Decision</b><p>Open a numbered gate to review pending requests.</p></div></div>
 <details class="key-topic" name="map-key-topic"><summary>Familiars, tasks and agents</summary><div><div id="kzFams" class="kz-fams"></div><div class="kz-r"><span class="kz-m" id="kzDots"></span><div><b>Familiar color</b><p>Connects the familiar to its mission and agents. Moving highlights indicate working agents.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="-1.2 -1.2 2.4 2.4" aria-hidden="true"><circle r=".96" fill="var(--fam-astra)"/><rect x="-.28" y="-.28" width=".56" height=".56" fill="var(--card)"/></svg></span><div><b>Agent and assignment</b><p>Each dot is an agent. A square center marks a task assignment. Working agents are filled. Idle agents are hollow.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 14 14" aria-hidden="true"><circle class="kc on" cx="7" cy="7" r="4.5"/><circle cx="7" cy="7" r="2" fill="var(--fam-cody)"/></svg></span><div><b>Shared task</b><p>A second hub color identifies a co-leading familiar. A dashed spot reserves a waiting agent’s place.</p></div></div></div></details>
 <details class="key-topic" name="map-key-topic"><summary>Mission progress and limits</summary><div>
@@ -2468,7 +2468,8 @@ function syncTaskTray(s, mission, tasks) {
   const width = captionWidth + visible.length * 13 + 10 + suffix.length * 6;
   s.trayWidth = width;
   svgEl('rect', {class: 'task-tray-hit', x: -width / 2 - 2, y: -13, width: width + 4, height: 26, rx: 8}, s.tray);
-  svgEl('rect', {class: 'task-tray-bg', x: -width / 2, y: -8, width, height: 16, rx: 8}, s.tray);
+  svgEl('rect', {class: 'task-tray-bg', x: -width / 2, y: -8, width, height: 16, rx: 5}, s.tray);
+  svgEl('rect', {class: 'task-tray-well', x: captionWidth + 4 - width / 2, y: -6, width: width - captionWidth - 6, height: 12, rx: 3.5, 'pointer-events': 'none'}, s.tray);
   svgEl('text', {class: 'task-caption', x: 6 - width / 2, y: 3}, s.tray).textContent = caption;
   visible.forEach((task, index) => {
     const glyph = svgEl('path', {class: 'task-cog', d: taskCogPath, 'fill-rule': 'evenodd', transform: 'translate(' + (captionWidth + 11 + index * 13 - width / 2) + ' 0)'}, s.tray);
@@ -2513,6 +2514,9 @@ function sync() {
         s = {id, m: M.id, fam: k, x: p.x, y: p.y, rot: p.rot, ln,
           link: svgEl('line', {class: 'link'}, ln), lflow: svgEl('line', {class: 'flow task-flow'}, ln), g: svgEl('g', {class: 'atlas-squad', 'data-m': M.id, 'data-fam': k}, sc.nodes)};
         s.g.style.setProperty('--hue', hue);
+        s.plane = svgEl('g', {class: 'squad-plane', 'pointer-events': 'none', 'aria-hidden': 'true'}, s.g);
+        s.stem = svgEl('line', {}, s.plane);
+        s.floor = svgEl('rect', {rx: 10}, s.plane);
         s.label = svgEl('text', {class: 'task-l show'}, s.g);
         s.label.textContent = fam(k).name;
         s.badge = svgEl('g', {class: 'seat'}, s.g);
@@ -2526,6 +2530,7 @@ function sync() {
       }
       const tl = tally.get(id) || {tot: 0, work: 0};
       s.R = seatR(c, id);
+      s.slots = null;
       s.ln.classList.toggle('working', tl.work > 0);
       const seat = c.layout.seat.get(id);
       s.bx = seat.bx; s.by = seat.by;
@@ -2578,6 +2583,22 @@ function sync() {
       const [hx, hy] = slotXY(lt, c.layout.slot.get(a.id) || 0); s.home = [hx, hy];
     }
     if (a.state !== 'gate' && s.ghost) { s.ghost.remove(); s.ghost = null; }
+    if (tg) {
+      // A waiting agent keeps its place on the plane while its mark moves to the gate.
+      const [x, y] = a.state === 'gate' && s.home ? s.home : q;
+      const b = tg.slots || (tg.slots = {left: x, right: x, top: y, bottom: y});
+      b.left = Math.min(b.left, x); b.right = Math.max(b.right, x);
+      b.top = Math.min(b.top, y); b.bottom = Math.max(b.bottom, y);
+    }
+  });
+  sc.seats.forEach(s => {
+    const b = s.slots;
+    if (!b) return;
+    const pad = 10;
+    s.floor.setAttribute('x', b.left - pad); s.floor.setAttribute('y', b.top - pad);
+    s.floor.setAttribute('width', b.right - b.left + 2 * pad); s.floor.setAttribute('height', b.bottom - b.top + 2 * pad);
+    s.stem.setAttribute('x1', s.bx); s.stem.setAttribute('y1', s.by);
+    s.stem.setAttribute('x2', (b.left + b.right) / 2); s.stem.setAttribute('y2', (b.top + b.bottom) / 2);
   });
   sc.agents.forEach((s, id) => { if (!w.agents.has(id)) { s.el.remove(); if (s.ghost) s.ghost.remove(); sc.agents.delete(id); } });
   const pairs = new Set();
@@ -2648,7 +2669,10 @@ function applySel() {
   });
   sc.missions.forEach(s => { s.node.classList.toggle('sel', c.sel === s.id);
     s.node.setAttribute('aria-pressed', String(c.sel === s.id)); });
-  sc.seats.forEach(s => s.badge.classList.toggle('sel', c.fam === s.fam && c.sel === s.m));
+  sc.seats.forEach(s => {
+    s.badge.classList.toggle('sel', c.fam === s.fam && c.sel === s.m);
+    s.plane.style.display = s.slots && c.sel === s.m ? '' : 'none';
+  });
   sc.agents.forEach(s => {
     const a = w.agents.get(s.id), visible = !!a && c.sel === a.mission;
     s.el.classList.toggle('picked', !!c.pick && c.pick.id === s.id);
@@ -3266,7 +3290,7 @@ function sealSvg(d, px) {
 }
 function buildSeal(se, d) {
   se.g.textContent = '';
-  se.selection = svgEl('circle', {class: 'se-selection', r: 46.3}, se.g);
+  se.selection = svgEl('circle', {class: 'se-selection', r: 47.5, pathLength: 100}, se.g);
   se.face = svgEl('circle', {class: 'se-face', r: 41.5}, se.g);
   svgEl('circle', {class: 'se-track', r: 36.8}, se.g);
   se.wedges = d.wedges.map(() => {
@@ -3362,9 +3386,18 @@ function fitTarget(c) {
     y0 = Math.min(y0, y - r); y1 = Math.max(y1, y + r);
   };
   add(ms.x, ms.y, 43);
-  M.seats.forEach(k => { const s = sc.seats.get(seatId(M.id, k)); if (s) { add(s.x, s.y, s.R + 6); add(s.bx, s.by, 16); } });
-  c.world.agents.forEach(a => { if (a.mission === M.id && a.state === 'gate') { const s = sc.agents.get(a.id); if (s) add(s.q[0], s.q[1], 14); } });
-  const target = window.CovenAtlasViewport.fit({x0: x0 - 16, y0: y0 - 28, x1: x1 + 16, y1: y1 + 28}, {width: stage.clientWidth, height: stage.clientHeight, frame: atlasViewportFrame(true), fill: .88, minZoom: ZMIN, maxZoom: 2.3});
+  const focusedSeat = c.fam && sc.seats.get(seatId(M.id, c.fam));
+  for (const k of focusedSeat ? [c.fam] : M.seats) {
+    const seat = sc.seats.get(seatId(M.id, k));
+    if (seat) { add(seat.x, seat.y, seat.R + 6); add(seat.bx, seat.by, 16); }
+  }
+  c.world.agents.forEach(a => {
+    if (a.mission !== M.id || a.state !== 'gate' || (focusedSeat && a.fam !== c.fam)) return;
+    const agent = sc.agents.get(a.id); if (agent) add(agent.q[0], agent.q[1], 14);
+  });
+  const x = focusedSeat ? focusedSeat.bx : ms.x, y = focusedSeat ? focusedSeat.by : ms.y;
+  const halfWidth = Math.max(x - x0, x1 - x) + 16, halfHeight = Math.max(y - y0, y1 - y) + 28;
+  const target = window.CovenAtlasViewport.fit({x0: x - halfWidth, y0: y - halfHeight, x1: x + halfWidth, y1: y + halfHeight}, {width: stage.clientWidth, height: stage.clientHeight, frame: atlasViewportFrame(true), fill: .88, minZoom: ZMIN, maxZoom: 2.3});
   return {zoom: target.zoom, px: clamp(target.px, -PAN, PAN), py: clamp(target.py, -PAN, PAN)};
 }
 // A selected mission is written into the space it occupies: a title plate for the mission, a plate beside each council

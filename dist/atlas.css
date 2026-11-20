@@ -931,3 +931,6 @@ body.atlas-adaptive-mobile[data-mobile-layout="landscape"] .mission-captions:not
 .atlas-marker-style select:focus-visible { outline: 2px solid var(--primary); outline-offset: 1px; }
 #atlasMobileChrome .atlas-marker-style { grid-column: 1 / -1; justify-content: space-between; }
 #atlasMobileChrome .atlas-marker-style select { min-height: 44px; }
+
+#mission-section[aria-labelledby="mission-tab-tasks"] .i-task { padding: 10px 12px; margin-block: 6px; border: 1px solid var(--border); border-radius: 8px; background: color-mix(in srgb, var(--hue) 5%, var(--card)); }
+#mission-section[aria-labelledby="mission-tab-tasks"] .dots { margin: 7px 0 0; padding: 3px; border-radius: 5px; background: var(--well); }

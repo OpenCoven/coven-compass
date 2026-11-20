@@ -451,6 +451,17 @@ test('selected-mission fit remains centered in its asymmetric safe frame after t
   assert.equal(camera.zoom, 2.3, 'this mission exercises the upper zoom cap');
   const screen = projectToScreen([position.x, position.y], [0, 0], camera, f.stage);
   near(screen[0], frame.cx, 'capped mission horizontal center'); near(screen[1], frame.cy, 'capped mission vertical center');
+  M.seats.push('astra');
+  context.seatId = (m, k) => m + '/' + k;
+  const seat = {x: 365, y: -170, R: 35, bx: 292, by: -140};
+  context.sc.seats.set('m1/astra', seat);
+  for (const [familiar, anchor] of [[null, [position.x, position.y]], ['astra', [seat.bx, seat.by]]]) {
+    project.fam = familiar;
+    const fitted = context.fitTarget(project);
+    const center = projectToScreen(anchor, [0, 0], fitted, f.stage);
+    near(center[0], frame.cx, 'selected item stays horizontally centered with an off-center squad');
+    near(center[1], frame.cy, 'selected item stays vertically centered with an off-center squad');
+  }
   project.sel = 'removed'; assert.equal(context.fitTarget(project), null, 'replay removal has no stale fit target');
 });
 

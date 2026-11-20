@@ -292,7 +292,12 @@ body.atlas-enhanced #plan .agent.co .agent-task { fill: var(--hue2); }
 /* A shared capsule groups each mission’s recorded tasks at rest and during replay. */
 .mission-tasks { cursor: pointer; }
 .task-tray-hit { fill: transparent; pointer-events: all; }
-.task-tray-bg { fill: #282631; stroke: #585464; stroke-width: 1; }
+.task-tray-bg { fill: #27242d; stroke: #625a6c; stroke-width: 1; }
+.task-tray-well { fill: #19171e; stroke: #423b4b; stroke-width: .6; }
+.squad-plane rect { fill: color-mix(in srgb, var(--hue) 10%, #19181e); stroke: color-mix(in srgb, var(--hue) 38%, #302d38); }
+.squad-plane :is(rect, line) { vector-effect: non-scaling-stroke; stroke-width: 1; }
+.squad-plane line { stroke: var(--hue); stroke-opacity: .45; }
+body.atlas-enhanced #plan:not(.atlas-agent-detail) .squad-plane { display: none; }
 .task-cog { fill: var(--hue); }
 .task-caption { fill: #c6c1cf; font: 500 9px var(--f-body); }
 .task-overflow { fill: #dfdbe6; font: 500 9px var(--f-body); text-anchor: end; }
@@ -300,3 +305,23 @@ body.atlas-enhanced #plan .agent.co .agent-task { fill: var(--hue2); }
 
 .seal-reference { display: none; fill: #fff; stroke: #27242d; stroke-width: 2.5; paint-order: stroke; text-anchor: middle; font: 500 13px var(--f-body); }
 .atlas-compact-seal .lead-node:not(:hover, :focus-visible, .sel) .seal-reference { display: inline; }
+
+/* Focus follows the mark. HTML controls retain their normal focus outline. */
+body.atlas-enhanced #plan :is(.lead-node, .seat, .agent, .mission-tasks, .hub, .atlas-local-psyche, .ghostfort, .atlas-decision):focus-visible { outline: none; }
+body.atlas-enhanced #plan .se-selection { vector-effect: non-scaling-stroke; stroke-width: 1.6; stroke-dasharray: 14 11; stroke-dashoffset: 7; stroke-linecap: round; }
+body.atlas-enhanced #plan .lead-node:focus-visible .se-selection { stroke: var(--attention); stroke-width: 2; }
+body.atlas-enhanced #plan .agent:focus-visible { opacity: 1; }
+body.atlas-enhanced #plan .agent:focus-visible .hot { stroke: var(--attention); stroke-opacity: 1; stroke-width: 2; vector-effect: non-scaling-stroke; }
+body.atlas-enhanced #plan .ghostfort:focus-visible .wall.base,
+body.atlas-enhanced #plan .seat:focus-visible .familiar-disc,
+body.atlas-enhanced #plan .mission-tasks:focus-visible .task-tray-bg { stroke-width: 2.5; vector-effect: non-scaling-stroke; }
+body.atlas-enhanced #plan.atlas-selected :is(.atlas-mission-group, .atlas-squad).dim { opacity: .32; }
+body.atlas-enhanced #plan.atlas-selected :is(.atlas-mission-group, .atlas-squad).dim:is(:hover, :focus-within) { opacity: 1; }
+body.atlas-enhanced #plan.atlas-selected :is(.atlas-mission-lines, .atlas-squad-lines).dim { opacity: .13; }
+@media (prefers-contrast: more) {
+  body.atlas-enhanced #plan.atlas-selected :is(.atlas-mission-group, .atlas-squad).dim { opacity: .75; }
+}
+
+@media (forced-colors: active) {
+  body.atlas-enhanced #plan [data-map-item]:focus-visible :is(.se-selection, .familiar-disc, .hot, .task-tray-bg, .coord-face, .coord-point, .wall.base, rect:not(.atlas-map-hit)) { stroke: Highlight; }
+}

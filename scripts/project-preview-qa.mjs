@@ -189,3 +189,42 @@ test('mission browsing leaves space for the selected seal and the open Inbox rev
     await page.close();
   }
 });
+
+test('mission focus traces the seal and reveals the planes for its agents', async () => {
+  const page = await browser.newPage({viewport: {width: 1440, height: 900}, reducedMotion: 'reduce'});
+  try {
+    await page.goto(new URL('#/project/psyche-build', base).href);
+    const mission = page.locator('.lead-node[aria-label^="Source survey,"]');
+    // Enter keyboard modality and activate the real map control.
+    await page.keyboard.press('Tab');
+    await mission.focus();
+    assert.equal(await mission.evaluate(el => getComputedStyle(el).outlineStyle), 'none');
+    assert.equal(await mission.locator('.se-selection').isVisible(), true);
+    await page.keyboard.press('Enter');
+    await page.locator('#plan.atlas-selected').waitFor();
+    const selected = page.locator('.atlas-mission-group.atlas-mission-current');
+    assert.equal(await selected.locator('.task-tray-well').isVisible(), true);
+    const planes = page.locator('.atlas-squad:not(.dim) .squad-plane:visible');
+    assert.ok(await planes.count() > 0);
+    assert.equal(await page.locator('.atlas-squad.dim .squad-plane:visible').count(), 0);
+    for (const plane of await planes.all()) {
+      const rect = await plane.locator('rect').boundingBox();
+      assert.ok(rect.width > 0 && rect.height > 0);
+      const marks = plane.locator('..').locator('.agent-mark:visible, .cell-ghost:visible');
+      for (const mark of await marks.all()) {
+        const box = await mark.boundingBox();
+        assert.ok(box.x >= rect.x - 1 && box.x + box.width <= rect.x + rect.width + 1);
+        assert.ok(box.y >= rect.y - 1 && box.y + box.height <= rect.y + rect.height + 1);
+      }
+    }
+    const distant = page.locator('.atlas-mission-group.dim').first();
+    assert.ok(await distant.evaluate(el => Number(getComputedStyle(el).opacity) < .5));
+    await mission.focus();
+    await page.keyboard.press('Escape');
+    await page.locator('#plan:not(.atlas-selected)').waitFor();
+    assert.equal(await page.locator('.squad-plane:visible').count(), 0);
+    assert.ok(await mission.evaluate(el => el === document.activeElement));
+  } finally {
+    await page.close();
+  }
+});
