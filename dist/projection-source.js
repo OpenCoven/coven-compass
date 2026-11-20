@@ -348,6 +348,26 @@
     return node;
   }
 
+  // One synthetic Brief case: what it shows, the shared policy panel, and links to the other cases.
+  function renderBrief(doc, slot, brief, view) {
+    slot.removeAttribute('hidden');
+    slot.appendChild(element(doc, 'div', {'class': 'bp-case'}, [
+      element(doc, 'h2', {text: 'Synthetic case: ' + brief.title}),
+      element(doc, 'p', {text: (brief.mission ? brief.mission + '. ' : '') + brief.summary}),
+    ]));
+    if (view && typeof view.render === 'function') {
+      slot.appendChild(view.render(doc, {policy: brief.policy, result: brief.result, summary: brief.policySummary, origin: 'synthetic',
+        note: 'Every id and digest in this case is a placeholder. It came from a synthetic fixture, not from Psyche or Coven.'}));
+    } else {
+      slot.appendChild(element(doc, 'p', {role: 'alert', text: 'The Brief policy view (brief-policy-view.js) did not load, so this case cannot be shown.'}));
+    }
+    slot.appendChild(element(doc, 'nav', {'aria-label': 'Synthetic Brief cases'}, (brief.cases || []).map(function (id) {
+      var link = element(doc, 'a', {href: '?source=fixture&scenario=' + encodeURIComponent(id), text: id.replace(BRIEF_PREFIX, '')});
+      if (id === brief.scenario) link.setAttribute('aria-current', 'page');
+      return link;
+    })));
+  }
+
   /** Browser only. Replaces the simulation UI with a projection view for a non-simulation mode. */
   function renderStandalone(doc, selection, options) {
     var o = options || {}, win = doc.defaultView;
@@ -359,10 +379,11 @@
       [element(doc, 'span', {'class': 'pv-badge', text: 'Loading'})]);
     var table = element(doc, 'table', {'class': 'pv-table', hidden: ''});
     var scroll = element(doc, 'div', {'class': 'pv-scroll'}, [table]);
+    var briefSlot = element(doc, 'div', {'class': 'pv-brief', hidden: ''});
     var view = element(doc, 'main', {'class': 'projection-view', 'aria-labelledby': 'projectionTitle'}, [
       element(doc, 'h1', {id: 'projectionTitle', text: selection.mode === 'fixture' && isBriefScenario(selection.scenario) ? 'Coven Compass · Brief policy case' : 'Coven Compass · Projects'}),
       element(doc, 'p', {'class': 'pv-source', text: 'Projection source: ' + (selection.requested || selection.mode) + '. The simulation is not running in this mode.'}),
-      status, scroll,
+      status, briefSlot, scroll,
       element(doc, 'nav', {'aria-label': 'Projection sources'}, ['simulation', 'fixture&scenario=fresh', 'fixture&scenario=stale',
         'fixture&scenario=partial', 'fixture&scenario=disconnected', 'fixture&scenario=unsupported-version', 'fixture&scenario=brief-rubric-pass'].map(function (q) {
         return element(doc, 'a', {href: '?source=' + q, text: q.replace('fixture&scenario=', 'fixture: ')});
@@ -398,6 +419,8 @@
       status.appendChild(element(doc, 'span', {'class': 'pv-badge', text: d.label}));
       status.appendChild(doc.createTextNode(d.message));
       status.appendChild(element(doc, 'div', {'class': 'pv-source', text: d.source}));
+      briefSlot.textContent = '';
+      if (projection.brief) renderBrief(doc, briefSlot, projection.brief, win && win.CovenBriefPolicyView);
       table.textContent = '';
       if (d.rows.length) {
         table.removeAttribute('hidden');

@@ -2,7 +2,7 @@
 
 **Status: proposed consumer profile, awaiting owner decisions.** This chapter is the documentation half of the proposal/fixture slice of [issue #35](https://github.com/OpenCoven/coven-compass/issues/35). It approves no protocol, grants no execution authority, and changes no wire schema. Every row below is *proposed — owner decision*. The decisions it raises are D13–D15 in the [register](11-open-decisions.md), and all three are proposed.
 
-Compass consumes this profile and doesn't own it. The browser model is `dist/brief-policy.js`, and its synthetic cases are in `dist/fixtures/brief-policy-cases.json`. Both are labeled proposal and synthetic everywhere they appear.
+Compass consumes this profile and doesn't own it. The browser model is [`dist/brief-policy.js`](../../dist/brief-policy.js), and its synthetic cases are in [`dist/fixtures/brief-policy-cases.json`](../../dist/fixtures/brief-policy-cases.json). Open a case with `?source=fixture&scenario=brief-rubric-pass` (or any other `brief-…` case), or look at the Brief tab of any simulated mission. Both are labeled proposal and synthetic everywhere they appear.
 
 ## Pinned sources
 

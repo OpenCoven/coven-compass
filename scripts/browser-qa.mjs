@@ -34,6 +34,13 @@ const SCENARIOS = [
   { query: '?source=fixture&scenario=disconnected', state: 'unavailable', label: 'Unavailable', rows: 0, message: /disconnected/ },
   { query: '?source=fixture&scenario=unsupported-version', state: 'unavailable', label: 'Unavailable', rows: 0, message: /"2\.0"/ },
   { query: '?source=live', state: 'unavailable', label: 'Unavailable', rows: 0, message: /Requested "live"/ },
+  // Synthetic Brief success policy cases (#35 proposal): no Projects, one policy panel each.
+  ...[['rubric-pass', 'request-authorized-acceptance'], ['rubric-fail', 'request-bounded-revision'], ['hard-failure', 'stop-escalate'],
+    ['missing-evidence', 'wait-for-evidence'], ['stale-evaluation', 'wait-for-evidence'], ['remediable-failure', 'request-bounded-revision'],
+    ['budget-exhausted', 'stop-escalate'], ['cancelled', 'stop-escalate'], ['unresolved-effects', 'stop-escalate'],
+    ['authorization-expired', 'stop-escalate']].map(([name, action]) => ({ query: '?source=fixture&scenario=brief-' + name,
+    state: 'synthetic', label: 'Fixture · synthetic', rows: 0, message: /not Coven data/, brief: action })),
+  { query: '?source=fixture&scenario=brief-nope', state: 'unavailable', label: 'Unavailable', rows: 0, message: /Known Brief cases/ },
 ];
 
 
@@ -322,6 +329,29 @@ for (const vp of VIEWPORTS) {
       const inspector = await visible(page, '#inspect');
       check(mode, vp.name, 'open a mission', hash2.includes('/mission/') && inspector, `via ${opener}; hash ${hash2}; inspector visible ${inspector}`);
       if (!query) await shot(page, `${tag}-mission`);
+
+      // The Brief tab carries the success policy panel (#35 proposal), labeled simulation, never accepted.
+      if (inspector) {
+        await page.click('#mission-tab-brief');
+        await page.waitForTimeout(400);
+        const bp = await page.evaluate(() => {
+          const panel = document.querySelector('#inspect .bp'), box = document.getElementById('inspect');
+          if (!panel) return null;
+          const r = panel.getBoundingClientRect();
+          return { badge: panel.querySelector('.bp-badge').textContent, steps: [...panel.querySelectorAll('.bp-step dt')].map(d => d.textContent),
+            accepted: panel.querySelectorAll('.bp-step')[3].textContent, next: panel.querySelector('.bp-action').textContent,
+            sections: [...panel.querySelectorAll('.bp-sec h4')].map(h => h.textContent),
+            fits: r.width > 0 && box.scrollWidth <= box.clientWidth + 1 && r.right <= window.innerWidth + 1 };
+        });
+        check(mode, vp.name, 'Brief tab shows the success policy proposal apart from acceptance',
+          bp && /Simulation · proposal/.test(bp.badge) && bp.steps.join('|') === 'Proposal|Execution|Quality qualification|Accepted completion'
+            && /Not recorded/.test(bp.accepted) && bp.next === 'Wait for evidence' && bp.sections.length === 4 && bp.fits,
+          bp ? `badge "${bp.badge}"; steps ${bp.steps.join(' / ')}; next "${bp.next}"; sections ${bp.sections.join(' / ')}; fits ${bp.fits}` : 'no .bp panel in #inspect');
+        if (!query) {
+          await page.locator('#inspect .bp').scrollIntoViewIfNeeded().catch(() => {});
+          await shot(page, `${tag}-brief-policy`);
+        }
+      }
       await page.keyboard.press('Escape');
       await page.waitForTimeout(300);
 
@@ -415,6 +445,17 @@ for (const vp of VIEWPORTS) {
         `hidden ${r.tableHidden}; tr ${r.rows} (expected ${s.rows ? s.rows + 1 : 0})`);
       check(mode, vp.name, 'no horizontal page scroll', !r.overflowX, `scrollWidth > innerWidth: ${r.overflowX}`);
       check(mode, vp.name, 'table fits without clipping', !r.tableClipped, `table wider than its container: ${r.tableClipped}`);
+      if (s.brief) {
+        const bp = await page.evaluate(() => {
+          const panel = document.querySelector('.pv-brief .bp');
+          return panel && { badge: panel.querySelector('.bp-badge').textContent, next: panel.querySelector('.bp-next').className,
+            steps: panel.querySelectorAll('.bp-step').length, accepted: panel.querySelectorAll('.bp-step')[3].textContent,
+            cases: document.querySelectorAll('.pv-brief nav a').length, current: document.querySelector('.pv-brief nav a[aria-current="page"]')?.textContent };
+        });
+        check(mode, vp.name, 'synthetic Brief case: labeled, next action, acceptance not recorded',
+          bp && /Synthetic fixture/.test(bp.badge) && bp.next.includes('is-' + s.brief) && bp.steps === 4 && /Not recorded/.test(bp.accepted) && bp.cases >= 10 && !!bp.current,
+          bp ? `badge "${bp.badge}"; ${bp.next}; steps ${bp.steps}; links ${bp.cases}; current ${bp.current}` : 'no .bp panel');
+      }
       check(mode, vp.name, 'no console errors', errors.length === 0, errors.join(' | ') || 'none');
       await shot(page, `${vp.name}-${s.query.replace(/[?&=]/g, '_')}`);
     } catch (error) {

@@ -313,7 +313,7 @@ function fromBrief(brief, labels) {
   return n.ok ? n.policy : null;
 }
 
-const fmtLimit = (k, v) => k === 'usd' ? '$' + (v % 1 ? v.toFixed(2) : v) : k === 'minutes' ? v + ' minutes' : v + ' tokens';
+const fmtLimit = (k, v) => k === 'usd' ? '$' + (v % 1 ? v.toFixed(2) : v) : k === 'minutes' ? v + ' minutes' : v.toLocaleString('en-US') + ' tokens';
 const fmtScore = v => String(Math.round(v * 100) / 100);
 /** The plain-language completion summary of a policy, shown before a Brief is saved. */
 function summarize(policyInput) {
