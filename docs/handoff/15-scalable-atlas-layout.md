@@ -8,7 +8,7 @@ The inspected implementation surfaces are [`atlas-layout.js`](../../dist/atlas-l
 
 | Representation | Meaning | Constraint |
 | --- | --- | --- |
-| Uniform four-corner Project | One project within the displayed Coven scope | The four corners describe the enclosure, not a four-project limit or a permission model. |
+| Cut-corner Project | One project within the displayed Coven scope | Clipped corners frame the Project. Openings align with route gates. |
 | Mission count inside a Project | Exact known mission total in that Project | Enter the Project or use the searchable mission browser for individual seals and details. |
 | Central canonical crown | Psyche coordination in the displayed scope | Its relief does not encode priority, progress, authority, or a separate identity. |
 | Shared branch corridor | A readable coordination connection from Psyche to a project | Shared segments do not assert execution order, dependencies, network connectivity, or shared permissions. |
@@ -20,6 +20,8 @@ All overview Projects use the same enclosure vocabulary, including the currently
 ## 2. Compact placement for a changing project count
 
 The layout helper accepts an ordered collection of unique project keys. It reserves a central hub and fills nearby lattice cells in opposite pairs. This produces a compact arrangement with balanced space around Psyche, including when the project count is odd. It avoids enlarging a single ring every time a project is added. The usable aspect ratio influences which nearby cells are selected: a wide canvas favors horizontal space, while a narrow canvas makes greater use of vertical space. [Layout source](../../dist/atlas-layout.js)
+
+The overview uses the same four-sided enclosure for every Project. Inside a Project the boundary can grow additional sides as missions accumulate. Psyche occupies a circular coordination disc with the upright crown in both scopes. Routes meet the overview disc at its edge. Plan view shows the face alone, and orbit reveals a shallow base proportional to its radius.
 
 Each cell reserves the complete Project-and-label rectangle, not just the outline. The gaps between those rectangles are routing corridors. Routes leave the hub boundary, share suitable corridor segments, and make their final approach through the destination's inward-facing cardinal gate. A route may enter its own destination rectangle; it must not pass through another project's reserved space. The renderer must respect the helper's `maxCornerRadius` when rounding a branch, because excessive rounding can consume the reserved clearance.
 

@@ -263,3 +263,14 @@ body.atlas-enhanced #plan .atlas-compact-decision text { display: none; }
 
 body.atlas-enhanced #plan .atlas-compact-seal:not(.atlas-mission-current) .lead-name { visibility: hidden; }
 body.atlas-enhanced #plan .atlas-compact-seal:has(.lead-node:is(:hover, :focus-visible)) .lead-name { visibility: visible; opacity: 1; }
+
+/* The coordination disc meets the routes at its edge in both camera modes. */
+body.atlas-enhanced #plan .coord-face {
+  fill: #282531;
+  stroke: #9289ac;
+  stroke-width: 1.25;
+  vector-effect: non-scaling-stroke;
+}
+body.atlas-enhanced #plan .coord-base { fill: #51495f; }
+body.atlas-enhanced #plan :is(.hub, .atlas-local-psyche):is(:hover, :focus-visible) .coord-face { stroke: var(--primary); }
+body.atlas-enhanced #plan.flat :is(.atlas-crown-back, .atlas-crown-sides, .coord-base) { display: none; }
