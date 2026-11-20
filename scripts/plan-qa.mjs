@@ -92,13 +92,13 @@ for (const [name, width, height, mobile] of [['desktop', 1440, 900, false], ['ph
       const hub = page.locator('.atlas-local-psyche');
       const crown = hub.locator('.coord-crown');
       assert.equal(await select.inputValue(), 'crown');
-      assert.equal(Math.round((await crown.boundingBox()).width), 16);
+      assert.equal(Math.round((await crown.boundingBox()).width), 32);
       await page.locator('#atlasZoomIn').click();
       const camera = await readView(page);
-      assert.equal(Math.round((await crown.boundingBox()).width), 16);
+      assert.equal(Math.round((await crown.boundingBox()).width), 32);
       await select.selectOption('point');
       assert.equal(await crown.isVisible(), false);
-      assert.equal(Math.round((await hub.locator('.coord-point').boundingBox()).width), 8);
+      assert.equal(Math.round((await hub.locator('.coord-point').boundingBox()).width), 16);
       assert.equal(Math.round((await hub.locator('.atlas-map-hit').boundingBox()).width), 44);
       assert.deepEqual(await readView(page), camera);
       await select.selectOption('labeled');
@@ -107,6 +107,7 @@ for (const [name, width, height, mobile] of [['desktop', 1440, 900, false], ['ph
       await page.goto(new URL('#/coven', base).href);
       const overview = page.locator('.hub');
       await overview.locator('.coord-name').waitFor();
+      assert.equal(Math.round((await overview.locator('.coord-crown').boundingBox()).width), 32);
       await page.reload();
       await overview.locator('.coord-name').waitFor();
       if (mobile && !(await select.isVisible())) await page.locator('#atlasMobileView').click();

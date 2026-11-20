@@ -243,7 +243,7 @@ body.atlas-enhanced #plan :is(.coord-crown, .coord-point) { fill: var(--primary)
 body.atlas-enhanced #plan :is(.coord-name, .coord-point) { display: none; }
 body[data-psyche-marker="point"] #plan .coord-crown { display: none; }
 body[data-psyche-marker="point"] #plan .coord-point { display: inline; }
-body[data-psyche-marker="point"] #plan .coord-face { r: 6px; }
+body[data-psyche-marker="point"] #plan .coord-face { r: 12px; }
 body[data-psyche-marker="labeled"] #plan .coord-face { stroke: #787183; }
 body[data-psyche-marker="labeled"] #plan .coord-name { display: inline; fill: var(--foreground); font-family: var(--f-body); }
 body.atlas-enhanced #plan :is(.hub, .atlas-local-psyche):is(:hover, :focus-visible) .coord-face { stroke: var(--primary); stroke-width: 2; }

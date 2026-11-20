@@ -2756,7 +2756,7 @@ function project() {
     const hq = P(cv.x, cv.y), hubU = Math.min(U, 8);
     window.CovenAtlasCrown.draw(cv.marker, {x: cv.x, y: cv.y, screenScale});
     cv.g.style.setProperty('--u', hubU.toFixed(3));
-    const belowMarker = (document.body.dataset.psycheMarker === 'labeled' ? 26 : 11) / screenScale;
+    const belowMarker = (document.body.dataset.psycheMarker === 'labeled' ? 37 : 22) / screenScale;
     set(cv.sub, hq, belowMarker + 14 * hubU); set(cv.need, hq, belowMarker + 29 * hubU);
     cv.links.forEach((L, i) => {
       const gh = sc.ghosts[i], gate = P(L.gx, L.gy);
@@ -2933,7 +2933,7 @@ function layoutMapLabels() {
     if (s.tray && s.trayBox) reserve(X(s.trayBox.x), Y(s.trayBox.y), s.trayBox.width * scale, s.trayBox.height * scale);
   });
   reserve(X(sc.psy.sx), Y(sc.psy.sy), 44, 44);
-  if (document.body.dataset.psycheMarker === 'labeled') reserve(X(sc.psy.sx), Y(sc.psy.sy) + 20, 45, 14);
+  if (document.body.dataset.psycheMarker === 'labeled') reserve(X(sc.psy.sx), Y(sc.psy.sy) + 31, 45, 14);
   sc.gateL.forEach(g => { if (g.mark.style.display !== 'none') reserve(X(g.sx), Y(g.sy), 30, 30, g); });
   sc.seats.forEach(s => {
     if (c.sel !== s.m) return;
