@@ -198,6 +198,7 @@ async function compactMissionLabel() {
   try {
     await page.locator('#atlasBrowse').click();
     await page.locator('.atlas-project[data-project="psyche-build"]').click();
+    await page.locator('#workspaceTools > summary').click();
     await page.locator('#traceBox > summary').click();
     await page.locator('#traceLoad > summary').click();
     const fileChoice = page.waitForEvent('filechooser');

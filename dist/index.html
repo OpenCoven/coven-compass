@@ -93,7 +93,9 @@ h1,h2,h3,p,dl,dd{margin:0}
 .stage{position:relative;flex:1;min-width:0;min-height:0;cursor:grab;touch-action:pan-y;-webkit-user-select:none;user-select:none}
 .stage.locked{cursor:default}
 .stage.panning{cursor:grabbing}
-.stage:focus-visible{outline-offset:-3px}
+#stage:focus-visible,#plan:focus-visible{outline:none}
+#stage:is(:focus-visible,:has(>#plan:focus-visible))::after{content:"";position:absolute;top:5px;left:50%;width:36px;height:2px;transform:translateX(-50%);border-radius:2px;background:color-mix(in srgb,var(--primary) 65%,transparent);pointer-events:none}
+@media (forced-colors:active){#stage:is(:focus-visible,:has(>#plan:focus-visible))::after{background:Highlight;forced-color-adjust:none}}
 #plan{position:absolute;inset:0;display:block;width:100%;height:100%;touch-action:none}
 .pill{position:relative}
 .pill summary{list-style:none}
@@ -574,7 +576,9 @@ body{letter-spacing:-.006em;font-feature-settings:"ss01","cv11";text-rendering:o
 .manifest .plate-h .nm{flex:none}
 .leaders{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .leaders line{stroke:var(--hue,var(--primary));stroke-opacity:.5;stroke-width:1}
-.leaders circle{fill:var(--hue,var(--primary))}
+.seat-connector{color:var(--hue);pointer-events:none}
+.seat-connector path{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round}
+.seat-connector circle{fill:currentColor;stroke:var(--background);stroke-width:1}
 .plates:not(:has(.manifest)) .plate-h .rl{display:none}
 
 /* Project outlines and names in the Coven overview. */
@@ -1410,7 +1414,10 @@ button.fm-r:hover svg{color:var(--hue,var(--primary))}
 /* ================= composer: one field. The route is its top strip, the message its body, both on one left edge ================= */
 .comp{padding:10px 12px 12px;gap:8px}
 .comp .field{flex-wrap:wrap;gap:0 8px;padding:0;align-items:center;background:var(--well);border-color:var(--border-strong);box-shadow:inset 0 2px 5px rgba(0,0,0,.55),0 1px 0 rgba(255,255,255,.04)}
-.comp .field:focus-within{border-color:var(--primary);box-shadow:inset 0 2px 5px rgba(0,0,0,.55),0 0 0 3px var(--primary-soft)}
+#comp #say{border-bottom:2px solid transparent}
+#comp #say:focus-visible{outline:none;border-bottom-color:var(--primary)}
+#comp button:focus-visible{outline-offset:-2px}
+@media (forced-colors:active){#comp #say:focus-visible{border-bottom-color:Highlight}}
 .comp .field>.route{flex:0 0 100%;box-sizing:border-box;min-height:calc(34px * var(--fs,1));padding:5px 6px 5px 13px;gap:5px 7px;flex-wrap:nowrap;border-bottom:1px solid var(--border);border-radius:calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.015))}
 .comp .field>.route .rt-k{flex:none}
 .comp .field>.route .rt-c{flex:0 1 auto;min-width:0;min-height:calc(22px * var(--fs,1));overflow:hidden}
@@ -1510,7 +1517,14 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
   <main class="main">
     <section class="left">
       <div class="plan card">
-        <div class="plan-head">
+        <div class="plan-head" id="workspaceBar">
+          <div class="workspace-urgent">
+            <div class="ctl need-ctl"><button class="attn" type="button" id="needBtn" aria-pressed="false" aria-controls="notif" hidden><span class="in-i" id="needIc"></span><span id="needTxt"></span></button></div>
+            <div class="ctl stop-ctl"><button class="stopb" type="button" id="stopBtn" aria-expanded="false" aria-controls="stopPop" hidden><i></i><span id="stopTxt">Stop</span></button></div>
+          </div>
+          <details class="workspace-tools" id="workspaceTools">
+            <summary title="Project tools" aria-label="Project tools">•••</summary>
+            <div class="workspace-utilities">
           <div class="ctl crumb">
           <details class="pill" id="proj">
             <summary class="btn"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 3v9h4V9h2v3h4V3h-2v2H8V3H6v2H4V3Z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg><span class="sr">Project: </span><span class="nm" id="projName"></span><svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
@@ -1561,10 +1575,10 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
             <div class="ctl"><button type="button" id="keyBtn" aria-haspopup="dialog" aria-controls="keyModal" aria-label="Key and help" title="Key and help"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5.2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M7 6.4v3.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="7" cy="4.4" r=".9" fill="currentColor"/></svg></button></div>
             <div class="ctl"><button type="button" id="lock" aria-pressed="false" aria-label="Lock the view"></button></div>
             <div class="ctl live-ctl"><button type="button" class="live-btn" id="live" aria-pressed="true"><i></i><span class="sr">Live</span></button><span class="summary sr" id="summary"></span></div>
-            <div class="ctl need-ctl"><button class="attn" type="button" id="needBtn" aria-pressed="false" aria-controls="notif" hidden><span class="in-i" id="needIc"></span><span id="needTxt"></span></button></div>
-            <div class="ctl stop-ctl"><button class="stopb" type="button" id="stopBtn" aria-expanded="false" aria-controls="stopPop" hidden><i></i><span id="stopTxt">Stop</span></button></div>
             <div class="ctl"><button type="button" id="footBtn" aria-pressed="true" aria-label="Hide the timeline and missions"><svg viewBox="0 0 14 14" aria-hidden="true"><rect x="2" y="2.5" width="10" height="9" rx="1.3" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M2 8.4h10" stroke="currentColor" stroke-width="1.3"/></svg><span id="footClock" hidden></span></button></div>
           </div>
+            </div>
+          </details>
           <section class="notif stop-pop" id="stopPop" aria-label="Stop this project" hidden>
       <div class="hd"><span class="hd-i q" id="stopIc"></span><span class="hd-t">Stop this project</span><span class="hd-m" id="stopName"></span></div>
       <p class="pc-note">Every agent here stops at once and stays stopped until you resume. This does not go through Psyche.</p>
@@ -1573,7 +1587,7 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
         </div>
         <div class="plan-body">
           <div class="stage" id="stage" tabindex="0" aria-label="Project view. Drag or use arrow keys to pan. Pinch, scroll, or use plus and minus to zoom. Press zero to fit.">
-            <svg id="plan" viewBox="-392 -392 784 784" role="group" aria-label="Coven map. Arrow keys move between items. Home and End go to the first and last."></svg>
+            <svg id="plan" tabindex="-1" viewBox="-392 -392 784 784" role="group" aria-label="Coven map. Arrow keys move between items. Home and End go to the first and last."></svg>
             <form class="empty" id="projectForm" aria-label="Project" autocomplete="off" novalidate hidden>
               <div class="hd"><span class="hd-i" id="czIcon"></span><h2 class="hd-t" id="czTitle">New project</h2><span class="hd-m" id="czMeta"></span><button class="btn x" type="button" id="czX" aria-label="Close">×</button></div>
               <div class="mobile-form-body">
@@ -1600,7 +1614,7 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
               <div class="em-act"><span class="nm-foot" id="czFoot"></span><button class="btn pri" id="czGo" type="submit">Create project</button></div>
             </form>
             <form class="empty" id="empty" aria-label="New mission" autocomplete="off" hidden>
-              <div class="hd"><h2 class="hd-t" id="nmTitle">New mission</h2><span class="hd-m" id="emptyName"></span><span class="hd-s off" id="emptyState">Dormant</span><button class="btn x" type="button" id="emptyX" aria-label="Close" hidden>×</button></div>
+              <div class="hd"><h2 class="hd-t" id="nmTitle" tabindex="-1">New mission</h2><span class="hd-m" id="emptyName"></span><span class="hd-s off" id="emptyState">Dormant</span><button class="btn x" type="button" id="emptyX" aria-label="Close" hidden>×</button></div>
               <div class="mobile-form-body">
               <div class="nm-sec">
                 <label class="nm-l" for="nmName">What should get done?</label>
@@ -1672,24 +1686,46 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
   <div class="modal-bg" id="keyBg"></div>
   <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="keyTitle">
     <header class="hd"><span class="hd-i" id="keyIc"></span><h2 class="hd-t" id="keyTitle">Map key</h2><button class="btn x" type="button" id="keyX" aria-label="Close">×</button></header>
+    <div class="key-tabs" role="tablist" aria-label="Map key topics">
+      <button type="button" role="tab" id="key-tab-map" aria-controls="key-panel-map" aria-selected="true" tabindex="0">Map</button>
+      <button type="button" role="tab" id="key-tab-teams" aria-controls="key-panel-teams" aria-selected="false" tabindex="-1">Teams</button>
+      <button type="button" role="tab" id="key-tab-seals" aria-controls="key-panel-seals" aria-selected="false" tabindex="-1">Seals</button>
+      <button type="button" role="tab" id="key-tab-signals" aria-controls="key-panel-signals" aria-selected="false" tabindex="-1">Signals</button>
+      <button type="button" role="tab" id="key-tab-controls" aria-controls="key-panel-controls" aria-selected="false" tabindex="-1">Controls</button>
+    </div>
     <div class="key-reader">
-      <p class="key-context">Local simulation · Decisions and chat affect sample data only.</p>
-<div class="kz-r"><span class="kz-m"><svg viewBox="0 0 20 20" aria-hidden="true"><path class="kl" d="M5 3h10l2 2v10l-2 2H5l-2-2V5Z"/></svg></span><div><b>Project</b><p>Open a Project outline to explore its missions. The number inside is its mission count.</p></div></div>
-<div class="kz-r"><span class="kz-m"><svg viewBox="-9 -9 18 18" aria-hidden="true" style="color:var(--primary)"><use href="#crown" x="-8.4" y="-8.1" width="16.8" height="15.5" fill="currentColor"/></svg></span><div><b>Psyche</b><p>Open the center marker to talk to Psyche. Its inner band shows the share of agents working. Its outer band shows the share of missions waiting for you.</p></div></div>
-<div class="kz-r"><span class="kz-m" id="kzSealMark"></span><div><b>Mission</b><p>Each cog beside a seal is a task. Open the group to see task names and assigned agents.</p></div></div>
-<div class="kz-r"><span class="kz-m"><svg viewBox="0 0 18 18" aria-hidden="true"><rect x="3" y="3" width="12" height="12" rx="1" fill="none" stroke="var(--attention)"/><path d="M9 6v6" stroke="var(--attention)"/></svg></span><div><b>Decision</b><p>Open a numbered gate to review pending requests.</p></div></div>
-<details class="key-topic" name="map-key-topic"><summary>Familiars, tasks and agents</summary><div><div id="kzFams" class="kz-fams"></div><div class="kz-r"><span class="kz-m" id="kzDots"></span><div><b>Familiar color</b><p>Connects the familiar to its mission and agents. Moving highlights indicate working agents.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="-1.2 -1.2 2.4 2.4" aria-hidden="true"><circle r=".96" fill="var(--fam-astra)"/><rect x="-.28" y="-.28" width=".56" height=".56" fill="var(--card)"/></svg></span><div><b>Agent and assignment</b><p>Each dot is an agent. A square center marks a task assignment. Working agents are filled. Idle agents are hollow.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 14 14" aria-hidden="true"><circle class="kc on" cx="7" cy="7" r="4.5"/><circle cx="7" cy="7" r="2" fill="var(--fam-cody)"/></svg></span><div><b>Shared task</b><p>A second hub color identifies a co-leading familiar. A dashed spot reserves a waiting agent’s place.</p></div></div></div></details>
-<details class="key-topic" name="map-key-topic"><summary>Mission progress and limits</summary><div>
-<div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><circle r="8" fill="var(--fam-cody)" opacity=".55"/><path d="M0 -8a8 8 0 0 1 8 8" fill="none" stroke="var(--fam-cody)" stroke-width="3"/></svg></span><div><b>Council slices</b><p>Each slice shows a familiar’s share of the agents. Its bright outer arc shows progress on that familiar’s targets.</p></div></div>
+      <section class="key-panel" role="tabpanel" id="key-panel-map" aria-labelledby="key-tab-map" tabindex="0">
+        <h3>Map symbols</h3>
+        <div class="key-entries"><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 20 20" aria-hidden="true"><path class="kl" d="M5 3h10l2 2v10l-2 2H5l-2-2V5Z"/><text x="10" y="13" text-anchor="middle" fill="currentColor" font-size="9">3</text></svg></span><div><b>Project</b><p>Open the outline to explore a project. Its number counts the missions inside.</p></div></div>
+<div class="kz-r"><span class="kz-m"><svg viewBox="-9 -9 18 18" aria-hidden="true" style="color:var(--primary)"><circle r="8" fill="none" stroke="currentColor" stroke-opacity=".45"/><circle r="6.5" fill="none" stroke="currentColor" stroke-dasharray="26 15"/><use href="#crown" x="-5.4" y="-5.1" width="10.8" height="10.2" fill="currentColor"/></svg></span><div><b>Psyche</b><p>Open the crown to chat. The inner band tracks working agents. The outer band tracks missions waiting for you.</p></div></div>
+<div class="kz-r"><span class="kz-m" id="kzSealMark"></span><div><b>Mission</b><p>Select a seal to see its team. Open the cogs beside it for the task list.</p></div></div>
+<div class="kz-r"><span class="kz-m"><svg viewBox="0 0 18 18" aria-hidden="true"><rect x="3" y="3" width="12" height="12" rx="1" fill="none" stroke="var(--attention)"/><path d="M9 6v6" stroke="var(--attention)"/></svg></span><div><b>Decision</b><p>Open the numbered gate to review requests waiting for you.</p></div></div></div>
+      </section>
+      <section class="key-panel" role="tabpanel" id="key-panel-teams" aria-labelledby="key-tab-teams" tabindex="0" hidden>
+        <h3>Familiars and agents</h3>
+        <div class="key-entries"><div id="kzFams" class="kz-fams"></div><div class="kz-r"><span class="kz-m" id="kzDots"></span><div><b>Familiar color</b><p>Each familiar keeps its color across the map. Select its tinted group to center its agents. Each task’s area shows its share of the group’s agents.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="-1.2 -1.2 2.4 2.4" aria-hidden="true"><circle r=".96" fill="var(--fam-astra)"/><rect x="-.28" y="-.28" width=".56" height=".56" fill="var(--card)"/></svg></span><div><b>Agent and assignment</b><p>Each dot is an agent. A square center marks a task assignment. Working agents are filled. Idle agents are hollow.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 14 14" aria-hidden="true"><circle class="kc on" cx="7" cy="7" r="4.5"/><circle cx="7" cy="7" r="2" fill="var(--fam-cody)"/></svg></span><div><b>Shared task</b><p>A second hub color identifies a co-leading familiar. A dashed spot reserves a waiting agent’s place.</p></div></div></div>
+      </section>
+      <section class="key-panel" role="tabpanel" id="key-panel-seals" aria-labelledby="key-tab-seals" tabindex="0" hidden>
+        <h3>Mission seals</h3>
+        <div class="key-entries"><div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><circle r="8" fill="var(--fam-cody)" opacity=".55"/><path d="M0 -8a8 8 0 0 1 8 8" fill="none" stroke="var(--fam-cody)" stroke-width="3"/></svg></span><div><b>Council slices</b><p>Each slice shows a familiar’s share of the agents. Its bright outer arc shows progress on that familiar’s targets.</p></div></div>
 <div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><circle r="9" fill="none" stroke="var(--primary)" stroke-dasharray="2 2"/></svg></span><div><b>Mission state</b><p>The name sits beside the seal. Its outline shows the mission state.</p></div></div>
-<div class="kz-states" id="kzStates"></div><div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><circle r="9" fill="none" stroke="var(--border-strong)"/><path d="M0,-9A9,9 0 1 1 -8.6,2.8" fill="none" stroke="var(--warn)" stroke-width="2"/></svg></span><div><b>Resource limit</b><p>A coral arc marks a limit at or above 85% of time, tokens or budget.</p></div></div></div></details>
-<details class="key-topic" name="map-key-topic"><summary>Connections and messages</summary><div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M2 7h22" stroke="var(--muted-foreground)" stroke-width="1.3"/></svg></span><div><b>Project connection</b><p>Psyche coordinates this Project. Filter by familiar to highlight its missions.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M2 7h22" stroke="var(--muted-foreground)" stroke-width="1.3" stroke-dasharray="2 4"/></svg></span><div><b>Dormant connection</b><p>No agents are assigned to this Project.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 26 14" aria-hidden="true"><path class="kl dim" d="M2 7h14" stroke-dasharray="1.5 3"/><circle cx="20" cy="7" r="2.6" fill="var(--primary)"/></svg></span><div><b>Message in transit</b><p>Lavender goes out from Psyche. Familiar colors come back. White marks a request for you.</p></div></div></div></details>
-<details class="key-topic" name="map-key-topic"><summary>Keyboard and text size</summary><div><div class="kz-k"><kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd><span>Move</span></div>
+<div class="kz-states" id="kzStates"></div><div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><circle r="9" fill="none" stroke="var(--border-strong)"/><path d="M0,-9A9,9 0 1 1 -8.6,2.8" fill="none" stroke="var(--warn)" stroke-width="2"/></svg></span><div><b>Resource limit</b><p>A coral arc marks a limit at or above 85% of time, tokens or budget.</p></div></div></div>
+      </section>
+      <section class="key-panel" role="tabpanel" id="key-panel-signals" aria-labelledby="key-tab-signals" tabindex="0" hidden>
+        <h3>Connections and messages</h3>
+        <div class="key-entries"><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M2 7h22" stroke="var(--muted-foreground)" stroke-width="1.3"/></svg></span><div><b>Project connection</b><p>Psyche coordinates this Project. Filter by familiar to highlight its missions.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M2 7h22" stroke="var(--muted-foreground)" stroke-width="1.3" stroke-dasharray="2 4"/></svg></span><div><b>Dormant connection</b><p>No agents are assigned to this Project.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 26 14" aria-hidden="true"><path class="kl dim" d="M2 7h14" stroke-dasharray="1.5 3"/><circle cx="20" cy="7" r="2.6" fill="var(--primary)"/></svg></span><div><b>Message in transit</b><p>Lavender goes out from Psyche. Familiar colors come back. White marks a request for you.</p></div></div></div>
+      </section>
+      <section class="key-panel" role="tabpanel" id="key-panel-controls" aria-labelledby="key-tab-controls" tabindex="0" hidden>
+        <h3>Keyboard and text size</h3>
+        <div class="key-entries"><div class="kz-k"><kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd><span>Move between map items</span></div>
+        <div class="kz-k"><kbd>Enter</kbd><span>Open the focused item</span></div>
         <div class="kz-k"><kbd>+</kbd><kbd>−</kbd><span>Zoom</span></div>
         <div class="kz-k"><kbd>0</kbd><span>Reset the view</span></div>
         <div class="kz-k"><kbd>Tab</kbd><span>Take Psyche’s suggested message</span></div>
-        <div class="kz-k"><kbd>Esc</kbd><span>Close, or step back out</span></div><div class="key-fs"><span>Text size</span><div class="seg fsz" role="group" aria-label="Text size"><button type="button" id="fsDown" aria-label="Smaller text"><span class="sm">A</span></button><button type="button" id="fsUp" aria-label="Larger text"><span class="lg">A</span></button></div></div></div></details>
+        <div class="kz-k"><kbd>Esc</kbd><span>Close, or step back out</span></div><div class="key-fs"><span>Text size</span><div class="seg fsz" role="group" aria-label="Text size"><button type="button" id="fsDown" aria-label="Smaller text"><span class="sm">A</span></button><button type="button" id="fsUp" aria-label="Larger text"><span class="lg">A</span></button></div></div></div>
+      </section>
     </div>
+    <p class="key-context">Local simulation · Chat and decisions affect sample data only.</p>
   </section>
 </div>
 
@@ -2219,7 +2255,7 @@ function atlasViewportFrame(selection) {
     if (style && (style.display === 'none' || style.visibility === 'hidden' || style.visibility === 'collapse')) return;
     const r = el.getBoundingClientRect();
     if (r.right <= rect.left || r.left >= rect.right || r.bottom <= rect.top || r.top >= rect.bottom) return;
-    occluders.push({x: r.left - rect.left, y: r.top - rect.top, width: r.width, height: r.height, edge});
+    occluders.push({x: r.left - rect.left, y: r.top - rect.top, width: r.width, height: r.height, edge: edge === 'side' ? (r.left + r.right <= rect.left + rect.right ? 'left' : 'right') : edge});
   };
   const chrome = document.body?.dataset;
   const sideControls = chrome?.mobileLayout === 'landscape' && chrome.atlasScope === 'project' && !selection;
@@ -2228,15 +2264,15 @@ function atlasViewportFrame(selection) {
   reserve($('atlasCameraDock'), 'bottom');
   const mobile = document.body && document.body.classList.contains('atlas-adaptive-mobile');
   if (!mobile) {
-    reserve($('atlasMissionBrowser'), 'left');
-    reserve($('atlasSidebar'), 'left');
+    reserve($('atlasMissionBrowser'), 'side');
+    reserve($('atlasSidebar'), 'side');
   }
   if (selection) {
     const manifest = document.querySelector('#notes .manifest'), hud = document.querySelector(mobile ? '#notes .hud' : '#notes > .hud');
-    reserve(manifest, 'left'); reserve(hud, mobile ? 'bottom' : 'top');
+    reserve(manifest, 'side'); reserve(hud, mobile ? 'bottom' : 'top');
     const inspect = $('inspect');
     const modal = mobile && document.body.classList.contains('atlas-mobile-overlay');
-    if (inspect && !inspect.hidden && !modal) reserve(inspect, inspect.getBoundingClientRect().width > width * .65 ? 'bottom' : 'right');
+    if (inspect && !inspect.hidden && !modal) reserve(inspect, inspect.getBoundingClientRect().width > width * .65 ? 'bottom' : 'side');
   }
   return window.CovenAtlasViewport.safeFrame({width, height, occluders, padding: sideControls ? 10 : width < 600 ? 16 : 28});
 }
@@ -2388,19 +2424,45 @@ function buildScene() {
   atlasFocusable(pg, 'Psyche, coordination for ' + active + '. Open simulated conversation', () => openPsyche());
   pg.addEventListener('click', ev => { ev.stopPropagation(); openPsyche(); });
 }
-// Stable packed positions keep each agent in its familiar's group throughout replay.
-const HEX_D = 13.6, HEX_H = 7;
-const HEX = (() => { const d = [[1, 0], [1, -1], [0, -1], [-1, 0], [-1, 1], [0, 1]], out = [[0, 0]];
-  for (let k = 1; k <= 3; k++) { let q = d[4][0] * k, r = d[4][1] * k; for (let i = 0; i < 6; i++) for (let j = 0; j < k; j++) { out.push([q, r]); q += d[i][0]; r += d[i][1]; } }
-  return out; })();
-const ringsFor = n => n <= 1 ? 0 : n <= 7 ? 1 : n <= 19 ? 2 : 3;
-const seatR = (c, id) => HEX_D * ringsFor(c.layout.size.get(id) || 1) + HEX_H + 8;
 const missionXY = (c, m) => pol(c.layout.lead, c.layout.ang.get(m) || 0);
-function slotXY(t, i) {
-  const [q, r] = HEX[i % HEX.length], lx = HEX_D * (q + r / 2), ly = HEX_D * .8660254 * r, cs = Math.cos(t.rot * RAD), sn = Math.sin(t.rot * RAD);
-  return [t.x + lx * cs - ly * sn, t.y + lx * sn + ly * cs];
+function syncTaskPlane(seat, groups) {
+  const signature = JSON.stringify(groups);
+  if (signature === seat.taskLayoutSignature) return;
+  seat.taskLayoutSignature = signature;
+  seat.regions.textContent = '';
+  seat.cells = new Map();
+  seat.captions = [];
+  seat.captionScale = null;
+  seat.slots = null;
+  seat.R = 14;
+  if (!groups.length) { seat.floor.removeAttribute('aria-description'); return; }
+  const counts = groups.map(g => g.members.length);
+  const width = Math.min(72, Math.max(18, 16 * Math.sqrt(counts.reduce((a, b) => a + b, 0))));
+  const height = width * .82, x = seat.x - width / 2, y = seat.y - height / 2;
+  seat.slots = {left: x, right: x + width, top: y, bottom: y + height};
+  seat.R = Math.max(width, height) / 2;
+  for (const [key, value] of Object.entries({x, y, width, height})) seat.floor.setAttribute(key, value);
+  seat.stem.setAttribute('x1', seat.bx); seat.stem.setAttribute('y1', seat.by);
+  seat.stem.setAttribute('x2', seat.x); seat.stem.setAttribute('y2', seat.y);
+  seat.floor.setAttribute('aria-description', 'Area shows assigned agents. ' + groups.map(g => g.name + ', ' + plural(g.members.length, 'agent')).join('. '));
+  const regions = window.CovenAtlasLayout.taskPacking(counts, {x, y, width, height});
+  regions.forEach((r, i) => {
+    const group = groups[i];
+    const tile = svgEl('svg', {class: 'task-region', x: r.x, y: r.y, width: r.width, height: r.height, 'data-agents': counts[i], 'data-task': group.key ?? ''}, seat.regions);
+    svgEl('title', {}, tile).textContent = group.name + ' · ' + plural(counts[i], 'agent');
+    // Every division is drawn once. The plane's frame supplies the outside edges.
+    if (r.x > x) svgEl('line', {x1: 0, y1: 0, x2: 0, y2: r.height}, tile);
+    if (r.y > y) svgEl('line', {x1: 0, y1: 0, x2: r.width, y2: 0}, tile);
+    if (r.labelHeight) {
+      const inset = Math.min(2, r.width * .07);
+      const label = svgEl('text', {x: inset, y: r.labelHeight * .8, 'font-size': 10}, tile);
+      label.textContent = group.name;
+      seat.captions.push({label, width: r.width - 2 * inset, height: r.labelHeight});
+    }
+    group.members.forEach((id, index) => seat.cells.set(id, r.cells[index]));
+  });
 }
-function targetOf(c, a) {
+function targetOf(c, a, cell) {
   if (a.state === 'gate') {
     const q = c.world.asks.get(a.ask), lp = missionXY(c, a.mission);
     if (!q) return [0, 0];
@@ -2408,10 +2470,7 @@ function targetOf(c, a) {
     const g = q.agents.length > 1 ? f(i % 2) : [f(0), f(1)].sort((p, r) => Math.hypot(p[0] - lp[0], p[1] - lp[1]) - Math.hypot(r[0] - lp[0], r[1] - lp[1]))[0];
     return g;
   }
-  const t = c.layout.seat.get(a.seat);
-  if (!t) return [0, 0];
-  const [x, y] = slotXY(t, c.layout.slot.get(a.id) || 0);
-  return [x, y];
+  return cell ? [cell.x, cell.y] : [0, 0];
 }
 // information in motion: a packet travels Psyche, mission, familiar (or back)
 let packets = [];
@@ -2468,7 +2527,8 @@ function syncTaskTray(s, mission, tasks) {
   const width = captionWidth + visible.length * 13 + 10 + suffix.length * 6;
   s.trayWidth = width;
   svgEl('rect', {class: 'task-tray-hit', x: -width / 2 - 2, y: -13, width: width + 4, height: 26, rx: 8}, s.tray);
-  svgEl('rect', {class: 'task-tray-bg', x: -width / 2, y: -8, width, height: 16, rx: 8}, s.tray);
+  svgEl('rect', {class: 'task-tray-bg', x: -width / 2, y: -8, width, height: 16, rx: 5}, s.tray);
+  svgEl('rect', {class: 'task-tray-well', x: captionWidth + 4 - width / 2, y: -6, width: width - captionWidth - 6, height: 12, rx: 3.5, 'pointer-events': 'none'}, s.tray);
   svgEl('text', {class: 'task-caption', x: 6 - width / 2, y: 3}, s.tray).textContent = caption;
   visible.forEach((task, index) => {
     const glyph = svgEl('path', {class: 'task-cog', d: taskCogPath, 'fill-rule': 'evenodd', transform: 'translate(' + (captionWidth + 11 + index * 13 - width / 2) + ' 0)'}, s.tray);
@@ -2479,11 +2539,19 @@ function syncTaskTray(s, mission, tasks) {
 function sync() {
   if (sc.layoutSignature !== atlasWorldLayout().signature) { buildScene(); if (atlasAutoFit) atlasQueueFit(); }
   const c = cur(), w = c.world, tally = new Map(), liveSeats = new Set();
-  w.agents.forEach(a => { let t = tally.get(a.seat); if (!t) tally.set(a.seat, t = {tot: 0, work: 0}); t.tot++; if (a.state === 'work') t.work++; });
-  const missionTasks = new Map();
+  const missionTasks = new Map(), taskOrder = new Map();
   w.tasks.forEach(task => {
+    taskOrder.set(task.id, taskOrder.size);
     if (!missionTasks.has(task.mission)) missionTasks.set(task.mission, []);
     missionTasks.get(task.mission).push(task);
+  });
+  w.agents.forEach(a => {
+    let t = tally.get(a.seat);
+    if (!t) tally.set(a.seat, t = {tot: 0, work: 0, groups: new Map()});
+    t.tot++; if (a.state === 'work') t.work++;
+    const task = w.tasks.get(a.task), key = task?.id ?? null;
+    if (!t.groups.has(key)) t.groups.set(key, {key, name: task?.name || 'Unassigned', members: []});
+    t.groups.get(key).members.push(a.id);
   });
   w.missions.forEach(M => {
     if (!sc.missions.has(M.id)) {
@@ -2513,6 +2581,16 @@ function sync() {
         s = {id, m: M.id, fam: k, x: p.x, y: p.y, rot: p.rot, ln,
           link: svgEl('line', {class: 'link'}, ln), lflow: svgEl('line', {class: 'flow task-flow'}, ln), g: svgEl('g', {class: 'atlas-squad', 'data-m': M.id, 'data-fam': k}, sc.nodes)};
         s.g.style.setProperty('--hue', hue);
+        s.plane = svgEl('g', {class: 'squad-plane'}, s.g);
+        s.stem = svgEl('line', {'pointer-events': 'none', 'aria-hidden': 'true'}, s.plane);
+        s.floor = svgEl('rect', {rx: 3}, s.plane);
+        s.regions = svgEl('g', {'pointer-events': 'none', 'aria-hidden': 'true'}, s.plane);
+        const focusGroup = () => {
+          select(M.id, k, 'card', {group: true, focus: false});
+          s.floor.focus({preventScroll: true});
+        };
+        atlasFocusable(s.floor, 'Focus ' + fam(k).name + ' group on ' + M.name, focusGroup);
+        s.floor.addEventListener('click', ev => { ev.stopPropagation(); focusGroup(); });
         s.label = svgEl('text', {class: 'task-l show'}, s.g);
         s.label.textContent = fam(k).name;
         s.badge = svgEl('g', {class: 'seat'}, s.g);
@@ -2525,10 +2603,12 @@ function sync() {
         sc.seats.set(id, s);
       }
       const tl = tally.get(id) || {tot: 0, work: 0};
-      s.R = seatR(c, id);
       s.ln.classList.toggle('working', tl.work > 0);
       const seat = c.layout.seat.get(id);
       s.bx = seat.bx; s.by = seat.by;
+      const groups = tl.groups ? [...tl.groups.values()] : [];
+      groups.sort((a, b) => (taskOrder.get(a.key) ?? Infinity) - (taskOrder.get(b.key) ?? Infinity));
+      syncTaskPlane(s, groups);
       s.badge.setAttribute('aria-label', fam(k).name + ', ' + tl.tot + ' agents on ' + M.name + ', ' + tl.work + ' working');
     });
   });
@@ -2548,7 +2628,8 @@ function sync() {
   });
   w.agents.forEach(a => {
     let s = sc.agents.get(a.id);
-    const q = targetOf(c, a), lt = c.layout.seat.get(a.seat), tg = sc.seats.get(a.seat);
+    const tg = sc.seats.get(a.seat), cell = tg?.cells.get(a.id);
+    const q = targetOf(c, a, cell);
     if (!s) {
       const e = svgEl('g', {class: 'agent', 'data-m': a.mission, 'data-fam': a.fam});
       e.style.setProperty('--hue', fam(a.fam).hue);
@@ -2557,10 +2638,17 @@ function sync() {
       svgEl('circle', {class: 'o', r: 1}, mark);
       svgEl('rect', {class: 'agent-task', x: -.35, y: -.35, width: .7, height: .7}, mark);
       s = {id: a.id, el: e, halo, mark, co: null,
-        p: reduce || !tg ? q.slice() : [tg.bx, tg.by], q, state: null, ghost: null, home: null};
+        p: reduce || !tg ? q.slice() : [tg.bx, tg.by], q, state: null, ghost: null};
       svgEl('title', {}, e).textContent = a.id + ' · ' + fam(a.fam).name;
-      e.addEventListener('click', ev => { ev.stopPropagation(); pick(a.id, 'plan'); });
-      atlasFocusable(e, a.id + ', agent led by ' + fam(a.fam).name, () => pick(a.id, 'plan'));
+      const openAgent = () => {
+        const cc = cur(), agent = cc.world.agents.get(a.id);
+        if (agent && agent.state !== 'gate' && cc.sel === agent.mission && cc.focusGroup !== agent.seat) {
+          select(agent.mission, agent.fam, 'card', {group: true, focus: false});
+        }
+        pick(a.id, 'plan');
+      };
+      e.addEventListener('click', ev => { ev.stopPropagation(); openAgent(); });
+      atlasFocusable(e, a.id + ', agent led by ' + fam(a.fam).name, openAgent);
       sc.agents.set(a.id, s);
     }
     const task = w.tasks.get(a.task);
@@ -2568,14 +2656,17 @@ function sync() {
     const description = [a.id, fam(a.fam).name, task ? task.name : 'Unassigned', a.state === 'gate' ? 'Waiting at gate' : a.state === 'work' ? 'Working' : 'Idle'].join(' · ');
     s.el.setAttribute('aria-label', description);
     s.el.querySelector('title').textContent = description;
-    s.q = q; s.seat = a.seat;
+    s.q = q; s.seat = a.seat; s.cell = cell;
     const co = coLead(w, a); if (co !== s.co) { s.co = co; s.el.classList.toggle('co', !!co); if (co) s.el.style.setProperty('--hue2', fam(co).hue); }
     if (s.state !== a.state) { s.el.classList.remove('work', 'idle', 'gate'); s.el.classList.add(a.state); s.state = a.state; }
     if (a.state === 'gate') { if (s.el.parentNode !== sc.gateAgents) sc.gateAgents.appendChild(s.el); }
     else if (tg && s.el.parentNode !== tg.g) tg.g.insertBefore(s.el, tg.badge);
-    if (a.state === 'gate' && !s.ghost && tg && lt) {                 // its cell stays reserved while it waits at the gate
-      s.ghost = svgEl('circle', {class: 'cell-ghost'}); tg.g.insertBefore(s.ghost, tg.label.nextSibling);
-      const [hx, hy] = slotXY(lt, c.layout.slot.get(a.id) || 0); s.home = [hx, hy];
+    if (a.state === 'gate' && tg && cell) {
+      if (!s.ghost) {
+        s.ghost = svgEl('circle', {class: 'cell-ghost'});
+        tg.g.insertBefore(s.ghost, tg.label.nextSibling);
+      }
+      s.ghost.setAttribute('cx', cell.x); s.ghost.setAttribute('cy', cell.y); s.ghost.setAttribute('r', cell.radius);
     }
     if (a.state !== 'gate' && s.ghost) { s.ghost.remove(); s.ghost = null; }
   });
@@ -2648,7 +2739,11 @@ function applySel() {
   });
   sc.missions.forEach(s => { s.node.classList.toggle('sel', c.sel === s.id);
     s.node.setAttribute('aria-pressed', String(c.sel === s.id)); });
-  sc.seats.forEach(s => s.badge.classList.toggle('sel', c.fam === s.fam && c.sel === s.m));
+  sc.seats.forEach(s => {
+    s.badge.classList.toggle('sel', c.fam === s.fam && c.sel === s.m);
+    s.plane.style.display = s.slots && c.sel === s.m ? '' : 'none';
+    s.floor.setAttribute('aria-pressed', String(c.focusGroup === s.id));
+  });
   sc.agents.forEach(s => {
     const a = w.agents.get(s.id), visible = !!a && c.sel === a.mission;
     s.el.classList.toggle('picked', !!c.pick && c.pick.id === s.id);
@@ -2845,10 +2940,10 @@ function project() {
     g.count.style.fontSize = f(badgeSize * .54) + 'px';
   });
 
-  const showAgents = detailVisible(sc.agentDetail, HEX_D * .866 * screenScale, 11, 9);
+  const showAgents = detailVisible(sc.agentDetail, 11.78 * screenScale, 11, 9);
   if (showAgents !== sc.agentDetail) {
     sc.agentDetail = showAgents;
-    const focusedAgent = document.activeElement?.closest?.('#plan .agent');
+    const focusedAgent = document.activeElement?.closest?.('#plan .agent, #plan .squad-plane');
     plan.classList.toggle('atlas-agent-detail', showAgents);
     if (!showAgents && focusedAgent) sc.missions.get(cur().sel)?.node.focus({preventScroll: true});
   }
@@ -2919,17 +3014,24 @@ function project() {
     s.hit.setAttribute('r', f(clamp(minHit / 2, 15, 27)));
     s.badge.setAttribute('transform', `translate(${f(badge[0])} ${f(badge[1])})`);
     s.bsx = badge[0]; s.bsy = badge[1]; s.cx = s.x; s.cy = s.y; s.ry = s.R;
+    if (showAgents && cc.sel === s.m && s.captionScale !== screenScale) {
+      s.captionScale = screenScale;
+      for (const caption of s.captions) {
+        // Measure the full name once, then fit it to its tile as the camera zooms.
+        if (!caption.emWidth) caption.emWidth = caption.label.getComputedTextLength() / 10;
+        const size = Math.min(13 / screenScale, caption.height * .68, caption.width / caption.emWidth);
+        caption.label.style.fontSize = size + 'px';
+        caption.label.style.visibility = size * screenScale >= 9 ? 'visible' : 'hidden';
+      }
+    }
     if (M) { const a = P(M.x, M.y); seg(s.link, a, badge); seg(s.lflow, a, badge); }
   });
   sc.agents.forEach(s => {
     const q = P(s.p[0], s.p[1]);
-    const radius = Math.min(HEX_D * .44, (s.state === 'idle' ? 4.5 : 6) / screenScale);
-    const hit = Math.max(radius, Math.min(10 / screenScale, HEX_D * .4));
+    const radius = s.state === 'gate' ? Math.min(6, 6 / screenScale) : (s.cell?.radius ?? 4);
+    const hit = s.state === 'gate' ? Math.max(radius, Math.min(6, 9 / screenScale)) : radius * 1.35;
     s.halo.setAttribute('cx', f(q[0])); s.halo.setAttribute('cy', f(q[1])); s.halo.setAttribute('r', f(hit));
     s.mark.setAttribute('transform', `translate(${f(q[0])} ${f(q[1])}) scale(${radius})`);
-    if (s.ghost && s.home) {
-      s.ghost.setAttribute('cx', f(s.home[0])); s.ghost.setAttribute('cy', f(s.home[1])); s.ghost.setAttribute('r', '4.6');
-    }
     s.sx = q[0]; s.sy = q[1];
   });
   sc.colinks.forEach(r => { const A2 = sc.seats.get(r.a), B2 = sc.seats.get(r.b); if (!A2 || !B2) return; const pa = P(A2.bx, A2.by), pb = P(B2.bx, B2.by); seg(r.l1, pa, pb); seg(r.l2, pa, pb); });
@@ -2994,10 +3096,23 @@ function placePop() {
   const s = sc.agents.get(c.pick.id); if (!s) return;
   const W = stage.clientWidth, H = stage.clientHeight, vw = 784 / cam.zoom, k = Math.min(W, H) / vw;
   const px = W / 2 + (s.sx - cam.px) * k, py = H / 2 + (s.sy - cam.py) * k, pw = pop.offsetWidth, ph = pop.offsetHeight;
-  let top = py - ph - 14; if (top < 8) top = py + 14;
-  const left = clamp(px - pw / 2, 8, Math.max(8, W - pw - 8));
+  const safe = atlasViewportFrame(true);
+  const frame = pw <= safe.width && ph <= safe.height ? safe : {x: 8, y: 8, width: W - 16, height: H - 16};
+  const anchor = {x: px, y: py}, size = {width: pw, height: ph};
+  const group = s.state !== 'gate' && sc.seats.get(s.seat)?.slots;
+  let position;
+  if (group) {
+    const bounds = {x: W / 2 + (group.left - cam.px) * k, y: H / 2 + (group.top - cam.py) * k,
+      width: (group.right - group.left) * k, height: (group.bottom - group.top) * k};
+    const center = {x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2};
+    position = placeAnnotation(center, size, frame, [bounds], Math.max(bounds.width, bounds.height) / 2 + 8, false);
+  }
+  const gap = 8 + (s.state === 'gate' ? 6 : (s.cell?.radius ?? 4) * k);
+  position ??= placeAnnotation(anchor, size, frame, [], gap);
+  const left = position?.x ?? clamp(px - pw / 2, 8, Math.max(8, W - pw - 8));
+  const top = position?.y ?? clamp(py - ph - gap, 8, Math.max(8, H - ph - 8));
   const key = Math.round(left) + ',' + Math.round(top);
-  if (key !== popAt) { popAt = key; pop.style.left = left + 'px'; pop.style.top = clamp(top, 8, Math.max(8, H - ph - 8)) + 'px'; }
+  if (key !== popAt) { popAt = key; pop.style.left = left + 'px'; pop.style.top = top + 'px'; }
 }
 function easeCam(dt) {
   const k = reduce ? 1 : 1 - Math.exp(-dt / 150); let busy = false;
@@ -3221,10 +3336,12 @@ function drawMissions() {
 }
 // popovers hang from the toolbar, kept inside the card and never taller than it
 function placePill(d) {
-  const body = d.querySelector('.pill-body'), head = d.closest('.plan-head'), unit = d.parentElement, top = unit.offsetTop + unit.offsetHeight + 6;
-  const w = Math.min((d.id === 'traceBox' || d.id === 'ward' ? 360 : 304) * (+getComputedStyle(document.documentElement).getPropertyValue('--fs') || 1), head.clientWidth - 20);
+  const body = d.querySelector('.pill-body'), head = d.closest('.plan-head'), anchor = d.closest('.workspace-utilities') || head;
+  const control = d.querySelector('summary').getBoundingClientRect(), origin = anchor.getBoundingClientRect();
+  const top = control.bottom - origin.top + 6;
+  const w = Math.min((d.id === 'traceBox' || d.id === 'ward' ? 360 : 304) * (+getComputedStyle(document.documentElement).getPropertyValue('--fs') || 1), anchor.clientWidth - 12);
   body.style.width = w + 'px'; body.style.top = top + 'px';
-  body.style.left = clamp(d.id === 'mis' ? d.offsetLeft : unit.offsetLeft, 10, Math.max(10, head.clientWidth - w - 10)) + 'px';
+  body.style.left = clamp(control.left - origin.left, 4, Math.max(4, anchor.clientWidth - w - 4)) + 'px';
   body.style.maxHeight = Math.max(180, head.parentElement.clientHeight - top - 12) + 'px';
 }
 document.querySelectorAll('details.pill').forEach(d => d.firstElementChild.addEventListener('click', () => {
@@ -3281,7 +3398,7 @@ function sealSvg(d, px) {
 }
 function buildSeal(se, d) {
   se.g.textContent = '';
-  se.selection = svgEl('circle', {class: 'se-selection', r: 46.3}, se.g);
+  se.selection = svgEl('circle', {class: 'se-selection', r: 47.5, pathLength: 100}, se.g);
   se.face = svgEl('circle', {class: 'se-face', r: 41.5}, se.g);
   svgEl('circle', {class: 'se-track', r: 36.8}, se.g);
   se.wedges = d.wedges.map(() => {
@@ -3352,6 +3469,7 @@ function select(m, k, mode, options) {
   if (m && atlasScope === 'coven') { atlasScope = 'project'; atlasFitScene(false); }
   if (m) atlasAutoFit = true;
   if (k && (!mission || !mission.seats.includes(k))) k = null;
+  c.focusGroup = options.group && k ? seatId(m, k) : null;
   if (m && m !== was) c.selectionOrigin = origin?.closest?.('#plan [data-map-item]') || null;
   clearPick(); if (m && c.composing) { c.composing = false; drawNew(); }
   if (k && sc.hl && sc.hl !== k) { sc.hl = null; syncCoven(); }
@@ -3377,20 +3495,28 @@ function fitTarget(c) {
     y0 = Math.min(y0, y - r); y1 = Math.max(y1, y + r);
   };
   add(ms.x, ms.y, 43);
-  M.seats.forEach(k => { const s = sc.seats.get(seatId(M.id, k)); if (s) { add(s.x, s.y, s.R + 6); add(s.bx, s.by, 16); } });
-  c.world.agents.forEach(a => { if (a.mission === M.id && a.state === 'gate') { const s = sc.agents.get(a.id); if (s) add(s.q[0], s.q[1], 14); } });
-  const target = window.CovenAtlasViewport.fit({x0: x0 - 16, y0: y0 - 28, x1: x1 + 16, y1: y1 + 28}, {width: stage.clientWidth, height: stage.clientHeight, frame: atlasViewportFrame(true), fill: .88, minZoom: ZMIN, maxZoom: 2.3});
+  const focusedSeat = c.fam && sc.seats.get(seatId(M.id, c.fam));
+  if (focusedSeat && c.focusGroup === focusedSeat.id && focusedSeat.slots) {
+    const b = focusedSeat.slots, pad = 24;
+    const bounds = {x0: b.left - pad, x1: b.right + pad, y0: b.top - pad, y1: b.bottom + pad};
+    const target = window.CovenAtlasViewport.fit(bounds, {width: stage.clientWidth, height: stage.clientHeight, frame: atlasViewportFrame(true), fill: .88, minZoom: ZMIN, maxZoom: 4});
+    return {zoom: target.zoom, px: clamp(target.px, -PAN, PAN), py: clamp(target.py, -PAN, PAN)};
+  }
+  for (const k of focusedSeat ? [c.fam] : M.seats) {
+    const seat = sc.seats.get(seatId(M.id, k));
+    if (seat) { add(seat.x, seat.y, seat.R + 6); add(seat.bx, seat.by, 16); }
+  }
+  c.world.agents.forEach(a => {
+    if (a.mission !== M.id || a.state !== 'gate' || (focusedSeat && a.fam !== c.fam)) return;
+    const agent = sc.agents.get(a.id); if (agent) add(agent.q[0], agent.q[1], 14);
+  });
+  const x = focusedSeat ? focusedSeat.bx : ms.x, y = focusedSeat ? focusedSeat.by : ms.y;
+  const halfWidth = Math.max(x - x0, x1 - x) + 16, halfHeight = Math.max(y - y0, y1 - y) + 28;
+  const target = window.CovenAtlasViewport.fit({x0: x - halfWidth, y0: y - halfHeight, x1: x + halfWidth, y1: y + halfHeight}, {width: stage.clientWidth, height: stage.clientHeight, frame: atlasViewportFrame(true), fill: .88, minZoom: ZMIN, maxZoom: 2.3});
   return {zoom: target.zoom, px: clamp(target.px, -PAN, PAN), py: clamp(target.py, -PAN, PAN)};
 }
 // A selected mission is written into the space it occupies: a title plate for the mission, a plate beside each council
 // seat listing that familiar's tasks, and a tag on anything of its waiting at a gate.
-function selHead(c) {
-  const M = c.world.missions.get(c.sel), head = html('div', 'i-head'), who = html('div', 'who');
-  const title = setMissionName(html('h2', 'mission-title'), c.fam ? fam(c.fam).name : M.name); title.id = 'missionDetailTitle'; title.tabIndex = -1;
-  if (c.fam) { const f = fam(c.fam); head.innerHTML = avatar(c.fam); who.append(title, setMissionName(html('span', 'role'), `${f.role} · on ${M.name}`)); }
-  else { head.innerHTML = avatar('mission'); who.append(title, html('span', 'role', `Mission · council of ${M.seats.length}`)); }
-  head.appendChild(who); return head;
-}
 const selName = c => { const M = c.world.missions.get(c.sel); return !M ? '' : c.fam ? `${fam(c.fam).name} on ${M.name}` : M.name; };
 const inSel = (c, a) => a.mission === c.sel && (!c.fam || a.fam === c.fam);
 const xBtn = (label, fn) => { const x = html('button', 'btn x', '×'); x.type = 'button'; x.setAttribute('aria-label', label); x.addEventListener('click', fn); return x; };
@@ -3455,10 +3581,17 @@ function drawLeadCard(force) {
         if (others.length) { const row = html('div', 'lc-also plate-also'); row.append('Also on'); others.forEach(m => { const b = setMissionName(html('button'), m.name); b.type = 'button'; b.addEventListener('click', () => select(m.id, k, cur().detail)); row.appendChild(b); }); el.appendChild(row); }
         if (leaders) {
           ['pointerenter', 'pointerleave', 'focusin', 'focusout'].forEach(event => el.addEventListener(event, kick));
-          rec.line = svgEl('line', {}, leaders); rec.dot = svgEl('circle', {r: 3}, leaders); rec.line.style.setProperty('--hue', f.hue); rec.dot.style.setProperty('--hue', f.hue); }
+          rec.connector = svgEl('g', {class: 'seat-connector', 'data-seat': id}, leaders);
+          rec.connector.style.setProperty('--hue', f.hue);
+          rec.line = svgEl('path', {}, rec.connector);
+          rec.dot = svgEl('circle', {r: 3.5}, rec.connector);
+        }
         col.appendChild(el); notes.push(rec);
       });
-      if (wide) layer.append(leaders, col);
+      if (wide) {
+        layer.append(leaders, col);
+        col.addEventListener('scroll', kick, {passive: true});
+      }
     }
     if (next) {
       const q = next;
@@ -3490,21 +3623,55 @@ function drawLeadCard(force) {
   });
   placeCard();
 }
+// Join the card and the painted map item in the overlay's CSS-pixel coordinate system.
+function placeSeatConnector(note, seat, frame) {
+  const card = note.el.getBoundingClientRect(), rail = note.el.parentElement.getBoundingClientRect();
+  const header = note.el.firstElementChild.getBoundingClientRect();
+  const cardY = (header.top + header.bottom) / 2;
+  if (cardY < rail.top || cardY > rail.bottom) return;
+  const plane = seat.floor.getBoundingClientRect();
+  const item = plane.width && plane.height ? plane : seat.badge.querySelector('.familiar-disc').getBoundingClientRect();
+  if (!item.width || !item.height) return;
+
+  let x1, y1, x2, y2, dx = 0, dy = 0;
+  if (item.left >= card.right || item.right <= card.left) {
+    const right = item.left >= card.right;
+    x1 = right ? card.right : card.left; x2 = right ? item.left : item.right;
+    y1 = cardY; y2 = (item.top + item.bottom) / 2;
+    dx = (x2 - x1) * .4;
+  } else if (item.top >= card.bottom || item.bottom <= card.top) {
+    const below = item.top >= card.bottom;
+    y1 = below ? card.bottom : card.top; y2 = below ? item.top : item.bottom;
+    if (y1 < rail.top || y1 > rail.bottom) return;
+    x1 = (card.left + card.right) / 2; x2 = (item.left + item.right) / 2;
+    dy = (y2 - y1) * .4;
+  } else return;
+
+  if (x2 < frame.left || x2 > frame.right || y2 < frame.top || y2 > frame.bottom) return;
+  x1 -= frame.left; x2 -= frame.left; y1 -= frame.top; y2 -= frame.top;
+  note.line.setAttribute('d', `M${x1} ${y1} C${x1 + dx} ${y1 + dy}, ${x2 - dx} ${y2 - dy}, ${x2} ${y2}`);
+  note.dot.setAttribute('cx', x2); note.dot.setAttribute('cy', y2);
+  return true;
+}
 // every frame: leader lines run from each seat plate to its squad; free tags follow their anchors
 function placeCard() {
   if (!notes.length) return;
   const W = stage.clientWidth, H = stage.clientHeight, k = Math.min(W, H) / (784 / cam.zoom), X = v => W / 2 + (v - cam.px) * k, Y = v => H / 2 + (v - cam.py) * k;
-  let sr = null;
+  let overlayBounds;
   notes.forEach(n => {
     if (n.kind === 'seat') {
-      const s = sc.seats.get(n.id); if (!s || s.cx == null) { n.el.style.visibility = 'hidden'; return; }
+      const s = sc.seats.get(n.id);
+      if (!s || s.cx == null) {
+        n.el.style.visibility = 'hidden';
+        if (n.connector) n.connector.style.display = 'none';
+        return;
+      }
       n.el.style.visibility = '';
       const px = X(s.cx), py = Y(s.cy);
-      if (n.line) {
-        sr = sr || stage.getBoundingClientRect(); const r = n.el.getBoundingClientRect(), x1 = r.right - sr.left + 2, y1 = r.top - sr.top + Math.min(r.height / 2, 19), x2 = px - s.R * k - 5;
-        const show = (s.fam === cur().fam || n.el.matches(':hover, :focus-within')) && r.bottom > sr.top + 4 && r.top < sr.bottom - 4 && x2 > x1 + 6;
-        n.line.style.display = n.dot.style.display = show ? '' : 'none';
-        if (show) { n.line.setAttribute('x1', x1.toFixed(1)); n.line.setAttribute('y1', y1.toFixed(1)); n.line.setAttribute('x2', x2.toFixed(1)); n.line.setAttribute('y2', py.toFixed(1)); n.dot.setAttribute('cx', x2.toFixed(1)); n.dot.setAttribute('cy', py.toFixed(1)); }
+      if (n.connector) {
+        const active = s.fam === cur().fam || n.el.matches(':hover, :focus-within');
+        const attached = active && placeSeatConnector(n, s, overlayBounds ||= n.connector.ownerSVGElement.getBoundingClientRect());
+        n.connector.style.display = attached ? '' : 'none';
         return;
       }
       const w = n.el.offsetWidth, h = n.el.offsetHeight;                // narrow stage: a small tag under the squad
@@ -3556,7 +3723,9 @@ function syncInspect(force) {
   const tasks = [...w.tasks.values()].filter(t => c.fam ? t.leads.some(k => order.has(seatId(t.mission, k))) : t.mission === M.id).sort((a, b) => rank(seatId(a.mission, a.fam)) - rank(seatId(b.mission, b.fam)));
   const taskIds = new Set(tasks.map(t => t.id));      // a familiar's scope includes the agents of tasks it shares, wherever they sit
   const all = [...w.agents.values()].filter(a => order.has(a.seat) || (a.task && taskIds.has(a.task))).sort((a, b) => rank(a.seat) - rank(b.seat) || slotOf(a) - slotOf(b));
-  const sig = (panelView === 'brief' ? briefSig(briefState(w, M), M) + Math.floor((w.t - M.t0) / 60000) + canAct() : '') + active + M.id + '/' + (c.fam || '') + '|' + panelView + '|' + seatIds.join(',') + '|' + tasks.map(t => t.id).join(',') + '|' + all.map(a => a.id + ':' + (a.task || '')).join(',');
+  const missionOrder = [...w.missions.values()];
+  const editable = canAct();
+  const sig = editable + '|' + missionOrder.map(m => m.id).join(',') + '|' + (panelView === 'brief' ? briefSig(briefState(w, M), M) + Math.floor((w.t - M.t0) / 60000) : '') + active + M.id + '/' + (c.fam || '') + '|' + panelView + '|' + seatIds.join(',') + '|' + tasks.map(t => t.id).join(',') + '|' + all.map(a => a.id + ':' + (a.task || '')).join(',');
   if (force || sig !== insp.sig) {
     const identity = [active, M.id, c.fam, panelView].join('|'), sameView = box.dataset.selection === identity;
     const previousScroll = sameView ? box.scrollTop : 0;
@@ -3566,35 +3735,56 @@ function syncInspect(force) {
     box.hidden = false;
     box.setAttribute('aria-label', c.fam ? fam(c.fam).name + ' on ' + M.name : M.name + ' mission details');
     box.setAttribute('aria-labelledby', 'missionDetailTitle'); box.tabIndex = -1;
-    const context = setMissionName(html('p', 'mission-context'), active + (c.fam ? ' / ' + M.name : ' / Mission details'));
-    const backRow = html('nav', 'mission-return'); backRow.setAttribute('aria-label', 'Mission navigation');
-    const back = html('button', 'btn sm', c.fam ? '← Back to mission' : '← All missions'); back.type = 'button'; back.dataset.focus = 'mission-back';
+    const header = html('header', 'mission-header');
+    const head = html('div', 'mission-identity');
+    const context = setMissionName(html('span', 'mission-context'), c.fam ? active + ' / ' + M.name : active);
+    const back = html('button', 'btn x', '←'); back.type = 'button'; back.dataset.focus = 'mission-back';
+    back.title = c.fam ? 'Back to mission' : 'All missions';
+    back.setAttribute('aria-label', back.title);
+    const title = setMissionName(html('h2', 'mission-title'), c.fam ? fam(c.fam).name : M.name);
+    title.id = 'missionDetailTitle'; title.tabIndex = -1;
+    const role = c.fam ? fam(c.fam).role : 'Mission details';
+    title.setAttribute('aria-description', role);
+    const path = html('div', 'mission-path');
+    path.title = context.textContent + ' / ' + title.textContent + ' · ' + role;
+    path.tabIndex = 0; path.dataset.focus = 'mission-path';
+    path.setAttribute('role', 'group'); path.setAttribute('aria-label', path.title);
+    const separator = html('span', 'mission-path-separator', '·'); separator.setAttribute('aria-hidden', 'true');
+    path.append(title, separator, context);
     back.addEventListener('click', () => {
       if (c.fam) select(M.id, null, 'side');
       else if (c.missionBrowserOrigin) closeMissionDetails();
       else if (window.CovenAtlas) window.CovenAtlas.openMissions(true);
     });
-    backRow.append(back);
-    const head = selHead(c), toCard = html('button', 'btn x'); toCard.type = 'button'; toCard.innerHTML = ICON.card; toCard.setAttribute('aria-label', 'Show as a card');
-    toCard.dataset.focus = 'show-card';
+    const toCard = html('button', 'btn x'); toCard.type = 'button'; toCard.innerHTML = ICON.card; toCard.setAttribute('aria-label', 'Show card');
+    toCard.title = 'Show card'; toCard.dataset.focus = 'show-card';
     toCard.addEventListener('click', () => select(c.sel, c.fam, 'card'));
     const close = xBtn('Close details', closeMissionDetails); close.dataset.focus = 'close-details';
-    head.append(toCard, close);
-    const missionOrder = [...w.missions.values()], position = missionOrder.findIndex(m => m.id === M.id);
+    close.title = 'Close details';
+    head.append(back, path, toCard, close);
+    const position = missionOrder.findIndex(m => m.id === M.id);
     const stepper = html('div', 'mission-stepper');
-    const previous = html('button', 'btn sm', '← Previous'), next = html('button', 'btn sm', 'Next →');
+    const previous = html('button', 'btn sm', '‹'), next = html('button', 'btn sm', '›');
     previous.type = next.type = 'button'; previous.disabled = position <= 0; next.disabled = position >= missionOrder.length - 1;
     previous.dataset.focus = 'previous-mission'; next.dataset.focus = 'next-mission';
-    previous.setAttribute('aria-label', previous.disabled ? 'Previous mission' : 'Previous mission: ' + missionOrder[position - 1].name);
-    next.setAttribute('aria-label', next.disabled ? 'Next mission' : 'Next mission: ' + missionOrder[position + 1].name);
+    previous.setAttribute('aria-label', 'Previous mission'); next.setAttribute('aria-label', 'Next mission');
+    if (!previous.disabled) previous.setAttribute('aria-description', missionOrder[position - 1].name);
+    if (!next.disabled) next.setAttribute('aria-description', missionOrder[position + 1].name);
+    previous.title = previous.disabled ? 'Previous mission' : 'Previous mission · ' + missionOrder[position - 1].name;
+    next.title = next.disabled ? 'Next mission' : 'Next mission · ' + missionOrder[position + 1].name;
     previous.addEventListener('click', () => select(missionOrder[position - 1].id, null, 'side'));
     next.addEventListener('click', () => select(missionOrder[position + 1].id, null, 'side'));
     stepper.append(previous, html('span', '', (position + 1) + ' / ' + missionOrder.length), next);
     const counts = html('dl', 'i-counts'); insp.nums = {};
-    ['work', 'idle', 'gate'].forEach(st => { const d = html('div', st), dd = html('dd'); insp.nums[st] = dd; d.append(html('dt', null, STATE[st]), dd); counts.appendChild(d); });
+    ['gate', 'work', 'idle'].forEach(st => { const d = html('div', st), dd = html('dd'); insp.nums[st] = dd; d.append(html('dt', null, STATE[st]), dd); counts.appendChild(d); });
     const seg = html('div', 'seg i-view'); seg.setAttribute('role', 'tablist'); seg.setAttribute('aria-label', 'Mission sections');
     [['brief', 'Brief'], ['council', c.fam ? 'Councils' : 'Council'], ['tasks', 'Tasks'], ['agents', 'Agents']].forEach(([v, label]) => {
       const b = html('button', null, label); b.type = 'button'; b.id = 'mission-tab-' + v; b.dataset.focus = b.id;
+      if (v === 'council') {
+        const n = c.fam ? seats.length : M.seats.length;
+        b.appendChild(html('span', 'council-count', String(n)));
+        b.title = c.fam ? fam(c.fam).role + ' · ' + plural(n, 'council') : 'Council of ' + n;
+      }
       b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', String(panelView === v)); b.setAttribute('aria-pressed', String(panelView === v));
       b.setAttribute('aria-controls', 'mission-section'); b.tabIndex = panelView === v ? 0 : -1;
       b.addEventListener('click', () => { panelView = v; store.set('coven-compass-panel', v); syncInspect(true); atlasWriteRoute(true); const nb = $('inspect').querySelector('.i-view [aria-selected="true"]'); if (nb) nb.focus({preventScroll: true}); });
@@ -3608,16 +3798,22 @@ function syncInspect(force) {
       tabs[target].click();
     });
     insp.slot = html('div', 'i-agent'); insp.slot.hidden = true;
-    box.append(context, backRow, head, stepper, counts, seg);
+    const activity = html('div', 'mission-activity');
+    activity.append(counts, stepper);
+    header.append(head, activity, seg);
+    box.appendChild(header);
     const sec = html('section'); sec.id = 'mission-section'; sec.setAttribute('role', 'tabpanel'); sec.setAttribute('aria-labelledby', 'mission-tab-' + panelView); sec.tabIndex = 0; sec.dataset.focus = 'mission-section';
     const dotBtn = a => { const b = html('button', 'dot'), co = coLead(w, a); b.type = 'button'; b.dataset.focus = 'agent-' + a.id; b.setAttribute('aria-pressed', 'false'); b.appendChild(html('i')); if (co) b.style.setProperty('--hue2', fam(co).hue); b.addEventListener('click', () => pick(a.id, 'panel')); insp.dots.set(a.id, {dot: b, btn: b, co: !!co}); return b; };
-    const group = (hue, title, list) => {
+    const group = (hue, title, list, owners = []) => {
       const row = html('div', 'i-task'), tt = html('div', 't'), dots = html('div', 'dots'); row.style.setProperty('--hue', hue);
       tt.append(title, html('span', 'i-assigned', plural(list.length, 'agent')));
       row.appendChild(tt);
-      if (panelView === 'tasks' && list.length) {
-        const summary = html('p', 'i-task-summary');
-        row.appendChild(summary);
+      if (panelView === 'tasks') {
+        const metadata = html('div', 'i-task-meta');
+        if (owners.length) metadata.appendChild(html('span', 'i-task-owner', owners.map(k => fam(k).name).join(' + ')));
+        const summary = html('span', 'i-task-summary');
+        metadata.appendChild(summary);
+        row.appendChild(metadata);
         insp.taskSummaries.push({summary, ids: list.map(a => a.id)});
       }
       list.forEach(a => dots.appendChild(dotBtn(a)));
@@ -3631,23 +3827,75 @@ function syncInspect(force) {
       if (c.fam && x.m.id === M.id) link.setAttribute('aria-current', 'true');
       link.addEventListener('click', () => select(x.m.id, x.k, 'side')); return link;
     };
+    const actions = html('footer', 'inspect-actions');
+    actions.setAttribute('aria-label', 'Mission actions');
+    const addAction = (id, label, icon, description, run) => {
+      const item = html('div', 'inspect-action-item');
+      const button = html('button', 'btn inspect-action');
+      button.type = 'button'; button.dataset.focus = id;
+      button.innerHTML = icon;
+      button.appendChild(html('span', '', label));
+      const hint = html('span', 'inspect-action-hint', description);
+      hint.id = id + '-hint'; button.setAttribute('aria-describedby', hint.id);
+      button.addEventListener('click', run);
+      item.append(button, hint); actions.appendChild(item);
+    };
     if (panelView === 'brief') {
       const st = briefState(w, M);
-      const grp = (icon, title, tone, right) => { const g = html('div', 'bfg' + (tone ? ' ' + tone : '')), h2 = html('div', 'bfg-h'); h2.innerHTML = ICON[icon]; h2.appendChild(html('span', null, title)); if (right) h2.appendChild(html('em', null, right)); g.appendChild(h2); sec.appendChild(g); return g; };
-      const line = (g, label, value, frac, cls) => { const r = html('div', 'bfl' + (cls ? ' ' + cls : '')); r.append(html('span', null, label), html('b', null, value)); if (frac != null) { const mt = html('i', 'meter'), fi = html('i'); fi.style.width = Math.max(0, Math.min(100, Math.round(frac * 100))) + '%'; mt.appendChild(fi); r.appendChild(mt); } g.appendChild(r); };
-      if (!st) sec.appendChild(html('p', 'small', 'No brief has been set for this mission. Set one to say what it delivers, what it must reach and what it must stay under.'));
+      const section = (title, icon, summary) => {
+        const card = html('section', 'brief-card');
+        const heading = html('h3', 'brief-heading');
+        heading.innerHTML = ICON[icon];
+        heading.appendChild(document.createTextNode(title));
+        if (summary) heading.appendChild(html('small', '', summary));
+        card.appendChild(heading); sec.appendChild(card);
+        return card;
+      };
+      const group = (card, label, summary) => {
+        const g = html('div', 'bfg');
+        if (label) {
+          const heading = html('h4', 'bfg-h', label);
+          if (summary) heading.appendChild(html('em', '', summary));
+          g.appendChild(heading);
+        }
+        card.appendChild(g);
+        return g;
+      };
+      const line = (g, label, value, frac, cls) => {
+        const row = html('div', 'bfl' + (cls ? ' ' + cls : ''));
+        const name = html('span', '', label);
+        if (cls === 'near' || cls === 'over') name.appendChild(html('small', 'limit-state', cls === 'over' ? 'At limit' : 'Near limit'));
+        row.append(name, html('b', '', value));
+        if (frac != null) {
+          const meter = html('i', 'meter'), fill = html('i');
+          meter.setAttribute('aria-hidden', 'true');
+          fill.style.width = Math.max(0, Math.min(100, Math.round(frac * 100))) + '%';
+          meter.appendChild(fill); row.appendChild(meter);
+        }
+        g.appendChild(row);
+      };
+      if (!st) sec.appendChild(html('p', 'small', 'Set a brief to define this mission’s deliverables, targets and limits.'));
       else {
-        const done = st.deliver.filter(x => x.state === 'delivered').length, fm = st.floors.filter(x => x.met).length;
-        { const tg = grp('layers', 'Template', '', M.tpl || 'Custom'); tg.classList.add('flat'); }
-        let g = grp('doc', 'Deliver', 't-ok', st.deliver.length ? `${done} of ${st.deliver.length}` : '');
-        st.deliver.forEach(x => line(g, artText(x.a), ART[x.state], null, x.state)); if (!st.deliver.length) line(g, 'Nothing named', '');
-        g = grp('floor', 'At least', fm === st.floors.length && fm ? 't-ok' : '', st.floors.length ? `${fm} of ${st.floors.length} met` : '');
-        st.floors.forEach(x => line(g, x.label, `${fmtN(x.k, x.have)} / ${fmtN(x.k, x.need)}`, x.have / x.need, x.met ? 'met' : '')); if (!st.floors.length) line(g, 'Nothing required', '');
-        g = grp('cap', 'At most', M.paused || (st.worst && st.worst.frac >= WARN_AT) ? 't-q' : '', M.paused === 'you' ? 'paused by you' : M.paused ? 'stopped until you decide' : '');
-        st.caps.forEach(x => line(g, x.label, `${fmtN(x.k, x.used)} / ${fmtN(x.k, x.max)}`, x.frac, x.frac >= 1 ? 'over' : x.frac >= WARN_AT ? 'near' : '')); if (!st.caps.length) line(g, 'No limits', '');
-        if (st.measures.length) { g = grp('gauge', 'Measured by', '', ''); st.measures.forEach(x => line(g, x.label, x.value)); }
+        const done = st.deliver.filter(x => x.state === 'delivered').length, met = st.floors.filter(x => x.met).length;
+        const goals = section('Mission goals', 'doc', (M.tpl || 'Custom') + ' brief');
+        let g = group(goals, 'Deliverables', st.deliver.length ? done + ' of ' + st.deliver.length + ' delivered' : '');
+        st.deliver.forEach(x => line(g, artText(x.a), ART[x.state], null, x.state));
+        if (!st.deliver.length) line(g, 'No deliverables set', '');
+        g = group(goals, 'Minimum targets', st.floors.length ? met + ' of ' + st.floors.length + ' met' : '');
+        st.floors.forEach(x => line(g, x.label, fmtN(x.k, x.have) + ' / ' + fmtN(x.k, x.need), x.have / x.need, x.met ? 'met' : ''));
+        if (!st.floors.length) line(g, 'No minimums set', '');
+        const limits = section('Resource limits', 'cap', M.paused === 'you' ? 'Paused by you' : M.paused ? 'Awaiting decision' : '');
+        g = group(limits);
+        st.caps.forEach(x => line(g, x.label, fmtN(x.k, x.used) + ' / ' + fmtN(x.k, x.max), x.frac, x.frac >= 1 ? 'over' : x.frac >= WARN_AT ? 'near' : ''));
+        if (!st.caps.length) line(g, 'No limits set', '');
+        if (st.measures.length) {
+          g = group(section('Performance', 'gauge'));
+          st.measures.forEach(x => line(g, x.label, x.value));
+        }
       }
-      if (canAct()) { const eb = html('button', 'btn sm', st ? 'Edit brief' : 'Set brief'); eb.type = 'button'; eb.addEventListener('click', () => openNew(M.id)); const wrap = html('div', 'bfg'); wrap.appendChild(eb); sec.appendChild(wrap); }
+      if (editable) addAction('edit-brief', st ? 'Edit brief' : 'Set brief', ICON.doc, 'Deliverables and limits', () => {
+        openNew(M.id); nm.fromInspector = true;
+      });
     } else if (panelView === 'council') {
       seats.forEach(x => group(fam(x.k).hue, seatLink(x), all.filter(a => a.seat === seatId(x.m.id, x.k))));
       const lent = all.filter(a => !order.has(a.seat)); if (lent.length) group('var(--subtle)', html('span', 'tname', 'Shared, in another squad'), lent);
@@ -3655,7 +3903,7 @@ function syncInspect(force) {
       tasks.forEach(t => {
         const title = html('span', 'tname'), TM = w.missions.get(t.mission); title.innerHTML = '<span class="avs">' + t.leads.map(avatar).join('') + '</span>'; title.append(t.name);
         if (c.fam && TM) title.appendChild(setMissionName(html('em'), TM.name));
-        group(fam(t.fam).hue, title, all.filter(a => a.task === t.id));
+        group(fam(t.fam).hue, title, all.filter(a => a.task === t.id), t.leads);
       });
       const loose = all.filter(a => !a.task || !w.tasks.has(a.task));
       if (loose.length) group('var(--subtle)', html('span', 'tname', 'No task yet'), loose);
@@ -3681,9 +3929,14 @@ function syncInspect(force) {
       [['Allowed without asking', f.may], ['Requires approval', f.must]].forEach(([k, v]) => { const r = html('div', 'kv'); r.append(html('dt', null, k), html('dd', null, v)); dl.appendChild(r); });
       wd.append(sm, dl); box.appendChild(wd);
     }
-    const m = html('button', 'btn', 'Ask Psyche about this'); m.type = 'button';
-    m.addEventListener('click', () => { openPsyche(); $('say').focus(); });
-    box.append(m, insp.slot);
+    addAction('ask-psyche', editable ? 'Ask Psyche' : 'View chat',
+      '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3.5h10v7H7l-3.5 2.5v-2.5H3z" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"/></svg>',
+      editable ? 'Progress and blockers' : 'Replay conversation', () => {
+        openPsyche(); setTab('chat', false);
+        if (window.CovenMobileUI) window.CovenMobileUI.activate('psyche');
+        ($('say').disabled ? $('tabChat') : $('say')).focus();
+      });
+    box.append(insp.slot, actions);
     showPick();
     box.querySelectorAll('button,summary,[tabindex]').forEach(el => { if (!el.dataset.focus) el.dataset.focus = el.id || [el.tagName, el.getAttribute('aria-label') || el.textContent.trim()].join(':'); });
     if (window.CovenMobileUI) window.CovenMobileUI.sync();
@@ -3696,40 +3949,57 @@ function syncInspect(force) {
   for (const {summary, ids} of insp.taskSummaries) {
     const counts = {work: 0, idle: 0, gate: 0};
     for (const id of ids) counts[w.agents.get(id).state]++;
-    const text = ['gate', 'work', 'idle'].filter(st => counts[st]).map(st => counts[st] + ' ' + STATE[st].toLowerCase()).join(' · ');
+    const text = ids.length ? ['gate', 'work', 'idle'].filter(st => counts[st]).map(st => counts[st] + ' ' + STATE[st].toLowerCase()).join(' · ') : 'Unassigned';
+    summary.classList.toggle('waiting', counts.gate > 0);
     if (summary.textContent !== text) summary.textContent = text;
   }
   ['work', 'idle', 'gate'].forEach(st => { const v = all.filter(a => a.state === st).length; insp.nums[st].textContent = v; insp.nums[st].parentElement.classList.toggle('zero', v === 0); });
-  all.forEach(a => { const r = insp.dots.get(a.id); if (!r) return; r.dot.className = 'dot ' + a.state + (r.co ? ' co' : ''); if (r.st) r.st.textContent = ', ' + STATE[a.state].toLowerCase(); else r.btn.setAttribute('aria-label', `${a.id}, ${STATE[a.state].toLowerCase()}`); });
+  all.forEach(a => {
+    const r = insp.dots.get(a.id);
+    if (!r) return;
+    r.dot.className = 'dot ' + a.state + (r.co ? ' co' : '');
+    if (r.st) r.st.textContent = ', ' + STATE[a.state].toLowerCase();
+    else {
+      const label = a.id + ', ' + STATE[a.state].toLowerCase();
+      r.btn.setAttribute('aria-label', label);
+      r.btn.title = label;
+    }
+  });
 }
 function agentInfo(a, previous) {
   const w = cur().world, e = previous && previous.dataset.agent === a.id ? previous : html('div', 'a-info');
   if (!e.firstElementChild) {
     e.dataset.agent = a.id; e.setAttribute('role', 'group'); e.setAttribute('aria-labelledby', 'agentDetailTitle');
-    const top = html('div', 'a-top'), title = html('h3', 'id', 'Agent ' + a.id);
+    const top = html('div', 'a-top'), title = html('h3', 'agent-activity');
+    title.setAttribute('data-agent-field', 'work');
+    const id = html('span', 'id', 'Agent ' + a.id);
+    id.id = 'agentDetailId'; e.setAttribute('aria-describedby', id.id);
     title.id = 'agentDetailTitle'; title.tabIndex = -1; title.dataset.focus = 'agent-detail-title-' + a.id;
     const close = html('button', 'btn agent-close');
     close.type = 'button'; close.title = 'Close agent details'; close.setAttribute('aria-label', close.title);
     close.appendChild(html('span', 'sr', close.title));
     close.setAttribute('data-agent-action', 'close'); close.dataset.focus = 'agent-detail-close-' + a.id;
     close.addEventListener('click', () => clearPick(true)); top.append(title, close);
-    const work = html('p', 'agent-activity'); work.setAttribute('data-agent-field', 'work');
     const status = html('div', 'agent-status'); status.append(html('span', 'st'), html('span', 'agent-elapsed'));
     const facts = html('dl', 'agent-facts');
-    for (const [key, label] of [['task', 'Task'], ['leads', 'Led by'], ['mission', 'Mission'], ['gate', 'Gate']]) {
+    for (const [key, label] of [['task', 'Task'], ['mission', 'Mission'], ['gate', 'Gate']]) {
       const row = html('div'), val = html('dd'); val.setAttribute('data-agent-field', key);
       row.append(html('dt', '', label), val); facts.appendChild(row);
     }
     const review = html('button', 'btn agent-review', 'Review in Inbox'); review.type = 'button'; review.setAttribute('data-agent-action', 'review'); review.dataset.focus = 'agent-detail-review-' + a.id;
     review.addEventListener('click', () => { const current = cur().world.agents.get(e.dataset.agent); if (current && current.ask) flashAsk(current.ask); });
-    e.append(top, work, status, facts, review);
+    const footer = html('div', 'agent-identity'), owner = html('span', 'agent-owner'), leads = html('b');
+    leads.setAttribute('data-agent-field', 'leads');
+    owner.append(html('span', '', 'Led by '), leads);
+    footer.append(owner, id);
+    e.append(top, status, facts, review, footer);
   }
   const task = w.tasks.get(a.task), mission = w.missions.get(a.mission), request = a.state === 'gate' && w.asks.get(a.ask);
   e.style.setProperty('--hue', fam(a.fam).hue);
   const field = key => e.querySelector(`[data-agent-field="${key}"]`);
   field('work').textContent = request ? request.title : a.state === 'work' ? a.doing || 'Working on assignment' : a.state === 'gate' ? 'Waiting for approval' : 'Waiting for work';
   const state = e.querySelector('.st'); state.className = 'st ' + a.state; state.textContent = STATE[a.state];
-  e.querySelector('.agent-elapsed').textContent = ago(a) + ' in this state';
+  e.querySelector('.agent-elapsed').textContent = 'for ' + ago(a);
   field('task').textContent = task ? task.name : 'Unassigned';
   setMissionName(field('mission'), mission ? mission.name : 'No mission');
   field('leads').textContent = (task && task.leads.length ? task.leads : [a.fam]).map(k => fam(k).name).join(' and ');
@@ -3769,6 +4039,10 @@ function showPick(reveal) {
   if (!a) {
     if (selected && hadFocus) { const fallback = $('missionDetailTitle'); if (fallback && !fallback.closest('[hidden],[inert]')) fallback.focus({preventScroll: true}); }
     return;
+  }
+  if (inPanel) {
+    const task = insp.dots.get(a.id).btn.closest('.i-task');
+    if (task && slot.parentNode !== task) task.appendChild(slot);
   }
   const host = inPanel ? slot : pop, previous = host.firstElementChild, info = agentInfo(a, previous);
   if (info !== previous) { host.textContent = ''; host.appendChild(info); }
@@ -4567,6 +4841,7 @@ function drawNew() {
   $('raise').disabled = !ok || !$('nmName').value.trim(); $('nmName').disabled = !ok || !!EM;
 }
 function openNew(editId) {
+  nm.fromInspector = false;
   const c = cur(), M = editId ? c.world.missions.get(editId) : null;
   if (!M && c.sel) select(null); if (atlasScope === 'coven') setView();
   nm.edit = M ? M.id : null; nm.open = M ? 'deliver' : null;
@@ -4574,14 +4849,17 @@ function openNew(editId) {
     const t0 = M.tpl ? allTpl().find(t => M.tpl.indexOf(t.name) === 0) : null; nm.tpl = t0 ? t0.id : null; nm.tplEdited = !!t0 && M.tpl !== t0.name; }
   c.composing = true; drawBriefForm(); drawNew();
   if (window.CovenMobileUI) window.CovenMobileUI.activate('empty');
-  if (!M) { const i = $('nmName'); i.focus(); i.select(); }
+  if (M) $('nmTitle').focus({preventScroll: true});
+  else { const i = $('nmName'); i.focus(); i.select(); }
 }
 function closeNew() {
-  const c = cur(); c.composing = false; c.emptyDismissed = true;
+  const c = cur(), returnToBrief = nm.edit && nm.fromInspector;
+  nm.fromInspector = false; c.composing = false; c.emptyDismissed = true;
   nm.touched = false; nm.leadTouched = false; nm.match = null; if (!nm.edit && nm.briefTouched) { nm.briefTouched = false; }
   if (nm.edit) { nm.edit = null; nm.briefTouched = false; nm.open = null; setLead(nm.lead); }
   drawNew(); if (window.CovenMobileUI) window.CovenMobileUI.sync();
-  const add = $('emptyNew'); if (add && !add.closest('[hidden],[inert]') && !add.disabled) add.focus({preventScroll: true});
+  const trigger = (returnToBrief && $('inspect').querySelector('[data-focus="edit-brief"]')) || $('emptyNew');
+  if (trigger && !trigger.closest('[hidden],[inert]') && !trigger.disabled) trigger.focus({preventScroll: true});
 }
 Object.keys(FAM).forEach(k => {
   const b = html('button', 'nm-lead'); b.type = 'button'; b.dataset.k = k; b.setAttribute('role', 'radio'); b.style.setProperty('--hue', FAM[k].hue);
@@ -4756,22 +5034,41 @@ function closeWheel() { if ($('cpModal').hidden) return; $('cpModal').hidden = t
     if (ev.shiftKey && i <= 0) { ev.preventDefault(); f[f.length - 1].focus(); } else if (!ev.shiftKey && i === f.length - 1) { ev.preventDefault(); f[0].focus(); } });
 }
 // ------------------------------------------------------------ the key: one dialog, a compartment for each kind of meaning
+const keyTabs = [...$('keyModal').querySelectorAll('[role="tab"]')];
+function showKeyTopic(tab) {
+  for (const item of keyTabs) {
+    const active = item === tab;
+    item.setAttribute('aria-selected', String(active));
+    item.tabIndex = active ? 0 : -1;
+    $(item.getAttribute('aria-controls')).hidden = !active;
+  }
+  $('keyModal').querySelector('.key-reader').scrollTop = 0;
+}
+keyTabs.forEach((tab, index) => {
+  tab.addEventListener('click', () => showKeyTopic(tab));
+  tab.addEventListener('keydown', ev => {
+    const dest = {Home: 0, End: keyTabs.length - 1, ArrowLeft: (index + keyTabs.length - 1) % keyTabs.length, ArrowRight: (index + 1) % keyTabs.length}[ev.key];
+    if (dest === undefined) return;
+    ev.preventDefault(); ev.stopPropagation();
+    showKeyTopic(keyTabs[dest]); keyTabs[dest].focus();
+  });
+});
 function openKey() {
   document.querySelectorAll('details.pill[open]').forEach(d => d.open = false);
   const dots = $('kzDots'), fams = $('kzFams'); dots.textContent = fams.textContent = '';
   Object.keys(FAM).forEach(k => { const f = FAM[k], d = html('i', 'kd'), r = html('span', 'kz-f'); d.style.setProperty('--hue', f.hue); dots.appendChild(d);
     r.style.setProperty('--hue', f.hue); r.innerHTML = avatar(k); r.append(html('b', null, f.name), html('span', null, (f.roles || [f.role]).join(', '))); fams.appendChild(r); });
   { const demo = (state, o) => { const ks = Object.keys(FAM).slice(0, 3), sh = [.45, .33, .22]; let a = -90; return Object.assign({state, burn: .4, warn: false, wedges: ks.map((k, i) => { const x = {k, share: sh[i], progress: state === 'sealed' ? 1 : state === 'planned' ? 0 : [0.7, 0.45, 0.2][i], a0: a, a1: a + sh[i] * 360, live: state === 'active' ? 1 : 0, blocked: state === 'stalled' && i === 1, asking: state === 'needsYou' && i === 1, lead: !i}; a = x.a1; return x; })}, o || {}); };
-    $('kzSealMark').innerHTML = sealSvg(demo('active'), 16); const box = $('kzStates'); box.textContent = '';
-    Object.keys(SEAL_STATE).forEach(st => { const r = html('div', 'kz-st'); r.innerHTML = sealSvg(demo(st, {warn: st === 'broken'}), 26); r.append(html('b', null, SEAL_STATE[st][0])); r.title = SEAL_STATE[st][0] + ': ' + SEAL_STATE[st][1]; box.appendChild(r); }); }
-  $('keyIc').innerHTML = $('keyBtn').innerHTML; $('keyModal').hidden = false; $('keyBtn').setAttribute('aria-expanded', 'true'); $('keyX').focus();
+    $('kzSealMark').innerHTML = sealSvg(demo('active'), 34); const box = $('kzStates'); box.textContent = '';
+    Object.keys(SEAL_STATE).forEach(st => { const r = html('div', 'kz-st'); r.innerHTML = sealSvg(demo(st, {warn: st === 'broken'}), 26); r.append(html('b', null, SEAL_STATE[st][0]), html('span', null, SEAL_STATE[st][1])); box.appendChild(r); }); }
+  $('keyIc').innerHTML = $('keyBtn').innerHTML; $('keyModal').hidden = false; $('keyBtn').setAttribute('aria-expanded', 'true'); showKeyTopic(keyTabs[0]); keyTabs[0].focus();
 }
-function closeKey() { $('keyModal').hidden = true; $('keyBtn').setAttribute('aria-expanded', 'false'); (document.body.dataset.atlasScope === 'coven' ? $('atlasBrowse') : $('keyBtn')).focus(); }
+function closeKey() { $('keyModal').hidden = true; $('keyBtn').setAttribute('aria-expanded', 'false'); (document.body.dataset.atlasScope === 'coven' ? $('atlasBrowse') : $('workspaceTools').open ? $('keyBtn') : $('workspaceTools').firstElementChild).focus(); }
 $('keyBtn').addEventListener('click', ev => { ev.stopPropagation(); openKey(); });
 $('keyX').addEventListener('click', closeKey); $('keyBg').addEventListener('click', closeKey);
 $('keyModal').addEventListener('click', ev => ev.stopPropagation());
 $('keyModal').addEventListener('keydown', ev => {      // focus stays inside the dialog while it is open
-  if (ev.key !== 'Tab') return; const f = [...$('keyModal').querySelectorAll('summary,button:not(:disabled)')].filter(el => el.getClientRects().length), i = f.indexOf(document.activeElement);
+  if (ev.defaultPrevented || ev.key !== 'Tab') return; const f = [...$('keyModal').querySelectorAll('button:not(:disabled),[tabindex="0"]')].filter(el => el.tabIndex >= 0 && el.getClientRects().length), i = f.indexOf(document.activeElement);
   if (ev.shiftKey && i <= 0) { ev.preventDefault(); f[f.length - 1].focus(); } else if (!ev.shiftKey && i === f.length - 1) { ev.preventDefault(); f[0].focus(); }
 });
 // ------------------------------------------------------------ projects: a project is a name, a repository and a folder on this machine

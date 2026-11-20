@@ -104,11 +104,12 @@ for (const [name, width, height, mobile] of [['desktop', 1440, 900, false], ['ph
       const camera = await readView(page);
       await verifyBandSize();
       await select.selectOption('point');
-      assert.equal(await crown.isVisible(), false);
+      assert.equal(await hub.locator('.coord-artwork').evaluate(el => getComputedStyle(el).display), 'none');
       assert.equal(Math.round((await hub.locator('.coord-point').boundingBox()).width), 16);
       assert.equal(Math.round((await hub.locator('.atlas-map-hit').boundingBox()).width), 44);
       assert.deepEqual(await readView(page), camera);
       await select.selectOption('labeled');
+      assert.notEqual(await hub.locator('.coord-artwork').evaluate(el => getComputedStyle(el).display), 'none');
       assert.equal(await crown.isVisible(), true);
       assert.equal(await hub.locator('.coord-name').isVisible(), true);
       await page.goto(new URL('#/coven', base).href);
@@ -211,11 +212,12 @@ test('landscape Project makes use of the map height alongside its controls', asy
     await verifyGeometry(page);
     const observed = await page.evaluate(() => {
       const stage = document.querySelector('#plan').getBoundingClientRect();
-      const controls = ['#atlasHeader', '#atlasFamiliars'].map(id => document.querySelector(id).getBoundingClientRect());
+      const header = document.querySelector('#atlasHeader').getBoundingClientRect();
+      const familiars = document.querySelector('#atlasFamiliars').getBoundingClientRect();
       const discs = [...document.querySelectorAll('.atlas-project-detail .familiar-disc')].map(el => el.getBoundingClientRect());
       const left = Math.min(...discs.map(r => r.left)), right = Math.max(...discs.map(r => r.right));
       const top = Math.min(...discs.map(r => r.top)), bottom = Math.max(...discs.map(r => r.bottom));
-      return {clear: left > Math.max(...controls.map(r => r.right)) && right <= stage.right && top >= stage.top && bottom <= stage.bottom,
+      return {clear: header.bottom <= stage.top && left > familiars.right && right <= stage.right && top >= stage.top && bottom <= stage.bottom,
         heightUsed: (bottom - top) / stage.height};
     });
     assert.equal(observed.clear, true);

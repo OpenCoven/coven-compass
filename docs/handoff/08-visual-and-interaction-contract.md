@@ -44,7 +44,7 @@ Keep internal mission placement and overview project placement distinct. The new
 
 ## 4. Reading a mission seal
 
-Compass uses one drawing plane for the overview, Project, mission details, previews and Seal lab. Psyche defaults to a crown with bands for working agents and missions awaiting a decision. Choose a point or a labeled crown in the map controls. A mission uses a filled disc with an external label. Smaller familiar badges sit at the ends of colored spokes. Selection adds an outline and preserves familiar identity colors.
+Compass uses one drawing plane for the overview, Project, mission details, previews and Seal lab. Psyche defaults to a crown with bands for working agents and missions awaiting a decision. Choose a point or a labeled crown in the map controls. A mission uses a filled disc with an external label. Smaller familiar badges sit at the ends of colored spokes. Four arcs mark a selected mission. Its familiar connections stay bright, and each familiar’s agents share a tinted plane. Unrelated branches recede. Selection centers the mission or familiar in the available map space and preserves familiar identity colors.
 
 | Seal feature | Meaning |
 | --- | --- |
@@ -59,6 +59,12 @@ Council slices provide a readable summary even for small shares. Details and the
 Current progress ownership uses `TARGET_ROLES` in the prototype. Production integration must inspect canonical target ownership, counters, and completion semantics. Do not copy this fixture mapping into a second orchestration schema. “Sealed” requires canonical completion evidence; a local 100% animation or a model's report is insufficient.
 
 ## 5. Progressive detail and control placement
+
+The workspace bar and Psyche title share a height. Mission details open on the left. Inspector action labels use up to three words, with supporting descriptions beside the controls. Edit brief sets deliverables and limits. Ask Psyche opens the conversation for the current selection. In replay, View chat opens the conversation history. The header keeps identity, activity and section navigation in three rows. The Tasks tab names each owning familiar and groups its assigned agents under the task. A filled circle means working, an open circle means idle, and a square with a center dot means waiting at a gate. Selecting an agent opens its details in that task row. Closing the details returns focus to the agent.
+
+One top bar holds workspace navigation. Project tools opens the project and mission selectors, Ward, trace and display controls. Inbox and Stop stay in the top bar when available. The map shares the workspace surface color. Its familiar key and camera controls sit on one bottom row. On small screens, View reveals the controls beside the scrollable familiar key. Camera icons offer zoom, fit, lock and the Psyche marker picker. A locked camera shows the unlock and marker controls.
+
+The Map key opens on four illustrated map symbols. Its topic tabs keep familiar identities, mission seals, connections and keyboard controls within reach while the selected panel scrolls. Selecting a familiar’s agent plane frames its members in the available map area and uses the familiar’s own color for the selection. The plane divides its area by assigned agent count. Each task has its own region, waiting agents keep a dashed place, and unassigned agents share a separate region. Tasks without agents remain accessible in the mission’s task list. The camera lock preserves a manually chosen view.
 
 The Coven view shows Project previews, exact mission counts, decision badges, and a compact identity filter. The Projects drawer is closed by default and overlays the map without changing its dimensions. Project view reveals useful controls and group counts. Mission selection opens task/agent detail. Retain the existing replay and Seal lab as clearly scoped controls.
 

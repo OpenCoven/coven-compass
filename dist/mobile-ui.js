@@ -8,7 +8,6 @@
   var mobile = false, nativeOpen = false, topId = null, pendingActivation = null, frame = 0;
   var viewportPrevious = null, observer = null;
   var chrome = null, chromePortals = [], cameraExpanded = false, chromeObserver = null;
-  var cameraObscured = null;
   var composingTargets = new WeakSet();
   var FOCUSABLE = 'a[href],button,input,select,textarea,summary,[tabindex],[contenteditable]';
 
@@ -165,10 +164,11 @@
     });
     var view = action('atlasMobileView', 'View', 'Show map controls', function () {
       cameraExpanded = !cameraExpanded; updateCameraChoice(); scheduleViewport();
+      if (cameraExpanded) focus(document.getElementById('atlasCameraDock').querySelector('button:not(:disabled)'));
     });
     view.setAttribute('aria-controls', 'atlasCameraDock');
     chrome.appendChild(nav); document.body.insertBefore(chrome, document.body.firstChild);
-    ['timeline', 'atlasCameraDock', 'live'].forEach(function (id) {
+    ['timeline', 'live'].forEach(function (id) {
       var el = document.getElementById(id);
       if (el) chromePortals.push({el: el, anchor: null, destination: id === 'live' ? document.getElementById('timeline') : chrome});
     });
@@ -189,14 +189,8 @@
     var view = document.getElementById('atlasMobileView');
     view.setAttribute('aria-expanded', String(cameraExpanded));
     view.setAttribute('aria-label', cameraExpanded ? 'Hide map controls' : 'Show map controls');
-    var familiars = document.getElementById('atlasFamiliars');
-    if (mobile && cameraExpanded && familiars && !cameraObscured) {
-      cameraObscured = {el: familiars, hidden: familiars.hidden};
-      familiars.hidden = true;
-    } else if ((!mobile || !cameraExpanded) && cameraObscured) {
-      cameraObscured.el.hidden = cameraObscured.hidden;
-      cameraObscured = null;
-    }
+    var dock = document.getElementById('atlasCameraDock'), folded = mobile && !cameraExpanded;
+    if (dock.hidden !== folded) dock.hidden = folded;
   }
 
   function syncAdaptiveChrome() {
