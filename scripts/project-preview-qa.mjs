@@ -60,8 +60,63 @@ for (const [width, height] of [[1440, 900], [390, 844]]) {
       await page.setViewportSize({width, height});
       assert.equal(await unstaffed.locator('.task-cog').count(), 3);
       assert.equal(await unstaffed.locator('.task-overflow').textContent(), '+2');
-      await unstaffed.click();
+      // Start from the overview again, this time with a Project containing only unstaffed tasks.
+      await page.locator(width < 500 ? '#atlasMobileMap' : '#atlasOverview').click();
+      await project.locator('.preview-mission').first().waitFor();
+      const item = page.locator('#plan [data-map-item]:focus');
+      for (let i = 0; i < 100 && !await item.count(); i++) await page.keyboard.press('Tab');
+      assert.equal(await item.count(), 1, 'Tab enters the map');
+      await page.keyboard.press('Home');
+      const first = await item.getAttribute('aria-label');
+      await page.keyboard.press('End');
+      assert.notEqual(await item.getAttribute('aria-label'), first);
+      await page.keyboard.press('Home');
+      const projectCount = await page.locator('.ghostfort').count();
+      for (let i = 0; i < projectCount && !await project.evaluate(el => el.matches(':focus')); i++) {
+        await page.keyboard.press('ArrowRight');
+      }
+      assert.ok(await project.evaluate(el => el.matches(':focus')), 'arrow keys reach the Project preview');
+      assert.equal(await page.locator('#plan [tabindex="0"]').count(), 1);
+      await page.keyboard.press('Tab');
+      assert.equal(await item.count(), 0, 'one Tab leaves the map');
+      await page.keyboard.press('Shift+Tab');
+      assert.ok(await project.evaluate(el => el.matches(':focus')), 'Tab returns to the same Project');
+      await page.keyboard.press('Enter');
+      await unstaffed.waitFor();
+      assert.equal(await item.count(), 1, 'opening a Project from the map keeps keyboard focus inside it');
+      const itemCount = await page.locator('#plan [data-map-item]').count();
+      for (let i = 0; i < itemCount && !await unstaffed.evaluate(el => el.matches(':focus')); i++) await page.keyboard.press('ArrowRight');
+      assert.ok(await unstaffed.evaluate(el => el.matches(':focus')), 'arrow keys reach the unstaffed task group');
+      await page.keyboard.press('Space');
       assert.deepEqual(await page.locator('#inspect .tname').allTextContents(), names);
+      await page.locator('[data-focus="close-details"]').click();
+      await page.keyboard.press('Escape');
+      assert.ok(await unstaffed.evaluate(el => el.matches(':focus')), 'deselecting the mission returns to its task group');
+
+      const launcher = page.locator(width < 500 ? '#atlasMobileMissions' : '#atlasMissions');
+      await launcher.click();
+      const search = page.locator('#atlasMissionSearch');
+      await search.fill('Unstaffed');
+      await search.press('ArrowDown');
+      const row = page.getByRole('button', {name: /Unstaffed mission, psyche-build/});
+      assert.ok(await row.evaluate(el => el.matches(':focus')));
+      await page.keyboard.press('Enter');
+      await page.getByRole('heading', {name: 'Unstaffed mission', exact: true}).waitFor();
+      await page.locator('[data-focus="close-details"]').click();
+      assert.equal(await search.inputValue(), 'Unstaffed');
+      assert.ok(await row.evaluate(el => el.matches(':focus')), 'close returns to the filtered mission');
+      await page.keyboard.press('Escape');
+      assert.ok(await launcher.evaluate(el => el.matches(':focus')));
+      assert.match(page.url(), /#\/project\/psyche-build$/);
+      await page.goto(new URL('#/castle/psyche-build', base).href);
+      const notice = page.locator('#atlasNavigationNotice');
+      await notice.waitFor();
+      assert.match(await notice.innerText(), /navigation link is not valid/);
+      assert.ok(await notice.evaluate(el => {
+        const r = el.getBoundingClientRect();
+        return r.left >= 0 && r.top >= 0 && r.right <= innerWidth && r.bottom <= innerHeight;
+      }), 'invalid-link notice fits the viewport');
+      assert.match(page.url(), /#\/coven$/);
       assert.deepEqual(errors, []);
     } finally { await page.close(); }
   });

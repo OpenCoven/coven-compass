@@ -1570,7 +1570,7 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
         </div>
         <div class="plan-body">
           <div class="stage" id="stage" tabindex="0" aria-label="Project view. Drag or use arrow keys to pan. Pinch, scroll, or use plus and minus to zoom. Press zero to fit.">
-            <svg id="plan" viewBox="-392 -392 784 784" role="img" aria-label="The project: Psyche at the center, missions around it, each with its council of familiars and their squads of agents, gates on the walls"></svg>
+            <svg id="plan" viewBox="-392 -392 784 784" role="group" aria-label="Coven map. Arrow keys move between items. Home and End go to the first and last."></svg>
             <form class="empty" id="projectForm" aria-label="Project" autocomplete="off" novalidate hidden>
               <div class="hd"><span class="hd-i" id="czIcon"></span><h2 class="hd-t" id="czTitle">New project</h2><span class="hd-m" id="czMeta"></span><button class="btn x" type="button" id="czX" aria-label="Close">×</button></div>
               <div class="mobile-form-body">
@@ -1725,6 +1725,7 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
 <script src="atlas-viewport.js"></script>
 <script src="atlas-crown.js"></script>
 <script src="atlas-presentation.js"></script>
+<script src="map-focus.js"></script>
 <script src="simulation-model.js"></script>
 <script src="projection-source.js"></script>
 <script>
@@ -2291,6 +2292,7 @@ function atlasRoutePath(points, radius) {
 const camT = {zoom: 1, px: 0, py: 0};
 const cam = {...camT, locked: false};
 let sc = null;
+let atlasMapFocusInstance = null;
 
 function coordinationMarker(parent) {
   return window.CovenAtlasCrown.create(parent, svgEl);
@@ -2332,7 +2334,11 @@ function buildScene() {
     rec.aggregate = svgEl('text', {class: 'atlas-aggregate', 'aria-hidden': 'true'}, g);
     rec.title = svgEl('title', {}, g);
     g.addEventListener('click', ev => { ev.stopPropagation(); atlasOpenProject(k); });
-    atlasFocusable(g, k + ', Project', () => atlasOpenProject(k));
+    atlasFocusable(g, k + ', Project', () => {
+      atlasOpenProject(k);
+      project(); // Apply the new scope before focusing its SVG items.
+      sc.psy.g.focus({preventScroll: true});
+    });
     return rec;
   });
   cv.links.forEach(L => {
@@ -2734,8 +2740,7 @@ function project() {
         L.expandedBadge = expanded;
         if (!expanded && document.activeElement === L.decision) gh.g.focus({preventScroll: true});
         L.decision.classList.toggle('atlas-compact-decision', !expanded);
-        L.decision.setAttribute('tabindex', expanded ? '0' : '-1');
-        L.decision.setAttribute('aria-hidden', String(!expanded));
+        L.decision.setAttribute('aria-hidden', String(!expanded));   // the map's roving focus skips hidden items
       }
       const side = (expanded ? clamp(20 * U * screenScale, 18, 26) : clamp(pixels * .3, 7, 11)) / screenScale;
       if (!expanded) {
@@ -3260,7 +3265,7 @@ function select(m, k, mode, options) {
   if (m && atlasScope === 'coven') { atlasScope = 'project'; atlasFitScene(false); }
   if (m) atlasAutoFit = true;
   if (k && (!mission || !mission.seats.includes(k))) k = null;
-  if (m && !was && origin && origin !== document.body) c.selectionOrigin = origin;
+  if (m && m !== was) c.selectionOrigin = origin?.closest?.('#plan [data-map-item]') || null;
   clearPick(); if (m && c.composing) { c.composing = false; drawNew(); }
   if (k && sc.hl && sc.hl !== k) { sc.hl = null; syncCoven(); }
   c.detail = m ? (mode || (narrow.matches || c.detail === 'side' ? 'side' : 'card')) : null; c.sel = m || null; c.fam = m ? (k || null) : null;
@@ -5149,8 +5154,15 @@ function watchLimits() {
 setInterval(() => { if (document.hidden) return; watchLimits(); fillHudBrief(); if (panelView === 'brief') syncInspect(); }, 5000);
 
 // Atlas presentation reads the existing worlds. It never creates a second execution model.
+// Map items share one Tab stop (dist/map-focus.js): each starts at tabindex -1, and the roving manager keeps
+// exactly one reachable. Arrow keys move between them; Enter and Space activate the focused one.
+function atlasMapFocus() {
+  if (!atlasMapFocusInstance && window.CovenMapFocus && $('plan')) atlasMapFocusInstance = window.CovenMapFocus.create($('plan'));
+  return atlasMapFocusInstance;
+}
 function atlasFocusable(el, label, action) {
-  el.setAttribute('tabindex', '0'); el.setAttribute('role', 'button'); el.setAttribute('aria-label', label);
+  el.setAttribute('tabindex', '-1'); el.setAttribute('data-map-item', ''); el.setAttribute('role', 'button'); el.setAttribute('aria-label', label);
+  const mf = atlasMapFocus(); if (mf) mf.schedule(); else el.setAttribute('tabindex', '0');
   el.addEventListener('keydown', ev => {
     if (ev.target !== el || (ev.key !== 'Enter' && ev.key !== ' ')) return;
     ev.preventDefault(); ev.stopPropagation(); action();
@@ -5402,8 +5414,11 @@ function atlasFocusSelection(preferOpen, previousMission) {
   const c = cur(); let target = null;
   if (c.sel && c.detail === 'side') target = $('missionDetailTitle');
   else if (c.sel) target = preferOpen ? document.querySelector('.hud [data-focus="open-details"]') : $('missionSummaryTitle');
-  else if (previousMission) target = [...document.querySelectorAll('.lead-card')].find(el => el.dataset.mission === previousMission);
   const reachable = el => el && el.isConnected && !el.closest('[hidden],[inert]') && el.getClientRects().length;
+  if (!c.sel && previousMission) {
+    target = reachable(c.selectionOrigin) ? c.selectionOrigin : [...document.querySelectorAll('.lead-card')].find(el => el.dataset.mission === previousMission);
+    c.selectionOrigin = null;
+  }
   if (!reachable(target)) target = [$('atlasMobileMissions'), $('atlasMissions'), $('stage')].find(reachable);
   if (target) target.focus({preventScroll: true});
 }

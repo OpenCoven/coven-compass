@@ -212,7 +212,11 @@ async function compactMissionLabel() {
     await page.locator(compact).first().waitFor();
     await page.mouse.move(0, 0);
     const target = page.locator(compact + ':focus-visible');
-    for (let i = 0; i < 100 && !(await target.count()); i++) await page.keyboard.press('Tab');
+    const mapItem = page.locator('#plan [data-map-item]:focus');
+    for (let i = 0; i < 100 && !await mapItem.count(); i++) await page.keyboard.press('Tab');
+    if (!await mapItem.count()) throw new Error('Tab did not enter the map');
+    const itemCount = await page.locator('#plan [data-map-item]').count();
+    for (let i = 0; i < itemCount && !await target.count(); i++) await page.keyboard.press('ArrowRight');
     await target.waitFor({timeout: 3000});
     const label = target.locator('.lead-name');
     const name = (await target.getAttribute('aria-label')).split(',')[0];
