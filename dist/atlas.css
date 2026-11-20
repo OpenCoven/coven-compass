@@ -767,3 +767,25 @@ body.atlas-enhanced.atlas-adaptive-mobile #notes .hud > .bar,
 body.atlas-enhanced.atlas-adaptive-mobile #notes .hud-brief,
 body.atlas-enhanced.atlas-adaptive-mobile .stage:has(#notes .hud) #atlasFamiliars { display: none; }
 body.atlas-enhanced.atlas-adaptive-mobile:has(#atlasMobileChrome[data-camera-open="true"]) #notes .hud { visibility: hidden; pointer-events: none; }
+
+/* Ward keeps the review action above the policy disclosures. */
+body.atlas-enhanced .plan-head #wardCtl:has(#ward[open]) { opacity: 1; }
+#wardBody .hd { gap: 10px; }
+#wardBody .hd-m { margin-left: auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#wardBody .ward-queue { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px 12px; padding: 8px 14px; background: var(--card-raised); }
+#wardBody .ward-status { color: var(--muted-foreground); font-size: .875em; }
+#wardBody .ward-queue:has(.ward-review:not([hidden])) .ward-status { color: var(--foreground); font-weight: 550; }
+#wardBody .ward-review { min-height: 36px; padding-inline: 16px; color: var(--primary-foreground); background: var(--primary); }
+#wardBody .ward-review[hidden] { display: none; }
+#wardBody .dr > summary { min-height: 44px; background: transparent; }
+#wardBody .dr > summary:hover { background: var(--card-raised); }
+#wardBody .dr-v { color: var(--muted-foreground); }
+#wardBody .dr-b ul { gap: 4px; }
+#wardBody .dr[data-k="may"] ul { flex-direction: row; flex-wrap: wrap; }
+#wardBody .dr[data-k="may"] li { padding: 2px 8px; border: 1px solid var(--border); border-radius: 4px; }
+#wardBody .dr[data-k="may"] li::before, #wardBody .dr[data-k="paths"] li::before { display: none; }
+#wardBody .dr-b .mono { overflow-wrap: anywhere; color: var(--foreground); }
+#wardBody :is(button, summary):focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }
+@media (max-width: 700px), (pointer: coarse) {
+  #wardBody .ward-review { min-height: 44px; }
+}

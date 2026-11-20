@@ -3389,7 +3389,7 @@ function drawMissions() {
 // popovers hang from the toolbar, kept inside the card and never taller than it
 function placePill(d) {
   const body = d.querySelector('.pill-body'), head = d.closest('.plan-head'), unit = d.parentElement, top = unit.offsetTop + unit.offsetHeight + 6;
-  const w = Math.min((d.id === 'traceBox' ? 360 : 304) * (+getComputedStyle(document.documentElement).getPropertyValue('--fs') || 1), head.clientWidth - 20);
+  const w = Math.min((d.id === 'traceBox' || d.id === 'ward' ? 360 : 304) * (+getComputedStyle(document.documentElement).getPropertyValue('--fs') || 1), head.clientWidth - 20);
   body.style.width = w + 'px'; body.style.top = top + 'px';
   body.style.left = clamp(d.id === 'mis' ? d.offsetLeft : unit.offsetLeft, 10, Math.max(10, head.clientWidth - w - 10)) + 'px';
   body.style.maxHeight = Math.max(180, head.parentElement.clientHeight - top - 12) + 'px';
@@ -3859,7 +3859,7 @@ function syncInspect(force) {
     box.appendChild(sec);
     if (c.fam) {
       const f = fam(c.fam), wd = html('details', 'fold'), sm = html('summary'), dl = html('dl'); sm.innerHTML = 'Ward' + CHEV;
-      [['Permissions', f.may], ['Allowable', f.must]].forEach(([k, v]) => { const r = html('div', 'kv'); r.append(html('dt', null, k), html('dd', null, v)); dl.appendChild(r); });
+      [['Allowed without asking', f.may], ['Requires approval', f.must]].forEach(([k, v]) => { const r = html('div', 'kv'); r.append(html('dt', null, k), html('dd', null, v)); dl.appendChild(r); });
       wd.append(sm, dl); box.appendChild(wd);
     }
     const m = html('button', 'btn', 'Ask Psyche about this'); m.type = 'button';
@@ -3980,17 +3980,36 @@ const dr = (key, label, value, body, o = {}) => {
 };
 const ul = (items, cls) => { const u = html('ul'); items.forEach(t => u.appendChild(html('li', cls, t))); return u; };
 function drawWard() {
-  const c = cur(), open = openAsks(c.world), sig = active + '|' + open.length + '|' + c.world.missions.size;
-  if (sig === wardSig) return; wardSig = sig;
-  const box = $('wardBody'), was = new Set([...box.querySelectorAll('.dr[open]')].map(d => d.dataset.k)); box.textContent = '';
-  box.appendChild(hd('Ward', active, open.length ? [`${open.length} waiting`, 'q'] : ['Clear', 'on'], 'ward', open.length ? 'q' : ''));
-  const rows = html('div', 'rows'), must = [ul(WARD.must)];
-  if (open.length) { const go2 = html('button', 'btn sm', `Review ${open.length} waiting`); go2.type = 'button'; go2.addEventListener('click', () => { $('ward').open = false; flashAsk(openAsks(cur().world)[0].id); }); const acts = html('div', 'dr-acts'); acts.appendChild(go2); must.push(acts); }
-  rows.append(
-    dr('may', 'Permissions', `${WARD.may.length} · without asking`, [ul(WARD.may)], {open: was.has('may'), icon: 'check', tone: 'ok'}),
-    dr('must', 'Allowable', open.length ? `${open.length} waiting` : `${WARD.must.length} · waits for you`, must, {open: was.has('must'), cls: open.length ? 'q' : '', icon: 'gate', tone: 'q'}),
-    dr('paths', 'Locations', `${WARD.editable.length} · free to write`, [ul(WARD.editable, 'mono')], {open: was.has('paths'), icon: 'folder'}));
-  box.append(rows, html('p', 'pc-foot', 'Anything else stops at a gate until you answer.'));
+  const box = $('wardBody'), pending = openAsks(cur().world).length;
+  if (!box.firstElementChild) {
+    const title = hd('Ward', active, null, 'ward');
+    const queue = html('div', 'ward-queue'), status = html('span', 'ward-status');
+    const review = html('button', 'btn ward-review', 'Review');
+    review.type = 'button';
+    review.addEventListener('click', () => {
+      const asks = openAsks(cur().world);
+      if (!asks.length) return;
+      $('ward').open = false;
+      if (asks.length === 1) flashAsk(asks[0].id);
+      else setNeeds(true, true);
+    });
+    queue.append(status, review);
+    const rows = html('div', 'rows');
+    rows.append(
+      dr('may', 'Allowed without asking', String(WARD.may.length), [ul(WARD.may)], {open: true, icon: 'check'}),
+      dr('must', 'Requires approval', String(WARD.must.length), [ul(WARD.must)], {icon: 'gate'}),
+      dr('paths', 'Writable locations', String(WARD.editable.length), [ul(WARD.editable, 'mono')], {icon: 'folder'}));
+    box.append(title, queue, rows, html('p', 'pc-foot', 'Other actions pause for your approval.'));
+  }
+  const sig = active + '|' + pending;
+  if (sig === wardSig) return;
+  wardSig = sig;
+  box.querySelector('.hd-m').textContent = active;
+  const review = box.querySelector('.ward-review');
+  if (!pending && document.activeElement === review) $('ward').firstElementChild.focus();
+  review.hidden = !pending;
+  review.setAttribute('aria-label', pending === 1 ? 'Review pending request' : 'Review pending requests');
+  box.querySelector('.ward-status').textContent = pending ? pending + (pending === 1 ? ' pending request' : ' pending requests') : 'No pending requests';
 }
 const FAMILY = [['Missions', ['mission.opened', 'council.seated', 'task.opened', 'task.lead.added', 'mission.briefed', 'mission.progress', 'artifact.state', 'mission.paused', 'mission.resumed', 'mission.renamed', 'mission.closed', 'project.founded', 'project.moved', 'project.renamed', 'project.stopped', 'project.resumed']], ['Agents', ['agent.spawned', 'agent.state', 'agent.assigned', 'agent.retired']], ['Messages', ['you.said', 'psyche.said', 'psyche.routed', 'familiar.report', 'round.closed']], ['Gates', ['gate.requested', 'gate.resolved']]];
 function drawTrace() {
@@ -4190,7 +4209,7 @@ function drawNeeds() {
     if (M) ref('Mission', [rf(M.name, () => select(q.mission))]);
     ref('Gate', [rf(cap(GATE_NAME[q.gate]), () => showAgent(q, q.agents[0]))]);
     if (q.agents.length) ref(q.agents.length === 1 ? 'Agent' : 'Agents', q.agents.map(id => rf(id, () => showAgent(q, id), 'mono')));
-    if (!x && RULE[kind] != null) ref('Ward', [rf('Allowable', () => openWard('must'))]);
+    if (!x && RULE[kind] != null) ref('Ward', [rf('Requires approval', () => openWard('must'))]);
     ref('Asked', [rf(hm(q.t), () => jumpTo(q.t), 'mono')]);
     const no = html('button', 'btn sm', x ? 'Keep stopped' : 'Hold'), yes = html('button', 'btn pri sm', x ? `Raise to ${fmtN(x.k, nextCap(w, M, x.k))}` : 'Allow once'); no.type = yes.type = 'button'; yes.disabled = no.disabled = !ok;
     yes.addEventListener('click', () => resolve(q.id, 'allowed_once')); no.addEventListener('click', () => resolve(q.id, 'held'));
@@ -4314,8 +4333,8 @@ function drawFams(focusId) {
         ci.addEventListener('input', check); ci.addEventListener('keydown', ev => { if (composingInput(ev)) return; if (ev.key === 'Enter') { ev.preventDefault(); take(); } }); ap.addEventListener('click', take);
         cf.append(dot, ci); cw.append(cf, ap); b2.append(cg, cw, ce); check();
       }); }
-    sect('ward', ICON.ward, 'Ward', 'permissions and allowable', b2 => {
-      [['ok', ICON.check, 'Permissions', f.may], ['q', ICON.gate, 'Allowable', f.must]].forEach(([cls, icon, key, val]) => { const li = html('div', 'fm-w ' + cls); li.innerHTML = icon; li.append(html('span', null, key), val); b2.appendChild(li); });
+    sect('ward', ICON.ward, 'Ward', 'permissions and approvals', b2 => {
+      [['ok', ICON.check, 'Allowed without asking', f.may], ['q', ICON.gate, 'Requires approval', f.must]].forEach(([cls, icon, key, val]) => { const li = html('div', 'fm-w ' + cls); li.innerHTML = icon; li.append(html('span', null, key), val); b2.appendChild(li); });
     });
     d.append(sm, body); list.appendChild(d);
   });
@@ -4676,7 +4695,7 @@ function setLead(k, focus) {
   if (!nm.touched && !nm.edit) $('nmName').value = NM_IDEA[k] || '';
   if (!nm.briefTouched && !nm.edit) { nm.tpl = tplFor(k).id; nm.tplEdited = false; nm.brief = tplBrief(nm.tpl); }
   const f = fam(k), box = $('nmTerms'); box.textContent = ''; box.style.setProperty('--hue', f.hue);
-  [['', `<svg viewBox="-10 -10 20 20" aria-hidden="true">${sigil(k)}</svg>`, f.roles && f.roles.length > 1 ? 'Roles' : 'Role', (f.roles || [f.role]).join(', ')], ['ok', ICON.check, 'Permissions', f.may], ['q', ICON.gate, 'Allowable', f.must]].forEach(([cls, icon, key, val]) => {
+  [['', `<svg viewBox="-10 -10 20 20" aria-hidden="true">${sigil(k)}</svg>`, f.roles && f.roles.length > 1 ? 'Roles' : 'Role', (f.roles || [f.role]).join(', ')], ['ok', ICON.check, 'Allowed without asking', f.may], ['q', ICON.gate, 'Requires approval', f.must]].forEach(([cls, icon, key, val]) => {
     const li = html('li', cls); li.innerHTML = icon; li.append(html('span', null, key), val); box.appendChild(li); });
   drawBriefForm(); drawNew();
 }
