@@ -1,8 +1,10 @@
 # Coven Compass
 
-A private, interactive Site exploration of the supplied Coven Castles v27 prototype. This presentation builds on its existing event-driven simulation; it does not connect to a Coven daemon or confer protected authority.
+An interactive Site exploration of the supplied Coven Castles v27 prototype. This presentation builds on its existing event-driven simulation; it does not connect to a Coven daemon or confer protected authority.
 
 ## Full source and implementation handoff
+
+Compass is distributed under the [Apache License, Version 2.0](LICENSE). [Copyright and brand notices](NOTICE) accompany the source and Handoff ZIP.
 
 Open [START_HERE.md](START_HERE.md) for the runnable ZIP workflow and [the handoff index](docs/handoff/00-handoff-index.md) for the complete proposed architecture, ownership, synchronization/recovery plan, execution packets, agent prompts, acceptance matrix, and evidence ledger. The in-app **Handoff** entry opens a readable guide and downloads the complete source package. The implementation proposal covers Coven Host, Compass, Coven CLI, Psyche, Psyche Build, SDK, Threads, Cave, familiar identity, runtimes, and read-only memory/continuity views.
 
@@ -72,7 +74,7 @@ The starting model contains four Projects, seven missions, and 114 delegated age
 
 ## Projection sources
 
-The mode is explicit. With no `source` parameter the Site runs the simulation exactly as before. `?source=fixture` (optionally `&scenario=fresh|stale|partial|disconnected|unsupported-version`) reads a static fixture shaped after Cave Client v1 `projects.list`, as cited in the [D01–D04 discovery](docs/discovery/2026-11-19-d01-d04/README.md). It shows each Project's name, root, and Cave id separately, and labels the state explicitly as *fresh*, *stale*, *reconciling* (incomplete pages), or *unavailable* (disconnected, unsupported version, unreadable). Any non-simulation mode stops before the simulation boots, and an unknown `source` value shows *unavailable*, so sample data never stands in for another source. There is no live mode: D03 is unresolved.
+The mode is explicit. With no `source` parameter the Site runs the simulation exactly as before. `?source=fixture` (optionally `&scenario=fresh|stale|partial|disconnected|unsupported-version`) reads a static fixture shaped after Cave Client v1 `projects.list`, as cited in the [D01–D04 discovery summary](docs/discovery/2026-11-20-public/README.md). It shows each Project's name, root, and Cave id separately, and labels the state explicitly as *fresh*, *stale*, *reconciling* (incomplete pages), or *unavailable* (disconnected, unsupported version, unreadable). Any non-simulation mode stops before the simulation boots, and an unknown `source` value shows *unavailable*, so sample data never stands in for another source. There is no live mode: D03 is unresolved.
 
 Both sources implement one interface, `read() → Promise<Projection>`, described at the top of `dist/projection-source.js`. A live adapter would be a third implementation of that interface. In simulation mode the map still renders from its own state; the registered simulation source wraps `atlasSnapshot` for consumers of the interface.
 
