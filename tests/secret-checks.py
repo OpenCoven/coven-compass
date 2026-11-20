@@ -1,4 +1,4 @@
-"""Exercise the actual Git hooks, full-history guard and archive publisher with synthetic values."""
+"""Exercise the actual Git hooks, full-history guard and public site checker with synthetic values."""
 import os
 from pathlib import Path
 import shutil
@@ -77,32 +77,27 @@ class SecretChecks(unittest.TestCase):
         self.assertEqual(self.call("git", "--git-dir", str(destination), "show-ref", fails=True), b"")
 
     def test_publisher_scans_actual_bytes(self):
-        for name in ("scripts", "docs", "tests", "examples", "dist"):
-            shutil.copytree(ROOT / name, self.repo / name, ignore=shutil.ignore_patterns("downloads", "__pycache__"))
-        for name in ("LICENSE", "NOTICE", "README.md", "START_HERE.md", "MOBILE_READINESS.md", "AGENTS.md"):
-            shutil.copyfile(ROOT / name, self.repo / name)
-        p = self.repo / "examples/notes.txt"
-        p.write_bytes(CANARY)
-        out = self.call(sys.executable, "scripts/build-handoff.py", fails=True)
-        self.assertIn(b"Export secret check failed", out)
-        self.assertFalse((self.repo / "dist/downloads").exists())
-        private_detail = b"/Us" + b"ers/sample-account/work"
-        p.write_bytes(private_detail)
-        out = self.call(sys.executable, "scripts/build-handoff.py", fails=True)
-        self.assertIn(b"Private operational detail", out)
-        self.assertNotIn(private_detail, out)
         import gzip
-        p.write_bytes(gzip.compress(private_detail))
-        self.assertIn(b"Nested archive", self.call(sys.executable, "scripts/build-handoff.py", fails=True))
-        p.unlink()
-        import zipfile
-        self.call(sys.executable, "scripts/build-handoff.py")
-        with zipfile.ZipFile(next((self.repo / "dist/downloads").glob("*.zip"))) as bundle:
-            names = {name.split("/", 1)[1] for name in bundle.namelist()}
-            self.assertTrue({"LICENSE", "NOTICE", "docs/discovery/2026-11-20-public/README.md"} <= names)
-            self.assertFalse(any("2026-11-19-d01-d04/" in n or n.endswith(".tar.gz") for n in names))
-        (self.repo / "dist/.env.local").write_text("harmless")
-        self.assertIn(b"restricted credential filename", self.call(sys.executable, SCANNER, "source", ".", fails=True))
+        site = self.repo / "dist"
+        site.mkdir()
+        page = site / "index.html"
+        page.write_bytes(CANARY)
+        check = [sys.executable, SCANNER, "site", "dist"]
+        self.assertIn(b"GitHub token", self.call(*check, fails=True))
+        detail = b"/Us" + b"ers/sample-account/work"
+        page.write_bytes(detail)
+        self.assertIn(b"Private operational detail", self.call(*check, fails=True))
+        page.write_bytes(gzip.compress(detail))
+        self.assertIn(b"Archive in public site", self.call(*check, fails=True))
+        page.write_text("<title>Compass</title>")
+        for name in ("handoff", "downloads"):
+            stale = site / name
+            stale.mkdir()
+            self.assertIn(b"Retired Handoff", self.call(*check, fails=True))
+            stale.rmdir()
+        self.call(*check)
+        (site / ".env.local").write_text("harmless")
+        self.assertIn(b"restricted credential filename", self.call(*check, fails=True))
 
     def test_gitleaks_default_rules_reach_an_archive(self):
         import zipfile

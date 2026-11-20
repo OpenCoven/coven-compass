@@ -2,31 +2,15 @@
 
 An interactive Site exploration of the supplied Coven Castles v27 prototype. This presentation builds on its existing event-driven simulation; it does not connect to a Coven daemon or confer protected authority.
 
-## Full source and implementation handoff
+## Run Compass locally
 
-Compass is distributed under the [Apache License, Version 2.0](LICENSE). [Copyright and brand notices](NOTICE) accompany the source and Handoff ZIP.
+Serve the static site from the repository root.
 
-Open [START_HERE.md](START_HERE.md) for the runnable ZIP workflow and [the handoff index](docs/handoff/00-handoff-index.md) for the complete proposed architecture, ownership, synchronization/recovery plan, execution packets, agent prompts, acceptance matrix, and evidence ledger. The in-app **Handoff** entry opens a readable guide and downloads the complete source package. The implementation proposal covers Coven Host, Compass, Coven CLI, Psyche, Psyche Build, SDK, Threads, Cave, familiar identity, runtimes, and read-only memory/continuity views.
-
-The handoff preserves the prototype as a simulation. Production APIs, schemas, and command paths require current-repository discovery and acceptance; conceptual JSON examples are inert documentation fixtures.
-
-Run every check with one command. CI runs the same command on every pull request (`.github/workflows/verify.yml`, repository only):
-
-```bash
-node scripts/verify-all.mjs
+```sh
+python3 -m http.server 8000 --bind 127.0.0.1 --directory dist
 ```
 
-It runs the steps below, then repeats the source, test, crown, and manifest checks in a clean extraction of the built ZIP. It exits non-zero if any step fails or is skipped. When everything passes it writes the measured counts to [`tests/evidence/current.json`](tests/evidence/current.json); commit that file with your change. CI runs `--check`, which fails if the file is stale.
-
-```bash
-node scripts/check-source.mjs
-node --test tests/*.test.cjs
-node scripts/test-atlas-crown.mjs
-python3 scripts/build-handoff.py
-python3 scripts/verify-handoff.py dist/downloads/Coven_Compass_Handoff_2026-11-19.zip
-```
-
-The tests include their exact reference fixture and work without Git history. The generated export includes the mobile-readiness report, source harness, historical JSON evidence, and its own inventory and checksums. Historical browser screenshots remain in the repository only and are excluded from the handoff, along with credentials, runtime data, and previous ZIPs. Historical fingerprints describe their recorded checkpoint; they are not verification of the current layout source.
+Open `http://127.0.0.1:8000/`. Run `node scripts/verify-all.mjs --check` to verify the site and run its tests. Compass is distributed under the [Apache License, Version 2.0](LICENSE). [Copyright and brand notices](NOTICE) accompany the source.
 
 ## Scalable overview refinement
 
@@ -95,14 +79,14 @@ Both sources implement one interface, `read() → Promise<Projection>`, describe
 - `scripts/test-atlas-crown.mjs`: canonical-path provenance, aperture, finite geometry, footprint, and SVG record-reuse checks.
 - [Replay clock](tests/replay-clock.test.cjs), [replay rendering](tests/replay-render.test.cjs), and [delayed-report](tests/replay-emission.test.cjs) tests cover elapsed playback, project focus, shared bounds, early mission events, and delayed emission. [Mobile UI](tests/mobile-ui.test.cjs) and [mobile focus](tests/mobile-focus.test.cjs) tests cover the adaptive workspace and focus targets.
 - `tests/mobile-qa.html`: an interactive responsive QA harness, excluded from the deployment.
-- `tests/evidence/`: historical mobile and incoming replay/mobile JSON audits with source fingerprints; repository-only browser screenshots are excluded from the exported handoff.
+- `tests/evidence/`: historical browser audits and source fingerprints.
 - `MOBILE_READINESS.md`: separate mobile, replay, and layout checkpoints, the combined source's verification boundary, and physical-device acceptance criteria.
 
 No build step or runtime dependencies are required. Google Fonts is the inherited optional typography dependency, with system font fallbacks.
 
 ## Verification and evidence boundary
 
-**Current counts are generated, not written by hand.** `node scripts/verify-all.mjs` records the current test, crown, and package counts in [`tests/evidence/current.json`](tests/evidence/current.json), and CI fails when that file is stale. Its evidence level is static + unit: Node fixtures with DOM facades, not a browser, device, daemon, packaged CLI, or remote Host.
+Current test and crown results are recorded in [the verification evidence](tests/evidence/current.json).
 
 The source integrates layout/crown work with replay and adaptive-mobile improvements from `07919b421df5457e778e1b1c6a73512c8f27ba73`. Earlier checkpoints (the layout/crown branch, the incoming replay/adaptive-mobile branch with its Chrome audits, and the mobile/navigation baseline) are historical records with their own counts in [current state and evidence](docs/handoff/01-current-state-and-evidence.md) and [Mobile readiness](MOBILE_READINESS.md). They do not verify the current source.
 
