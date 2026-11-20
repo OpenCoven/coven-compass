@@ -167,10 +167,10 @@ h1,h2,h3,p,dl,dd{margin:0}
 .agent.gate .o{fill:var(--card);stroke:var(--attention);stroke-width:1.2}
 .agent .i{fill:var(--attention);opacity:0;pointer-events:none}
 .agent.gate .i{opacity:1}
-.agent .hot{fill:transparent;stroke:var(--attention);stroke-width:1;stroke-opacity:0;stroke-linejoin:round;transition:stroke-opacity .2s}
-.agent:hover .hot{stroke-opacity:.35}
-.agent.is-hot .hot{stroke-opacity:.8}
-.agent.picked .hot{stroke-opacity:1;stroke:var(--foreground);stroke-width:1.2}
+.agent .hot{fill:transparent;pointer-events:all}
+.agent .agent-halo{fill:none;stroke:var(--hue);stroke-width:1.5px;vector-effect:non-scaling-stroke;stroke-opacity:0;pointer-events:none}
+.agent:is(:hover,.is-hot) .agent-halo{stroke-opacity:.6}
+.agent:is(.picked,:focus-visible) .agent-halo{stroke-opacity:1}
 .s-hi{stop-color:var(--disc-hi)}.s-lo{stop-color:var(--disc-lo)}.s-glow{stop-color:var(--primary)}
 [data-lead]{transition:opacity .3s}
 .dim{opacity:.2}
@@ -2634,11 +2634,12 @@ function sync() {
     if (!s) {
       const e = svgEl('g', {class: 'agent', 'data-m': a.mission, 'data-fam': a.fam});
       e.style.setProperty('--hue', fam(a.fam).hue);
-      const halo = svgEl('circle', {class: 'hot'}, e);
+      const hitArea = svgEl('circle', {class: 'hot'}, e);
       const mark = svgEl('g', {class: 'agent-mark', 'pointer-events': 'none'}, e);
+      const halo = svgEl('circle', {class: 'agent-halo'}, mark);
       svgEl('circle', {class: 'o', r: 1}, mark);
       svgEl('rect', {class: 'agent-task', x: -.35, y: -.35, width: .7, height: .7}, mark);
-      s = {id: a.id, el: e, halo, mark, co: null,
+      s = {id: a.id, el: e, hitArea, halo, mark, co: null,
         p: reduce || !tg ? q.slice() : [tg.bx, tg.by], q, state: null, ghost: null};
       svgEl('title', {}, e).textContent = a.id + ' · ' + fam(a.fam).name;
       const openAgent = () => {
@@ -3057,7 +3058,9 @@ function project() {
     const q = P(s.p[0], s.p[1]);
     const radius = s.state === 'gate' ? Math.min(6, 6 / screenScale) : (s.cell?.radius ?? 4);
     const hit = s.state === 'gate' ? Math.max(radius, Math.min(6, 9 / screenScale)) : radius * 1.35;
-    s.halo.setAttribute('cx', f(q[0])); s.halo.setAttribute('cy', f(q[1])); s.halo.setAttribute('r', f(hit));
+    s.hitArea.setAttribute('cx', f(q[0])); s.hitArea.setAttribute('cy', f(q[1])); s.hitArea.setAttribute('r', f(hit));
+    // Leave a fixed screen-space gap beyond the mark’s outer stroke at every zoom.
+    s.halo.setAttribute('r', 1.08 + 2.5 / (radius * screenScale));
     s.mark.setAttribute('transform', `translate(${f(q[0])} ${f(q[1])}) scale(${radius})`);
     s.sx = q[0]; s.sy = q[1];
   });
