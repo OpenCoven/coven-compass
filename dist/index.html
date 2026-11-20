@@ -2528,6 +2528,8 @@ function buildScene() {
   sc = {missions: new Map(), seats: new Map(), agents: new Map(), colinks: new Map(), orderEls: null, dirty: true, plated: null, hl: highlight || null};
   sc.n = cur().layout.n;
   const defs = svgEl('defs', {}, plan);
+  sc.labelMeasure = document.createElement('canvas').getContext('2d');
+  sc.labelMeasure.font = '500 100px ' + getComputedStyle(document.body).fontFamily;
   svgEl('polygon', {id: 'agent-cog-profile', points: cogOutline}, defs);
   sc.paving = svgEl('pattern', {id:'atlas-flagstones', patternUnits:'userSpaceOnUse', width:72, height:48}, defs);
   svgEl('rect', {width:72, height:48, fill:'#201f25'}, sc.paving);
@@ -2966,11 +2968,12 @@ function project() {
         L.decision.setAttribute('aria-hidden', String(!expanded));
       }
       const side = (expanded ? clamp(20 * U * screenScale, 18, 26) : clamp(pixels * .3, 7, 11)) / screenScale;
-      if (!expanded) {
-        const dx = gate[0] - center[0], dy = gate[1] - center[1], [ux, uy] = unit(dx, dy);
-        const clear = (pixels < 35 ? 8 : 11) / screenScale - Math.hypot(dx, dy);
-        if (clear > 0) { gate[0] += ux * clear; gate[1] += uy * clear; }
-      }
+      // Keep the square outside the count disc, even when the badge collapses.
+      const dx = gate[0] - center[0], dy = gate[1] - center[1], [ux,uy] = unit(dx,dy);
+      const markerRadius = Math.max(100, 6 / screenScale);
+      const discEdge = markerRadius / Math.hypot(ux, uy / cp);
+      const clear = discEdge + side / 2 + 1 / screenScale - Math.hypot(dx,dy);
+      if (clear > 0) { gate[0] += ux * clear; gate[1] += uy * clear; }
       if (expanded) squareHit(L.decisionHit);
       L.decision.setAttribute('transform', `translate(${f(gate[0])},${f(gate[1])})`);
       L.decisionBox.setAttribute('x', f(-side / 2)); L.decisionBox.setAttribute('y', f(-side / 2));
@@ -2979,9 +2982,24 @@ function project() {
       L.decisionCount.style.fontSize = (side * .54).toFixed(1) + 'px';
       const markerBottom = center[1] + Math.max(100, 6 / screenScale) * cp;
       const edge = L.decision.style.display === 'none' ? markerBottom : Math.max(markerBottom, gate[1] + side / 2);
-      const labelU = Math.min(U, gh.density === 'full' ? 9 : 6), fontWidth = 14 * labelU * .58 * fsz;
-      const maxChars = Math.max(7, Math.floor(700 / fontWidth)), name = L.k.length > maxChars ? L.k.slice(0, maxChars - 1) + '…' : L.k;
-      if (gh.name.textContent !== name) gh.name.textContent = name;
+      const labelU = Math.min(U, gh.density === 'full' ? 9 : 6);
+      const budget = layout.byKey.get(L.k).width * 100 / (14 * labelU * fsz);
+      if (gh.labelBudget !== budget) {
+        gh.labelBudget = budget;
+        const measure = text => sc.labelMeasure.measureText(text).width;
+        let name = L.k;
+        if (measure(name) > budget) {
+          const chars = Array.from(name);
+          let lo = 0, hi = chars.length;
+          while (lo < hi) {
+            const mid = Math.ceil((lo + hi) / 2);
+            if (measure(chars.slice(0, mid).join('') + '…') <= budget) lo = mid;
+            else hi = mid - 1;
+          }
+          name = chars.slice(0, lo).join('') + '…';
+        }
+        gh.name.textContent = name;
+      }
       gh.g.style.setProperty('--u', labelU.toFixed(3));
       set(gh.name, [center[0], edge], 14 * labelU); set(gh.sub, [center[0], edge], 30 * labelU);
     });
