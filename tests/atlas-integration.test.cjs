@@ -19,7 +19,8 @@ const plain = value => JSON.parse(JSON.stringify(value));
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
 function extract(name) {
-  const start = source.indexOf(`function ${name}(`);
+  let start = source.indexOf(`function ${name}(`);
+  if (source.slice(start - 6, start) === 'async ') start -= 6;
   assert.notEqual(start, -1, `${name} must exist in the actual Site source`);
   for (let end = source.indexOf('\n', start); end !== -1; end = source.indexOf('\n', end + 1)) {
     const candidate = source.slice(start, end).trimEnd();
@@ -40,11 +41,16 @@ function load(names, globals = {}, prelude = '') {
 class Element {
   constructor(tag = 'g') {
     this.tag = tag; this.attributes = {}; this.children = []; this.parent = null;
-    this.listeners = {}; this.style = {}; this.hidden = false; this._text = '';
+    this.listeners = {}; this.style = {setProperty(key, value) { this[key] = value; }}; this.hidden = false; this._text = '';
   }
   setAttribute(key, value) { this.attributes[key] = String(value); }
   getAttribute(key) { return this.attributes[key] ?? null; }
   appendChild(child) { child.remove(); this.children.push(child); child.parent = this; return child; }
+  insertBefore(child, next) {
+    if (!next) return this.appendChild(child);
+    child.remove();
+    this.children.splice(this.children.indexOf(next), 0, child); child.parent = this; return child;
+  }
   remove() {
     if (this.parent) this.parent.children.splice(this.parent.children.indexOf(this), 1);
     this.parent = null;
@@ -138,7 +144,7 @@ test('actual snapshot and hash writer keep explicit scope at extreme and mismatc
   assert.equal(writes.length, n, 'Back/Forward restoration does not push another route');
 });
 
-test('overview keeps a single exact and accessible count as replay and density change', () => {
+test('overview keeps an exact accessible mission total across preview densities', () => {
   const world = {missions: new Map(), agents: new Map()};
   const gh = {k: 'demo', g: svgEl('g'), ox: 0, oy: 0};
   const aggregate = gh.aggregate = svgEl('text', {}, gh.g);
@@ -160,6 +166,82 @@ test('overview keeps a single exact and accessible count as replay and density c
       assert.deepEqual(gh.g.children, [aggregate], 'density changes reuse the single count element');
     }
   }
+});
+
+test('miniatures retain Project-scoped mission, council and task identities as replay changes', () => {
+  const fam = k => ({name: k, hue: k === 'astra' ? '#9cc2f2' : '#e8c99a', roles: []});
+  const fixture = load(['createProjectPreview', 'syncProjectPreview', 'updateVisibleProjectPreviews', 'sealOf', 'buildSeal', 'drawSeal'], {
+    window: {CovenAtlasLayout: layout}, svgEl, fam, MAX_WEDGES: 8, MIN_WEDGE: 12, WARN_AT: .85,
+    pol: (r, a) => [r * Math.cos(a * Math.PI / 180), r * Math.sin(a * Math.PI / 180)],
+    countOf: (w, pred) => [...w.agents.values()].filter(pred).length, openAsks: w => [...w.asks.values()],
+  });
+  const world = {missions: new Map(), tasks: new Map(), agents: new Map(), asks: new Map(), t: 0};
+  const project = {world, applied: 0, layout: {n: 4, ang: new Map([['m1', -135]])}};
+  const gh = {g: svgEl('g'), ox: 21, oy: -15};
+  const preview = fixture.createProjectPreview(gh);
+  const sync = () => { project.applied++; fixture.syncProjectPreview(preview, project); };
+  sync();
+  assert.equal(preview.graph.style.display, 'none');
+  assert.equal(preview.empty.style.display, '');
+  const M = {id: 'm1', name: 'Source survey', seats: ['astra', 'cody'], spawned: 1};
+  world.missions.set(M.id, M);
+  world.agents.set('a1', {mission: 'm1', fam: 'astra', state: 'work'});
+  world.tasks.set('t1', {mission: 'm1', leads: ['astra']});
+  sync();
+  const item = preview.missions.get('m1');
+  assert.equal(item.fullName, M.name);
+  assert.equal(item.seal.g.getAttribute('class'), 'seal st-active');
+  assert.equal(item.node.getAttribute('data-preview-mission'), 'm1');
+  assert.deepEqual([...item.members.keys()], ['astra', 'cody']);
+  const astra = item.members.get('astra');
+  assert.equal(astra.task.style.display, '');
+  assert.equal(item.members.get('cody').task.style.display, 'none');
+  world.asks.set('gate', {mission: 'm1', fam: 'cody'});
+  M.name = 'Renamed';
+  world.tasks.get('t1').leads.push('cody');
+  sync();
+  assert.equal(preview.missions.get('m1'), item);
+  assert.equal(item.members.get('astra'), astra);
+  assert.equal(item.seal.g.getAttribute('class'), 'seal st-needsYou');
+  assert.equal(item.fullName, M.name);
+  assert.equal(item.members.get('cody').task.style.display, '');
+  project.layout.n = 128;
+  for (let i = 2; i <= 128; i++) world.missions.set('m' + i, {id: 'm' + i, name: 'Mission ' + i, seats: [], spawned: 0});
+  sync();
+  assert.equal(preview.missions.size, 8);
+  assert.equal(preview.moreLabel.textContent, '+120');
+  assert.equal(preview.more.style.display, '');
+  assert.equal(preview.links.children.length, 8);
+  assert.equal(preview.nodes.children.length, 8);
+  world.missions.delete('m1');
+  sync();
+  assert.equal(item.node.parent, null);
+  assert.equal(item.link.parent, null);
+  assert.ok(preview.missions.has('m9'));
+  assert.equal(preview.moreLabel.textContent, '+119');
+  fixture.projects = {demo: project};
+  gh.k = 'demo'; gh.preview = preview;
+  const camera = {px: 0, py: 0};
+  const update = scale => fixture.updateVisibleProjectPreviews([gh], camera, scale, 320, 200);
+  update(.15);
+  assert.equal(gh.preview.missions.get('m2'), preview.missions.get('m2'));
+  const detailed = gh.preview.missions.get('m2');
+  update(.05);
+  assert.equal(gh.preview.missions.get('m2'), detailed);
+  assert.deepEqual(detailed.node.children.map(el => el.getAttribute('class')), ['preview-compact-ring']);
+  update(.15);
+  assert.equal(gh.preview.missions.get('m2'), detailed);
+  assert.ok(detailed.seal.g.children.length > 1);
+  camera.px = 5000;
+  update(.15);
+  assert.equal(gh.preview, null);
+  assert.equal(preview.group.parent, null);
+  camera.px = 0;
+  update(.01);
+  assert.equal(gh.preview, null, 'count-only tiles allocate no miniature');
+  update(.15);
+  assert.equal(gh.preview.missions.size, 8);
+  assert.equal(gh.preview.moreLabel.textContent, '+119');
 });
 
 function rectangle(left, top, width, height) { return {left, top, width, height, right: left + width, bottom: top + height}; }
@@ -270,8 +352,8 @@ function projectToScreen(point, origin, camera, stage) {
   return [stage.clientWidth / 2 + (px - camera.px) * scale, stage.clientHeight / 2 + (py - camera.py) * scale];
 }
 
-test('actual Coven fit contains every project reservation and branch inside measured chrome at 1–128 projects', () => {
-  for (const [width, height] of [[1600, 900], [390, 844], [1100, 460]]) for (const count of [1, 4, 16, 128]) {
+test('actual Coven fit contains every project reservation and branch inside measured chrome through 2,049 projects', () => {
+  for (const [width, height] of [[1600, 900], [390, 844], [1100, 460]]) for (const count of [1, 4, 16, 128, 2049]) {
     const f = fitFixture(width, height, count), {context} = f;
     context.atlasFitScene(true);
     const snapshot = context.atlasWorldLayout(), active = snapshot.byKey.get(context.active);
@@ -450,22 +532,22 @@ test('queued fitting measures the current mission-card structure after a respons
   assert.deepEqual(calls, ['card', 'fit', 'kick']);
 });
 
-test('layout simulation counts preserve user Projects and reset only generated samples', () => {
+test('layout simulation counts preserve user Projects beyond the presets and reset only generated samples', async () => {
   const real = {name: 'real', trace: [{type: 'user-content'}]}, collision = {name: 'atlas-001', sample: true};
   const projects = {real, 'atlas-001': collision}, calls = {enter: 0, overview: 0, seek: 0, announcements: []};
   const context = load(['atlasSetProjectCount'], {
-    projects, active: 'real', Date: {now: () => 123456},
+    projects, active: 'real', atlasSampleRequest: 0, Date: {now: () => 123456}, performance: {now: () => 0},
     makeProject: (key, trace, recorded) => ({key, trace, recorded}), sampleTrace: (key, time) => [{key, time}],
     seek: (project, time, quiet) => { assert.equal(time, 123456); assert.equal(quiet, true); calls.seek++; },
     enter: () => { calls.enter++; }, atlasOverview: () => { calls.overview++; },
     window: {CovenAtlas: {announce: text => calls.announcements.push(text)}},
   });
-  for (const invalid of [-1, 129, 2.5, 'invalid', Infinity]) {
-    assert.equal(context.atlasSetProjectCount(invalid), false); assert.equal(Object.keys(projects).length, 2);
+  for (const invalid of [-1, Number.MAX_SAFE_INTEGER + 1, 2.5, 'invalid', Infinity]) {
+    assert.equal(await context.atlasSetProjectCount(invalid), false); assert.equal(Object.keys(projects).length, 2);
   }
   assert.equal(calls.enter, 0, 'invalid values cause no topology change');
-  for (const count of [16, 64, 128]) {
-    assert.equal(context.atlasSetProjectCount(count), true); assert.equal(Object.keys(projects).length, count);
+  for (const count of [16, 64, 128, 1025]) {
+    assert.equal(await context.atlasSetProjectCount(count), true); assert.equal(Object.keys(projects).length, count);
     assert.equal(projects.real, real); assert.equal(projects['atlas-001'], collision);
     Object.entries(projects).filter(([key]) => key !== 'real' && key !== 'atlas-001').forEach(([, project]) => {
       assert.equal(project.layoutDemo, true); assert.equal(project.sample, true); assert.equal(project.recorded, false);
@@ -473,10 +555,10 @@ test('layout simulation counts preserve user Projects and reset only generated s
   }
   const generated = Object.keys(projects).find(key => projects[key].layoutDemo);
   context.active = generated;
-  assert.equal(context.atlasSetProjectCount(0), true);
+  assert.equal(await context.atlasSetProjectCount(0), true);
   assert.deepEqual(Object.keys(projects), ['real', 'atlas-001']); assert.equal(context.active, 'real');
   assert.deepEqual(real.trace, [{type: 'user-content'}]);
-  assert.equal(calls.seek, 126); assert.equal(calls.enter, 4); assert.equal(calls.overview, 4);
+  assert.equal(calls.seek, 1023); assert.equal(calls.enter, 5); assert.equal(calls.overview, 5);
   assert.match(calls.announcements.at(-1), /^2 Projects/);
 });
 
@@ -504,4 +586,21 @@ test('Project events use project.* types and castle.* types are not accepted', (
   }
   assert.doesNotMatch(source, /'castle\./, 'the Site never writes castle.* events');
   assert.doesNotMatch(source, /coven-castles-/, 'browser storage uses coven-compass-* keys');
+});
+
+test('large sample setup yields with all Projects intact and a newer request cancels the pending batch', async () => {
+  let tick = 0, resume, entered = 0;
+  const projects = {real: {key: 'real'}};
+  const context = load(['atlasSetProjectCount'], {
+    projects, active: 'real', atlasSampleRequest: 0, Date, performance: {now: () => tick += 20},
+    setTimeout: fn => { resume = fn; }, makeProject: key => ({key}), sampleTrace: () => [], seek() {},
+    enter: () => entered++, atlasOverview() {}, window: {},
+  });
+  const first = context.atlasSetProjectCount(999);
+  assert.equal(typeof resume, 'function');
+  assert.deepEqual(Object.keys(projects), ['real']);
+  assert.equal(await context.atlasSetProjectCount(0), true);
+  resume();
+  assert.equal(await first, false);
+  assert.deepEqual(Object.keys(projects), ['real']); assert.equal(entered, 1);
 });

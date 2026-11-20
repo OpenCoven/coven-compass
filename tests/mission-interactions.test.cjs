@@ -152,7 +152,7 @@ function formFixture() {
       stage.inert = !form.hidden; form.inert = form.hidden;
     },
   };
-  const context = load(['drawNew', 'openNew', 'closeNew'], {
+  const context = load(['setMissionName', 'drawNew', 'openNew', 'closeNew'], {
     ...f, stage, nm, cz, cur: () => project, active: 'brand', atlasScope: 'project',
     canAct: () => actionable,
     sc: {far: false}, select() {}, setView() {}, setLead() {}, drawBriefForm() {},
@@ -175,7 +175,7 @@ function agentFixture() {
     agents: new Map([[a.id, a]]), missions: new Map([['m1', {name: 'Research'}]]),
     asks: new Map([[q.id, q]]), tasks: new Map([['t1', {name: 'Draft brief', leads: ['echo']}]]),
   }};
-  const context = load(['agentInfo', 'pick', 'clearPick', 'showPick'], {
+  const context = load(['setMissionName', 'agentInfo', 'pick', 'clearPick', 'showPick'], {
     ...f, cur: () => c, fam: () => ({name: 'Echo', hue: '#c5a7ff'}),
     STATE: {gate: 'At a gate', work: 'Working', idle: 'Idle'}, GATE_NAME: {N: 'North'}, ago: () => '1 min',
     flashAsk: id => f.calls.push({kind: 'review', id}),

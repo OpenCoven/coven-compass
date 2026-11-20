@@ -143,6 +143,7 @@ body.csl-open { overflow: hidden; }
 .csl-preview { border-right: 1px solid var(--csl-line); }
 
 .csl-specimen {
+  margin: 0;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   justify-items: center;
@@ -153,7 +154,7 @@ body.csl-open { overflow: hidden; }
   background: #18171c;
 }
 
-.csl-mission-name { font: 550 13px var(--f-body, system-ui, sans-serif); text-anchor: middle; fill: var(--csl-ink); }
+.csl-mission-name { font: 500 .75rem/1.4 var(--f-body, system-ui, sans-serif); text-align: center; color: #d3cfdb; }
 .csl-scene { display: block; width: 100%; height: clamp(175px, 24vh, 250px); }
 
 

@@ -1,158 +1,25 @@
 {
-  "generated_utc": "2026-11-20T09:17:15.352Z",
-  "commit": "d9058f7901bbc7d6eb5fb2fd4d7fa649a3b2148a",
-  "browser": "chromium 158.0.8127.18",
-  "tool": "playwright 1.62.0",
-  "base": "http://127.0.0.1:53976/",
+  "generated_utc": "2026-11-20T07:46:45.376Z",
+  "commit": "1a10cd0de471b9af31823a1726bf48be34d16413",
+  "browser": "chromium 130.0.6723.31",
+  "tool": "playwright 1.48.2 (installed outside the repository)",
+  "base": "http://127.0.0.1:18473/",
   "evidence_level": "browser (headless Chromium; not Safari, not a physical device)",
   "screenshot_dir": "kept outside the repository; see the pull request",
   "checks": [
     {
-      "mode": "compact map",
-      "viewport": "desktop-1920x1080",
-      "name": "focused compact label visible and centered inside ring",
-      "pass": true,
-      "detail": "{\"name\":\"Mission 1\",\"centerError\":0.000030517578125,\"fontPixels\":10.278872786680845,\"fits\":true}"
-    },
-    {
-      "mode": "compact map",
-      "viewport": "desktop-1920x1080",
-      "name": "same focused label hidden without keyboard-focus rule",
-      "pass": true,
-      "detail": "Mission 1"
-    },
-    {
-      "mode": "compact map",
-      "viewport": "desktop-1920x1080",
-      "name": "no console errors",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "desktop-1440x900",
-      "name": "Missions within five Tabs",
-      "pass": true,
-      "detail": "5 Tabs to #atlasMissions"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "desktop-1440x900",
-      "name": "reach Missions from overview",
-      "pass": true,
-      "detail": "{\"element\":\"atlasMissions\",\"name\":\"Browse 7 missions\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":5}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "desktop-1440x900",
-      "name": "search from the Missions entry",
-      "pass": true,
-      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":6}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "desktop-1440x900",
-      "name": "find Board cards",
-      "pass": true,
-      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Board cards, coven-cave, Active, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":18}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "desktop-1440x900",
-      "name": "inspect Board cards",
-      "pass": true,
-      "detail": "{\"element\":\"missionDetailTitle\",\"name\":\"Board cards\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/coven-cave/mission/m-1?view=brief&detail=side\",\"keys\":19}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "desktop-1440x900",
-      "name": "return to matching row",
-      "pass": true,
-      "detail": "{\"element\":\"btn sm\",\"name\":\"← All missions\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/coven-cave/mission/m-1?view=brief&detail=side\",\"keys\":20}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "desktop-1440x900",
-      "name": "return to matching row",
-      "pass": true,
-      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Board cards, coven-cave, Active, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":21}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "desktop-1440x900",
-      "name": "recover from an empty search",
-      "pass": true,
-      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":48}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "desktop-1440x900",
-      "name": "recover from an empty search",
-      "pass": true,
-      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":52}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "desktop-1440x900",
-      "name": "find Source survey",
-      "pass": true,
-      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Source survey, psyche-build, Needs you, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":66}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "desktop-1440x900",
-      "name": "inspect Source survey",
-      "pass": true,
-      "detail": "{\"element\":\"missionDetailTitle\",\"name\":\"Source survey\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/psyche-build/mission/m-2?view=brief&detail=side\",\"keys\":67}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "desktop-1440x900",
-      "name": "close details and return to the invoking row",
-      "pass": true,
-      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Source survey, psyche-build, Needs you, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":70}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "desktop-1440x900",
-      "name": "dismiss Missions and return to its launcher",
-      "pass": true,
-      "detail": "{\"element\":\"atlasMissions\",\"name\":\"Browse 7 missions\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":71}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "desktop-1440x900",
-      "name": "original overview restored",
-      "pass": true,
-      "detail": "http://127.0.0.1:53976/#/coven"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "desktop-1440x900",
-      "name": "reload mission permalink",
-      "pass": true,
-      "detail": "http://127.0.0.1:53976/#/project/psyche-build/mission/m-2?view=brief&detail=side"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "desktop-1440x900",
-      "name": "no console errors",
-      "pass": true,
-      "detail": ""
-    },
-    {
       "mode": "simulation (default)",
       "viewport": "desktop-1440x900",
       "name": "overview fit keeps every Project in the stage",
       "pass": true,
-      "detail": "4 Project name labels; outside stage: none"
+      "detail": "5 Project name labels; outside stage: none"
     },
     {
       "mode": "simulation (default)",
       "viewport": "desktop-1440x900",
       "name": "map renders",
       "pass": true,
-      "detail": "803 SVG nodes in #plan"
+      "detail": "2303 SVG nodes in #plan"
     },
     {
       "mode": "simulation (default)",
@@ -171,16 +38,9 @@
     {
       "mode": "simulation (default)",
       "viewport": "desktop-1440x900",
-      "name": "every sample mission name is readable inside its ring at Project fit",
-      "pass": true,
-      "detail": "4 of 4 centered names, smallest text 11.4px"
-    },
-    {
-      "mode": "simulation (default)",
-      "viewport": "desktop-1440x900",
       "name": "mission names clear the crown and each other",
       "pass": true,
-      "detail": "4 names shown; over the crown: none; overlapping: none"
+      "detail": "0 names shown; over the crown: none; overlapping: none"
     },
     {
       "mode": "simulation (default)",
@@ -201,14 +61,14 @@
       "viewport": "desktop-1440x900",
       "name": "replay starts and moves",
       "pass": true,
-      "detail": "clicked #play; scrub 1000 → 20; clock \"03:17:27\" → \"02:39:49\"; button \"Pause\""
+      "detail": "clicked #play; scrub 1000 → 21; clock \"01:46:53\" → \"01:09:18\"; button \"Pause\""
     },
     {
       "mode": "simulation (default)",
       "viewport": "desktop-1440x900",
       "name": "replay frame: mission names clear the crown and each other",
       "pass": true,
-      "detail": "1 names shown; over the crown: none; overlapping: none"
+      "detail": "0 names shown; over the crown: none; overlapping: none"
     },
     {
       "mode": "simulation (default)",
@@ -216,13 +76,6 @@
       "name": "replay frame: familiar labels clear each other and the mission names",
       "pass": true,
       "detail": "0 familiar labels shown; overlapping: none"
-    },
-    {
-      "mode": "simulation (default)",
-      "viewport": "desktop-1440x900",
-      "name": "Seal lab extends a familiar’s progress arc",
-      "pass": true,
-      "detail": "51.631 360 to 52.707 360"
     },
     {
       "mode": "simulation (default)",
@@ -250,14 +103,14 @@
       "viewport": "desktop-1440x900",
       "name": "overview fit keeps every Project in the stage",
       "pass": true,
-      "detail": "4 Project name labels; outside stage: none"
+      "detail": "5 Project name labels; outside stage: none"
     },
     {
       "mode": "simulation (?source=simulation)",
       "viewport": "desktop-1440x900",
       "name": "map renders",
       "pass": true,
-      "detail": "803 SVG nodes in #plan"
+      "detail": "2303 SVG nodes in #plan"
     },
     {
       "mode": "simulation (?source=simulation)",
@@ -276,16 +129,9 @@
     {
       "mode": "simulation (?source=simulation)",
       "viewport": "desktop-1440x900",
-      "name": "every sample mission name is readable inside its ring at Project fit",
-      "pass": true,
-      "detail": "4 of 4 centered names, smallest text 11.4px"
-    },
-    {
-      "mode": "simulation (?source=simulation)",
-      "viewport": "desktop-1440x900",
       "name": "mission names clear the crown and each other",
       "pass": true,
-      "detail": "4 names shown; over the crown: none; overlapping: none"
+      "detail": "0 names shown; over the crown: none; overlapping: none"
     },
     {
       "mode": "simulation (?source=simulation)",
@@ -306,14 +152,14 @@
       "viewport": "desktop-1440x900",
       "name": "replay starts and moves",
       "pass": true,
-      "detail": "clicked #play; scrub 1000 → 20; clock \"03:17:37\" → \"02:40:00\"; button \"Pause\""
+      "detail": "clicked #play; scrub 1000 → 20; clock \"01:47:04\" → \"01:09:28\"; button \"Pause\""
     },
     {
       "mode": "simulation (?source=simulation)",
       "viewport": "desktop-1440x900",
       "name": "replay frame: mission names clear the crown and each other",
       "pass": true,
-      "detail": "1 names shown; over the crown: none; overlapping: none"
+      "detail": "0 names shown; over the crown: none; overlapping: none"
     },
     {
       "mode": "simulation (?source=simulation)",
@@ -321,13 +167,6 @@
       "name": "replay frame: familiar labels clear each other and the mission names",
       "pass": true,
       "detail": "0 familiar labels shown; overlapping: none"
-    },
-    {
-      "mode": "simulation (?source=simulation)",
-      "viewport": "desktop-1440x900",
-      "name": "Seal lab extends a familiar’s progress arc",
-      "pass": true,
-      "detail": "51.631 360 to 52.707 360"
     },
     {
       "mode": "simulation (?source=simulation)",
@@ -694,130 +533,18 @@
       "detail": "none"
     },
     {
-      "mode": "keyboard",
-      "viewport": "phone-390x844",
-      "name": "Missions within five Tabs",
-      "pass": true,
-      "detail": "2 Tabs to #atlasMobileMissions"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-390x844",
-      "name": "reach Missions from overview",
-      "pass": true,
-      "detail": "{\"element\":\"atlasMobileMissions\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":2}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-390x844",
-      "name": "search from the Missions entry",
-      "pass": true,
-      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":3}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-390x844",
-      "name": "find Board cards",
-      "pass": true,
-      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Board cards, coven-cave, Active, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":15}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-390x844",
-      "name": "inspect Board cards",
-      "pass": true,
-      "detail": "{\"element\":\"missionDetailTitle\",\"name\":\"Board cards\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/coven-cave/mission/m-1?view=brief&detail=side\",\"keys\":16}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-390x844",
-      "name": "return to matching row",
-      "pass": true,
-      "detail": "{\"element\":\"btn sm\",\"name\":\"← All missions\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/coven-cave/mission/m-1?view=brief&detail=side\",\"keys\":17}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-390x844",
-      "name": "return to matching row",
-      "pass": true,
-      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Board cards, coven-cave, Active, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":18}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-390x844",
-      "name": "recover from an empty search",
-      "pass": true,
-      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":45}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-390x844",
-      "name": "recover from an empty search",
-      "pass": true,
-      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":49}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-390x844",
-      "name": "find Source survey",
-      "pass": true,
-      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Source survey, psyche-build, Needs you, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":63}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-390x844",
-      "name": "inspect Source survey",
-      "pass": true,
-      "detail": "{\"element\":\"missionDetailTitle\",\"name\":\"Source survey\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/psyche-build/mission/m-2?view=brief&detail=side\",\"keys\":64}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-390x844",
-      "name": "close details and return to the invoking row",
-      "pass": true,
-      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Source survey, psyche-build, Needs you, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":68}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-390x844",
-      "name": "dismiss Missions and return to its launcher",
-      "pass": true,
-      "detail": "{\"element\":\"atlasMobileMissions\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":69}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-390x844",
-      "name": "original overview restored",
-      "pass": true,
-      "detail": "http://127.0.0.1:53976/#/coven"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-390x844",
-      "name": "reload mission permalink",
-      "pass": true,
-      "detail": "http://127.0.0.1:53976/#/project/psyche-build/mission/m-2?view=brief&detail=side"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-390x844",
-      "name": "no console errors",
-      "pass": true,
-      "detail": ""
-    },
-    {
       "mode": "simulation (default)",
       "viewport": "phone-390x844",
       "name": "overview fit keeps every Project in the stage",
       "pass": true,
-      "detail": "4 Project name labels; outside stage: none"
+      "detail": "5 Project name labels; outside stage: none"
     },
     {
       "mode": "simulation (default)",
       "viewport": "phone-390x844",
       "name": "map renders",
       "pass": true,
-      "detail": "803 SVG nodes in #plan"
+      "detail": "2303 SVG nodes in #plan"
     },
     {
       "mode": "simulation (default)",
@@ -836,16 +563,9 @@
     {
       "mode": "simulation (default)",
       "viewport": "phone-390x844",
-      "name": "every sample mission name is readable inside its ring at Project fit",
-      "pass": true,
-      "detail": "4 of 4 centered names, smallest text 10.3px"
-    },
-    {
-      "mode": "simulation (default)",
-      "viewport": "phone-390x844",
       "name": "mission names clear the crown and each other",
       "pass": true,
-      "detail": "4 names shown; over the crown: none; overlapping: none"
+      "detail": "0 names shown; over the crown: none; overlapping: none"
     },
     {
       "mode": "simulation (default)",
@@ -866,14 +586,14 @@
       "viewport": "phone-390x844",
       "name": "replay starts and moves",
       "pass": true,
-      "detail": "clicked #play; scrub 1000 → 22; clock \"03:17:51\" → \"02:40:20\"; button \"Pause\""
+      "detail": "clicked #play; scrub 1000 → 20; clock \"01:47:22\" → \"01:09:46\"; button \"Pause\""
     },
     {
       "mode": "simulation (default)",
       "viewport": "phone-390x844",
       "name": "replay frame: mission names clear the crown and each other",
       "pass": true,
-      "detail": "1 names shown; over the crown: none; overlapping: none"
+      "detail": "0 names shown; over the crown: none; overlapping: none"
     },
     {
       "mode": "simulation (default)",
@@ -881,13 +601,6 @@
       "name": "replay frame: familiar labels clear each other and the mission names",
       "pass": true,
       "detail": "0 familiar labels shown; overlapping: none"
-    },
-    {
-      "mode": "simulation (default)",
-      "viewport": "phone-390x844",
-      "name": "Seal lab extends a familiar’s progress arc",
-      "pass": true,
-      "detail": "51.631 360 to 52.707 360"
     },
     {
       "mode": "simulation (default)",
@@ -915,14 +628,14 @@
       "viewport": "phone-390x844",
       "name": "overview fit keeps every Project in the stage",
       "pass": true,
-      "detail": "4 Project name labels; outside stage: none"
+      "detail": "5 Project name labels; outside stage: none"
     },
     {
       "mode": "simulation (?source=simulation)",
       "viewport": "phone-390x844",
       "name": "map renders",
       "pass": true,
-      "detail": "803 SVG nodes in #plan"
+      "detail": "2303 SVG nodes in #plan"
     },
     {
       "mode": "simulation (?source=simulation)",
@@ -941,16 +654,9 @@
     {
       "mode": "simulation (?source=simulation)",
       "viewport": "phone-390x844",
-      "name": "every sample mission name is readable inside its ring at Project fit",
-      "pass": true,
-      "detail": "4 of 4 centered names, smallest text 10.3px"
-    },
-    {
-      "mode": "simulation (?source=simulation)",
-      "viewport": "phone-390x844",
       "name": "mission names clear the crown and each other",
       "pass": true,
-      "detail": "4 names shown; over the crown: none; overlapping: none"
+      "detail": "0 names shown; over the crown: none; overlapping: none"
     },
     {
       "mode": "simulation (?source=simulation)",
@@ -971,14 +677,14 @@
       "viewport": "phone-390x844",
       "name": "replay starts and moves",
       "pass": true,
-      "detail": "clicked #play; scrub 1000 → 20; clock \"03:18:03\" → \"02:40:26\"; button \"Pause\""
+      "detail": "clicked #play; scrub 1000 → 21; clock \"01:47:34\" → \"01:09:59\"; button \"Pause\""
     },
     {
       "mode": "simulation (?source=simulation)",
       "viewport": "phone-390x844",
       "name": "replay frame: mission names clear the crown and each other",
       "pass": true,
-      "detail": "1 names shown; over the crown: none; overlapping: none"
+      "detail": "0 names shown; over the crown: none; overlapping: none"
     },
     {
       "mode": "simulation (?source=simulation)",
@@ -986,13 +692,6 @@
       "name": "replay frame: familiar labels clear each other and the mission names",
       "pass": true,
       "detail": "0 familiar labels shown; overlapping: none"
-    },
-    {
-      "mode": "simulation (?source=simulation)",
-      "viewport": "phone-390x844",
-      "name": "Seal lab extends a familiar’s progress arc",
-      "pass": true,
-      "detail": "51.631 360 to 52.707 360"
     },
     {
       "mode": "simulation (?source=simulation)",
@@ -1359,130 +1058,18 @@
       "detail": "none"
     },
     {
-      "mode": "keyboard",
-      "viewport": "phone-landscape-844x390",
-      "name": "Missions within five Tabs",
-      "pass": true,
-      "detail": "2 Tabs to #atlasMobileMissions"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-landscape-844x390",
-      "name": "reach Missions from overview",
-      "pass": true,
-      "detail": "{\"element\":\"atlasMobileMissions\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":2}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-landscape-844x390",
-      "name": "search from the Missions entry",
-      "pass": true,
-      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":3}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-landscape-844x390",
-      "name": "find Board cards",
-      "pass": true,
-      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Board cards, coven-cave, Active, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":15}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-landscape-844x390",
-      "name": "inspect Board cards",
-      "pass": true,
-      "detail": "{\"element\":\"missionDetailTitle\",\"name\":\"Board cards\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/coven-cave/mission/m-1?view=brief&detail=side\",\"keys\":16}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-landscape-844x390",
-      "name": "return to matching row",
-      "pass": true,
-      "detail": "{\"element\":\"btn sm\",\"name\":\"← All missions\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/coven-cave/mission/m-1?view=brief&detail=side\",\"keys\":17}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-landscape-844x390",
-      "name": "return to matching row",
-      "pass": true,
-      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Board cards, coven-cave, Active, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":18}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-landscape-844x390",
-      "name": "recover from an empty search",
-      "pass": true,
-      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":45}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-landscape-844x390",
-      "name": "recover from an empty search",
-      "pass": true,
-      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":49}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-landscape-844x390",
-      "name": "find Source survey",
-      "pass": true,
-      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Source survey, psyche-build, Needs you, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":63}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-landscape-844x390",
-      "name": "inspect Source survey",
-      "pass": true,
-      "detail": "{\"element\":\"missionDetailTitle\",\"name\":\"Source survey\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/psyche-build/mission/m-2?view=brief&detail=side\",\"keys\":64}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-landscape-844x390",
-      "name": "close details and return to the invoking row",
-      "pass": true,
-      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Source survey, psyche-build, Needs you, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":68}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-landscape-844x390",
-      "name": "dismiss Missions and return to its launcher",
-      "pass": true,
-      "detail": "{\"element\":\"atlasMobileMissions\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":69}"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-landscape-844x390",
-      "name": "original overview restored",
-      "pass": true,
-      "detail": "http://127.0.0.1:53976/#/coven"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-landscape-844x390",
-      "name": "reload mission permalink",
-      "pass": true,
-      "detail": "http://127.0.0.1:53976/#/project/psyche-build/mission/m-2?view=brief&detail=side"
-    },
-    {
-      "mode": "keyboard",
-      "viewport": "phone-landscape-844x390",
-      "name": "no console errors",
-      "pass": true,
-      "detail": ""
-    },
-    {
       "mode": "simulation (default)",
       "viewport": "phone-landscape-844x390",
       "name": "overview fit keeps every Project in the stage",
       "pass": true,
-      "detail": "4 Project name labels; outside stage: none"
+      "detail": "5 Project name labels; outside stage: none"
     },
     {
       "mode": "simulation (default)",
       "viewport": "phone-landscape-844x390",
       "name": "map renders",
       "pass": true,
-      "detail": "803 SVG nodes in #plan"
+      "detail": "2303 SVG nodes in #plan"
     },
     {
       "mode": "simulation (default)",
@@ -1501,23 +1088,16 @@
     {
       "mode": "simulation (default)",
       "viewport": "phone-landscape-844x390",
-      "name": "every sample mission name is readable inside its ring at Project fit",
-      "pass": true,
-      "detail": "4 of 4 centered names, smallest text 9.0px"
-    },
-    {
-      "mode": "simulation (default)",
-      "viewport": "phone-landscape-844x390",
       "name": "mission names clear the crown and each other",
       "pass": true,
-      "detail": "4 names shown; over the crown: none; overlapping: none"
+      "detail": "0 names shown; over the crown: none; overlapping: none"
     },
     {
       "mode": "simulation (default)",
       "viewport": "phone-landscape-844x390",
       "name": "familiar labels clear each other and the mission names",
       "pass": true,
-      "detail": "10 familiar labels shown; overlapping: none"
+      "detail": "0 familiar labels shown; overlapping: none"
     },
     {
       "mode": "simulation (default)",
@@ -1531,14 +1111,14 @@
       "viewport": "phone-landscape-844x390",
       "name": "replay starts and moves",
       "pass": true,
-      "detail": "clicked #play; scrub 1000 → 20; clock \"03:18:17\" → \"02:40:40\"; button \"Pause\""
+      "detail": "clicked #play; scrub 1000 → 20; clock \"01:47:48\" → \"01:10:12\"; button \"Pause\""
     },
     {
       "mode": "simulation (default)",
       "viewport": "phone-landscape-844x390",
       "name": "replay frame: mission names clear the crown and each other",
       "pass": true,
-      "detail": "1 names shown; over the crown: none; overlapping: none"
+      "detail": "0 names shown; over the crown: none; overlapping: none"
     },
     {
       "mode": "simulation (default)",
@@ -1546,13 +1126,6 @@
       "name": "replay frame: familiar labels clear each other and the mission names",
       "pass": true,
       "detail": "0 familiar labels shown; overlapping: none"
-    },
-    {
-      "mode": "simulation (default)",
-      "viewport": "phone-landscape-844x390",
-      "name": "Seal lab extends a familiar’s progress arc",
-      "pass": true,
-      "detail": "51.631 360 to 52.707 360"
     },
     {
       "mode": "simulation (default)",
@@ -1580,14 +1153,14 @@
       "viewport": "phone-landscape-844x390",
       "name": "overview fit keeps every Project in the stage",
       "pass": true,
-      "detail": "4 Project name labels; outside stage: none"
+      "detail": "5 Project name labels; outside stage: none"
     },
     {
       "mode": "simulation (?source=simulation)",
       "viewport": "phone-landscape-844x390",
       "name": "map renders",
       "pass": true,
-      "detail": "803 SVG nodes in #plan"
+      "detail": "2303 SVG nodes in #plan"
     },
     {
       "mode": "simulation (?source=simulation)",
@@ -1606,23 +1179,16 @@
     {
       "mode": "simulation (?source=simulation)",
       "viewport": "phone-landscape-844x390",
-      "name": "every sample mission name is readable inside its ring at Project fit",
-      "pass": true,
-      "detail": "4 of 4 centered names, smallest text 9.0px"
-    },
-    {
-      "mode": "simulation (?source=simulation)",
-      "viewport": "phone-landscape-844x390",
       "name": "mission names clear the crown and each other",
       "pass": true,
-      "detail": "4 names shown; over the crown: none; overlapping: none"
+      "detail": "0 names shown; over the crown: none; overlapping: none"
     },
     {
       "mode": "simulation (?source=simulation)",
       "viewport": "phone-landscape-844x390",
       "name": "familiar labels clear each other and the mission names",
       "pass": true,
-      "detail": "10 familiar labels shown; overlapping: none"
+      "detail": "0 familiar labels shown; overlapping: none"
     },
     {
       "mode": "simulation (?source=simulation)",
@@ -1636,14 +1202,14 @@
       "viewport": "phone-landscape-844x390",
       "name": "replay starts and moves",
       "pass": true,
-      "detail": "clicked #play; scrub 1000 → 20; clock \"03:18:28\" → \"02:40:52\"; button \"Pause\""
+      "detail": "clicked #play; scrub 1000 → 21; clock \"01:48:00\" → \"01:10:25\"; button \"Pause\""
     },
     {
       "mode": "simulation (?source=simulation)",
       "viewport": "phone-landscape-844x390",
       "name": "replay frame: mission names clear the crown and each other",
       "pass": true,
-      "detail": "1 names shown; over the crown: none; overlapping: none"
+      "detail": "0 names shown; over the crown: none; overlapping: none"
     },
     {
       "mode": "simulation (?source=simulation)",
@@ -1651,13 +1217,6 @@
       "name": "replay frame: familiar labels clear each other and the mission names",
       "pass": true,
       "detail": "0 familiar labels shown; overlapping: none"
-    },
-    {
-      "mode": "simulation (?source=simulation)",
-      "viewport": "phone-landscape-844x390",
-      "name": "Seal lab extends a familiar’s progress arc",
-      "pass": true,
-      "detail": "51.631 360 to 52.707 360"
     },
     {
       "mode": "simulation (?source=simulation)",
@@ -2025,9 +1584,6 @@
     }
   ],
   "screenshots": [
-    "desktop-compact-keyboard-label.png",
-    "desktop-1440x900-keyboard-m-1-coven-cave.png",
-    "desktop-1440x900-keyboard-m-2-psyche-build.png",
     "desktop-1440x900-default-overview.png",
     "desktop-1440x900-default-mission.png",
     "desktop-1440x900-default-replay.png",
@@ -2039,8 +1595,6 @@
     "desktop-1440x900-_source_fixture_scenario_disconnected.png",
     "desktop-1440x900-_source_fixture_scenario_unsupported-version.png",
     "desktop-1440x900-_source_live.png",
-    "phone-390x844-keyboard-m-1-coven-cave.png",
-    "phone-390x844-keyboard-m-2-psyche-build.png",
     "phone-390x844-default-overview.png",
     "phone-390x844-default-mission.png",
     "phone-390x844-default-replay.png",
@@ -2052,8 +1606,6 @@
     "phone-390x844-_source_fixture_scenario_disconnected.png",
     "phone-390x844-_source_fixture_scenario_unsupported-version.png",
     "phone-390x844-_source_live.png",
-    "phone-landscape-844x390-keyboard-m-1-coven-cave.png",
-    "phone-landscape-844x390-keyboard-m-2-psyche-build.png",
     "phone-landscape-844x390-default-overview.png",
     "phone-landscape-844x390-default-mission.png",
     "phone-landscape-844x390-default-replay.png",
@@ -2067,8 +1619,8 @@
     "phone-landscape-844x390-_source_live.png"
   ],
   "summary": {
-    "checks": 288,
-    "passed": 288,
+    "checks": 225,
+    "passed": 225,
     "failed": 0
   }
 }

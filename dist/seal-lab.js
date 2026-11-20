@@ -2,6 +2,7 @@
 (() => {
   'use strict';
 
+  const MISSION_NAME = 'Config refactor';
   const ORDER = ['planned', 'active', 'needsYou', 'stalled', 'sealed', 'broken'];
   const COUNCIL = [
     { key: 'astra', agents: 7 },
@@ -103,7 +104,7 @@
       const assigned = state === 'planned' ? 0 : member.agents;
       return `${api.fam(member.key).name}, ${assigned} assigned, ${values.working[i]} working, ${values.progress[i]}% target progress`;
     });
-    ui.scene.setAttribute('aria-label', [`Config refactor. Mission state ${stateName}`, ...council, `${values.limit}% of token limit used`].join('. '));
+    ui.scene.setAttribute('aria-label', [`${MISSION_NAME}. Mission state ${stateName}`, ...council, `${values.limit}% of token limit used`].join('. '));
     ui.limit.value = values.limit;
     ui.limit.disabled = frozen;
     ui.limitValue.textContent = `${values.limit}%`;
@@ -171,14 +172,11 @@
     const body = el('div', 'csl-body');
     const preview = el('section', 'csl-preview');
     preview.setAttribute('aria-label', 'Mission seal preview');
-    const specimen = el('div', 'csl-specimen');
+    const specimen = el('figure', 'csl-specimen');
     ui.scene = api.svgEl('svg', { class: 'csl-scene', viewBox: '-50 -50 100 100', role: 'img' });
     seal = { g: api.svgEl('g', {}, ui.scene) };
     api.buildSeal(seal, data());
-    const name = api.svgEl('text', { class: 'csl-mission-name' }, ui.scene);
-    api.svgEl('tspan', { x: 0, y: -2.7 }, name).textContent = 'Config';
-    api.svgEl('tspan', { x: 0, y: 11.3 }, name).textContent = 'refactor';
-    specimen.append(ui.scene);
+    specimen.append(ui.scene, el('figcaption', 'csl-mission-name', MISSION_NAME));
     preview.append(specimen);
 
     ui.stateCard = el('div', 'csl-state-card');
@@ -191,7 +189,7 @@
 
     const anatomy = el('dl', 'csl-anatomy');
     [
-      ['Segment span', 'Share of assigned agents'],
+      ['Colored slice', 'Share of assigned agents'],
       ['Bright arc', 'Progress on owned targets'],
       ['Outline', 'Mission state'],
       ['Coral arc', 'Resource limit warning'],

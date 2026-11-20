@@ -36,33 +36,33 @@ At Coven scale, project enclosures surround Psyche. All projects use the same ov
 
 Overview positions come from an aspect-aware compact lattice with opposite pairs, reserved Project/label rectangles, and shared routing corridors. The inward-facing gate terminates the route for that Project. Location is presentation structure, not priority or execution topology. Preserve stable caller ordering; at unchanged geometry options, appending projects retains existing positions. Resizing or explicitly reordering the collection can change placement and must not imply that canonical ownership changed. [Current positioning contract](15-scalable-atlas-layout.md)
 
-Inside a project, mission seals connect to familiar groups. Selecting a mission reveals its individual agents, reserved positions, task detail, and relevant requests. A round hub identifies an unassigned agent. A square hub identifies an assigned task. Working marks are larger and filled. Idle marks are smaller and hollow. Dashed outlines reserve places for agents at gates. Waiting agents remain inside the boundary. The boundary marker invites review; it does not depict an operation already crossing the boundary.
+Inside a Project, mission seals connect to familiar groups. Each mission with recorded tasks has a shared capsule of familiar-colored task cogs before selection. Activating it opens the full task list, including unstaffed tasks. Selecting a mission reveals its individual agents, reserved positions, task detail, and relevant requests. A round hub identifies an unassigned agent. A square hub identifies an assigned task. Working marks are larger and filled. Idle marks are smaller and hollow. Dashed outlines reserve places for agents at gates. Waiting agents remain inside the boundary. The boundary marker invites review; it does not depict an operation already crossing the boundary.
 
 Within the overview, a boundary marker aggregates pending decisions for that project at its coordination-facing gate. Within a project, markers correspond to the simulation's gate locations and selected-mission scope. A future implementation must map this deliberately from canonical decision data; do not assign a new permission category based on north/east/south/west placement.
 
 Keep internal mission placement and overview project placement distinct. The newer overview helper supersedes the earlier trace/ring positioning assumptions; local mission data still drives each project's contents. Preserve context through filtering, replay, snapshot replacement, and brief changes. A filtered item may dim or disappear; reappearance should not imply it moved between projects. If canonical assignments change, display the actual move as a data change with corresponding details.
 
-## 4. Reading a mission ring
+## 4. Reading a mission seal
 
-Compass uses one drawing plane for the overview, Project, mission details, previews and Seal lab. Psyche uses the canonical crown inside a circular badge. A mission uses a labeled ring. Smaller familiar badges sit at the ends of colored spokes. Selection adds an outline and preserves familiar identity colors.
+Compass uses one drawing plane for the overview, Project, mission details, previews and Seal lab. Psyche uses the canonical crown inside a circular badge. A mission uses a filled disc with an external label. Smaller familiar badges sit at the ends of colored spokes. Selection adds an outline and preserves familiar identity colors.
 
 | Seal feature | Meaning |
 | --- | --- |
-| Segment span | Familiar’s share of mission agents, subject to the visual minimum |
-| Brighter length inside a segment | Progress on targets assigned to that familiar’s roles |
+| Colored slice angle | Familiar’s share of mission agents, subject to the visual minimum |
+| Bright arc along a slice’s edge | Progress on targets assigned to that familiar’s roles |
 | Outer outline | Mission state, also named in details and accessible labels |
 | Rim sweep | Tightest time, token, or budget limit |
 | Coral threshold | 85% or the existing broken state |
 
-Council arcs provide a readable summary even for small shares. Details and the Seal lab supply exact counts and percentages.
+Council slices provide a readable summary even for small shares. Details and the Seal lab supply exact counts and percentages.
 
 Current progress ownership uses `TARGET_ROLES` in the prototype. Production integration must inspect canonical target ownership, counters, and completion semantics. Do not copy this fixture mapping into a second orchestration schema. “Sealed” requires canonical completion evidence; a local 100% animation or a model's report is insufficient.
 
 ## 5. Progressive detail and control placement
 
-The Coven view carries boundaries, exact mission counts, decision badges, and a compact identity filter. The Projects drawer is closed by default and overlays the map without changing its dimensions. Project view reveals useful controls and group counts. Mission selection opens task/agent detail. Retain the existing replay and Seal lab as clearly scoped controls.
+The Coven view shows Project previews, exact mission counts, decision badges, and a compact identity filter. The Projects drawer is closed by default and overlays the map without changing its dimensions. Project view reveals useful controls and group counts. Mission selection opens task/agent detail. Retain the existing replay and Seal lab as clearly scoped controls.
 
-Project view shows connected mission rings and familiar badges. Selection exposes agent and task detail. The Inbox retains every pending decision.
+Project view shows connected mission seals and familiar badges. Selection exposes agent and task detail. The Inbox retains every pending decision.
 
 Coven and project scope are explicit navigation state, separate from camera zoom. A Fit action uses measured chrome-safe space and enables auto-fit; resize refits only in that mode. Manual camera framing is retained. Camera fitting includes screen-facing crown and label bounds as well as the projected ground. [Scope and fit details](15-scalable-atlas-layout.md)
 

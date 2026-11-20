@@ -180,3 +180,38 @@ test('landscape Project makes use of the map height alongside its controls', asy
     await page.close();
   }
 });
+
+test('custom Coven totals retain every Project, static route, and searchable keyboard destination', async () => {
+  const page = await browser.newPage({viewport: {width: 1440, height: 900}, reducedMotion: 'reduce'});
+  try {
+    await page.goto(base);
+    await page.locator('#atlasBrowse').click();
+    await page.locator('.atlas-layout-simulation > summary').click();
+    await page.locator('#atlasCustomCount').fill('513');
+    await page.locator('#atlasCustomCount').press('Enter');
+    await page.waitForFunction(() => document.querySelector('#atlasSidebar').hidden &&
+      document.querySelectorAll('#plan .ghostfort').length === 513);
+    await readView(page);
+    assert.equal(await page.locator('#plan .road[d^="M"]').count(), 513);
+    const before = await readView(page);
+    await page.evaluate(() => {
+      window.roadWrites = 0;
+      const observer = new MutationObserver(records => { window.roadWrites += records.length; });
+      document.querySelectorAll('#plan .road').forEach(el => observer.observe(el, {attributes: true, attributeFilter: ['d']}));
+    });
+    await page.locator('#stage').focus();
+    await page.keyboard.press('ArrowRight');
+    assert.ok((await readView(page)).x > before.x);
+    assert.equal(await page.evaluate(() => window.roadWrites), 0, 'a pan moves the viewport without rebuilding route paths');
+    await page.locator('#atlasBrowse').click();
+    const last = await page.locator('.atlas-project').last().getAttribute('data-project');
+    await page.locator('#atlasProjectSearch').fill(last);
+    const match = page.locator('.atlas-project:visible');
+    assert.equal(await match.count(), 1);
+    await match.focus();
+    await page.keyboard.press('Enter');
+    assert.equal(new URL(page.url()).hash, '#/project/' + encodeURIComponent(last));
+  } finally {
+    await page.close();
+  }
+});

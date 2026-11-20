@@ -115,7 +115,7 @@ function fixture(trace = []) {
   });
   const constants = source.slice(source.indexOf('const TARGET_ROLES ='), source.indexOf('function sealOf('));
   context.SimModel = loadSimulationModel({ normBrief: () => null, fam: context.fam });
-  const names = ['seek', 'sync', 'sealOf', 'buildSeal', 'drawSeal',
+  const names = ['seek', 'sync', 'syncTaskTray', 'sealOf', 'buildSeal', 'drawSeal',
     'atlasProjectGhost'];
   new vm.Script(`${constants}\n${names.map(extract).join('\n')}`, {
     filename: 'actual-replay-render-functions.js',
