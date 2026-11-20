@@ -25,6 +25,16 @@ Record a decision as **proposed**, **accepted by owner**, **implemented**, and *
 | D11 | **Canonical metric mapping.** Psyche owner; UI/Brand consumers | Preserve the current visual vocabulary while mapping each displayed quantity to a verified canonical field or computed projection. | The prototype uses role-owned target progress, wedge shares and resource-limit ratios. Decide whether equivalent production semantics exist. Unsupported metrics should show unknown or be omitted, not be approximated as authoritative progress. |
 | D12 | **Pilot scope and publication.** Val; component owners | A one-repository, one-Project, single-authority-host pilot with an explicit bounded operation and rollback/recovery record. | Select the repository, familiar root/revision, runtime, destination, budget, capabilities and human acceptance owner. Published or paid remote execution requires its own concrete acceptance and authorization; a successful Site simulation is not that evidence. |
 
+### Brief success policy (from issue #35): proposed
+
+[Chapter 16](16-brief-success-profile.md) raises these three. **All three are proposed, and none is accepted.** Compass consumes the outcome and doesn't own any of them.
+
+| ID | Decision and owner | Recommended starting proposal | What must be resolved before acceptance |
+| --- | --- | --- | --- |
+| D13 | **Who issues, evaluates, authorizes and commits mission success.** Psyche policy owner ([Psyche #12](https://github.com/OpenCoven/psyche/issues/12)); Coven authority owner | The Psyche policy owner issues `Graph.policy_revision`. An evaluator named by the policy grades evidence as a `Verdict`. The Coven authority owner authorizes another attempt and commits terminal transitions through its command/adoption boundary. Runners produce evidence only. | Name each owner, the record each act writes, and the receipt that proves it. Confirm that Coven's M0 refusal (`AUTHORITY_UNAVAILABLE_REASON`) stays in place until Runtime Authority exists. |
+| D14 | **Where rubric, attempt cap and deadline live.** Psyche schema owner | Keep them out of free-form `Intent.constraints`. Either add a versioned policy record owned by the policy owner or find an existing home. Until then, these terms exist only in Compass's labeled proposal model. | The closed v1 registry has no score field on `Verdict`, no attempt-count limit and no mission deadline. Decide the record, its schema version, and the aggregation rule's version (the model uses `weighted-mean/1` as a placeholder). |
+| D15 | **How a Verdict binds to a candidate.** Psyche policy owner | Require the sealed evidence set to include the candidate's `ResultBundle` content digest, so that a verdict can't be reused for another candidate. | `Verdict` carries `sealed_evidence_digest` and `policy_revision`, but no candidate digest. Confirm the binding and how a stale verdict is identified. |
+
 ## Status of D01–D04: discovery delivered, awaiting owners
 
 Sage's read-only discovery for issue #2 is in [docs/discovery/2026-11-19-d01-d04](../discovery/2026-11-19-d01-d04/README.md), pinned to exact revisions and digests. **Every recommendation in it is proposed.** None of these four decisions is accepted, apart from D01's naming, which Val decided on 2026-11-19.
