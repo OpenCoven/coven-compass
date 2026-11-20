@@ -206,8 +206,9 @@ test('mission focus traces the seal and reveals the planes for its agents', asyn
     const selected = page.locator('.atlas-mission-group.atlas-mission-current');
     await selected.locator('.task-tray-well').waitFor({state: 'visible'});
     const planes = page.locator('.atlas-squad:not(.dim) .squad-plane:visible');
-    assert.ok(await planes.count() > 0);
-    assert.equal(await page.locator('.atlas-squad.dim .squad-plane:visible').count(), 0);
+    assert.ok(await planes.evaluateAll(items => items.some(plane => getComputedStyle(plane).display !== 'none')));
+    assert.ok(await page.locator('.atlas-squad.dim .squad-plane').evaluateAll(planes =>
+      planes.every(plane => getComputedStyle(plane).display === 'none')));
     for (const plane of await planes.all()) {
       const rect = await plane.locator('rect').boundingBox();
       assert.ok(rect.width > 0 && rect.height > 0);
@@ -223,7 +224,8 @@ test('mission focus traces the seal and reveals the planes for its agents', asyn
     await mission.focus();
     await page.keyboard.press('Escape');
     await page.locator('#plan:not(.atlas-selected)').waitFor();
-    assert.equal(await page.locator('.squad-plane:visible').count(), 0);
+    assert.ok(await page.locator('.squad-plane').evaluateAll(planes =>
+      planes.every(plane => getComputedStyle(plane).display === 'none')));
     assert.ok(await mission.evaluate(el => el === document.activeElement));
   } finally {
     await page.close();
@@ -376,6 +378,37 @@ test('inspector actions open the brief and conversation and desktop title rows a
         assert.equal(await say.isDisabled(), true);
         assert.ok(await page.locator('#tabChat').evaluate(el => document.activeElement === el));
       }
+    } finally { await page.close(); }
+  }
+});
+
+test('camera icons share the familiar key row on the workspace surface', async () => {
+  for (const [width, height] of [[1440, 900], [320, 640], [844, 390]]) {
+    const mobile = width < 1100;
+    const page = await browser.newPage({viewport: {width, height}, hasTouch: mobile, reducedMotion: 'reduce'});
+    try {
+      await page.goto(new URL('#/project/psyche-build', base).href);
+      if (mobile) await page.locator('#atlasMobileView').click();
+      const dock = page.locator('#atlasCameraDock'), key = page.locator('#atlasFamiliars');
+      const box = await dock.boundingBox(), legend = await key.boundingBox();
+      assert.equal(box.y, legend.y);
+      assert.equal(box.height, legend.height);
+      assert.ok(legend.width >= 44 && legend.x + legend.width <= box.x && box.x + box.width <= width);
+      const surfaces = await page.locator('#workspaceBar,#stage').evaluateAll(nodes => nodes.map(node => getComputedStyle(node).backgroundColor));
+      assert.equal(surfaces[0], surfaces[1]);
+      for (const control of await dock.getByRole('button').all()) {
+        assert.equal(await control.innerText(), '');
+        assert.ok(await control.getAttribute('aria-label'));
+        assert.ok(await control.getAttribute('title'));
+      }
+      const picker = dock.getByRole('combobox', {name: 'Psyche marker'});
+      await picker.selectOption('point');
+      assert.match(await picker.getAttribute('title'), /Point/);
+      const lock = dock.getByRole('button', {name: 'Lock the map'});
+      await lock.click();
+      assert.equal(await dock.getByRole('button').count(), 1);
+      assert.ok(await dock.getByRole('button', {name: 'Unlock the map'}).isVisible());
+      assert.equal((await dock.boundingBox()).height, (await key.boundingBox()).height);
     } finally { await page.close(); }
   }
 });
