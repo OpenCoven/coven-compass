@@ -1570,7 +1570,7 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
         </div>
         <div class="plan-body">
           <div class="stage" id="stage" tabindex="0" aria-label="Project view. Drag or use arrow keys to pan. Pinch, scroll, or use plus and minus to zoom. Press zero to fit.">
-            <svg id="plan" viewBox="-392 -392 784 784" role="img" aria-label="The project: Psyche at the center, missions around it, each with its council of familiars and their squads of agents, gates on the walls"></svg>
+            <svg id="plan" viewBox="-392 -392 784 784" role="group" aria-label="Map: Psyche at the center, missions around it, each with its council of familiars and their squads of agents, gates on the walls. Arrow keys move between items, Home and End go to the first and last."></svg>
             <form class="empty" id="projectForm" aria-label="Project" autocomplete="off" novalidate hidden>
               <div class="hd"><span class="hd-i" id="czIcon"></span><h2 class="hd-t" id="czTitle">New project</h2><span class="hd-m" id="czMeta"></span><button class="btn x" type="button" id="czX" aria-label="Close">×</button></div>
               <div class="mobile-form-body">
@@ -1725,6 +1725,7 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
 <script src="atlas-viewport.js"></script>
 <script src="atlas-crown.js"></script>
 <script src="atlas-presentation.js"></script>
+<script src="map-focus.js"></script>
 <script src="simulation-model.js"></script>
 <script src="projection-source.js"></script>
 <script>
@@ -2628,8 +2629,7 @@ function project() {
         L.expandedBadge = expanded;
         if (!expanded && document.activeElement === L.decision) gh.g.focus({preventScroll: true});
         L.decision.classList.toggle('atlas-compact-decision', !expanded);
-        L.decision.setAttribute('tabindex', expanded ? '0' : '-1');
-        L.decision.setAttribute('aria-hidden', String(!expanded));
+        L.decision.setAttribute('aria-hidden', String(!expanded));   // the map's roving focus skips hidden items
       }
       const side = (expanded ? clamp(20 * U * screenScale, 18, 26) : clamp(pixels * .3, 7, 11)) / screenScale;
       if (!expanded) {
@@ -5016,8 +5016,16 @@ function watchLimits() {
 setInterval(() => { if (document.hidden) return; watchLimits(); fillHudBrief(); if (panelView === 'brief') syncInspect(); }, 5000);
 
 // Atlas presentation reads the existing worlds. It never creates a second execution model.
+// Map items share one Tab stop (dist/map-focus.js): each starts at tabindex -1, and the roving manager keeps
+// exactly one reachable. Arrow keys move between them; Enter and Space activate the focused one.
+var atlasMapFocusInstance = null;
+function atlasMapFocus() {
+  if (!atlasMapFocusInstance && window.CovenMapFocus && $('plan')) atlasMapFocusInstance = window.CovenMapFocus.create($('plan'));
+  return atlasMapFocusInstance;
+}
 function atlasFocusable(el, label, action) {
-  el.setAttribute('tabindex', '0'); el.setAttribute('role', 'button'); el.setAttribute('aria-label', label);
+  el.setAttribute('tabindex', '-1'); el.setAttribute('data-map-item', ''); el.setAttribute('role', 'button'); el.setAttribute('aria-label', label);
+  const mf = atlasMapFocus(); if (mf) mf.schedule(); else el.setAttribute('tabindex', '0');
   el.addEventListener('keydown', ev => {
     if (ev.target !== el || (ev.key !== 'Enter' && ev.key !== ' ')) return;
     ev.preventDefault(); ev.stopPropagation(); action();
