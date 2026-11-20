@@ -15,6 +15,9 @@
  * numbers. It holds deterministic counts only (no time or commit), so it changes only when
  * a count changes.
  *
+ * It also fails (with --check) when dist/handoff/guide.html, which the build regenerates from
+ * the Markdown chapters, differs from the committed copy.
+ *
  *   --check          compare instead of write; fail if current.json is stale (CI uses this)
  *   --report PATH    also write a run report with commit, runtimes, time, and step results
  *
@@ -76,7 +79,22 @@ try {
   run('source', node, ['scripts/check-source.mjs']);
   run('tests', node, ['--test', ...testFiles(root)]);
   run('crown', node, ['scripts/test-atlas-crown.mjs']);
+  const guidePath = path.join(root, 'dist/handoff/guide.html');
+  const guideBefore = fs.existsSync(guidePath) ? fs.readFileSync(guidePath) : null;
   run('build', python, ['scripts/build-handoff.py', '--output', zip]);
+  if (results.at(-1).status === 'pass') {
+    // build-handoff regenerates the reader from Markdown in place. A change means the
+    // committed copy was stale.
+    const fresh = guideBefore !== null && guideBefore.equals(fs.readFileSync(guidePath));
+    results.push(fresh
+      ? { name: 'guide', status: 'pass', detail: 'dist/handoff/guide.html matches its Markdown' }
+      : options.check
+        ? { name: 'guide', status: 'fail', detail: 'dist/handoff/guide.html was stale; run node scripts/verify-all.mjs and commit it' }
+        : { name: 'guide', status: 'pass', detail: 'dist/handoff/guide.html regenerated; commit it' });
+    console.log(`\n── guide: ${results.at(-1).detail}`);
+  } else {
+    results.push({ name: 'guide', status: 'skipped', detail: 'needs build' });
+  }
   run('zip', python, ['scripts/verify-handoff.py', zip], { needs: ['build'] });
   run('extract', python, ['-I', '-c',
     'import sys, zipfile; zipfile.ZipFile(sys.argv[1]).extractall(sys.argv[2])', zip, extracted],

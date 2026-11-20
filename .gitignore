@@ -1,3 +1,6 @@
 /dist/downloads/
+# Generated into the handoff ZIP by scripts/build-handoff.py; never committed.
+/HANDOFF_MANIFEST.json
+/CHECKSUMS.sha256
 __pycache__/
 *.pyc

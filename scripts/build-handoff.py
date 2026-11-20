@@ -479,8 +479,6 @@ def build(output: Path) -> tuple[int, str, int]:
             os.unlink(temporary)
     digest = hashlib.sha256(output.read_bytes()).hexdigest()
     atomic_write(Path(str(output) + ".sha256"), f"{digest}  {output.name}\n".encode("utf-8"))
-    for name in (MANIFEST, CHECKSUMS):
-        atomic_write(ROOT / name, files[name])
     return len(files), digest, chapters
 
 

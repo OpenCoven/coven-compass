@@ -1,6 +1,6 @@
 # Working on Coven Compass
 
-Use Node.js 24 and Python 3.10 or newer. From the checkout root, run `sh scripts/verify-checkout.sh`. This runs the source checker, all Node tests, the crown checks, and the handoff builder and ZIP verifier. The builder refreshes the tracked guide, manifest, and checksums and writes the ignored archive under `dist/downloads/`. Review generated diffs alongside their source changes.
+Use Node.js 24 and Python 3.10 or newer. From the checkout root, run `sh scripts/verify-checkout.sh`. This runs the source checker, all Node tests, the crown checks, and the handoff builder and ZIP verifier. The builder refreshes the tracked guide and writes the manifest and checksums only into the archive (they aren't committed). Review generated diffs alongside their source changes.
 
 | Change | Edit | Focused check |
 | --- | --- | --- |
