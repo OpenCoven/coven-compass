@@ -44,7 +44,7 @@ const missionNameClashes = () => {
   const shown = el => { const st = getComputedStyle(el); return el.getClientRects().length && st.display !== 'none' && st.visibility !== 'hidden' && +st.opacity > 0.05; };
   const hit = (a, b) => a.x < b.x2 - 1 && b.x < a.x2 - 1 && a.y < b.y2 - 1 && b.y < a.y2 - 1;
   const psy = document.querySelector('#plan .atlas-local-psyche');
-  const crownParts = psy ? [...psy.querySelectorAll('path, polygon, text')].filter(shown).map(box) : [];
+  const crownParts = psy ? [...psy.querySelectorAll('.coord-face, .coord-point, .coord-name')].filter(shown).map(box) : [];
   const trays = [...document.querySelectorAll('#plan .mission-tasks .task-tray-bg')].filter(shown).map(box);
   const labels = [...document.querySelectorAll('#plan .atlas-mission-group .lead-name')];
   const names = labels.filter(shown).map(el => {
@@ -198,6 +198,7 @@ async function compactMissionLabel() {
   try {
     await page.locator('#atlasBrowse').click();
     await page.locator('.atlas-project[data-project="psyche-build"]').click();
+    await page.locator('#workspaceTools > summary').click();
     await page.locator('#traceBox > summary').click();
     await page.locator('#traceLoad > summary').click();
     const fileChoice = page.waitForEvent('filechooser');

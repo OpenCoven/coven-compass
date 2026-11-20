@@ -79,7 +79,7 @@ When replay removes a selected mission, selection reconciliation restores the sa
 
 ## 5. Flat presentation is a product restriction
 
-Compass draws the map, badges, rings, previews and Seal lab on a single upright plane. The canonical lavender crown and its aperture identify Psyche at every scale. A familiar’s glyph, color and label are stable when selected. The inspector exposes exact counts and progress.
+Compass draws the map, badges, rings, previews and Seal lab on a single upright plane. The default Psyche marker is an upright lavender crown with two bands. The inner band measures working agents as a share of all agents. The outer band measures missions with at least one open request as a share of all missions. Both use the current Project in Project view and all Projects in Coven view. Map controls offer a point or a labeled crown in both scopes. The browser remembers this preference. The banded marker follows the average displayed mission diameter within legibility bounds. The point keeps a compact fixed size. All styles open the same conversation. A familiar’s glyph, color and label are stable when selected. The inspector exposes exact counts and progress.
 
 Introducing a third dimension requires Val’s explicit override of the 2D-only restriction in the issue or PR before implementation. Cite that decision and update the product invariant, source guard and rendered acceptance checks together. Preferences, imported recordings and navigation routes cannot enable a different renderer. [Contributor instructions](../../AGENTS.md)
 
