@@ -8,11 +8,13 @@
 //   python3 -m http.server 18433 --bind 127.0.0.1 --directory <repo>/dist   # any free port except 8765
 //   cp <repo>/scripts/browser-qa.mjs . && node browser-qa.mjs http://127.0.0.1:18433/ ./shots ./qa.json $(git -C <repo> rev-parse HEAD)
 //
+// Append --keyboard-only to run just the keyboard journeys.
 // It checks simulation mode (default and ?source=simulation) at 1440x900, 390x844 and 844x390,
 // and every ?source=fixture scenario plus ?source=live. It writes a JSON report and screenshots.
 // Keep screenshots out of the repository; commit the dated JSON to tests/evidence/.
 import { chromium } from 'playwright';
 import fs from 'node:fs';
+import { createRequire } from 'node:module';
 import path from 'node:path';
 
 const [base, shotDir, outJson, commit] = process.argv.slice(2);
@@ -54,7 +56,7 @@ const missionNameClashes = () => {
 
 const browser = await chromium.launch();
 const report = { generated_utc: new Date().toISOString(), commit, browser: `chromium ${browser.version()}`,
-  tool: 'playwright 1.48.2 (installed outside the repository)', base, evidence_level: 'browser (headless Chromium; not Safari, not a physical device)',
+  tool: 'playwright ' + createRequire(import.meta.url)('playwright/package.json').version, base, evidence_level: 'browser (headless Chromium; not Safari, not a physical device)',
   screenshot_dir: 'kept outside the repository; see the pull request', checks: [], screenshots: [] };
 const check = (mode, viewport, name, pass, detail = '') => report.checks.push({ mode, viewport, name, pass: Boolean(pass), detail: String(detail) });
 
@@ -76,7 +78,90 @@ const shot = async (page, name) => {
 };
 const visible = (page, sel) => page.locator(sel).first().isVisible().catch(() => false);
 
+// Navigate the native tab order. DOM and accessibility reads observe the journey;
+// every interaction after the initial navigation goes through the keyboard.
+async function keyboardJourney(vp) {
+  const { context, page, errors } = await open(vp, '');
+  const mode = 'keyboard';
+  let step = 'overview';
+  const press = key => page.keyboard.press(key);
+  async function tabTo(selector, key = 'Tab') {
+    for (let i = 0; i < 100; i++) {
+      if (await page.locator(selector + ':focus').count()) return;
+      await press(key);
+    }
+    throw new Error('Could not reach ' + selector + ' using ' + key);
+  }
+  async function observe(selector, role, name) {
+    const target = page.locator(selector);
+    const named = page.getByRole(role, { name });
+    const indicator = await target.evaluate(el => {
+      const style = getComputedStyle(el), rect = el.getBoundingClientRect();
+      const name = el.getAttribute('aria-label') || el.labels?.[0]?.innerText || el.innerText;
+      return { element: el.id || el.className, name: name.trim(), focused: el === document.activeElement,
+        visible: el.matches(':focus-visible') && rect.bottom > 0 && rect.top < innerHeight &&
+          rect.right > 0 && rect.left < innerWidth && style.outlineStyle !== 'none' &&
+          parseFloat(style.outlineWidth) > 0 && style.outlineColor !== 'rgba(0, 0, 0, 0)',
+        outline: style.outline, route: location.hash };
+    });
+    const pass = indicator.focused && indicator.visible && await named.and(target).count() === 1;
+    check(mode, vp.name, step, pass, JSON.stringify(indicator));
+    if (!pass) throw new Error('Expected visible keyboard focus and accessible name at ' + selector);
+  }
+  async function mission(title, project, id) {
+    step = 'find ' + title;
+    await page.keyboard.type(title);
+    await press('ArrowDown');
+    const row = '.atlas-mission-row:focus';
+    await observe(row, 'button', new RegExp(title + ', ' + project));
+    if (!(await page.locator(row).innerText()).includes(project)) throw new Error('Project missing from visible result');
+    await press('Enter');
+    step = 'inspect ' + title;
+    await page.locator('#missionDetailTitle').waitFor();
+    await observe('#missionDetailTitle', 'heading', title);
+    const route = page.url().split('#')[1]?.split('?')[0];
+    if (route !== '/project/' + project + '/mission/' + id ||
+        !(await page.locator('#inspect .mission-context').innerText()).includes(project)) throw new Error('Inspector Project or mission route mismatch');
+    await shot(page, vp.name + '-keyboard-' + id + '-' + project);
+  }
+  try {
+    const entry = vp.mobile ? '#atlasMobileMissions' : '#atlasMissions';
+    step = 'reach Missions from overview';
+    if (new URL(page.url()).hash !== '#/coven') throw new Error('Expected the Coven overview');
+    await tabTo(entry);
+    await observe(entry, 'button', /mission/i);
+    await press('Enter');
+    step = 'search from the Missions entry';
+    await observe('#atlasMissionSearch', 'searchbox', 'Find a mission');
+    await mission('Board cards', 'coven-cave', 'm-1');
+    step = 'return to matching row';
+    await tabTo('[data-focus="mission-back"]', vp.mobile ? 'Tab' : 'Shift+Tab');
+    await observe('[data-focus="mission-back"]', 'button', /All missions/);
+    await press('Enter');
+    await observe('.atlas-mission-row:focus', 'button', /Board cards, coven-cave/);
+    await tabTo('#atlasMissionSearch', 'Shift+Tab');
+    step = 'recover from an empty search';
+    await press('ControlOrMeta+a');
+    await page.keyboard.type('no matching mission xyz');
+    if (!await visible(page, '#atlasMissionEmpty') || await page.locator('.atlas-mission-row:visible').count()) throw new Error('Expected visible empty results');
+    await observe('#atlasMissionSearch', 'searchbox', 'Find a mission');
+    await tabTo('#atlasMissionReset');
+    await press('Enter');
+    await observe('#atlasMissionSearch', 'searchbox', 'Find a mission');
+    if (await page.locator('#atlasMissionSearch').inputValue() !== '') throw new Error('Clear filters retained search text');
+    await mission('Source survey', 'psyche-build', 'm-2');
+    check(mode, vp.name, 'no console errors', !errors.length, errors.join(' | '));
+  } catch (error) {
+    check(mode, vp.name, step, false, error.message);
+    await shot(page, vp.name + '-keyboard-failure');
+  } finally {
+    await context.close();
+  }
+}
+
 for (const vp of VIEWPORTS) {
+  await keyboardJourney(vp);
+  if (process.argv.includes('--keyboard-only')) continue;
   for (const query of ['', '?source=simulation']) {
     const mode = query ? 'simulation (?source=simulation)' : 'simulation (default)';
     const { context, page, errors } = await open(vp, query);
