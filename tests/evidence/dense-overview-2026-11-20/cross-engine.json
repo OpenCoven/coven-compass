@@ -1,0 +1,267 @@
+{
+  "candidate": "93dc7782f412e5efb7d8385fcba66b2766b546d4",
+  "baseline": "e7bb5a38ef76536ef94148db91a586cec5f664be",
+  "workload": "The label comparison renders identical text, caption sides and scales with both implementations. It compares generated tspans, caption placement depth and external-caption decisions.",
+  "chromium": {
+    "version": "130.0.6723.31",
+    "playwright": "1.48.2",
+    "labelComparisons": {
+      "comparisons": 320,
+      "mismatches": []
+    },
+    "projectPreviewQA": {
+      "passed": 3,
+      "failed": 0
+    }
+  },
+  "webkit": {
+    "version": "27.2",
+    "playwright": "1.64.1",
+    "labelComparisons": {
+      "comparisons": 320,
+      "mismatches": []
+    },
+    "projectPreviewQA": {
+      "passed": 2,
+      "failed": 1,
+      "failure": "At 1440x900, activating the psyche-build row with a pointer leaves the overview visible. The next step timed out waiting for the mission task groups. The narrow pointer journey and the native-scale check at both widths passed."
+    },
+    "desktopControl": [
+      {
+        "name": "baseline",
+        "i": 0,
+        "errors": [],
+        "route": "#/coven",
+        "scope": "coven",
+        "mapClass": "live map-running far compact-familiars",
+        "visible": 0,
+        "rect": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "focus": "stage",
+        "events": [
+          [
+            "pointerdown",
+            "SPAN",
+            "",
+            null,
+            "psyche-build"
+          ],
+          [
+            "focusin",
+            "DIV",
+            "stage",
+            "stage",
+            null
+          ],
+          [
+            "click",
+            "DIV",
+            "stage",
+            "stage",
+            null
+          ]
+        ]
+      },
+      {
+        "name": "baseline",
+        "i": 1,
+        "errors": [],
+        "route": "#/coven",
+        "scope": "coven",
+        "mapClass": "live map-running far compact-familiars",
+        "visible": 0,
+        "rect": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "focus": "stage",
+        "events": [
+          [
+            "pointerdown",
+            "SPAN",
+            "",
+            null,
+            "psyche-build"
+          ],
+          [
+            "focusin",
+            "DIV",
+            "stage",
+            "stage",
+            null
+          ],
+          [
+            "click",
+            "DIV",
+            "stage",
+            "stage",
+            null
+          ]
+        ]
+      },
+      {
+        "name": "baseline",
+        "i": 2,
+        "errors": [],
+        "route": "#/coven",
+        "scope": "coven",
+        "mapClass": "live map-running far compact-familiars",
+        "visible": 0,
+        "rect": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "focus": "stage",
+        "events": [
+          [
+            "pointerdown",
+            "SPAN",
+            "",
+            null,
+            "psyche-build"
+          ],
+          [
+            "focusin",
+            "DIV",
+            "stage",
+            "stage",
+            null
+          ],
+          [
+            "click",
+            "DIV",
+            "stage",
+            "stage",
+            null
+          ]
+        ]
+      },
+      {
+        "name": "candidate",
+        "i": 0,
+        "errors": [],
+        "route": "#/coven",
+        "scope": "coven",
+        "mapClass": "live map-running far",
+        "visible": 0,
+        "rect": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "focus": "stage",
+        "events": [
+          [
+            "pointerdown",
+            "SPAN",
+            "",
+            null,
+            "psyche-build"
+          ],
+          [
+            "focusin",
+            "DIV",
+            "stage",
+            "stage",
+            null
+          ],
+          [
+            "click",
+            "DIV",
+            "stage",
+            "stage",
+            null
+          ]
+        ]
+      },
+      {
+        "name": "candidate",
+        "i": 1,
+        "errors": [],
+        "route": "#/coven",
+        "scope": "coven",
+        "mapClass": "live map-running far",
+        "visible": 0,
+        "rect": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "focus": "stage",
+        "events": [
+          [
+            "pointerdown",
+            "SPAN",
+            "",
+            null,
+            "psyche-build"
+          ],
+          [
+            "focusin",
+            "DIV",
+            "stage",
+            "stage",
+            null
+          ],
+          [
+            "click",
+            "DIV",
+            "stage",
+            "stage",
+            null
+          ]
+        ]
+      },
+      {
+        "name": "candidate",
+        "i": 2,
+        "errors": [],
+        "route": "#/coven",
+        "scope": "coven",
+        "mapClass": "live map-running far",
+        "visible": 0,
+        "rect": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "focus": "stage",
+        "events": [
+          [
+            "pointerdown",
+            "SPAN",
+            "",
+            null,
+            "psyche-build"
+          ],
+          [
+            "focusin",
+            "DIV",
+            "stage",
+            "stage",
+            null
+          ],
+          [
+            "click",
+            "DIV",
+            "stage",
+            "stage",
+            null
+          ]
+        ]
+      }
+    ],
+    "alternateInput": "Focusing the Project row and pressing Enter on desktop passed the same task-group journey. This variant passed all three tests."
+  }
+}

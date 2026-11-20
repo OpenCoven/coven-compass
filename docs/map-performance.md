@@ -59,6 +59,22 @@ During the separately profiled 128-Project desktop return, the baseline recorded
 
 Extract an archive and pass its top-level directory to the budget checker or to `scripts/summarize-map-performance.py` for the complete breakdown. Each archive includes the served-file checksums, input observations, frame records and Chromium profiles. [Baseline](../tests/evidence/overview-return-2026-11-20/baseline.tar.gz) · [Frame scale](../tests/evidence/overview-return-2026-11-20/frame-scale.tar.gz) · [Frame scale repeat](../tests/evidence/overview-return-2026-11-20/frame-scale-repeat.tar.gz) · [Candidate](../tests/evidence/overview-return-2026-11-20/candidate.tar.gz) · [Candidate repeat](../tests/evidence/overview-return-2026-11-20/candidate-repeat.tar.gz)
 
+### Dense overview follow-up
+
+The follow-up batches SVG label preparation, measurement and drawing, and reads the overview viewport before writing tile geometry. Each preview uses its mission face scale. The renderer skips the hidden Project layer while the overview is visible and continues expiring packets on the replay clock. The focus manager measures the current Tab stop and searches for a replacement when it disappears.
+
+The benchmark used the same host, runner, workloads and 100 ms budget as above. The starting application was the candidate from the renderer comparison, also served by merged main at `443c6a7c2e7ec1b6a4d389841691356d09730b44`. Both follow-up matrices served `93dc7782f412e5efb7d8385fcba66b2766b546d4` (`dist/` tree `9611fd3edead64aa9451992208a450e65a6549c3`). Each pair gives the warmed median in milliseconds for two independent matrices.
+
+| Projects | Desktop before | Desktop after | Narrow before | Narrow after |
+| ---: | ---: | ---: | ---: | ---: |
+| 4 | 24.8 / 24.7 | 24.3 / 24.6 | 37.1 / 29.1 | 24.8 / 23.8 |
+| 32 | 45.6 / 34.1 | 23.5 / 24.9 | 65.9 / 61.3 | 50.1 / 43.0 |
+| 128 | 102.3 / 83.9 | 37.5 / 69.0 | 116.0 / 104.2 | 89.5 / 94.7 |
+
+The follow-up met budget in 12 of 12 measured cells. The slowest individual warmed 128-Project return was 77.2 ms on desktop and 108.6 ms on narrow. On the dense return, the two follow-up profiles recorded 4 and 3 Layout events on desktop, and 6 and 10 on narrow. Each trace covers one additional profiled journey. Both matrices also checked mission selection, exact task lists, keyboard focus, replay and the final overview. [First matrix](../tests/evidence/dense-overview-2026-11-20/final.tar.gz) · [Repeat matrix](../tests/evidence/dense-overview-2026-11-20/final-repeat.tar.gz) · [Browser checks](../tests/evidence/dense-overview-2026-11-20/browser-qa.json)
+
+Chromium and Playwright WebKit 27.2 each matched all 320 comparisons of label wrapping and caption placement against the starting renderer. Both engines also matched calculated label sizes to native SVG geometry across the tested zoom levels. In desktop WebKit, clicking a Project drawer row returned input to the stage and left the overview open on both revisions in three paired trials. Keyboard activation completed the journey. [Cross-engine results and input events](../tests/evidence/dense-overview-2026-11-20/cross-engine.json)
+
 ## Reproduction
 
 Use Node 24, Python 3, Playwright 1.48.2 and the Chromium revision Playwright installs. The recorded hardware and OS are in each run's `run.json`. These commands assume a shell in the PR checkout and a free loopback port. Run the server in its own terminal.

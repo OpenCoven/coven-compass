@@ -142,3 +142,33 @@ for (const [width, height] of [[1440, 900], [390, 844]]) {
     } finally { await page.close(); }
   });
 }
+
+test('overview preview labels match the native SVG scale at successive zoom levels', async () => {
+  for (const [width, height] of [[1440, 900], [390, 844]]) {
+    const page = await browser.newPage({viewport: {width, height}, reducedMotion: 'reduce'});
+    try {
+      await page.goto(new URL('#/coven', base).href);
+      const project = page.locator('.ghostfort[aria-label^="psyche-build,"]');
+      await project.waitFor();
+      const labels = project.locator('.preview-name');
+      let measured = 0;
+      for (let step = 0; step < 16 && measured < 3; step++) {
+        // Anchor the wheel at the actual Project floor so the tile stays in view on narrow screens.
+        await project.locator('.gfloor').evaluate(floor => {
+          const rect = floor.getBoundingClientRect();
+          floor.dispatchEvent(new WheelEvent('wheel', {bubbles: true, cancelable: true, ctrlKey: true, deltaY: -250, clientX: rect.x + rect.width / 2, clientY: rect.y + rect.height / 2}));
+        });
+        await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+        if (await project.getAttribute('data-preview-names') !== 'true') continue;
+        const readings = await labels.evaluateAll(nodes => nodes.map(node => ({
+          observed: parseFloat(node.style.fontSize),
+          expected: Math.ceil(10 * Math.max(13 / 3, 10.5 / Math.max(node.getScreenCTM().a, .01))) / 10,
+        })));
+        assert.equal(readings.length, 4);
+        for (const {observed, expected} of readings) assert.equal(observed, expected);
+        measured++;
+      }
+      assert.equal(measured, 3, 'named previews measured at three zoom levels');
+    } finally { await page.close(); }
+  }
+});
