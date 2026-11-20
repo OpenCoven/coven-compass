@@ -89,7 +89,7 @@ The generated ZIP is excluded from its own contents. It can be recreated from th
 - `scripts/`: source and crown checks, repeatable package generation with a fresh export timestamp, and archive/extracted-directory verification.
 - `HANDOFF_MANIFEST.json`, `CHECKSUMS.sha256`: export provenance, file inventory, and byte-integrity checks. `build-handoff.py` generates them into each ZIP; they are not committed to the source repository.
 
-Git metadata, credentials, local runtime state, browser profiles, historical QA screenshots, installed dependencies, and previous export archives are intentionally excluded. No license or production authority is created by this package. Preserve the applicable upstream terms and current repository instructions when integrating.
+The package includes the [Apache License, Version 2.0](LICENSE), the [copyright and brand notices](NOTICE), and a public summary of Sage’s discovery. Maintainers retain the original research packet and raw browser traces separately. The simulation has no production authority.
 
 ## First implementation recommendation
 

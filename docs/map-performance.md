@@ -16,7 +16,7 @@ Each timing cell below gives primary / reproduction medians in milliseconds. Eac
 | 32 | 56 | 184 | 912 | 65.6 / 79.0 | 67.1 / 75.2 |
 | 128 | 224 | 736 | 3,648 | 128.4 / 115.8 | 121.2 / 122.6 |
 
-The overview return had the largest median increase from 4 to 128 Projects on desktop in both runs (+99.6 and +84.1 ms) and on narrow in the primary run (+86.3 ms). In the narrow reproduction, opening Missions rose from 24.2 to 95.2 ms (+71.0), ahead of overview return (+65.4). Individual 128-Project overview returns ranged from 102.1 to 146.2 ms across the two matrices. At this density the p95 frame interval over the entire warmed journey was 50–67 ms on desktop and 50 ms on narrow. Both 32-Project runs were about 33 ms at p95. [Individual observations and timelines](../tests/evidence/map-performance-2026-11-20/main-matrix.tar.gz) · [Reproduction observations and timelines](../tests/evidence/map-performance-2026-11-20/repro-matrix.tar.gz)
+The overview return had the largest median increase from 4 to 128 Projects on desktop in both runs (+99.6 and +84.1 ms) and on narrow in the primary run (+86.3 ms). In the narrow reproduction, opening Missions rose from 24.2 to 95.2 ms (+71.0), ahead of overview return (+65.4). Individual 128-Project overview returns ranged from 102.1 to 146.2 ms across the two matrices. At this density the p95 frame interval over the entire warmed journey was 50–67 ms on desktop and 50 ms on narrow. Both 32-Project runs were about 33 ms at p95.
 
 The two dense desktop profiles each recorded 150 Layout events inside a single overview return. Layout occupied 61 and 54 ms and style recalculation occupied 43 and 40 ms in the respective windows. Paint occupied about 1 ms in each. Both CPU profiles sampled `project` and `atlasProjectGhost` during that input. The latter reads stage dimensions for each Project and updates its SVG attributes. The overview-return measurements below compare this baseline with a version that reads the stage dimensions once per frame.
 
@@ -32,7 +32,7 @@ Each dense narrow soak used one document for its full duration and returned to t
 | Used JS heap, MiB | 8.9 → 9.0 (14.6) | 8.2 → 10.2 (14.1) |
 | CDP nodes, including detached nodes awaiting collection | 24,467 → 26,896 | 24,451 → 27,207 |
 
-The attached-element endpoint increased in the first run and decreased in the reproduction. Renderer node counts ended higher in both runs, while used heap rose and fell during each run. These observations leave retained-object growth unresolved. A heap-retention investigation would need additional evidence such as object retainers across controlled garbage collections. [Primary checkpoint and frame records](../tests/evidence/map-performance-2026-11-20/main-soak.tar.gz) · [Reproduction checkpoint and frame records](../tests/evidence/map-performance-2026-11-20/repro-soak.tar.gz)
+The attached-element endpoint increased in the first run and decreased in the reproduction. Renderer node counts ended higher in both runs, while used heap rose and fell during each run. These observations leave retained-object growth unresolved. A heap-retention investigation would need additional evidence such as object retainers across controlled garbage collections.
 
 ### Overview-return budget
 
@@ -57,7 +57,7 @@ Each matrix completed all 30 journeys, including checks on Project selection, mi
 
 During the separately profiled 128-Project desktop return, the baseline recorded 150 Layout events. Each candidate run recorded 15. Across those same three windows, time in Layout was 73.6 ms, 49.2 ms and 46.5 ms, respectively. Each profile covers one return. The unprofiled medians above determine the budget result.
 
-Extract an archive and pass its top-level directory to the budget checker or to `scripts/summarize-map-performance.py` for the complete breakdown. Each archive includes the served-file checksums, input observations, frame records and Chromium profiles. [Baseline](../tests/evidence/overview-return-2026-11-20/baseline.tar.gz) · [Frame scale](../tests/evidence/overview-return-2026-11-20/frame-scale.tar.gz) · [Frame scale repeat](../tests/evidence/overview-return-2026-11-20/frame-scale-repeat.tar.gz) · [Candidate](../tests/evidence/overview-return-2026-11-20/candidate.tar.gz) · [Candidate repeat](../tests/evidence/overview-return-2026-11-20/candidate-repeat.tar.gz)
+Run a fresh measurement and pass its output directory to the budget checker or to `scripts/summarize-map-performance.py` for the complete breakdown. Each archive includes the served-file checksums, input observations, frame records and Chromium profiles.
 
 ### Dense overview follow-up
 
@@ -71,7 +71,7 @@ The benchmark used the same host, runner, workloads and 100 ms budget as above. 
 | 32 | 45.6 / 34.1 | 23.5 / 24.9 | 65.9 / 61.3 | 50.1 / 43.0 |
 | 128 | 102.3 / 83.9 | 37.5 / 69.0 | 116.0 / 104.2 | 89.5 / 94.7 |
 
-The follow-up met budget in 12 of 12 measured cells. The slowest individual warmed 128-Project return was 77.2 ms on desktop and 108.6 ms on narrow. On the dense return, the two follow-up profiles recorded 4 and 3 Layout events on desktop, and 6 and 10 on narrow. Each trace covers one additional profiled journey. Both matrices also checked mission selection, exact task lists, keyboard focus, replay and the final overview. [First matrix](../tests/evidence/dense-overview-2026-11-20/final.tar.gz) · [Repeat matrix](../tests/evidence/dense-overview-2026-11-20/final-repeat.tar.gz) · [Browser checks](../tests/evidence/dense-overview-2026-11-20/browser-qa.json)
+The follow-up met budget in 12 of 12 measured cells. The slowest individual warmed 128-Project return was 77.2 ms on desktop and 108.6 ms on narrow. On the dense return, the two follow-up profiles recorded 4 and 3 Layout events on desktop, and 6 and 10 on narrow. Each trace covers one additional profiled journey. Both matrices also checked mission selection, exact task lists, keyboard focus, replay and the final overview. [First matrix](../tests/evidence/dense-overview-2026-11-20/final.json) · [Repeat matrix](../tests/evidence/dense-overview-2026-11-20/final-repeat.json) · [Browser checks](../tests/evidence/dense-overview-2026-11-20/browser-qa.json)
 
 Chromium and Playwright WebKit 27.2 each matched all 320 comparisons of label wrapping and caption placement against the starting renderer. Both engines also matched calculated label sizes to native SVG geometry across the tested zoom levels. In desktop WebKit, clicking a Project drawer row returned input to the stage and left the overview open on both revisions in three paired trials. Keyboard activation completed the journey. [Cross-engine results and input events](../tests/evidence/dense-overview-2026-11-20/cross-engine.json)
 
@@ -80,21 +80,21 @@ Chromium and Playwright WebKit 27.2 each matched all 320 comparisons of label wr
 Use Node 24, Python 3, Playwright 1.48.2 and the Chromium revision Playwright installs. The recorded hardware and OS are in each run's `run.json`. These commands assume a shell in the PR checkout and a free loopback port. Run the server in its own terminal.
 
 ```sh
-git worktree add --detach /tmp/compass-measured c15823626a073540c3a8a5bff08f018eb360a091
-python3 -m http.server 18742 --bind 127.0.0.1 --directory /tmp/compass-measured/dist
+python3 -m http.server 18742 --bind 127.0.0.1 --directory dist
 ```
 
 ```sh
-mkdir -p /tmp/compass-perf-tools
-npm install --prefix /tmp/compass-perf-tools playwright@1.48.2
-/tmp/compass-perf-tools/node_modules/.bin/playwright install chromium
-cp scripts/map-performance.mjs /tmp/compass-perf-tools/
-revision=c15823626a073540c3a8a5bff08f018eb360a091
+scratch=$(mktemp -d)
+mkdir -p "$scratch/tools"
+npm install --prefix "$scratch/tools" playwright@1.48.2
+"$scratch/tools/node_modules/.bin/playwright" install chromium
+cp scripts/map-performance.mjs "$scratch/tools"/
+revision=$(git rev-parse HEAD)
 base=http://127.0.0.1:18742/
-node /tmp/compass-perf-tools/map-performance.mjs "$base" "$revision" /tmp/compass-perf-matrix matrix
-node /tmp/compass-perf-tools/map-performance.mjs "$base" "$revision" /tmp/compass-perf-soak soak
-python3 scripts/summarize-map-performance.py /tmp/compass-perf-matrix > /tmp/compass-perf-matrix-summary.json
-python3 scripts/summarize-map-performance.py /tmp/compass-perf-soak > /tmp/compass-perf-soak-summary.json
+node "$scratch/tools/map-performance.mjs" "$base" "$revision" "$scratch/matrix" matrix
+node "$scratch/tools/map-performance.mjs" "$base" "$revision" "$scratch/soak" soak
+python3 scripts/summarize-map-performance.py "$scratch/matrix" > "$scratch/matrix-summary.json"
+python3 scripts/summarize-map-performance.py "$scratch/soak" > "$scratch/soak-summary.json"
 ```
 
 ## Workload and clocks
@@ -111,19 +111,11 @@ Frame records contain animation frame timestamps and intervals in milliseconds. 
 
 The soak holds a single 128-Project narrow context open for at least 30 minutes of repeated warmed journeys. Each iteration includes an eight-second advancing replay and ends at the same live overview. The runner saves raw observations at each checkpoint. Attached element counts describe the current document. CDP node counts and JS heap include objects awaiting collection. Endpoint growth alone cannot establish a leak. The soak does not force garbage collection.
 
-To regenerate a published summary from its archived observations, extract the archive into a scratch directory and point the summarizer at its named run directory. For example, run these commands from the checkout.
-
-```sh
-scratch=$(mktemp -d)
-evidence=tests/evidence/map-performance-2026-11-20
-tar -xzf "$evidence/repro-matrix.tar.gz" -C "$scratch"
-python3 scripts/summarize-map-performance.py "$scratch/repro-matrix" > "$scratch/summary.json"
-cmp "$scratch/summary.json" "$evidence/repro-matrix.json"
-```
+Use the summarizer on your own run directory to reproduce the report format. Maintainers retain the historical raw archives separately because they contain browser traces and machine metadata.
 
 ## Earlier candidate and retained failures
 
-Issue #40 was claimed against the then-open PR #49 head `affeb1df608ba4a4d6145816784e2d74f2a929f4`. The first dense pilot timed out at both viewports because the harness expected opening Projects to focus its search field. Compass focuses the active Project row. Both corrected pilot journeys passed. The first soak on that head was interrupted during its seventeenth cycle after #49 merged with changes to the served map. The pilot reports, failed predicates, frame records, and partial soak are retained separately. Every reported baseline number above comes from the integrated build. [Pre-merge observations](../tests/evidence/map-performance-2026-11-20/pilots.tar.gz)
+Issue #40 was claimed against the then-open PR #49 head `affeb1df608ba4a4d6145816784e2d74f2a929f4`. The first dense pilot timed out at both viewports because the harness expected opening Projects to focus its search field. Compass focuses the active Project row. Both corrected pilot journeys passed. The first soak on that head was interrupted during its seventeenth cycle after #49 merged with changes to the served map. The pilot reports, failed predicates, frame records, and partial soak are retained separately. Every reported baseline number above comes from the integrated build.
 
 ## Reading a run
 

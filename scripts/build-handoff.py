@@ -29,9 +29,11 @@ ARCHIVE_ROOT = f"Coven_Compass_Handoff_{EDITION.isoformat()}"
 BASELINE_COMMIT = "d7b6f1e655140036cca49f31687131352162de13"
 MANIFEST = "HANDOFF_MANIFEST.json"
 CHECKSUMS = "CHECKSUMS.sha256"
-ALLOW_FILES = ("SECURITY.md", "AGENTS.md", "README.md", "START_HERE.md", "MOBILE_READINESS.md", ".gitignore", "docs/map-performance.md")
-ALLOW_DIRS = ("dist", "docs/handoff", "docs/discovery", "examples", "tests", "scripts")
+PUBLIC_DISCOVERY = "docs/discovery/2026-11-20-public/README.md"
+ALLOW_FILES = ("LICENSE", "NOTICE", PUBLIC_DISCOVERY, "SECURITY.md", "AGENTS.md", "README.md", "START_HERE.md", "MOBILE_READINESS.md", ".gitignore", "docs/map-performance.md")
+ALLOW_DIRS = ("dist", "docs/handoff", "examples", "tests", "scripts")
 REQUIRED = (
+    "LICENSE", "NOTICE", PUBLIC_DISCOVERY,
     "README.md", "START_HERE.md", "MOBILE_READINESS.md", "dist/index.html",
     "dist/handoff/index.html", "dist/handoff/handoff.css",
     "tests/presentation.test.cjs", "tests/fixtures/baseline.json",
@@ -48,6 +50,14 @@ RESERVED = {"con", "prn", "aux", "nul", *(f"com{i}" for i in range(1, 10)),
 MAX_FILES = 10000
 MAX_FILE_BYTES = 64 * 1024 * 1024
 MAX_TOTAL_BYTES = 256 * 1024 * 1024
+
+
+PRIVATE_DETAIL = re.compile(
+    rb"(?i)(?:/(?:users|home)/[\w.@+-]+|[a-z]:[\\/]+users[\\/]+[\w.-]+|"
+    rb"/(?:private/)?var/folders/[\w-]+|[~]/\.(?:coven|cargo)/(?:workspaces|git/db)|"
+    rb"appg(?:prj|ver)_[a-f0-9]{16,}|(?:dpl|prj|team)_[a-z0-9]{16,}|"
+    rb"https?://[\w-]+-[a-z0-9]{8,}-[\w-]+\.vercel\.app)"
+)
 
 
 class BuildError(ValueError):
@@ -74,7 +84,7 @@ def excluded(relative: str) -> bool:
         return True
     if relative == "docs/screenshots" or relative.startswith("docs/screenshots/"):
         return True
-    if relative.startswith("tests/evidence/") and Path(relative).suffix.casefold() in {".png", ".jpg", ".jpeg", ".webp"}:
+    if relative.startswith("tests/evidence/") and Path(relative).suffix.casefold() in {".png", ".jpg", ".jpeg", ".webp", ".gz", ".tgz", ".tar", ".bz2", ".xz", ".zst", ".7z"}:
         return True
     name = parts[-1]
     low = name.casefold()
@@ -404,6 +414,12 @@ def collect_files() -> dict[str, bytes]:
                 raise BuildError(f"Portable filename collision: {spelling}, {portable_names[key]}")
             portable_names[key] = spelling
         data = source_bytes(path)
+        # Embedded archives cannot be inspected by the plain-text disclosure check.
+        if data.startswith((b"PK\x03\x04", b"\x1f\x8b", b"BZh", b"\xfd7zXZ\x00", b"7z\xbc\xaf\x27\x1c", b"\x28\xb5\x2f\xfd")) or data[257:262] == b"ustar":
+            raise BuildError(f"Nested archive in public export: {relative}")
+        # Reports can contain private paths even when they contain no credentials.
+        if PRIVATE_DETAIL.search(data) or PRIVATE_DETAIL.search(relative.encode()):
+            raise BuildError(f"Private operational detail in export file {hashlib.sha256(data).hexdigest()[:16]}")
         try:
             check_name(relative)
             check_content(data)
