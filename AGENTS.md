@@ -23,7 +23,7 @@ The table comes from #6. Run its focused check while you work, then `verify-all`
 | Change | Edit | Focused check |
 | --- | --- | --- |
 | Project form and mission inspector | `dist/index.html` | `node --test tests/mission-interactions.test.cjs`, then exercise the form in a desktop and a narrow browser |
-| Routes and mission browser | `dist/mission-navigation.js`, `dist/atlas-ui.js`, and their bindings in `dist/index.html` | `node --test tests/navigation.test.cjs tests/mission-interactions.test.cjs` |
+| Routes and mission browser | `dist/mission-navigation.js`, `dist/atlas-ui.js`, and their bindings in `dist/index.html` | `node --test tests/navigation.test.cjs tests/navigation-notice.test.cjs tests/mission-interactions.test.cjs` |
 | Map and camera | `dist/atlas-layout.js`, `dist/atlas-viewport.js` | `node --test tests/atlas-layout.test.cjs tests/atlas-viewport.test.cjs` |
 | Mobile controls and focus | `dist/mobile-ui.js`, `dist/mobile-interactions.js`, `dist/atlas.css` | `node --test tests/mobile-*.test.cjs` |
 | Simulation fold (what an event does to the world) | `dist/simulation-model.js` | `node --test tests/simulation-model.test.cjs tests/replay-*.test.cjs` |

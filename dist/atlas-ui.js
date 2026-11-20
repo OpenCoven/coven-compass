@@ -38,9 +38,51 @@
     var first = drawer.querySelector('.atlas-project[data-active="true"]') || drawer.querySelector('button');
     if (first) first.focus({ preventScroll: true });
   }
-  function announce(message) {
+  // #atlasNavigationStatus is the only live region. With {visible: true} the same
+  // message is also shown in #atlasNavigationNotice, which is deliberately not a
+  // live region, so a screen reader announces it once (#45).
+  var noticeTimer = 0, NOTICE_MS = 10000;
+  function announce(message, options) {
     var status = $('atlasNavigationStatus');
     if (status && status.textContent !== message) status.textContent = message;
+    if (options && options.visible) showNotice(message);
+  }
+  function showNotice(message) {
+    var notice = $('atlasNavigationNotice');
+    if (!notice) return;
+    $('atlasNavigationNoticeText').textContent = message;
+    notice.hidden = false;
+    scheduleNoticeDismissal();
+  }
+  function scheduleNoticeDismissal() {
+    clearTimeout(noticeTimer);
+    noticeTimer = setTimeout(function () { dismissNotice(); }, NOTICE_MS);
+  }
+  function dismissNotice() {
+    clearTimeout(noticeTimer); noticeTimer = 0;
+    var notice = $('atlasNavigationNotice');
+    if (!notice || notice.hidden) return;
+    var hadFocus = notice.contains(document.activeElement);
+    notice.hidden = true;
+    if (hadFocus) {
+      var next = Array.prototype.find.call(document.querySelectorAll('#atlasHeader button'), function (b) { return b.getClientRects().length; });
+      if (next) next.focus({ preventScroll: true });
+    }
+  }
+  function buildNotice() {
+    var notice = node('div', 'atlas-notice'); notice.id = 'atlasNavigationNotice'; notice.hidden = true;
+    var text = node('p'); text.id = 'atlasNavigationNoticeText';
+    var dismiss = button('atlasNavigationNoticeDismiss', '×', function () { dismissNotice(); });
+    dismiss.setAttribute('aria-label', 'Dismiss this notice'); dismiss.title = 'Dismiss';
+    notice.append(text, dismiss);
+    // Reading or reaching the notice pauses its timer; leaving it restarts the timer.
+    notice.addEventListener('pointerenter', function () { clearTimeout(noticeTimer); });
+    notice.addEventListener('focusin', function () { clearTimeout(noticeTimer); });
+    notice.addEventListener('pointerleave', function () { if (!notice.hidden && !notice.contains(document.activeElement)) scheduleNoticeDismissal(); });
+    notice.addEventListener('focusout', function (ev) { if (!notice.hidden && !notice.contains(ev.relatedTarget)) scheduleNoticeDismissal(); });
+    notice.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') { ev.preventDefault(); dismissNotice(); } });
+    shield(notice);
+    return notice;
   }
   function closeMissions(restoreFocus) {
     var drawer = $('atlasMissionBrowser');
@@ -284,7 +326,7 @@
     });
     shield(cameraDock);
     stage.insertBefore(head, stage.firstChild);
-    stage.append(aside, missionBrowser, familiars, cameraDock, navigationStatus);
+    stage.append(buildNotice(), aside, missionBrowser, familiars, cameraDock, navigationStatus);
     document.addEventListener('pointerdown', function (ev) {
       if (!aside.hidden && !aside.contains(ev.target) && !browse.contains(ev.target)) closeBrowse(false);
       if (!missionBrowser.hidden && !missionBrowser.contains(ev.target) && !missions.contains(ev.target)) closeMissions(false);
@@ -363,5 +405,5 @@
       familiarNodes.forEach(function (b, k) { if (!s.familiars.some(function (f) { return f.key === k; })) { b.remove(); familiarNodes.delete(k); } });
     }
   }
-  window.CovenAtlas = { mount: mount, update: update, openMissions: openMissions, openMissionsForProject: openMissionsForProject, closeMissions: closeMissions, closeBrowse: closeBrowse, announce: announce };
+  window.CovenAtlas = { mount: mount, update: update, openMissions: openMissions, openMissionsForProject: openMissionsForProject, closeMissions: closeMissions, closeBrowse: closeBrowse, announce: announce, dismissNotice: dismissNotice };
 }());
