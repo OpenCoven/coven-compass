@@ -60,7 +60,7 @@ Current progress ownership uses `TARGET_ROLES` in the prototype. Production inte
 
 ## 5. Progressive detail and control placement
 
-Mission details open on the left. The header keeps identity, activity and section navigation in three rows. The Tasks tab names each owning familiar and groups its assigned agents under the task. A filled circle means working, an open circle means idle, and a square with a center dot means waiting at a gate. Selecting an agent opens its details in that task row. Closing the details returns focus to the agent.
+The workspace bar and Psyche title share a height. Mission details open on the left. Inspector action labels use up to three words, with supporting descriptions beside the controls. Edit brief sets deliverables and limits. Ask Psyche opens the conversation for the current selection. In replay, View chat opens the conversation history. The header keeps identity, activity and section navigation in three rows. The Tasks tab names each owning familiar and groups its assigned agents under the task. A filled circle means working, an open circle means idle, and a square with a center dot means waiting at a gate. Selecting an agent opens its details in that task row. Closing the details returns focus to the agent.
 
 One top bar holds workspace navigation. Project tools opens the project and mission selectors, Ward, trace and display controls. Inbox and Stop stay in the top bar when available. The camera dock offers zoom, fit, lock and the Psyche marker picker. A locked camera shows Unlock and keeps the marker picker available.
 

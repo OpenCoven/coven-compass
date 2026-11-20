@@ -3577,7 +3577,8 @@ function syncInspect(force) {
   const taskIds = new Set(tasks.map(t => t.id));      // a familiar's scope includes the agents of tasks it shares, wherever they sit
   const all = [...w.agents.values()].filter(a => order.has(a.seat) || (a.task && taskIds.has(a.task))).sort((a, b) => rank(a.seat) - rank(b.seat) || slotOf(a) - slotOf(b));
   const missionOrder = [...w.missions.values()];
-  const sig = missionOrder.map(m => m.id).join(',') + '|' + (panelView === 'brief' ? briefSig(briefState(w, M), M) + Math.floor((w.t - M.t0) / 60000) + canAct() : '') + active + M.id + '/' + (c.fam || '') + '|' + panelView + '|' + seatIds.join(',') + '|' + tasks.map(t => t.id).join(',') + '|' + all.map(a => a.id + ':' + (a.task || '')).join(',');
+  const editable = canAct();
+  const sig = editable + '|' + missionOrder.map(m => m.id).join(',') + '|' + (panelView === 'brief' ? briefSig(briefState(w, M), M) + Math.floor((w.t - M.t0) / 60000) : '') + active + M.id + '/' + (c.fam || '') + '|' + panelView + '|' + seatIds.join(',') + '|' + tasks.map(t => t.id).join(',') + '|' + all.map(a => a.id + ':' + (a.task || '')).join(',');
   if (force || sig !== insp.sig) {
     const identity = [active, M.id, c.fam, panelView].join('|'), sameView = box.dataset.selection === identity;
     const previousScroll = sameView ? box.scrollTop : 0;
@@ -3608,8 +3609,8 @@ function syncInspect(force) {
       else if (c.missionBrowserOrigin) closeMissionDetails();
       else if (window.CovenAtlas) window.CovenAtlas.openMissions(true);
     });
-    const toCard = html('button', 'btn x'); toCard.type = 'button'; toCard.innerHTML = ICON.card; toCard.setAttribute('aria-label', 'Show as a card');
-    toCard.title = 'Show as a card'; toCard.dataset.focus = 'show-card';
+    const toCard = html('button', 'btn x'); toCard.type = 'button'; toCard.innerHTML = ICON.card; toCard.setAttribute('aria-label', 'Show card');
+    toCard.title = 'Show card'; toCard.dataset.focus = 'show-card';
     toCard.addEventListener('click', () => select(c.sel, c.fam, 'card'));
     const close = xBtn('Close details', closeMissionDetails); close.dataset.focus = 'close-details';
     close.title = 'Close details';
@@ -3619,9 +3620,11 @@ function syncInspect(force) {
     const previous = html('button', 'btn sm', '‹'), next = html('button', 'btn sm', '›');
     previous.type = next.type = 'button'; previous.disabled = position <= 0; next.disabled = position >= missionOrder.length - 1;
     previous.dataset.focus = 'previous-mission'; next.dataset.focus = 'next-mission';
-    previous.setAttribute('aria-label', previous.disabled ? 'Previous mission' : 'Previous mission: ' + missionOrder[position - 1].name);
-    next.setAttribute('aria-label', next.disabled ? 'Next mission' : 'Next mission: ' + missionOrder[position + 1].name);
-    previous.title = previous.getAttribute('aria-label'); next.title = next.getAttribute('aria-label');
+    previous.setAttribute('aria-label', 'Previous mission'); next.setAttribute('aria-label', 'Next mission');
+    if (!previous.disabled) previous.setAttribute('aria-description', missionOrder[position - 1].name);
+    if (!next.disabled) next.setAttribute('aria-description', missionOrder[position + 1].name);
+    previous.title = previous.disabled ? 'Previous mission' : 'Previous mission · ' + missionOrder[position - 1].name;
+    next.title = next.disabled ? 'Next mission' : 'Next mission · ' + missionOrder[position + 1].name;
     previous.addEventListener('click', () => select(missionOrder[position - 1].id, null, 'side'));
     next.addEventListener('click', () => select(missionOrder[position + 1].id, null, 'side'));
     stepper.append(previous, html('span', '', (position + 1) + ' / ' + missionOrder.length), next);
@@ -3677,6 +3680,19 @@ function syncInspect(force) {
       if (c.fam && x.m.id === M.id) link.setAttribute('aria-current', 'true');
       link.addEventListener('click', () => select(x.m.id, x.k, 'side')); return link;
     };
+    const actions = html('footer', 'inspect-actions');
+    actions.setAttribute('aria-label', 'Mission actions');
+    const addAction = (id, label, icon, description, run) => {
+      const item = html('div', 'inspect-action-item');
+      const button = html('button', 'btn inspect-action');
+      button.type = 'button'; button.dataset.focus = id;
+      button.innerHTML = icon;
+      button.appendChild(html('span', '', label));
+      const hint = html('span', 'inspect-action-hint', description);
+      hint.id = id + '-hint'; button.setAttribute('aria-describedby', hint.id);
+      button.addEventListener('click', run);
+      item.append(button, hint); actions.appendChild(item);
+    };
     if (panelView === 'brief') {
       const st = briefState(w, M);
       const grp = (icon, title, tone, right) => { const g = html('div', 'bfg' + (tone ? ' ' + tone : '')), h2 = html('div', 'bfg-h'); h2.innerHTML = ICON[icon]; h2.appendChild(html('span', null, title)); if (right) h2.appendChild(html('em', null, right)); g.appendChild(h2); sec.appendChild(g); return g; };
@@ -3693,7 +3709,9 @@ function syncInspect(force) {
         st.caps.forEach(x => line(g, x.label, `${fmtN(x.k, x.used)} / ${fmtN(x.k, x.max)}`, x.frac, x.frac >= 1 ? 'over' : x.frac >= WARN_AT ? 'near' : '')); if (!st.caps.length) line(g, 'No limits', '');
         if (st.measures.length) { g = grp('gauge', 'Measured by', '', ''); st.measures.forEach(x => line(g, x.label, x.value)); }
       }
-      if (canAct()) { const eb = html('button', 'btn sm', st ? 'Edit brief' : 'Set brief'); eb.type = 'button'; eb.addEventListener('click', () => openNew(M.id)); const wrap = html('div', 'bfg'); wrap.appendChild(eb); sec.appendChild(wrap); }
+      if (editable) addAction('edit-brief', st ? 'Edit brief' : 'Set brief', ICON.doc, 'Deliverables and limits', () => {
+        openNew(M.id); nm.fromInspector = true;
+      });
     } else if (panelView === 'council') {
       seats.forEach(x => group(fam(x.k).hue, seatLink(x), all.filter(a => a.seat === seatId(x.m.id, x.k))));
       const lent = all.filter(a => !order.has(a.seat)); if (lent.length) group('var(--subtle)', html('span', 'tname', 'Shared, in another squad'), lent);
@@ -3727,9 +3745,14 @@ function syncInspect(force) {
       [['Allowed without asking', f.may], ['Requires approval', f.must]].forEach(([k, v]) => { const r = html('div', 'kv'); r.append(html('dt', null, k), html('dd', null, v)); dl.appendChild(r); });
       wd.append(sm, dl); box.appendChild(wd);
     }
-    const m = html('button', 'btn', 'Ask Psyche about this'); m.type = 'button';
-    m.addEventListener('click', () => { openPsyche(); $('say').focus(); });
-    box.append(m, insp.slot);
+    addAction('ask-psyche', editable ? 'Ask Psyche' : 'View chat',
+      '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3.5h10v7H7l-3.5 2.5v-2.5H3z" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"/></svg>',
+      editable ? 'Progress and blockers' : 'Replay conversation', () => {
+        openPsyche(); setTab('chat', false);
+        if (window.CovenMobileUI) window.CovenMobileUI.activate('psyche');
+        ($('say').disabled ? $('tabChat') : $('say')).focus();
+      });
+    box.append(insp.slot, actions);
     showPick();
     box.querySelectorAll('button,summary,[tabindex]').forEach(el => { if (!el.dataset.focus) el.dataset.focus = el.id || [el.tagName, el.getAttribute('aria-label') || el.textContent.trim()].join(':'); });
     if (window.CovenMobileUI) window.CovenMobileUI.sync();
@@ -4628,6 +4651,7 @@ function drawNew() {
   $('raise').disabled = !ok || !$('nmName').value.trim(); $('nmName').disabled = !ok || !!EM;
 }
 function openNew(editId) {
+  nm.fromInspector = false;
   const c = cur(), M = editId ? c.world.missions.get(editId) : null;
   if (!M && c.sel) select(null); if (atlasScope === 'coven') setView();
   nm.edit = M ? M.id : null; nm.open = M ? 'deliver' : null;
@@ -4635,14 +4659,17 @@ function openNew(editId) {
     const t0 = M.tpl ? allTpl().find(t => M.tpl.indexOf(t.name) === 0) : null; nm.tpl = t0 ? t0.id : null; nm.tplEdited = !!t0 && M.tpl !== t0.name; }
   c.composing = true; drawBriefForm(); drawNew();
   if (window.CovenMobileUI) window.CovenMobileUI.activate('empty');
-  if (!M) { const i = $('nmName'); i.focus(); i.select(); }
+  if (M) $('nmTitle').focus({preventScroll: true});
+  else { const i = $('nmName'); i.focus(); i.select(); }
 }
 function closeNew() {
-  const c = cur(); c.composing = false; c.emptyDismissed = true;
+  const c = cur(), returnToBrief = nm.edit && nm.fromInspector;
+  nm.fromInspector = false; c.composing = false; c.emptyDismissed = true;
   nm.touched = false; nm.leadTouched = false; nm.match = null; if (!nm.edit && nm.briefTouched) { nm.briefTouched = false; }
   if (nm.edit) { nm.edit = null; nm.briefTouched = false; nm.open = null; setLead(nm.lead); }
   drawNew(); if (window.CovenMobileUI) window.CovenMobileUI.sync();
-  const add = $('emptyNew'); if (add && !add.closest('[hidden],[inert]') && !add.disabled) add.focus({preventScroll: true});
+  const trigger = (returnToBrief && $('inspect').querySelector('[data-focus="edit-brief"]')) || $('emptyNew');
+  if (trigger && !trigger.closest('[hidden],[inert]') && !trigger.disabled) trigger.focus({preventScroll: true});
 }
 Object.keys(FAM).forEach(k => {
   const b = html('button', 'nm-lead'); b.type = 'button'; b.dataset.k = k; b.setAttribute('role', 'radio'); b.style.setProperty('--hue', FAM[k].hue);

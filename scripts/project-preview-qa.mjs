@@ -204,7 +204,7 @@ test('mission focus traces the seal and reveals the planes for its agents', asyn
     await page.keyboard.press('Enter');
     await page.locator('#plan.atlas-selected').waitFor();
     const selected = page.locator('.atlas-mission-group.atlas-mission-current');
-    assert.equal(await selected.locator('.task-tray-well').isVisible(), true);
+    await selected.locator('.task-tray-well').waitFor({state: 'visible'});
     const planes = page.locator('.atlas-squad:not(.dim) .squad-plane:visible');
     assert.ok(await planes.count() > 0);
     assert.equal(await page.locator('.atlas-squad.dim .squad-plane:visible').count(), 0);
@@ -334,6 +334,41 @@ test('one top bar contains navigation and project actions at desktop and phone w
       await lock.click();
       assert.ok(await page.locator('#atlasZoomIn').isEnabled());
       assert.ok(await page.locator('#atlasFit').isVisible());
+    } finally { await page.close(); }
+  }
+});
+
+test('inspector actions open the brief and conversation and desktop title rows align', async () => {
+  for (const [width, height] of [[1440, 900], [390, 844]]) {
+    const page = await browser.newPage({viewport: {width, height}, hasTouch: width < 500, reducedMotion: 'reduce'});
+    try {
+      await page.goto(new URL('#/project/psyche-build/mission/m-2?view=brief&detail=side', base).href);
+      const actions = page.locator('.inspect-actions'), edit = actions.getByRole('button', {name: 'Edit brief', exact: true});
+      const ask = actions.getByRole('button', {name: 'Ask Psyche', exact: true});
+      await edit.waitFor();
+      const a = await edit.boundingBox(), b = await ask.boundingBox();
+      assert.equal(a.height, b.height);
+      assert.ok(a.height >= (width < 500 ? 44 : 36));
+      await edit.click();
+      await page.locator('#empty').waitFor();
+      assert.equal(await page.locator('#nmName').inputValue(), 'Source survey');
+      await page.locator('#emptyX').click();
+      assert.ok(await edit.evaluate(el => document.activeElement === el));
+      await ask.click();
+      const say = page.locator('#say');
+      assert.ok(await say.evaluate(el => el === document.activeElement));
+      if (width > 1100) {
+        await page.locator('#dockBtn').click();
+        const bar = await page.locator('#workspaceBar').boundingBox();
+        const title = await page.locator('.psyche .p-h').boundingBox();
+        assert.equal(bar.height, title.height);
+        assert.equal(bar.y, title.y);
+        await say.fill('Draft question');
+        await page.locator('#tabProject').click();
+        await ask.click();
+        assert.equal(await say.inputValue(), 'Draft question');
+        assert.ok(await say.evaluate(el => el === document.activeElement));
+      }
     } finally { await page.close(); }
   }
 });
