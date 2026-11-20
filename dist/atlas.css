@@ -220,7 +220,7 @@ body.atlas-enhanced .atlas-mission-seal svg { display: block; width: 30px; heigh
 body.atlas-enhanced .atlas-mission-copy { display: flex; flex-direction: column; gap: 4px; grid-column: 2; grid-row: 1 / 4; min-width: 0; }
 body.atlas-enhanced .atlas-mission-meta,
 body.atlas-enhanced .atlas-mission-stats { grid-column: 2; min-width: 0; overflow-wrap: anywhere; }
-.mission-word { display: inline-block; max-width: 100%; overflow-x: auto; overflow-y: hidden; scrollbar-width: thin; white-space: nowrap; word-break: normal; hyphens: none; vertical-align: bottom; }
+body.atlas-enhanced .mission-word { display: inline-block; max-width: 100%; text-overflow: clip; overflow-x: auto; overflow-y: hidden; scrollbar-width: thin; white-space: nowrap; word-break: normal; hyphens: none; vertical-align: bottom; }
 .lc-also button, .rowlink > span:has(.mission-word), .tname em:has(.mission-word), .cf-r .rf:has(.mission-word) { min-width: 0; max-width: 100%; }
 [data-agent-field="mission"] { min-width: 0; white-space: normal; }
 body.atlas-enhanced .atlas-mission-title { min-width: 0; font-size: 13px; font-weight: 500; line-height: 1.35; }
@@ -876,7 +876,7 @@ body.atlas-enhanced .lc-task-names {
   body.atlas-enhanced .lead-card .lc-task-names { display: none; }
 }
 
-body.atlas-enhanced :is(.lead-card .who, .cs-mt > b, .n-m:has(.mission-word), #mis .opt-n, .inspect .role:has(.mission-word), #misName) {
+body.atlas-enhanced :is(.lead-card .who, .cs-mt > b, .msg .src:has(.mission-word), .comp .field > .route .rt-c:has(.mission-word), .n-m:has(.mission-word), #mis .opt-n, .inspect .role:has(.mission-word), #misName) {
   min-width: 0;
   white-space: normal;
   overflow: visible;
@@ -905,10 +905,22 @@ body.atlas-enhanced #misName { overflow-x: auto; }
 }
 .mission-caption b { color: var(--primary); font-variant-numeric: tabular-nums; }
 
-body.atlas-enhanced.atlas-adaptive-mobile .app:has(.mission-captions:not([hidden])) .stage {
+body.atlas-enhanced.atlas-adaptive-mobile:not([data-mobile-layout="landscape"]) .app:has(.mission-captions:not([hidden])) .stage {
   height: max(120px, calc(var(--mobile-stage-height) - min(18vh, 80px)));
   min-height: 120px;
 }
 body.atlas-enhanced.atlas-adaptive-mobile .mission-captions:not([hidden]) {
   max-height: min(18vh, 80px);
+}
+
+body.atlas-adaptive-mobile[data-mobile-layout="landscape"] .plan:has(> .mission-captions:not([hidden])) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(150px, 24%);
+}
+body.atlas-adaptive-mobile[data-mobile-layout="landscape"] .plan-head { grid-column: 1 / -1; }
+body.atlas-adaptive-mobile[data-mobile-layout="landscape"] .mission-captions:not([hidden]) {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  max-height: var(--mobile-stage-height);
+  align-items: start;
 }

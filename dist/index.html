@@ -2674,7 +2674,7 @@ function labelMission(s, name, scale, reference) {
   const first = svgEl('tspan', {x: 0}, s.name);
   const fits = text => {
     first.textContent = text;
-    return first.getComputedTextLength() <= 65;
+    return first.getComputedTextLength() <= 70;
   };
   const lines = missionNameLines(name, fits);
   const leading = units * 1.13;
@@ -4175,7 +4175,7 @@ function drawStream() {
     } else {
       const M = it.mission ? w.missions.get(it.mission) : null, b = html('div', 'body'), mh = html('div', 'mh'), src = html('span', 'src'), tm = html('time', null, hm(it.t)), p = html('p', null, it.text);
       e = html('div', 'msg'); e.innerHTML = avatar(it.from || 'psyche');
-      if (it.from) { e.style.setProperty('--hue', fam(it.from).hue); src.append(html('b', null, fam(it.from).name), html('span', null, (M ? ' · ' + M.name : '') + (it.agent ? ' · for ' + it.agent : ''))); if (it.tries > 1) src.appendChild(html('span', 'tries', ` · answer ${it.tries}`)); }
+      if (it.from) { e.style.setProperty('--hue', fam(it.from).hue); src.append(html('b', null, fam(it.from).name), setMissionName(html('span'), (M ? ' · ' + M.name : '') + (it.agent ? ' · for ' + it.agent : ''))); if (it.tries > 1) src.appendChild(html('span', 'tries', ` · answer ${it.tries}`)); }
       else src.append('Psyche');
       mh.append(src, tm); b.append(mh, p, replyActs(c, it, p)); e.appendChild(b); lastReply = e;
     }
@@ -4364,7 +4364,7 @@ function drawRoute() {
   const self = text && !R.explicit && R.targets.length ? answer(text, w.missions.get(R.targets[0].mission), [R.targets[0].familiar]) : null;
   if (self && !self.from) { box.append(chip('Psyche', 'var(--primary)'), html('span', 'rt-w', 'she can answer this from the project')); return; }
   if (R.mode === 'agent') R.targets.slice(0, 3).forEach(x => box.appendChild(chip(x.agent, fam(x.familiar).hue, true)));
-  else if (R.mode === 'broadcast' || R.mode === 'council') box.appendChild(chip(R.mode === 'broadcast' ? (R.targets.length === ms.length ? `Every lead · ${ms.length}` : `Everyone · ${R.targets.length}`) : (w.missions.get(ms[0]) || {name: ''}).name + ' council', ''));
+  else if (R.mode === 'broadcast' || R.mode === 'council') box.appendChild(chip(R.mode === 'broadcast' ? (R.targets.length === ms.length ? `Every lead · ${ms.length}` : `Everyone · ${R.targets.length}`) : setMissionName(html('span'), (w.missions.get(ms[0]) || {name: ''}).name + ' council'), ''));
   else [...new Set(R.targets.map(x => x.familiar))].slice(0, 3).forEach(k => box.appendChild(chip(fam(k).name + (ms.length > 1 ? ' · ' + R.targets.filter(x => x.familiar === k).length : ''), fam(k).hue)));
   if (R.why === 'selected') drop();
   if (R.mode === 'agent' && R.targets.length > 3) box.appendChild(html('span', 'rt-w', '+' + (R.targets.length - 3)));
@@ -4474,7 +4474,7 @@ function drawNew() {
   if (!show) return;
   $('nmLeadL').textContent = nm.match && nm.match.k === nm.lead && !nm.leadTouched ? `Who leads · matched as ${nm.match.role}, on “${nm.match.words[0]}”` : 'Who leads';
   $('nmTitle').textContent = EM ? 'Edit brief' : 'New mission'; $('raise').textContent = EM ? 'Save brief' : 'Open mission'; $('nmLeadSec').hidden = !!EM;
-  $('emptyName').textContent = EM ? EM.name : active; $('emptyState').textContent = EM ? '' : n ? `${n} open` : 'Dormant'; $('emptyState').className = 'hd-s ' + (n ? 'on' : 'off'); $('emptyState').hidden = !!EM;
+  setMissionName($('emptyName'), EM ? EM.name : active); $('emptyState').textContent = EM ? '' : n ? `${n} open` : 'Dormant'; $('emptyState').className = 'hd-s ' + (n ? 'on' : 'off'); $('emptyState').hidden = !!EM;
   $('emptyX').hidden = false;
   $('nmFoot').textContent = !canAct() ? 'Replaying. Go live first.' : EM ? 'Psyche tells the council.' : `Starts with 6 of up to ${nm.brief.atMost.agents} agents.`;
   $('raise').disabled = !ok || !$('nmName').value.trim(); $('nmName').disabled = !ok || !!EM;
