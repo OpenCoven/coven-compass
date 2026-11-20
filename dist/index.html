@@ -2525,7 +2525,7 @@ const cogOutline = Array.from({length: 8}, (_, tooth) => [0, 8, 21, 29].map((off
 function buildScene() {
   plan.textContent = '';
   const highlight = sc && sc.hl;
-  sc = {missions: new Map(), seats: new Map(), agents: new Map(), colinks: new Map(), orderEls: null, dirty: true, plated: null, hl: highlight || null};
+  sc = {missions: new Map(), seats: new Map(), agents: new Map(), colinks: new Map(), orderEls: null, dirty: true, hl: highlight || null};
   sc.n = cur().layout.n;
   const defs = svgEl('defs', {}, plan);
   sc.labelMeasure = document.createElement('canvas').getContext('2d');
@@ -3072,7 +3072,7 @@ function project() {
     const labelPos = cc.sel === s.m ? q : P(s.bx, s.by, ZS);
     s.labelX = labelPos[0]; s.labelY = labelPos[1] + (cc.sel === s.m ? ry + 8 : 17) + 11 * U;
     s.label.setAttribute('x', f(s.labelX)); s.label.setAttribute('y', f(s.labelY));
-    const on = sc.plated !== s.m; if (on !== s.lshow) { s.lshow = on; s.label.classList.toggle('show', on); }
+    const on = !cc.sel || cc.sel === s.m; if (on !== s.lshow) { s.lshow = on; s.label.classList.toggle('show', on); }
     ell(s.shadow, s.x, s.y, 0, s.R * .92); seg(s.stem, P(s.x, s.y, 0), b);
     const bq = P(s.bx, s.by, ZS);
     s.badge.setAttribute('transform', `translate(${f(bq[0])},${f(bq[1])})`); seg(s.bstem, P(s.bx, s.by, ZT), bq);
@@ -3623,51 +3623,47 @@ const xBtn = (label, fn) => { const x = html('button', 'btn x', '×'); x.type = 
 // at a gate is tagged where it stands. On a narrow stage the seats carry small tags instead.
 let lcSig = '', notes = [], hud = null;
 const briefSig = (st, M) => st ? (M && M.paused ? 'P' : '') + (M && M.tpl || '') + (M ? sealOf(cur().world, M).sig : '') + JSON.stringify([st.deliver.map(x => x.state), st.floors.map(x => [Math.round(x.have), x.need]), st.caps.map(x => [Math.round(x.used * (x.k === 'usd' ? 100 : 1)), x.max]), st.measures.map(x => x.k)]) : 'none';
-function fillHudBrief() {
-  if (!hud || !hud.bf || !hud.bf.isConnected) return;
-  const c = cur(), M = c.world.missions.get(hud.m), st = M && briefState(c.world, M), sig = briefSig(st, M);
-  if (sig === hud.bsig) return; hud.bsig = sig;
-  const box = hud.bf, row = (icon, label, value, cls) => { const r = html('span', 'hb' + (cls ? ' ' + cls : '')); r.innerHTML = ICON[icon]; r.append(html('span', null, label), html('b', null, value)); box.appendChild(r); };
-  box.textContent = '';
-  if (!st) return row('doc', 'Brief', 'Not set', '');
-  const done = st.deliver.filter(x => x.state === 'delivered').length, fm = st.floors.filter(x => x.met).length, w0 = st.worst;
-  { const sd = sealOf(c.world, M); row('gate', 'State', sealLabel(sd), sd.state === 'needsYou' ? 'q' : sd.state === 'sealed' ? 'ok' : sd.warn ? 'warn' : ''); }
-  if (M.tpl) row('layers', 'Template', M.tpl, '');
-  row('doc', 'Deliver', st.deliver.length ? st.deliver.map(x => x.label).join(', ') + ' · ' + (st.deliver.length > 1 ? `${done} of ${st.deliver.length} delivered` : ART[st.deliver[0].state].toLowerCase()) : 'Nothing named', done && done === st.deliver.length ? 'ok' : '');
-  row('floor', 'At least', st.floors.length ? `${fm} of ${st.floors.length} met` : 'Nothing required', st.floors.length && fm === st.floors.length ? 'ok' : '');
-  row('cap', 'At most', M.paused === 'you' ? 'Paused by you' : M.paused ? 'Stopped at a limit' : w0 ? (w0.frac >= 1 ? `${w0.label} at its limit` : `${w0.label} at ${Math.round(w0.frac * 100)}%`) : 'No limits', M.paused || (w0 && w0.frac >= .9) ? 'q' : '');
-  if (st.measures.length) row('gauge', 'Measured', st.measures[0].value + (st.measures.length > 1 ? ` · +${st.measures.length - 1}` : ''), '');
-}
 const hotTask = (id, on) => cur().world.agents.forEach(a => { if (a.task === id) { const s = sc.agents.get(a.id); if (s) s.el.classList.toggle('is-hot', on); } });
 function drawLeadCard(force) {
   const c = cur(), w = c.world, layer = $('notes'), M = c.sel ? w.missions.get(c.sel) : null;
-  if (!M) { if (lcSig) { layer.textContent = ''; notes = []; hud = null; lcSig = ''; sc.plated = null; } return; }
+  if (!M) { if (lcSig) { layer.textContent = ''; notes = []; hud = null; lcSig = ''; } return; }
   const asks = openAsks(w).filter(q => q.mission === M.id), tasks = [...w.tasks.values()].filter(t => t.mission === M.id), side = c.detail === 'side', wide = stage.clientWidth >= 700 && !side;
   const next = primaryRequest(asks, c.noteTop);
   const sig = [active, M.id, c.fam || '', side, wide, M.seats.join('+'), next?.id, asks.length, tasks.map(t => t.id).join(',')].join('|');
   if (force || sig !== lcSig) {
-    lcSig = sig; layer.textContent = ''; notes = []; hud = null; sc.plated = side ? null : M.id;
+    lcSig = sig; layer.textContent = ''; notes = []; hud = null;
     const col = wide ? html('div', 'manifest') : layer, leaders = wide ? svgEl('svg', {class: 'leaders', 'aria-hidden': 'true'}) : null;
     if (!side) {
-      const h = html('div', 'hud'), top = html('div', 'hud-top'), ttl = html('div'), stats = html('div', 'hud-stats'), bar = html('span', 'bar'), act = html('div', 'hud-act'), nums = {};
+      const h = html('div', 'hud'), top = html('div', 'hud-top'), ttl = html('div'), status = html('div', 'mission-glance'), state = html('strong'), activity = html('span'), act = html('div', 'hud-act');
       const title = html('h2', null, M.name); title.id = 'missionSummaryTitle'; title.tabIndex = -1;
-      top.innerHTML = avatar('mission'); ttl.append(title, html('p', null, `${active} · council of ${M.seats.length}`)); top.append(ttl, xBtn('Back to project', () => select(null)));
-      [['work', 'working'], ['idle', 'idle'], ['gate', 'at gate']].forEach(([st, label]) => { const sp = html('span', st), b = html('b'); nums[st] = b; sp.append(b, label); stats.appendChild(sp); });
-      M.seats.forEach(k => { const sg = html('b'); sg.style.setProperty('--hue', fam(k).hue); sg.dataset.seat = seatId(M.id, k); bar.appendChild(sg); });
+      top.innerHTML = avatar('mission'); ttl.append(title, html('p', null, active)); top.append(ttl, xBtn('Back to project', () => select(null)));
+      status.append(state, activity);
       const more = html('button', 'btn', 'Open details'), ask = html('button', 'btn', 'Ask Psyche'); more.type = ask.type = 'button';
       more.dataset.focus = 'open-details';
       more.addEventListener('click', () => select(c.sel, c.fam, 'side'));
-      ask.addEventListener('click', () => { openPsyche(); $('say').focus(); });
-      const bf = html('button', 'hud-brief'); bf.type = 'button'; bf.setAttribute('aria-label', 'Open the brief');
-      bf.addEventListener('click', () => { panelView = 'brief'; store.set('coven-compass-panel', panelView); select(c.sel, c.fam, 'side'); });
-      act.append(more, ask); h.append(top, stats, bar, bf, act); col.appendChild(h); hud = {nums, bar, bf, m: M.id, bsig: null};
-      const cyOf = k => { const q = sc.seats.get(seatId(M.id, k)); return q && q.cy != null ? q.cy : 0; };
-      M.seats.slice().sort((x, y) => cyOf(x) - cyOf(y)).forEach(k => {
+      ask.addEventListener('click', () => { openPsyche(); setTab('chat', false, true); $('say').focus(); });
+      act.append(more, ask); h.append(top, status, act); col.appendChild(h); hud = {state, activity};
+      const seats = wide && M.seats.length ? html('section', 'mission-familiars') : col;
+      if (seats !== col) {
+        seats.appendChild(html('h3', null, 'Familiars'));
+        col.appendChild(seats);
+      }
+      M.seats.forEach(k => {
         const id = seatId(M.id, k), f = fam(k), el = html('div', 'plate seat' + (c.fam === k ? ' on' : '')), head = html('button', 'plate-h'), ct = html('span', 'ct'), list = html('div', 'plate-tasks'), rec = {kind: 'seat', id, el, ct, tasks: []};
-        el.style.setProperty('--hue', f.hue); head.type = 'button'; head.innerHTML = avatar(k); head.append(html('span', 'nm', f.name), html('span', 'rl', f.role), ct);
+        el.style.setProperty('--hue', f.hue); head.type = 'button'; head.innerHTML = avatar(k); head.append(html('span', 'nm', f.name), ct);
+        head.dataset.seat = id;
         head.setAttribute('aria-pressed', String(c.fam === k));
-        head.addEventListener('click', () => { const cc = cur(); select(M.id, cc.fam === k ? null : k, cc.detail); });
-        tasks.filter(t => t.leads.includes(k)).forEach(t => {
+        const seatTasks = tasks.filter(t => t.leads.includes(k));
+        if (wide && seatTasks.length) {
+          head.setAttribute('aria-expanded', String(c.fam === k));
+          head.insertAdjacentHTML('beforeend', CHEV);
+        }
+        head.addEventListener('click', () => {
+          const cc = cur();
+          select(M.id, cc.fam === k ? null : k, cc.detail);
+          [...layer.querySelectorAll('.plate-h')].find(button => button.dataset.seat === id)?.focus({preventScroll:true});
+        });
+        if (wide && c.fam === k) seatTasks.forEach(t => {
           const r = html('div', 'nt' + (t.fam === k ? '' : ' shared')), n = html('span'), nm = html('em', null, t.name); r.append(nm, n);
           t.leads.filter(o => o !== k).forEach(o => { const d = html('i', 'codot'); d.style.setProperty('--hue', fam(o).hue); d.title = `Shared with ${fam(o).name}`; nm.appendChild(d); });
           if (t.leads.length > 1) r.setAttribute('aria-label', `${t.name}, shared with ${t.leads.filter(o => o !== k).map(o => fam(o).name).join(' and ')}`);
@@ -3680,7 +3676,7 @@ function drawLeadCard(force) {
         if (leaders) {
           ['pointerenter', 'pointerleave', 'focusin', 'focusout'].forEach(event => el.addEventListener(event, kick));
           rec.line = svgEl('line', {}, leaders); rec.dot = svgEl('circle', {r: 3}, leaders); rec.line.style.setProperty('--hue', f.hue); rec.dot.style.setProperty('--hue', f.hue); }
-        col.appendChild(el); notes.push(rec);
+        seats.appendChild(el); notes.push(rec);
       });
       if (wide) layer.append(leaders, col);
     }
@@ -3703,13 +3699,16 @@ function drawLeadCard(force) {
   }
   const mine = [...w.agents.values()].filter(a => a.mission === M.id);
   if (hud) {
-    ['work', 'idle', 'gate'].forEach(st => hud.nums[st].textContent = mine.filter(a => a.state === st).length); fillHudBrief();
-    hud.bar.querySelectorAll('b').forEach(sg => sg.style.flexGrow = mine.filter(a => a.seat === sg.dataset.seat).length || .001);
+    const d = sc.missions.get(M.id)?.seal.data || sealOf(w, M);
+    hud.state.textContent = sealLabel(d);
+    hud.state.dataset.state = d.state;
+    const working = mine.filter(a => a.state === 'work').length;
+    hud.activity.textContent = mine.length ? `${working} of ${plural(mine.length, 'agent')} working` : 'No agents assigned';
   }
   notes.forEach(n => {
     if (n.kind !== 'seat') return;
     const sq = mine.filter(a => a.seat === n.id);
-    n.ct.textContent = `${sq.filter(a => a.state === 'work').length}/${sq.length}`;
+    n.ct.textContent = plural(sq.length, 'agent');
     n.tasks.forEach(t => t.n.textContent = mine.filter(a => a.task === t.id).length);
   });
   placeCard();
@@ -4224,7 +4223,9 @@ function drawNeeds() {
   const sig = active + '|' + open.map(q => q.id + (c.expanded.has(q.id) ? '+' : '')).join(',') + '|' + ok + '|' + railTab + '|' + Math.floor(w.t / 60000);
   if (sig === needsSig) return;
   needsSig = sig;
-  const box = $('notif'); box.textContent = ''; needEls.clear(); box.hidden = !needsOpen;
+  const box = $('notif');
+  const expandedInfo = box.querySelector('details[open]')?.dataset.request;
+  box.textContent = ''; needEls.clear(); box.hidden = !needsOpen;
   $('stream').hidden = $('comp').hidden = railTab !== 'chat';            // one panel at a time: the conversation, what is waiting on you, or the familiars
   $('fams').hidden = railTab !== 'fams'; $('castPane').hidden = railTab !== 'project';
   $('needBtn').setAttribute('aria-pressed', String(needsOpen));
@@ -4259,7 +4260,10 @@ function drawNeeds() {
     if (!ok) { side.append(c.recorded ? 'Recorded. Decisions are closed.' : ''); if (!c.recorded) side.appendChild(rf('Go live to decide', goLive)); }
     else if (q.limit) side.appendChild(rf('Edit the brief', () => { setNeeds(false); openNew(q.mission); }));
     foot.append(side, no, yes);
-    pop.append(lead, refs, foot);
+    const info = html('details', 'request-context');
+    info.dataset.request = q.id; info.open = expandedInfo === q.id;
+    info.append(html('summary', null, 'Request details'), refs);
+    pop.append(lead, info, foot);
     return pop;
   };
   const item = q => {
@@ -4268,7 +4272,7 @@ function drawNeeds() {
     wrap.style.setProperty('--hue', f.hue); e.type = 'button'; ic.innerHTML = ICON[kindOf(q.title)]; e.setAttribute('aria-expanded', String(on));
     m.append(html('b', null, f.name), ` · ${M ? M.name : 'No mission'}`);
     e.append(ic, html('span', 'n-t', x ? `Go past ${capText(x.k, x.max)}` : q.title), html('span', 'n-age', age(q)), m);
-    if (x) e.appendChild(html('span', 'n-v', `${fmtN(x.k, x.used)} used`));
+
     e.insertAdjacentHTML('beforeend', CHEV);
     e.addEventListener('click', () => { const was = c.expanded.has(q.id); c.expanded.clear(); if (!was) { c.expanded.add(q.id); raiseNote(q.id); } drawNeeds(); const n = needEls.get(q.id); if (n) n.focus(); });
     const hot = v => q.agents.forEach(id => { const s2 = sc.agents.get(id); if (s2) s2.el.classList.toggle('is-hot', v); });
@@ -4279,10 +4283,10 @@ function drawNeeds() {
     return wrap;
   };
   // two kinds of request, kept apart: one action outside the ward, or a mission stopped at a limit in its brief
-  [['ward', 'Permissions', 'one action outside the ward', open.filter(q => !q.limit)], ['cap', 'Limits', 'a mission stopped at its brief', open.filter(q => q.limit)]].forEach(([icon, name, why, qs]) => {
+  [['ward', 'Permissions', open.filter(q => !q.limit)], ['cap', 'Resource limits', open.filter(q => q.limit)]].forEach(([icon, name, qs]) => {
     if (!qs.length) return;
     const sh = html('div', 'n-sec'), ic = html('span', 'n-si'); ic.innerHTML = ICON[icon];
-    sh.append(ic, html('b', null, name), html('span', null, why), html('i', null, String(qs.length))); list.appendChild(sh);
+    sh.append(ic, html('b', null, name), html('i', null, String(qs.length))); list.appendChild(sh);
     qs.forEach(q => list.appendChild(item(q)));
   });
   box.appendChild(list);
@@ -5472,7 +5476,7 @@ function watchLimits() {
     emit(c, {type: 'psyche.said', text: `${M.name} reached its ${LIMIT_OF[x.k]} limit and has stopped. ${fam(lead).name} is asking to go past it.`});
   });
 }
-setInterval(() => { if (document.hidden) return; watchLimits(); fillHudBrief(); if (panelView === 'brief') syncInspect(); }, 5000);
+setInterval(() => { if (document.hidden) return; watchLimits(); if (panelView === 'brief') syncInspect(); }, 5000);
 
 // Atlas presentation reads the existing worlds. It never creates a second execution model.
 function atlasFocusable(el, label, action) {

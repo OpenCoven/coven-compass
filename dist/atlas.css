@@ -815,3 +815,30 @@ body.atlas-enhanced .plan-head #wardCtl:has(#ward[open]) { opacity: 1; }
 @media (max-width: 700px), (pointer: coarse) {
   .a-info .btn.agent-close, .a-info .btn.agent-review { min-width: 44px; min-height: 44px; }
 }
+
+/* The map dock owns the camera controls in each layout. */
+body.atlas-enhanced:has(#atlasCameraDock) .view > .ctl:is([aria-label="Camera"], [aria-label="Zoom"], :has(> #lock)) { display: none; }
+.mission-glance { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; color: var(--muted-foreground); font-variant-numeric: tabular-nums; }
+.mission-glance strong { font-weight: 550; color: var(--primary); }
+.mission-glance strong[data-state="needsYou"] { color: var(--attention); }
+.mission-glance strong[data-state="broken"] { color: var(--warn); }
+.manifest .plate.seat { padding: 0 12px; box-shadow: none; }
+.manifest .plate.seat.on { border-color: color-mix(in srgb, var(--hue) 55%, transparent); }
+.manifest .plate-h { min-height: 42px; }
+.manifest .plate-h .ct { margin-left: auto; font: inherit; color: var(--muted-foreground); }
+.manifest .plate-h > .chev { transform: rotate(-90deg); color: var(--muted-foreground); }
+.manifest .plate-h[aria-expanded="true"] > .chev { transform: none; }
+.manifest .plate-tasks:not(:empty), .manifest .plate-also { margin: 0; padding: 4px 0 10px; }
+.n-sec i { margin-left: auto; }
+.request-context summary { cursor: pointer; padding: 9px 12px; font-size: .9em; color: var(--muted-foreground); }
+.request-context .cf-r { padding: 0 12px 10px; border: 0; }
+body.atlas-enhanced.atlas-adaptive-mobile #notes .mission-glance { grid-column: 1 / -1; grid-row: 2; }
+body.atlas-enhanced.atlas-adaptive-mobile #notes .hud-top > .x,
+body.atlas-enhanced.atlas-adaptive-mobile #notes .hud-act > .btn { grid-row: 3; }
+.manifest .mission-familiars { overflow: hidden; background: var(--popover); border: 1px solid var(--border); border-radius: var(--radius); }
+.mission-familiars h3 { margin: 0; padding: 10px 12px 6px; font-size: .85em; font-weight: 550; color: var(--muted-foreground); }
+.manifest .mission-familiars .plate.seat { background: transparent; border: 0; border-radius: 0; box-shadow: none; }
+.mission-familiars .plate.seat + .plate.seat { border-top: 1px solid var(--border); }
+.manifest .mission-familiars .plate.seat.on { background: color-mix(in srgb, var(--hue) 6%, transparent); }
+.manifest .plate.seat.on .plate-tasks:not(:empty) { display: flex; }
+body.atlas-enhanced.atlas-adaptive-mobile #notes .mission-familiars { display: none; }

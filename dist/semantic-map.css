@@ -332,3 +332,9 @@ body.atlas-enhanced #plan .so-face { stroke: url(#atlas-bevel); stroke-width: .6
 .atlas-roads .route-bed { stroke-width: 3.8; }
 #plan:not(.atlas-material-detail) .route-bed,
 .route-bed:has(+ .road.dormant) { display: none; }
+
+body.atlas-enhanced #plan.atlas-selected .brick-plane { opacity: .47; }
+body.atlas-enhanced #plan.atlas-selected :is(.atlas-squad,.atlas-squad-lines,.atlas-mission-lines).dim { opacity: .30; }
+body.atlas-enhanced #plan.atlas-selected .atlas-mission-group.dim { opacity: .58; }
+body.atlas-enhanced #plan.atlas-selected :is(.atlas-squad,.atlas-mission-group).dim:is(:focus-within,:hover) { opacity: 1; }
+body.atlas-enhanced:has(#psyche:not([hidden]) #notif:not([hidden])) #notes :is(.ask-note,.atlas-request-leader) { display: none; }
