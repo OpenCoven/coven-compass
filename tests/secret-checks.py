@@ -94,11 +94,15 @@ class SecretChecks(unittest.TestCase):
         import zipfile
         # A synthetic Slack webhook exercises the external scanner rather than the offline patterns.
         data = ("https://hooks.slack.com/" + "services/" + "T01234567/B01234567/" + "aZ34" * 6).encode()
-        with zipfile.ZipFile(self.repo / "sample.zip", "w", zipfile.ZIP_DEFLATED) as archive:
+        with zipfile.ZipFile(self.repo / "sample.bin", "w", zipfile.ZIP_DEFLATED) as archive:
             archive.writestr("nested.txt", data)
         out = self.call(sys.executable, SCANNER, "source", ".", fails=True)
         self.assertNotIn(data, out)
         self.assertIn(b"Gitleaks detected", out)
+        self.call("git", "add", "sample.bin")
+        out = self.call(sys.executable, SCANNER, "staged", fails=True)
+        self.assertIn(b"Gitleaks detected", out)
+        self.assertNotIn(data, out)
 
 
 if __name__ == "__main__":

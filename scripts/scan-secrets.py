@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Scan immutable Git objects, including committed messages and deleted file versions."""
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -15,6 +16,17 @@ from secret_guard import SecretError, check_content, check_name
 
 def git(*args):
     return subprocess.check_output(["git", *args])
+
+
+def archive_suffix(data):
+    # Git records blobs without extensions. Gitleaks selects archive readers by filename.
+    signatures = ((b"PK\x03\x04", ".zip"), (b"\x1f\x8b", ".gz"), (b"BZh", ".bz2"),
+                  (b"\xfd7zXZ\x00", ".xz"), (b"\x28\xb5\x2f\xfd", ".zst"),
+                  (b"7z\xbc\xaf\x27\x1c", ".7z"))
+    for prefix, suffix in signatures:
+        if data.startswith(prefix):
+            return suffix
+    return ".tar" if data[257:262] == b"ustar" else ""
 
 
 def scan_gitleaks(folder, private):
@@ -33,7 +45,7 @@ def scan_gitleaks(folder, private):
     if result.returncode == 17:
         for hit in json.loads(report.read_text()):
             # For Git scans filenames are object IDs. Paths in a publish directory may contain private data.
-            name = Path(hit["File"]).name
+            name = Path(hit["File"]).stem
             where = name if re.fullmatch(r"[a-f0-9]{40,64}", name) else "publish directory"
             print(f"Secret check: {hit['RuleID']} in {where}, line {hit['StartLine']}", file=sys.stderr)
         raise SecretError("Gitleaks detected a candidate")
@@ -67,7 +79,7 @@ def scan_objects(objects, folder):
                 except SecretError as err:
                     raise SecretError(f"{err} in object {oid.decode()}") from None
                 if header[1] != b"tree":
-                    (folder / oid.decode()).write_bytes(data)
+                    (folder / (oid.decode() + archive_suffix(data))).write_bytes(data)
                 count += 1
         finally:
             proc.stdin.close()
@@ -79,12 +91,20 @@ def scan_objects(objects, folder):
 def scan_directory(folder, private):
     if not folder.is_dir():
         raise ValueError("Expected a directory")
+    disguised_archives = private / "archives"
     for entry in folder.rglob("*"):
         check_name(entry.relative_to(folder).as_posix())
         if entry.is_symlink():
             raise SecretError("symlink in publish directory")
         if entry.is_file():
-            check_content(entry.read_bytes())
+            data = entry.read_bytes()
+            check_content(data)
+            suffix = archive_suffix(data)
+            if suffix and not entry.name.lower().endswith(suffix):
+                disguised_archives.mkdir(exist_ok=True)
+                (disguised_archives / (hashlib.sha256(data).hexdigest() + suffix)).write_bytes(data)
+    if disguised_archives.exists():
+        scan_gitleaks(disguised_archives, private)
     scan_gitleaks(folder, private)
 
 
