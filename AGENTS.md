@@ -29,7 +29,7 @@ The table comes from #6. Run its focused check while you work, then `verify-all`
 | Map keyboard focus (one Tab stop, arrow keys inside) | `dist/map-focus.js`, `atlasFocusable` in `dist/index.html` | `node --test tests/map-focus.test.cjs`, then Tab through the map in a browser |
 | Simulation fold (what an event does to the world) | `dist/simulation-model.js` | `node --test tests/simulation-model.test.cjs tests/replay-*.test.cjs` |
 | Projection sources (`?source=`) | `dist/projection-source.js`, `dist/fixtures/`, the guard at the top of the inline script in `dist/index.html` | `node --test tests/projection-source.test.cjs` |
-| Handoff | Chapters in `docs/handoff/`, or the reader template `scripts/guide-template.html`. The builder generates `dist/handoff/guide.html`. | `node scripts/verify-all.mjs`, then follow Handoff in the preview |
+| Handoff | Chapters in `docs/handoff/`, or the reader template `scripts/guide-template.html`. The builder generates `dist/handoff/guide.html`. | `node scripts/verify-all.mjs`, then run the external Playwright reader checks in `scripts/guide-qa.mjs` against the preview |
 
 Keep `tests/fixtures/` (the pinned baseline) and the dated audits in `tests/evidence/` as historical evidence. If you're working from an extracted delivery rather than a checkout, run `python3 scripts/verify-handoff.py .` before editing it.
 

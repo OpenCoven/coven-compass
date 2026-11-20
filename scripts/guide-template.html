@@ -11,10 +11,10 @@
 </head>
 <body>
 <a class="skip" href="#reader">Skip to content</a>
-<header class="top">
+<header class="top"><div class="top-inner">
   <a class="brand" href="#guide-overview"><img src="opencoven-logo.svg" alt="" width="32" height="32">Coven Compass <span>Docs</span></a>
   <div class="tools"><a href="../" aria-label="Compass map"><span class="map-product">Compass </span>Map <span aria-hidden="true">↗</span></a><button class="theme" hidden type="button" aria-label="Switch color theme">◐</button></div>
-</header>
+</div></header>
 <div class="layout">
   <aside class="sidebar">
     <details id="chapter-menu" open>
@@ -31,22 +31,23 @@
   </aside>
   <main id="reader" tabindex="-1">
     <div class="crumb" aria-label="Breadcrumb"><a href="#guide-overview">Guide</a><span aria-hidden="true">/</span><span id="group">Overview</span></div>
+    <div id="inline-outline"></div>
     <article class="chapter" id="guide-overview" data-group="Overview" tabindex="-1">
       <h1>Complete implementation guide</h1>
       <p class="intro">Explore the architecture, decisions, and evidence behind Coven Compass, from the local simulation to the proposed integration with Coven and Psyche.</p>
       <h2 id="reading-paths">Reading paths</h2>
       <div class="paths">
-        <a href="#doc-starthere"><strong>Start here</strong><span>Run Compass locally and find the chapters for your role.</span></a>
-        <a href="#doc-02-architecture-and-ownership"><strong>Architecture and ownership</strong><span>Trace how missions move between Compass, Coven, and Psyche.</span></a>
-        <a href="#doc-07-validation-and-acceptance"><strong>Validation and acceptance</strong><span>Find the checks and evidence each implementation phase needs.</span></a>
+        <a href="#doc-starthere"><strong>Run Compass locally</strong><span>Set up the simulation, verify the checkout, and find your starting point.</span></a>
+        <a href="#doc-02-architecture-and-ownership"><strong>Understand the architecture</strong><span>Trace how missions move between Compass, Coven, and Psyche.</span></a>
+        <a href="#doc-07-validation-and-acceptance"><strong>Verify an implementation</strong><span>Find the checks and evidence each implementation phase needs.</span></a>
       </div>
-      <h2 id="implementation-status">Implementation status</h2>
-      <p>Compass runs as a local simulation. The <a href="#doc-01-current-state-and-evidence">current state and evidence</a> chapter records what has been verified. The <a href="#doc-11-open-decisions">decision register</a> tracks proposals that need an owner’s decision.</p>
+      <section class="status-note"><h2 id="implementation-status">Implementation status</h2>
+      <p>Compass runs as a local simulation. The <a href="#doc-01-current-state-and-evidence">current state and evidence</a> chapter records what has been verified. The <a href="#doc-11-open-decisions">decision register</a> tracks proposals that need an owner’s decision.</p></section>
     </article>
     $chapters
     <nav class="pager" aria-label="Adjacent chapters" hidden><a id="previous"></a><a id="next"></a></nav>
   </main>
-  <aside class="outline" hidden><nav aria-label="On this page"><h2>On this page</h2><ul></ul></nav></aside>
+  <aside class="outline-rail"><details class="outline" hidden open><summary>On this page</summary><nav aria-label="On this page"><ul></ul></nav></details></aside>
 </div>
 </body>
 </html>

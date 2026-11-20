@@ -8,7 +8,60 @@
   const input = select('#search');
   const matches = select('#matches');
   const outline = select('.outline');
+  const compactOutline = matchMedia('(max-width: 1150px)');
   let current;
+  let headings = [];
+  let outlineLinks = [];
+  let activeSection;
+  let scrollFrame;
+
+  function placeOutline() {
+    const container = select(compactOutline.matches ? '#inline-outline' : '.outline-rail');
+    container.append(outline);
+    outline.open = !compactOutline.matches;
+  }
+
+  function updateSection() {
+    scrollFrame = 0;
+    const readingLine = select('.top').getBoundingClientRect().bottom + 36;
+    let index = headings.findLastIndex(heading => heading.getBoundingClientRect().top <= readingLine);
+    if (Math.ceil(window.scrollY + innerHeight) >= document.documentElement.scrollHeight) {
+      // Near the end, a linked heading can be visible below the sticky header
+      // without enough document remaining to align it with the reading line.
+      const linked = outlineLinks.findIndex(link => link.hash === location.hash);
+      if (linked >= 0 && headings[linked].getBoundingClientRect().top >= readingLine) index = linked;
+      else if (window.scrollY > 0) index = headings.length - 1;
+    }
+    const next = outlineLinks[index];
+    if (activeSection === next) return;
+    activeSection?.removeAttribute('aria-current');
+    next?.setAttribute('aria-current', 'location');
+    activeSection = next;
+  }
+
+  function scheduleSection() {
+    if (!scrollFrame) scrollFrame = requestAnimationFrame(updateSection);
+  }
+
+  const tableObserver = new ResizeObserver(entries => {
+    for (const {target} of entries) {
+      const overflow = target.scrollWidth > target.clientWidth + 1;
+      let hint = target.previousElementSibling;
+      if (!hint?.classList.contains('table-hint')) hint = null;
+      if (overflow) {
+        target.tabIndex = 0;
+        if (!hint) {
+          hint = document.createElement('div');
+          hint.className = 'table-hint';
+          hint.textContent = 'Scroll horizontally to see all columns →';
+          target.before(hint);
+        }
+      } else {
+        target.removeAttribute('tabindex');
+        hint?.remove();
+      }
+    }
+  });
 
   function navItem(heading) {
     const item = document.createElement('li');
@@ -63,8 +116,13 @@
         else links[i].removeAttribute('aria-current');
       }
       select('#group').textContent = chapter.dataset.group;
-      const headings = [...chapter.querySelectorAll('h2[id]')];
+      const group = links[index].closest('.chapter-group');
+      if (group) group.open = true;
+      tableObserver.disconnect();
+      for (const table of chapter.querySelectorAll('.table-scroll')) tableObserver.observe(table);
+      headings = [...chapter.querySelectorAll('h2[id]')];
       outline.querySelector('ul').replaceChildren(...headings.map(navItem));
+      outlineLinks = [...outline.querySelectorAll('a')];
       outline.hidden = headings.length === 0;
       setPager('#previous', links[index - 1], '← Previous');
       setPager('#next', links[index + 1], 'Next →');
@@ -81,6 +139,7 @@
       if (destination === chapter) window.scrollTo(0, 0);
       else destination.scrollIntoView();
     }
+    scheduleSection();
   }
 
   function openSearch() {
@@ -90,6 +149,16 @@
   }
 
   function syncMenu() { menu.open = !narrow.matches; }
+  placeOutline();
+  compactOutline.addEventListener('change', placeOutline);
+  outline.addEventListener('click', event => {
+    const link = event.target.closest('a');
+    if (!link || !compactOutline.matches || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    outline.open = false;
+    if (link.hash === location.hash) render(true);
+  });
+  window.addEventListener('scroll', scheduleSection, {passive: true});
+  window.addEventListener('resize', scheduleSection);
   syncMenu();
   narrow.addEventListener('change', syncMenu);
   select('.search').hidden = false;

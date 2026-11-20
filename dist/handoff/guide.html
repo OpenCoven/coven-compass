@@ -11,10 +11,10 @@
 </head>
 <body>
 <a class="skip" href="#reader">Skip to content</a>
-<header class="top">
+<header class="top"><div class="top-inner">
   <a class="brand" href="#guide-overview"><img src="opencoven-logo.svg" alt="" width="32" height="32">Coven Compass <span>Docs</span></a>
   <div class="tools"><a href="../" aria-label="Compass map"><span class="map-product">Compass </span>Map <span aria-hidden="true">↗</span></a><button class="theme" hidden type="button" aria-label="Switch color theme">◐</button></div>
-</header>
+</div></header>
 <div class="layout">
   <aside class="sidebar">
     <details id="chapter-menu" open>
@@ -23,9 +23,9 @@
         <div class="search" hidden><label for="search">Search the guide</label><div><input id="search" type="search" placeholder="Search the guide…" autocomplete="off"><kbd>/</kbd></div></div>
         <nav aria-label="Chapters" id="chapters">
           <a class="overview-link" href="#guide-overview">Overview</a>
-          <h2>Project</h2><ul><li><a href="#doc-readme">Compass overview</a></li><li><a href="#doc-starthere">Start here</a></li><li><a href="#doc-mobilereadiness">Mobile readiness</a></li></ul>
-<h2>Implementation</h2><ul><li><a href="#doc-00-handoff-index">Handoff index</a></li><li><a href="#doc-01-current-state-and-evidence">Current state and evidence</a></li><li><a href="#doc-02-architecture-and-ownership">Architecture and ownership</a></li><li><a href="#doc-03-integration-proposal">Integration proposal</a></li><li><a href="#doc-04-host-folder-sync-and-recovery">Coven Host</a></li><li><a href="#doc-05-implementation-plan">Implementation plan</a></li><li><a href="#doc-06-execution-playbook">Execution playbook</a></li><li><a href="#doc-07-validation-and-acceptance">Validation and acceptance</a></li><li><a href="#doc-08-visual-and-interaction-contract">Visual and interaction contract</a></li><li><a href="#doc-09-security-and-authority">Security and authority handoff</a></li><li><a href="#doc-10-agent-task-prompts">Agent task prompts</a></li><li><a href="#doc-11-open-decisions">Open decisions and proposal register</a></li><li><a href="#doc-12-source-ledger">Source ledger and evidence limits</a></li><li><a href="#doc-15-scalable-atlas-layout">Scalable 2D Atlas layout</a></li></ul>
-<h2>Reference</h2><ul><li><a href="#doc-user-architecture-instructions">Owner-supplied architecture constraints</a></li><li><a href="#doc-acceptance-checklist">Acceptance checklist — template</a></li><li><a href="#doc-evidence-record">Evidence record — template</a></li><li><a href="#doc-implementation-packet">Implementation packet — template</a></li><li><a href="#doc-canonical-binding-inventory">Canonical binding inventory</a></li><li><a href="#doc-examples-readmemd">Example records</a></li></ul>
+          <details class="chapter-group" open><summary>Project</summary><ul><li><a href="#doc-readme">Compass overview</a></li><li><a href="#doc-starthere">Start here</a></li><li><a href="#doc-mobilereadiness">Mobile readiness</a></li></ul></details>
+<details class="chapter-group"><summary>Implementation</summary><ul><li><a href="#doc-00-handoff-index">Handoff index</a></li><li><a href="#doc-01-current-state-and-evidence">Current state and evidence</a></li><li><a href="#doc-02-architecture-and-ownership">Architecture and ownership</a></li><li><a href="#doc-03-integration-proposal">Integration proposal</a></li><li><a href="#doc-04-host-folder-sync-and-recovery">Coven Host</a></li><li><a href="#doc-05-implementation-plan">Implementation plan</a></li><li><a href="#doc-06-execution-playbook">Execution playbook</a></li><li><a href="#doc-07-validation-and-acceptance">Validation and acceptance</a></li><li><a href="#doc-08-visual-and-interaction-contract">Visual and interaction contract</a></li><li><a href="#doc-09-security-and-authority">Security and authority handoff</a></li><li><a href="#doc-10-agent-task-prompts">Agent task prompts</a></li><li><a href="#doc-11-open-decisions">Open decisions and proposal register</a></li><li><a href="#doc-12-source-ledger">Source ledger and evidence limits</a></li><li><a href="#doc-15-scalable-atlas-layout">Scalable 2D Atlas layout</a></li></ul></details>
+<details class="chapter-group"><summary>Reference</summary><ul><li><a href="#doc-user-architecture-instructions">Owner-supplied architecture constraints</a></li><li><a href="#doc-acceptance-checklist">Acceptance checklist — template</a></li><li><a href="#doc-evidence-record">Evidence record — template</a></li><li><a href="#doc-implementation-packet">Implementation packet — template</a></li><li><a href="#doc-canonical-binding-inventory">Canonical binding inventory</a></li><li><a href="#doc-examples-readmemd">Example records</a></li></ul></details>
         </nav>
         <div id="matches" hidden><p role="status"></p><ul></ul></div>
       </div>
@@ -33,38 +33,51 @@
   </aside>
   <main id="reader" tabindex="-1">
     <div class="crumb" aria-label="Breadcrumb"><a href="#guide-overview">Guide</a><span aria-hidden="true">/</span><span id="group">Overview</span></div>
+    <div id="inline-outline"></div>
     <article class="chapter" id="guide-overview" data-group="Overview" tabindex="-1">
       <h1>Complete implementation guide</h1>
       <p class="intro">Explore the architecture, decisions, and evidence behind Coven Compass, from the local simulation to the proposed integration with Coven and Psyche.</p>
       <h2 id="reading-paths">Reading paths</h2>
       <div class="paths">
-        <a href="#doc-starthere"><strong>Start here</strong><span>Run Compass locally and find the chapters for your role.</span></a>
-        <a href="#doc-02-architecture-and-ownership"><strong>Architecture and ownership</strong><span>Trace how missions move between Compass, Coven, and Psyche.</span></a>
-        <a href="#doc-07-validation-and-acceptance"><strong>Validation and acceptance</strong><span>Find the checks and evidence each implementation phase needs.</span></a>
+        <a href="#doc-starthere"><strong>Run Compass locally</strong><span>Set up the simulation, verify the checkout, and find your starting point.</span></a>
+        <a href="#doc-02-architecture-and-ownership"><strong>Understand the architecture</strong><span>Trace how missions move between Compass, Coven, and Psyche.</span></a>
+        <a href="#doc-07-validation-and-acceptance"><strong>Verify an implementation</strong><span>Find the checks and evidence each implementation phase needs.</span></a>
       </div>
-      <h2 id="implementation-status">Implementation status</h2>
-      <p>Compass runs as a local simulation. The <a href="#doc-01-current-state-and-evidence">current state and evidence</a> chapter records what has been verified. The <a href="#doc-11-open-decisions">decision register</a> tracks proposals that need an owner’s decision.</p>
+      <section class="status-note"><h2 id="implementation-status">Implementation status</h2>
+      <p>Compass runs as a local simulation. The <a href="#doc-01-current-state-and-evidence">current state and evidence</a> chapter records what has been verified. The <a href="#doc-11-open-decisions">decision register</a> tracks proposals that need an owner’s decision.</p></section>
     </article>
     <article class="chapter" id="doc-00-handoff-index" data-group="Implementation" tabindex="-1">
 <h1 id="doc-00-handoff-index--handoff-index">Handoff index</h1>
-<p><strong>Status:</strong> complete source handoff with proposed integration work. Start with <a href="#doc-starthere">START_HERE</a>. The implementation plan is not an assertion of production implementation.</p>
-<p>The scalable layout/crown refinement is <strong>implemented; combined source-level verification passed</strong>; start its presentation handoff with <a href="#doc-15-scalable-atlas-layout">guide 15</a>. It supersedes earlier positioning and zoom-driven scope assumptions while preserving the semantic visual vocabulary. Headless Chromium QA of the current source ran on 2026-11-19 (record <code>(../../tests/evidence/browser-qa-2026-11-19.json)</code>, summarized in chapter 01); it does not establish Safari, physical-device, real multi-touch, keyboard-only, or screen-reader acceptance.</p>
-<p>For the <strong>historical pre-layout</strong> Node and Chrome mobile pass, read <a href="#doc-mobilereadiness">Mobile readiness</a>. Those results and the older v3 baseline do not verify the current refinement. Its exact source/package outcomes belong in chapter 01.</p>
-<table><thead><tr><th>Chapter</th><th>Purpose</th></tr></thead><tbody>
-<tr><td><a href="#doc-01-current-state-and-evidence">01 — Current state and evidence</a></td><td>Exactly what the Site implements, what was checked, and what remains unknown</td></tr>
-<tr><td><a href="#doc-02-architecture-and-ownership">02 — Architecture and ownership</a></td><td>Boundaries between Host, Projects, Castles, Coven, Psyche, clients, identity, and authorization</td></tr>
-<tr><td><a href="#doc-03-integration-proposal">03 — Integration proposal</a></td><td>Read models, event reconciliation, commands, receipts, identity binding, and adapter seams</td></tr>
-<tr><td><a href="#doc-04-host-folder-sync-and-recovery">04 — Host folder sync and recovery</a></td><td>Portable files, excluded authority/runtime data, conflicts, disconnection, and recovery</td></tr>
-<tr><td><a href="#doc-05-implementation-plan">05 — Implementation plan</a></td><td>Phases, work packets, dependencies, acceptance gates, and delivery order</td></tr>
-<tr><td><a href="#doc-06-execution-playbook">06 — Execution playbook</a></td><td>How humans and agents coordinate implementation and evidence</td></tr>
-<tr><td><a href="#doc-07-validation-and-acceptance">07 — Validation and acceptance</a></td><td>Unit, daemon, packaged, remote, security, and human acceptance scenarios</td></tr>
-<tr><td><a href="#doc-08-visual-and-interaction-contract">08 — Visual and interaction contract</a></td><td>Shape, color, topology, accessibility, state, and progressive detail</td></tr>
-<tr><td><a href="#doc-09-security-and-authority">09 — Security and authority</a></td><td>Threats, request boundaries, retry/fencing, protected operations, and synchronization rules</td></tr>
-<tr><td><a href="#doc-10-agent-task-prompts">10 — Agent task prompts</a></td><td>Ready-to-use prompts for discovery and scoped implementation</td></tr>
-<tr><td><a href="#doc-11-open-decisions">11 — Open decisions</a></td><td>Proposed defaults, owners, risks, and validation needed</td></tr>
-<tr><td><a href="#doc-12-source-ledger">12 — Source ledger</a></td><td>Provenance and limits for each source class</td></tr>
-<tr><td><a href="#doc-15-scalable-atlas-layout">15 — Scalable Atlas layout and crown</a></td><td>Uniform Projects, compact placement, bounded mission detail, density/search/sample controls, explicit scope, measured fit, and canonical flat crown</td></tr>
-</tbody></table>
+<p>Start with <a href="#doc-starthere">local setup</a>, or choose a chapter below. The source handoff documents the working simulation and the proposed production integration.</p>
+<h2 id="doc-00-handoff-index--chapters">Chapters</h2>
+<ul>
+<li><p><a href="#doc-01-current-state-and-evidence">01 — Current state and evidence</a></p>
+<p>Exactly what the Site implements, what was checked, and what remains unknown.</p></li>
+<li><p><a href="#doc-02-architecture-and-ownership">02 — Architecture and ownership</a></p>
+<p>Boundaries between Host, Projects, Castles, Coven, Psyche, clients, identity, and authorization.</p></li>
+<li><p><a href="#doc-03-integration-proposal">03 — Integration proposal</a></p>
+<p>Read models, event reconciliation, commands, receipts, identity binding, and adapter seams.</p></li>
+<li><p><a href="#doc-04-host-folder-sync-and-recovery">04 — Host folder sync and recovery</a></p>
+<p>Portable files, excluded authority/runtime data, conflicts, disconnection, and recovery.</p></li>
+<li><p><a href="#doc-05-implementation-plan">05 — Implementation plan</a></p>
+<p>Phases, work packets, dependencies, acceptance gates, and delivery order.</p></li>
+<li><p><a href="#doc-06-execution-playbook">06 — Execution playbook</a></p>
+<p>How humans and agents coordinate implementation and evidence.</p></li>
+<li><p><a href="#doc-07-validation-and-acceptance">07 — Validation and acceptance</a></p>
+<p>Unit, daemon, packaged, remote, security, and human acceptance scenarios.</p></li>
+<li><p><a href="#doc-08-visual-and-interaction-contract">08 — Visual and interaction contract</a></p>
+<p>Shape, color, topology, accessibility, state, and progressive detail.</p></li>
+<li><p><a href="#doc-09-security-and-authority">09 — Security and authority</a></p>
+<p>Threats, request boundaries, retry/fencing, protected operations, and synchronization rules.</p></li>
+<li><p><a href="#doc-10-agent-task-prompts">10 — Agent task prompts</a></p>
+<p>Ready-to-use prompts for discovery and scoped implementation.</p></li>
+<li><p><a href="#doc-11-open-decisions">11 — Open decisions</a></p>
+<p>Proposed defaults, owners, risks, and validation needed.</p></li>
+<li><p><a href="#doc-12-source-ledger">12 — Source ledger</a></p>
+<p>Provenance and limits for each source class.</p></li>
+<li><p><a href="#doc-15-scalable-atlas-layout">15 — Scalable Atlas layout and crown</a></p>
+<p>Uniform Projects, compact placement, bounded mission detail, density/search/sample controls, explicit scope, measured fit, and canonical flat crown.</p></li>
+</ul>
 <h2 id="doc-00-handoff-index--working-templates">Working templates</h2>
 <ul>
 <li><p><a href="#doc-implementation-packet">Implementation packet</a></p></li>
@@ -74,6 +87,9 @@
 <li><p><a href="#doc-examples-readmemd">Conceptual examples</a></p></li>
 </ul>
 <p>The sequence is deliberate: establish owners and current contracts; connect a read-only slice; add authenticated proposal/commit behavior; prove bounded execution and recovery; then extend the same contracts across clients and hosts. Avoid building independent stores or competing orchestration loops while implementing the visual map.</p>
+<h2 id="doc-00-handoff-index--evidence-and-history">Evidence and history</h2>
+<p>The scalable layout/crown refinement is <strong>implemented; combined source-level verification passed</strong>; start its presentation handoff with <a href="#doc-15-scalable-atlas-layout">guide 15</a>. It supersedes earlier positioning and zoom-driven scope assumptions while preserving the semantic visual vocabulary. Headless Chromium QA of the current source ran on 2026-11-19 (record <code>(../../tests/evidence/browser-qa-2026-11-19.json)</code>, summarized in chapter 01); it does not establish Safari, physical-device, real multi-touch, keyboard-only, or screen-reader acceptance.</p>
+<p>For the <strong>historical pre-layout</strong> Node and Chrome mobile pass, read <a href="#doc-mobilereadiness">Mobile readiness</a>. Those results and the older v3 baseline do not verify the current refinement. Its exact source/package outcomes belong in chapter 01.</p>
 </article>
 <article class="chapter" id="doc-01-current-state-and-evidence" data-group="Implementation" tabindex="-1">
 <h1 id="doc-01-current-state-and-evidence--current-state-and-evidence">Current state and evidence</h1>
@@ -82,14 +98,14 @@
 <p>The export adds documentation, portable test fixtures, packaging/checking utilities, a Handoff link/reader, mission-navigation/mobile changes, and the scalable layout, viewport, density, sample-control, and crown refinement. The combined source also incorporates replay/adaptive-mobile work from <code>07919b421df5457e778e1b1c6a73512c8f27ba73</code>. It is not a byte-for-byte export of the older v3 commit or either pre-combination branch. <code>HANDOFF_MANIFEST.json</code> identifies the baseline and inventories the exported files; <code>CHECKSUMS.sha256</code> records their bytes. A publication receipt, when recorded, identifies its particular artifact and must not be inferred from an earlier checkpoint.</p>
 <p>This source grew from the supplied Coven Castles v27 prototype. “v27” is the inherited prototype name; <strong>Site version 3</strong> is the publication checkpoint. They are distinct version systems.</p>
 <h2 id="doc-01-current-state-and-evidence--2-status-vocabulary">2. Status vocabulary</h2>
-<table><thead><tr><th>Label</th><th>Meaning here</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>Label</th><th>Meaning here</th></tr></thead><tbody>
 <tr><td>Implemented — prototype</td><td>Present in the packaged simulation source</td></tr>
 <tr><td>Verified — unit</td><td>Executed in Node fixtures with a limited DOM facade</td></tr>
 <tr><td>Observed — publication image</td><td>Visible in the generated preview for the exact saved Site version</td></tr>
 <tr><td>Specified constraint</td><td>Supplied by the owner as an architectural requirement</td></tr>
 <tr><td>Proposed</td><td>Recommended design or implementation sequence requiring canonical mapping and acceptance</td></tr>
 <tr><td>Unknown / unverified</td><td>No current repository, packaged-runtime, remote-host, or security evidence was established</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>Do not convert any one label into another. A prototype UI event is not a daemon receipt; a unit fixture is not a real-host test; a publication image is not keyboard or mobile acceptance.</p>
 <h2 id="doc-01-current-state-and-evidence--3-implemented-behavior">3. Implemented behavior</h2>
 <p>The application is buildless HTML, CSS, SVG, and JavaScript. The scene/UI source is joined by the pure layout and viewport helpers and the canonical crown renderer listed below. It has no bundled application framework or npm dependency graph. The inherited optional Google Fonts request has system-font fallbacks.</p>
@@ -99,7 +115,7 @@
 <p>The Project browser adds project search and 8/16/32/64/128 sample presets. Reset removes only generated <code>layoutDemo</code> additions, preserving baseline and user-created Projects; existing project counts may exceed a requested preset. The previous cosmetic 16-Project and 12-mission creation caps are removed. Presets and bounded geometry tests do not establish production capacity or unlimited browser performance.</p>
 <p>The combined mobile workspace reuses the original replay and camera controls in Map, Missions, Activity, and View surfaces. Shared live replay preserves elapsed time and playing/paused state across project focus changes, while imported recordings keep their own extent. Delayed reports do not force a replay to the live edge. Visible chrome is measured after the current HUD/manifest structure is updated; keyboard visibility, camera lock, and manual framing constrain refit. Selection cleanup during replay restores the saved camera and its auto-fit policy. These are local presentation/replay semantics, not a daemon clock or durable execution state. <a href="#doc-15-scalable-atlas-layout">Combined integration guidance</a></p>
 <h2 id="doc-01-current-state-and-evidence--4-source-map-for-an-implementer">4. Source map for an implementer</h2>
-<table><thead><tr><th>File / function</th><th>Current responsibility</th><th>Integration implication</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>File / function</th><th>Current responsibility</th><th>Integration implication</th></tr></thead><tbody>
 <tr><td><code>dist/simulation-model.js</code>: <code>newWorld</code>, <code>apply</code>, <code>advance</code>, <code>append</code>, <code>summarize</code>; <code>dist/index.html</code>: sample traces, <code>seek</code>, <code>emit</code></td><td>The model folds local sample events with no DOM or timers; the page generates the traces and keeps selection, camera, and effects in <code>seek</code>/<code>emit</code></td><td>Keep as fixture/demo mode; do not route real mutations through this reducer as if it were authoritative</td></tr>
 <tr><td><code>layoutOf</code>, <code>worldOf</code>, <code>missionXY</code>, <code>targetOf</code></td><td>Stable display positions and gate locations</td><td>Map canonical IDs into stable view coordinates; coordinates must never grant capability or ownership</td></tr>
 <tr><td><code>dist/atlas-layout.js</code></td><td>Aspect-aware paired overview placement, reserved rectangles, shared corridors, inward gates, and bounded mission packing</td><td>Pure presentation geometry; do not reinterpret route topology as canonical task dependencies</td></tr>
@@ -117,7 +133,7 @@
 <tr><td><code>dist/atlas-ui.js</code></td><td>Header, project search/sample presets, mission browser, drawer, familiar chips, Handoff entry</td><td>Keep low-trust UI responsibilities explicit and retain full scoped collections outside miniature limits</td></tr>
 <tr><td><code>dist/seal-lab.js</code></td><td>Isolated specimen exploration using the actual seal renderer</td><td>Remain visibly separate from real project status</td></tr>
 <tr><td><code>tests/presentation.test.cjs</code></td><td>Seven targeted presentation and geometry tests</td><td>Continue running after adapter extraction; add actual integration tests in the owning repositories</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>This is a navigation aid, not a promise that similarly named functions exist in any production OpenCoven repository.</p>
 <h2 id="doc-01-current-state-and-evidence--5-verified-baseline-evidence">5. Verified baseline evidence</h2>
 <h3 id="doc-01-current-state-and-evidence--current-evidence-generated-not-hand-written">Current evidence: generated, not hand-written</h3>
@@ -149,7 +165,7 @@ node scripts/test-atlas-crown.mjs</code></pre>
 <p>The layout sweep covers selected project counts through 128 (0, 1, 2, 4, 8, 12, 24, 64, and 128) as bounded geometry cases. Mission-packing integration covers every integer count from 0 through 128. These are not load or production benchmarks. At this 2026-11-18 checkpoint, browser QA was unavailable because of the prior browser URL-policy block; see the 2026-11-19 browser QA record above for the later run. No workaround was used, and neither historical Chrome evidence nor source-only checks establish visual, keyboard, touch, or responsive acceptance of this refinement. Locally generated SVG specimens illustrate source geometry, not browser rendering or interaction. <a href="#doc-15-scalable-atlas-layout">Remaining layout acceptance</a></p>
 <h3 id="doc-01-current-state-and-evidence--combined-standalone-export-verification-18-november-2026">Combined standalone export verification — 18 November 2026</h3>
 <p>The combined ZIP was extracted into <code>/workspace/scratch/c8f0b8aaa2a0/atlas-merged-clean-fq8gch1w/Coven_Castles_Atlas_Handoff_2026-11-18</code> without <code>.git</code> metadata. The following checks ran from that extracted root. The local run log is <code>/workspace/scratch/c8f0b8aaa2a0/layout-merged-clean-validation.txt</code>.</p>
-<table><thead><tr><th>Command or inspection</th><th>Recorded combined result</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>Command or inspection</th><th>Recorded combined result</th></tr></thead><tbody>
 <tr><td><code>python3 scripts/verify-handoff.py .</code></td><td>Passed: 67 files, 65 payload entries, 66 SHA-256 checks; paths and inventory verified.</td></tr>
 <tr><td><code>node --test --test-reporter=tap tests/*.test.cjs</code></td><td>207 passed; zero failed, cancelled, or skipped.</td></tr>
 <tr><td><code>node scripts/test-atlas-crown.mjs</code></td><td>Passed 84 view/size combinations, exact canonical digest, aperture, bounds, finite geometry, and stable-node checks.</td></tr>
@@ -158,11 +174,11 @@ node scripts/test-atlas-crown.mjs</code></pre>
 <tr><td><code>python3 scripts/verify-handoff.py /workspace/scratch/c8f0b8aaa2a0/atlas-merged-clean-fq8gch1w/rebuilt.zip</code></td><td>Passed CRC, paths, inventory, and hashes; 67 files, 65 payload entries, 66 SHA-256 checks.</td></tr>
 <tr><td>Handoff navigation inspection</td><td>All 198 local landing-page/reader links and chapter anchors resolved.</td></tr>
 <tr><td>Export exclusions</td><td>No browser images, Git metadata, <code>node_modules</code>, or recursive generated ZIP; historical JSON evidence retained.</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>This verifies standalone source portability and package integrity for the combined checkpoint. It does not establish browser layout, physical-device behavior, daemon integration, or production performance. The earlier branch/package records below remain separate historical evidence.</p>
 <h3 id="doc-01-current-state-and-evidence--historical-layoutcrown-standalone-export-before-this-combination">Historical layout/crown standalone export — before this combination</h3>
 <p>A fresh extraction of the layout/crown package before the replay/adaptive-mobile merge, without <code>.git</code>, passed the following checks. These counts and package results are historical; the combined ZIP requires its own run:</p>
-<table><thead><tr><th>Command or inspection</th><th>Result</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>Command or inspection</th><th>Result</th></tr></thead><tbody>
 <tr><td><code>python3 scripts/verify-handoff.py .</code></td><td>Passed: 62 files, 60 payload entries, 61 SHA-256 checks; extracted paths and inventory verified.</td></tr>
 <tr><td><code>node scripts/check-source.mjs</code></td><td>Passed: HTML/JS/CSS syntax and structure, JSON, and local source/document references.</td></tr>
 <tr><td><code>node --test tests/*.test.cjs</code></td><td>182 passed; zero failed, cancelled, or skipped.</td></tr>
@@ -171,18 +187,18 @@ node scripts/test-atlas-crown.mjs</code></pre>
 <tr><td><code>python3 scripts/verify-handoff.py /workspace/scratch/c8f0b8aaa2a0/layout-handoff-rebuilt.zip</code></td><td>Passed CRC, paths, inventory, and digests.</td></tr>
 <tr><td>Handoff navigation inspection</td><td>All 193 local landing-page/reader links and chapter anchors resolved in the deployable tree.</td></tr>
 <tr><td>Export exclusion inspection</td><td>No browser JPG/PNG/WebP evidence, Git metadata, dependency tree, or recursive generated ZIP was included. Historical JSON evidence remains labeled as historical.</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>The local geometry specimen was rendered and visually inspected with exact Project, route, fit, and crown code at four and 128 projects, at 24° and 45°. It uses assumed chrome rectangles and synthetic names, omits mission seals/totals, and is source geometry evidence only. It is not a browser capture and does not establish browser typography, keyboard, touch, or device acceptance.</p>
 <p>These checks established independent unpacking, validation, and rebuilding for that pre-combination package. They do not establish the current combined package. Production adapter, daemon, authority, and device acceptance remain separate work.</p>
 <h3 id="doc-01-current-state-and-evidence--historical-standalone-export-verification-18-november-2026">Historical standalone export verification — 18 November 2026</h3>
 <p>The archive was extracted into a fresh directory with no <code>.git</code> metadata. The following commands ran from the extracted <code>Coven_Castles_Atlas_Handoff_2026-11-18</code> root. They require no network, npm installation, or application build.</p>
-<table><thead><tr><th>Command</th><th>Recorded result</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>Command</th><th>Recorded result</th></tr></thead><tbody>
 <tr><td><code>python3 scripts/verify-handoff.py .</code></td><td>Exit 0; the extracted file inventory, paths, and all SHA-256 checks passed.</td></tr>
 <tr><td><code>node scripts/check-source.mjs</code></td><td>Exit 0; current HTML/JS/CSS structure, JSON, and local Markdown references passed.</td></tr>
 <tr><td><code>node --test tests/presentation.test.cjs</code></td><td>Exit 0; seven passed, zero failed, cancelled, or skipped. The pinned fixture loaded without Git history.</td></tr>
 <tr><td><code>python3 scripts/build-handoff.py --output /workspace/scratch/c8f0b8aaa2a0/handoff-qa-initial-rebuilt.zip</code></td><td>Exit 0; the extracted source rebuilt a complete handoff ZIP and static guide.</td></tr>
 <tr><td><code>python3 scripts/verify-handoff.py /workspace/scratch/c8f0b8aaa2a0/handoff-qa-initial-rebuilt.zip</code></td><td>Exit 0; the rebuilt archive passed CRC, path, inventory, and digest checks.</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>In the Site checkout, <code>git diff --check</code> passed. A separate static HTML pass resolved all local handoff navigation, download, and chapter-anchor targets in the deployable tree. The archive intentionally excludes itself and its download sidecar; that edition made the local Download button available after rebuilding the package. The guide and Atlas remain included and usable without that rebuild.</p>
 <p>The package verifier checks integrity relative to the supplied manifest; it does not authenticate the publisher. Source checks parse code and references; they are not a browser or security assessment. The final archive carries its own exact file inventory and checksums. A fresh export timestamp means a rebuild can have a different ZIP digest without a source-content change.</p>
 <h2 id="doc-01-current-state-and-evidence--6-explicitly-not-established">6. Explicitly not established</h2>
@@ -203,16 +219,16 @@ node scripts/test-atlas-crown.mjs</code></pre>
 <p><strong>Use the Compass Site as a presentation and interaction reference for existing OpenCoven systems. Keep authoritative state transitions in Coven, orchestration meaning in Psyche, and identity governance in the Familiar Contract.</strong> Coven Host should make this work discoverable in a folder and across devices; it should not introduce another daemon, identity root, scheduler, or competing state database. These are the user&#x27;s architectural requirements, not claims that every production repository already implements them. <a href="#doc-user-architecture-instructions">U1</a></p>
 <p>The historical Site baseline is commit <code>d7b6f1e655140036cca49f31687131352162de13</code>. The bundle also contains subsequent mobile/navigation work and the <a href="#doc-15-scalable-atlas-layout">scalable layout/crown refinement</a>, which is implemented and source-level verified. Its README continues to identify the application as a local simulation. Production repositories, their current APIs, and packaged runtime behavior were <strong>not inspected for this handoff</strong>. Treat the integration below as <strong>proposed</strong> until repository discovery establishes the existing contracts and tests. Export provenance identifies the delivered source separately from historical checkpoints. <a href="#doc-readme">S1</a></p>
 <p>Use these labels consistently during implementation:</p>
-<table><thead><tr><th>Label</th><th>Meaning in this handoff</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>Label</th><th>Meaning in this handoff</th></tr></thead><tbody>
 <tr><td>Source-inspected</td><td>A property visible in the bundled Site source.</td></tr>
 <tr><td>Supplied requirement</td><td>A boundary or invariant established by the user&#x27;s instructions.</td></tr>
 <tr><td>Proposed</td><td>A recommended integration design requiring implementation and review.</td></tr>
 <tr><td>Discovery required</td><td>The corresponding production component, contract, or behavior has not been established.</td></tr>
 <tr><td>Verified</td><td>Reserved for an identified artifact and a recorded acceptance check; never inferred from a mockup.</td></tr>
-</tbody></table>
+</tbody></table></div>
 <h2 id="doc-02-architecture-and-ownership--what-the-bundled-site-actually-supplies">What the bundled Site actually supplies</h2>
 <p>The Site reduces sample events into browser-side worlds using <code>apply</code>, advances or reconstructs them with <code>seek</code>, and appends simulation events with <code>emit</code>. <code>canAct</code> distinguishes live sample interaction from recorded/replay modes. These functions demonstrate interaction behavior; they are not principal authentication, protected authorization, durable scheduling, or a production event log. The <code>store</code> helper uses browser local storage for presentation-related persistence. <a href="../index.html">S2</a></p>
-<table><thead><tr><th>Source surface</th><th>Reusable intent</th><th>Production boundary</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>Source surface</th><th>Reusable intent</th><th>Production boundary</th></tr></thead><tbody>
 <tr><td><code>atlasSnapshot</code> in <code>dist/index.html</code></td><td>Derive project, familiar, mission, and attention summaries.</td><td>Its current objects and fields are local presentation contracts, not canonical SDK schemas.</td></tr>
 <tr><td><code>dist/atlas-ui.js</code></td><td>Scope navigation, optional project drawer, familiar filtering, keyboard labels.</td><td>Clicking a control must not directly commit daemon state.</td></tr>
 <tr><td><code>dist/semantic-map.css</code></td><td>Show project boundaries, mission seals, familiar glyphs, selected agents, and decision markers.</td><td>Visibility and color never grant permissions.</td></tr>
@@ -220,11 +236,11 @@ node scripts/test-atlas-crown.mjs</code></pre>
 <tr><td><code>sealOf</code> / <code>drawSeal</code></td><td>Quantitative mission representation at three detail levels.</td><td>Input measures must come from authoritative evidence, with unknown values explicit.</td></tr>
 <tr><td><code>dist/seal-lab.js</code></td><td>Explore the renderer&#x27;s states and measurements in isolation.</td><td>Lab settings must remain isolated from operational projects.</td></tr>
 <tr><td><code>tests/presentation.test.cjs</code></td><td>Source-level regression fixtures with a small DOM facade.</td><td>These are not browser, daemon, device, or recovery qualification.</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>These distinctions are stated in the README and observable in the referenced implementation. Preserve them when presenting the archive to another agent. <a href="#doc-readme">S1</a> <a href="../index.html">S2</a> <a href="../atlas-ui.js">S3</a> <a href="../semantic-map.css">S4</a> <a href="../seal-lab.js">S5</a> S6 <code>(../../tests/presentation.test.cjs)</code></p>
 <h2 id="doc-02-architecture-and-ownership--canonical-ownership">Canonical ownership</h2>
 <p>The following ownership map is a <strong>supplied requirement</strong>. “Discover” means locate the current owning code, public contract, and acceptance evidence before adding a feature. It does not authorize creating a new service to fill an apparent gap. <a href="#doc-user-architecture-instructions">U1</a></p>
-<table><thead><tr><th>Component</th><th>Owns or represents</th><th>Must not become</th><th>Discover before integration</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>Component</th><th>Owns or represents</th><th>Must not become</th><th>Discover before integration</th></tr></thead><tbody>
 <tr><td>Familiar Contract</td><td>Governed portable familiar identity and revisions.</td><td>A display name, color, or folder-derived identity.</td><td>Exact root/revision identifiers and session binding checks.</td></tr>
 <tr><td>SPAR</td><td>Continuity profile/query projection across revisions and execution contexts.</td><td>Another identity root or standalone competing database.</td><td>Existing continuity queries and provenance.</td></tr>
 <tr><td>Coven Threads</td><td>Protected-surface authorization and proposal-versus-commit decisions.</td><td>Permission inferred from UI text or model output.</td><td>Approval objects, principal authentication, replay/revocation rules.</td></tr>
@@ -242,7 +258,7 @@ node scripts/test-atlas-crown.mjs</code></pre>
 <tr><td>Coven Memory</td><td>Read-only memory client/projection.</td><td>Another memory authority or writable sync store.</td><td>Permitted projections and integrity checks.</td></tr>
 <tr><td>Coven GitHub</td><td>GitHub-triggered familiar delivery.</td><td>Authority supplied by issue text or an untrusted webhook body.</td><td>Trigger verification, delivery receipts, and protected actions.</td></tr>
 <tr><td>Brand / UI</td><td>Canonical identity/voice; component specimens.</td><td>Production state or authorization owners.</td><td>Existing tokens, glyphs, accessibility patterns, and component ownership.</td></tr>
-</tbody></table>
+</tbody></table></div>
 <h2 id="doc-02-architecture-and-ownership--proposed-data-and-authority-flow">Proposed data and authority flow</h2>
 <p>This diagram shows responsibilities, not a proposed set of deployed services. Threads and Psyche may be implemented within existing packages or processes; discover those locations first. The SDK and read projection are constrained client surfaces. <a href="#doc-user-architecture-instructions">U1</a></p>
 <pre><code class="language-mermaid">flowchart TD
@@ -291,7 +307,7 @@ node scripts/test-atlas-crown.mjs</code></pre>
 <p><strong>Connect one existing project and one familiar to an observational Compass view, then qualify one bounded task through the existing Coven/Psyche path.</strong> Expand to durable remote execution and Host synchronization only after the same operation can be inspected, refused, cancelled, and recovered through canonical interfaces.</p>
 <p>Everything in this document is <strong>proposed integration work</strong>. The bundled Site currently mounts <code>CovenAtlas</code> with local snapshot, navigation, familiar-highlight, and legend functions. Its chat, approval, and activity behavior modifies sample worlds; it is not a production transport or SDK. Do not replace a function with a network call and assume the resulting application has inherited the necessary authority model. <a href="#doc-readme">S1</a> <a href="../index.html">S2</a> <a href="../atlas-ui.js">S3</a></p>
 <h2 id="doc-03-integration-proposal--delivery-sequence-and-ownership">Delivery sequence and ownership</h2>
-<table><thead><tr><th>Stage</th><th>Concrete work</th><th>Primary owner to establish</th><th>Exit evidence</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>Stage</th><th>Concrete work</th><th>Primary owner to establish</th><th>Exit evidence</th></tr></thead><tbody>
 <tr><td>0. Discover</td><td>Map exact production objects, public clients, lifecycle rules, and packaged entry points.</td><td>Existing repository owners across Coven, Psyche, SDK, and Compass.</td><td>Revision-pinned contract map; unresolved assumptions assigned.</td></tr>
 <tr><td>1. Isolate presentation</td><td>Separate sample data generation from rendering and selection. Preserve the standalone demo.</td><td>Existing production UI/client owner, informed by Cave and Brand.</td><td>Demo remains explicit; operational mode cannot invoke sample mutation.</td></tr>
 <tr><td>2. Observe</td><td>Read one project&#x27;s canonical snapshot and follow updates without writes.</td><td>SDK adapter plus Coven read surface.</td><td>Correct initial state, duplicate handling, gap detection, reconnect, and unavailable states.</td></tr>
@@ -299,7 +315,7 @@ node scripts/test-atlas-crown.mjs</code></pre>
 <tr><td>4. Execute</td><td>Run one task with fixed inputs, a qualified runtime, fenced attempt ownership, and durable evidence.</td><td>Coven execution applying Psyche semantics.</td><td>One attributable attempt; acceptance evidence tied to exact inputs.</td></tr>
 <tr><td>5. Recover</td><td>Exercise cancellation, process loss, lost acknowledgments, and restart.</td><td>Coven/Psyche with runtime qualification.</td><td>No stale-owner commit or silent duplicate effect; unresolved outcomes remain visible.</td></tr>
 <tr><td>6. Extend Host</td><td>Synchronize eligible artifacts and proposals under one authoritative owner.</td><td>Existing Host/workspace integration owner discovered in stage 0.</td><td>Conflict, offline, path-safety, and recovery cases in the companion document.</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>These are acceptance stages, not a promise that the production repositories currently contain the required interfaces. Keep each stage in the existing owning component where possible. <a href="#doc-user-architecture-instructions">U1</a></p>
 <h2 id="doc-03-integration-proposal--separate-the-two-execution-modes">Separate the two execution modes</h2>
 <p>The current event reducer, sample trace, automatic activity generator, replay tools, and Seal lab are valuable as a deterministic presentation fixture or explicitly labeled sandbox. Keep their writes within a demo-only adapter. In connected mode, a sample event must have no route to authoritative state. Conversely, replaying historical production evidence must not enable live command buttons merely because the browser changes its <code>live</code> flag. <a href="../index.html">S2</a></p>
@@ -336,7 +352,7 @@ node scripts/test-atlas-crown.mjs</code></pre>
 <p>On restart, recover from durable authoritative state. Reconcile attempts against runtime/provider evidence, expire or reassign ownership through the canonical mechanism, and retain uncertainty when the external outcome is unknowable. Resource accounting should likewise distinguish observed usage, reservations, and unresolved consumption; delayed reports cannot justify an invented hard-spend guarantee.</p>
 <h2 id="doc-03-integration-proposal--qualification-matrix">Qualification matrix</h2>
 <p>For each case, capture the exact code/artifact revision, principal and fixture scope, request/attempt identifiers, observed transitions, and receipts. Start with the smallest relevant test, then use real-daemon or packaged-artifact tests wherever mocks could hide the failure. <a href="#doc-user-architecture-instructions">U1</a></p>
-<table><thead><tr><th>Case</th><th>Required result</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>Case</th><th>Required result</th></tr></thead><tbody>
 <tr><td>Snapshot followed by duplicated updates</td><td>Stable state and counts; no repeated operation.</td></tr>
 <tr><td>Subscription gap or expired cursor</td><td>Explicit reconciling state followed by a consistent snapshot.</td></tr>
 <tr><td>Identity revision or authorization changes before commit</td><td>Revalidation rejects or degrades the request; no stale grant.</td></tr>
@@ -346,7 +362,7 @@ node scripts/test-atlas-crown.mjs</code></pre>
 <tr><td>Daemon/process failure during transition</td><td>Recovery produces a justified state without contradictory receipts.</td></tr>
 <tr><td>Offline or stale client submits a decision</td><td>Proposal remains pending or is refused; client never self-commits.</td></tr>
 <tr><td>Second host tries to acquire the same work</td><td>Single-owner rules and fencing prevent competing commits.</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>The bundled source-level fixtures remain a useful visual regression floor, with the README recording their limited coverage. They do not satisfy this matrix. Browser interaction and responsive checks for the current revision also remain separately required. <a href="#doc-readme">S1</a> S6 <code>(../../tests/presentation.test.cjs)</code></p>
 <h2 id="doc-03-integration-proposal--implementation-packets-and-rollout-decision">Implementation packets and rollout decision</h2>
 <p>Give each implementation agent a bounded packet: owning repository and exact starting revision; scoped instructions; the existing contract to extend; the invariant being repaired; allowed changes; acceptance commands discovered from that repository; and required evidence. Require a red-to-green example for authority or lifecycle bugs and preserve unrelated work. <a href="#doc-user-architecture-instructions">U1</a></p>
@@ -367,14 +383,14 @@ node scripts/test-atlas-crown.mjs</code></pre>
 <p>The first sync delivery should use <strong>one authoritative owner per project/run</strong>. It may distribute eligible content and display remote results, but it should not support opportunistic offline ownership takeover or replicate live daemon databases.</p>
 <h2 id="doc-04-host-folder-sync-and-recovery--proposed-folder-contents">Proposed folder contents</h2>
 <p>The paths below illustrate a user experience, not a required new directory standard. Reuse existing Project/package conventions when discovery finds them. Ordinary file permissions can reduce accidental edits, but authoritative validation remains necessary.</p>
-<table><thead><tr><th>Illustrative location</th><th>Intended content</th><th>Treatment</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>Illustrative location</th><th>Intended content</th><th>Treatment</th></tr></thead><tbody>
 <tr><td><code>&lt;Host&gt;/Projects/&lt;project&gt;/workspace/</code></td><td>User work and approved execution inputs.</td><td>Versioned working material; never implicit permission to execute.</td></tr>
 <tr><td><code>…/proposals/</code></td><td>Draft intents, requested changes, and imported suggestions.</td><td>Pending until accepted through the canonical authority path.</td></tr>
 <tr><td><code>…/artifacts/</code></td><td>Produced reports, patches, exports, and supporting evidence.</td><td>Bind each accepted version to content identity and its attempt.</td></tr>
 <tr><td><code>…/receipts/</code></td><td>Exported copies of authoritative outcomes.</td><td>Read-only projection; edited copies do not rewrite history.</td></tr>
 <tr><td><code>…/references/</code></td><td>Links or exported context identifying the project and familiar revision.</td><td>References, not private identity material or executable grants.</td></tr>
 <tr><td><code>…/.cache/</code></td><td>Replaceable previews and downloaded content.</td><td>Discardable; excluded from authoritative recovery decisions.</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>Keep daemon databases, WAL/SHM files, runtime sockets, process handles, live lease state, bearer tokens, private keys, provider credentials, and secret-bearing environment files outside the synchronized set. A backup/export facility may handle selected state separately under its own consistency and access rules; generic folder sync must not copy a live database and call the result a recoverable authority.</p>
 <p>Discover the existing credential facility and secret-redaction rules. The folder should reference an approved credential binding without containing the credential itself. Protect exports and logs too: an apparently harmless report can contain paths, prompts, access tokens, or confidential source content.</p>
 <h2 id="doc-04-host-folder-sync-and-recovery--file-edits-create-input-not-committed-control-state">File edits create input, not committed control state</h2>
@@ -393,7 +409,7 @@ node scripts/test-atlas-crown.mjs</code></pre>
 <p>The exact transfer provider is a discovery decision. Prefer existing transport and storage capabilities over introducing another service. Define bandwidth, storage, retention, and cost boundaries before enabling remote transfer; this handoff does not create a paid account or select an unverified provider.</p>
 <h2 id="doc-04-host-folder-sync-and-recovery--conflict-policy">Conflict policy</h2>
 <p>Avoid timestamp-based last-writer-wins for semantically important files. Filesystem modification times are useful observations, not an authority ordering rule. Compare against a common base and preserve both versions when their relationship is uncertain.</p>
-<table><thead><tr><th>Conflict</th><th>Proposed handling</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>Conflict</th><th>Proposed handling</th></tr></thead><tbody>
 <tr><td>Same input edited on two hosts</td><td>Preserve both candidates and their common base; require review before choosing execution input.</td></tr>
 <tr><td>User edits a file while an attempt produces output</td><td>Keep attempt output separate; present a patch or merge proposal against the recorded input revision.</td></tr>
 <tr><td>Brief, permissions, identity reference, or ownership changes</td><td>Route a proposal to the relevant canonical owner; never auto-merge into authority.</td></tr>
@@ -401,7 +417,7 @@ node scripts/test-atlas-crown.mjs</code></pre>
 <tr><td>Delete races with edit or remote result</td><td>Retain a tombstone and recovery copy under a defined retention policy; do not silently delete new work.</td></tr>
 <tr><td>Rename or case/Unicode collision</td><td>Resolve identity and filesystem constraints explicitly; do not treat conflicting paths as the same approved object.</td></tr>
 <tr><td>Cache differs</td><td>Rebuild from an accepted source; cache conflict never decides mission state.</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>Textual auto-merge may be offered as a draft for ordinary source files. Its success does not establish semantic correctness, authorization, or acceptance. Keep protected metadata and external-effect decisions outside automatic merge.</p>
 <h2 id="doc-04-host-folder-sync-and-recovery--offline-operation">Offline operation</h2>
 <p>Offline users can inspect the last known state, edit ordinary work, and prepare proposals. Label the projection with its known revision/freshness. New control changes remain <strong>proposal-only</strong> until the authoritative owner can validate and commit them. Local connectivity loss must not manufacture an approval receipt or a new owner epoch.</p>
@@ -418,7 +434,7 @@ node scripts/test-atlas-crown.mjs</code></pre>
 <p>Publish through staging that stays on an appropriate filesystem and preserves the promised atomicity. Test interrupted writes, disk-full conditions, permission failures, and integrity mismatches. Report a failed transfer or failed persistence barrier explicitly rather than showing a new accepted revision.</p>
 <h2 id="doc-04-host-folder-sync-and-recovery--recovery-and-acceptance-packet">Recovery and acceptance packet</h2>
 <p>On restart, load authoritative state first, reconcile ownership and attempts, then rebuild folder projections. Treat orphaned staged transfers as incomplete. Verify durable artifact references, reconcile missing receipts or unknown external outcomes, and admit new work only after the necessary authority and state are available.</p>
-<table><thead><tr><th>Exercise</th><th>Acceptance evidence</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>Exercise</th><th>Acceptance evidence</th></tr></thead><tbody>
 <tr><td>Crash after content upload but before publication</td><td>Partial content remains unaccepted; restart resumes or discards safely.</td></tr>
 <tr><td>Crash after effect acceptance but before receipt visibility</td><td>Reconciliation finds the outcome or preserves explicit uncertainty.</td></tr>
 <tr><td>Symlink/root replacement during a write</td><td>Out-of-scope target is never modified.</td></tr>
@@ -426,7 +442,7 @@ node scripts/test-atlas-crown.mjs</code></pre>
 <tr><td>Old owner returns after transfer</td><td>Its fenced attempt cannot commit protected changes.</td></tr>
 <tr><td>Offline proposal uses a revoked/stale binding</td><td>Reconnection refuses or requests renewed authorization.</td></tr>
 <tr><td>Sync scans a live database or secret</td><td>Exclusion policy prevents transfer; diagnostics avoid leaking contents.</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>Assign discovery of folder conventions to the Project/Host owner, authoritative transitions to Coven/Psyche, protected decisions to Threads integration, public bindings to SDK, and cross-client acceptance to Cave, CLI, and Psyche Build owners. Each packet should identify real modules and tests after discovery. <a href="#doc-user-architecture-instructions">U1</a></p>
 <p>The acceptance result is a recoverable relationship between files, exact inputs, authority, attempts, and receipts. A folder that merely looks synchronized is not enough.</p>
 <h2 id="doc-04-host-folder-sync-and-recovery--sources">Sources</h2>
@@ -444,7 +460,7 @@ node scripts/test-atlas-crown.mjs</code></pre>
 <p>Paths such as <code>README.md</code>, <code>dist/index.html</code>, and <code>tests/presentation.test.cjs</code> are relative to the bundle root. Read the shared source ledger and <code>docs/handoff/source-context/user-architecture-instructions.md</code> before implementation. API names, repository locations, and supported protocol versions remain <strong>TBD through canonical repository discovery</strong>. “Coven Host,” “Compass” (formerly “Castles”), and “CLI” describe requested integration surfaces; their existing ownership and implementation must be verified.</p>
 <p>The intended result is one coherent path from a human-readable project and mission view to authoritative state, bounded work, and auditable outcomes. Keep the familiar identity distinct from its delegated agents. Preserve the visual grammar while replacing sample data with a constrained projection of canonical records.</p>
 <h2 id="doc-05-implementation-plan--ownership-to-confirm">Ownership to confirm</h2>
-<table><thead><tr><th>Component</th><th>Responsibility to preserve</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>Component</th><th>Responsibility to preserve</th></tr></thead><tbody>
 <tr><td>Familiar Contract</td><td>Governed identity, exact authorized root and revision.</td></tr>
 <tr><td>SPAR</td><td>Continuity profile/query plane; no second identity root or database.</td></tr>
 <tr><td>Coven Threads</td><td>Protected-surface authorization and proposal-versus-commit decisions.</td></tr>
@@ -454,7 +470,7 @@ node scripts/test-atlas-crown.mjs</code></pre>
 <tr><td>Coven Runtimes / SDK</td><td>Runtime capability conformance and constrained canonical client bindings.</td></tr>
 <tr><td>Compass / Cave</td><td>Project-scope visualization and human oversight; discover where production UI belongs.</td></tr>
 <tr><td>Psyche Build / CLI</td><td>Coding cockpit and terminal clients consuming the same authorized objects. Discover the CLI’s relationship to Coven Code.</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>These boundaries are design constraints, not evidence that every component already exposes the required capability. Before adding any service, schema, storage, or adapter, establish whether an existing component owns it.</p>
 <h2 id="doc-05-implementation-plan--phase-0-repository-and-contract-discovery">Phase 0 — repository and contract discovery</h2>
 <h3 id="doc-05-implementation-plan--w01-pin-the-integration-surface">W01 · Pin the integration surface</h3>
@@ -537,7 +553,7 @@ rg -n &#x27;proposal|authorization|receipt|lease|fenc|revocation|reconcile|idemp
 <p>Use scoped searches after locating the owner directories. Inspect instructions, ADRs, schemas, tests, CI, and release evidence. Preserve unrelated changes; use a permitted isolated branch/worktree when appropriate. Record unsupported or unavailable capabilities explicitly. These are discovery commands, not evidence that any particular Coven subcommand, endpoint, schema, or release pipeline exists.</p>
 <p>For each contract, record its owning repository, pinned revision, authoritative definition, consumers, test entry point, and compatibility constraints. Find the canonical command through repository documentation and the real program’s supported help interface before adding CLI examples. Never translate the prototype’s local event names into supposed public APIs without this evidence.</p>
 <h2 id="doc-06-execution-playbook--work-lanes-and-integration-order">Work lanes and integration order</h2>
-<table><thead><tr><th>Lane</th><th>Work packets</th><th>Safe parallel work</th><th>Integration prerequisite</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>Lane</th><th>Work packets</th><th>Safe parallel work</th><th>Integration prerequisite</th></tr></thead><tbody>
 <tr><td>A: contracts and ownership</td><td>W01–W02</td><td>Repository inventory, source ledger, identity/data-flow mapping</td><td>Reviewed owner and contract map</td></tr>
 <tr><td>B: projection and UI</td><td>W03–W04, W06</td><td>Read adapters, sealed fixtures, visual components</td><td>Canonical read contracts; decisions wait for W05</td></tr>
 <tr><td>C: authority</td><td>W05</td><td>Server enforcement, negative tests, receipt semantics</td><td>Authenticated principal and exact identity contracts</td></tr>
@@ -545,7 +561,7 @@ rg -n &#x27;proposal|authorization|receipt|lease|fenc|revocation|reconcile|idemp
 <tr><td>E: Host recovery</td><td>W09–W10</td><td>Trust model and fault harness discovery</td><td>Bounded local execution and canonical persistence</td></tr>
 <tr><td>F: client parity</td><td>W11–W12</td><td>Existing client inventory, presentation adapters</td><td>Stable command/outcome contracts</td></tr>
 <tr><td>G: packaging and pilot</td><td>W13–W14</td><td>Export manifests, validation scripts, acceptance planning</td><td>Required authority, recovery, and packaged-client evidence</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>The integration lead owns sequencing, not a new control plane. Assign file ownership before simultaneous edits. Contracts and shared fixtures should land before dependent clients; do not let several lanes redefine the same operation schema. Keep contract changes reviewable separately from presentation changes when practical.</p>
 <p>Integrate one canonical read path first. Then add one proposal-to-receipt path, one bounded execution path, and its cancellation/recovery cases. Extend that proven path to Host, Build, CLI, and Cave. A branch can be ready for review while deployment remains blocked by missing authorization or evidence.</p>
 <h2 id="doc-06-execution-playbook--packet-execution-loop">Packet execution loop</h2>
@@ -606,7 +622,7 @@ node scripts/test-atlas-crown.mjs</code></pre>
 <p>Keep Coven/project scope explicit across pan, zoom, search, and history navigation. Fit must include the measured chrome-safe viewport and visible crown/label bounds. Resize should refit in auto-fit mode and preserve manual framing otherwise. Inspect the canonical crown aperture at multiple zoom levels in both scopes, with flat UI marks unchanged and no spinning or glow. These source contracts still require browser evidence for rendered clearance, focus, touch targets, and readability.</p>
 <p>Use <code>scripts/plan-qa.mjs</code> to exercise the plan-only restriction, legacy saved settings and desktop and mobile camera inputs. The external Playwright setup and local preview commands are in AGENTS.md <code>(../../AGENTS.md)</code>.</p>
 <h3 id="doc-07-validation-and-acceptance--combined-mobile-replay-and-fit-boundaries">Combined mobile, replay, and fit boundaries</h3>
-<table><thead><tr><th>Scenario</th><th>Required behavior</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>Scenario</th><th>Required behavior</th></tr></thead><tbody>
 <tr><td>HUD/manifest changes at the compact breakpoint</td><td>Update the current lead-card structure before measuring and queuing fit; include a nested mobile HUD at its actual position.</td></tr>
 <tr><td>Chrome hidden through CSS or DOM visibility</td><td>Exclude non-rendered/hidden elements from safe-area reservations; their old rectangles must not shrink the usable map.</td></tr>
 <tr><td>Full mobile modal inspector</td><td>Keep modal focus/inert ownership; exclude the full modal from canvas-fit reservations while it obscures the inactive map. Reserve ordinary visible nonmodal chrome normally.</td></tr>
@@ -614,13 +630,13 @@ node scripts/test-atlas-crown.mjs</code></pre>
 <tr><td>Replay removes the selected mission</td><td>Clear the stale selection and restore saved zoom/pan together with its saved auto-fit policy; cleanup must not silently re-enable auto-fit.</td></tr>
 <tr><td>Adaptive popup closes</td><td>Reuse existing camera-dock/familiar observer notifications to update available space; do not add a second camera or replay state owner.</td></tr>
 <tr><td>Project focus during playback</td><td>Retain the shared live cursor, elapsed time, and playing/paused state; imported recordings and delayed reports retain their defined boundaries.</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>Source regressions for these boundaries do not replace a browser pass at the compact breakpoint, with actual keyboard geometry, nested controls, and modal focus behavior. Record the final combined result separately from both branches&#x27; earlier evidence.</p>
 <p>For every canonical fixture, independently calculate familiar agent shares, owned-target progress, and the tightest time/token/budget limit. Check all six states: Planned, Active, Needs you, Stalled, Sealed, Broken. Near-white indicates a need for human attention; coral indicates at least 85% of the relevant limit or the defined broken-state treatment. Neither color grants authority.</p>
 <p>Verify that the ring displays council share and target progress as separate quantities. Compare the labeled state, resource warning and exact counts with the inspector.</p>
 <h2 id="doc-07-validation-and-acceptance--authority-and-recovery-test-matrix">Authority and recovery test matrix</h2>
 <p>The canonical owner must define API names and transition details before implementation. The expected authority behavior below is the acceptance invariant, not an invented endpoint contract.</p>
-<table><thead><tr><th>Scenario</th><th>Injection and observation</th><th>Expected authority behavior</th><th>Required evidence</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>Scenario</th><th>Injection and observation</th><th>Expected authority behavior</th><th>Required evidence</th></tr></thead><tbody>
 <tr><td>Stale projection</td><td>Deliver an old snapshot, then attempt a protected decision using stale context.</td><td>UI marks stale context; server revalidates current authorized state or rejects the stale decision. Old displayed authority cannot authorize a write.</td><td>Daemon test, revisions, decision outcome, receipt or rejection.</td></tr>
 <tr><td>Disconnected client/Host</td><td>Cut transport during observation and during an operation.</td><td>Client exposes disconnection/unknown outcome. Execution follows canonical leases and bounds; connectivity loss creates no new authority.</td><td>Network fault trace, lease state, side-effect count, reconnect result.</td></tr>
 <tr><td>Pending proposal</td><td>Submit a valid proposal without an authorized decision.</td><td>Proposal remains pending and visually distinct from committed state; no protected effect occurs.</td><td>Server persistence and effect checks; UI pending representation.</td></tr>
@@ -635,7 +651,7 @@ node scripts/test-atlas-crown.mjs</code></pre>
 <tr><td>Limit reached/increased</td><td>Exhaust a bound, then submit an unauthorized increase.</td><td>Canonical enforcement stops further prohibited work; only a valid protected decision can increase a limit.</td><td>Measured usage, rejected increase, authorized-path receipt.</td></tr>
 <tr><td>Host/daemon restart</td><td>Restart before persistence, after commit, and before delivery of receipt.</td><td>Recover only durable authoritative state; retain fencing/replay guarantees and explain uncertain outcomes.</td><td>Restart fault harness, durable records, effect counts.</td></tr>
 <tr><td>Cross-client conflict</td><td>Act on the same proposal through Cave, CLI, Build, and Compass.</td><td>Clients share authoritative outcomes; later stale decisions cannot create extra effects or a different permission result.</td><td>Packaged/client integration matrix and common receipt references.</td></tr>
-</tbody></table>
+</tbody></table></div>
 <h2 id="doc-07-validation-and-acceptance--evidence-gates">Evidence gates</h2>
 <p><strong>Contract gate:</strong> W01–W02 identify real owners, versions, enforcement points, and supported compatibility. No production adapter is accepted against fictional APIs.</p>
 <p><strong>Read gate:</strong> canonical snapshots/events produce correct counts and seals; gaps, unavailable fields, and disconnects are legible. Unit fixtures and real-daemon read traces agree.</p>
@@ -650,7 +666,7 @@ node scripts/test-atlas-crown.mjs</code></pre>
 <p><strong>Implemented in the prototype; proposed as the integration&#x27;s presentation contract.</strong> Preserve the meanings below when replacing fixtures with canonical data. Authoritative operational state belongs to Coven, using Psyche&#x27;s orchestration semantics, and is exposed through a verified read projection. Shapes, colors, screen positions, and cached labels do not establish authority.</p>
 <p>Read the <a href="#doc-15-scalable-atlas-layout">layout guide</a> for placement, scope, measured fit and the 2D rendering restriction. Browser evidence is revision-specific.</p>
 <h2 id="doc-08-visual-and-interaction-contract--1-a-small-vocabulary">1. A small vocabulary</h2>
-<table><thead><tr><th>Element</th><th>Meaning</th><th>Must not imply</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>Element</th><th>Meaning</th><th>Must not imply</th></tr></thead><tbody>
 <tr><td>Uniform four-corner Project enclosure</td><td>One project&#x27;s work scope</td><td>A runtime sandbox, filesystem permission, authorized execution grant, or four-project limit</td></tr>
 <tr><td>Circular divided seal</td><td>One mission and its council</td><td>A task, familiar identity, or approval token</td></tr>
 <tr><td>Familiar glyph and stable hue</td><td>Familiar identity within the active binding</td><td>That a display name or color is a globally unique identity</td></tr>
@@ -662,7 +678,7 @@ node scripts/test-atlas-crown.mjs</code></pre>
 <tr><td>Mission count inside a Project</td><td>Exact known mission total</td><td>A limit on the canonical mission collection or evidence of complete data when coverage is partial</td></tr>
 <tr><td>Colored connection after familiar selection</td><td>That familiar&#x27;s assignments in that project</td><td>Permission to change all highlighted work</td></tr>
 <tr><td>Dotted connection</td><td>No agents assigned in the current complete sample projection</td><td>Offline, deleted, or inaccessible data; those require explicit state</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>Use <code>dist/semantic-map.css</code> for the presentational rules. Keep the canonical crown/lotus already present in <code>dist/index.html</code>; do not substitute the retired symbol or a decorative new mark.</p>
 <h2 id="doc-08-visual-and-interaction-contract--2-color-has-a-stable-job">2. Color has a stable job</h2>
 <p>Familiar hues remain consistent across Projects, mission rings, group glyphs, and agent marks. Read the current familiar presentation settings rather than scattering colors through new components. A hue is a display aid; the accessible name and exact bound identity belong in the data/details.</p>
@@ -676,13 +692,13 @@ node scripts/test-atlas-crown.mjs</code></pre>
 <p>Keep internal mission placement and overview project placement distinct. The newer overview helper supersedes the earlier trace/ring positioning assumptions; local mission data still drives each project&#x27;s contents. Preserve context through filtering, replay, snapshot replacement, and brief changes. A filtered item may dim or disappear; reappearance should not imply it moved between projects. If canonical assignments change, display the actual move as a data change with corresponding details.</p>
 <h2 id="doc-08-visual-and-interaction-contract--4-reading-a-mission-seal">4. Reading a mission seal</h2>
 <p>Compass uses one drawing plane for the overview, Project, mission details, previews and Seal lab. Psyche uses the canonical crown inside a circular badge. A mission uses a filled disc with an external label. Smaller familiar badges sit at the ends of colored spokes. Selection adds an outline and preserves familiar identity colors.</p>
-<table><thead><tr><th>Seal feature</th><th>Meaning</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>Seal feature</th><th>Meaning</th></tr></thead><tbody>
 <tr><td>Colored slice angle</td><td>Familiar’s share of mission agents, subject to the visual minimum</td></tr>
 <tr><td>Bright arc along a slice’s edge</td><td>Progress on targets assigned to that familiar’s roles</td></tr>
 <tr><td>Outer outline</td><td>Mission state, also named in details and accessible labels</td></tr>
 <tr><td>Rim sweep</td><td>Tightest time, token, or budget limit</td></tr>
 <tr><td>Coral threshold</td><td>85% or the existing broken state</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>Council slices provide a readable summary even for small shares. Details and the Seal lab supply exact counts and percentages.</p>
 <p>Current progress ownership uses <code>TARGET_ROLES</code> in the prototype. Production integration must inspect canonical target ownership, counters, and completion semantics. Do not copy this fixture mapping into a second orchestration schema. “Sealed” requires canonical completion evidence; a local 100% animation or a model&#x27;s report is insufficient.</p>
 <h2 id="doc-08-visual-and-interaction-contract--5-progressive-detail-and-control-placement">5. Progressive detail and control placement</h2>
@@ -706,22 +722,22 @@ node scripts/test-atlas-crown.mjs</code></pre>
 <p>Use one authority path. Coven owns authoritative transitions and persistence; Psyche owns orchestration semantics; Coven Threads owns protected-surface authorization and proposal-versus-commit decisions; the SDK exposes constrained canonical bindings. Compass, Cave, CLI, and Psyche Build consume those owners. A Host folder, browser cache, familiar message, or UI control cannot create another writer or authorize itself.</p>
 <p>The first live integration should be read-only. Introduce command submission only after the exact existing authentication, operation authorization, replay protection, revocation, and receipt contracts are mapped and tested. Keep the local simulation adapter visibly separate from a daemon adapter. A transport failure must not fall back to simulated success.</p>
 <h2 id="doc-09-security-and-authority--2-identity-intent-authority-orchestration-and-execution">2. Identity, intent, authority, orchestration, and execution</h2>
-<table><thead><tr><th>Concern</th><th>Required binding</th><th>What a client may do</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>Concern</th><th>Required binding</th><th>What a client may do</th></tr></thead><tbody>
 <tr><td>Identity</td><td>Exact authorized familiar root and revision; principal association resolved by the identity/authority owners</td><td>Display verified references and request an explicit binding; never infer identity from a name, color, or project path</td></tr>
 <tr><td>Intent</td><td>Concrete operation, target scope, immutable input references, requested effect, and bounded parameters</td><td>Draft and submit an intent through the canonical client</td></tr>
 <tr><td>Authority</td><td>Authenticated principal, operation-specific authorization, freshness/replay rules, revocation/recovery state</td><td>Present the decision interface and show returned outcomes; never make the final decision locally</td></tr>
 <tr><td>Orchestration</td><td>Canonical mission/task/lane/attempt state, leases, retries, recovery and cancellation</td><td>Render an adapter projection and request supported transitions</td></tr>
 <tr><td>Execution</td><td>Runtime capability descriptor, constrained environment, fenced attempt and output provenance</td><td>Display execution evidence; never treat a process exit or model response as proof of authorized completion</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>If a familiar changes revision while an attempt is active, use the canonical session-binding policy. Do not hot-swap the revision because the display name is unchanged. Until the policy is verified, hold a proposed rebinding for review and preserve the original attempt’s identity references. SPAR may explain continuity across revisions; it does not grant a new execution identity or become a second identity root.</p>
 <h2 id="doc-09-security-and-authority--3-keep-connection-freshness-and-work-state-separate">3. Keep connection, freshness, and work state separate</h2>
 <p>An active mission can be observed through a disconnected client. A successful receipt can arrive while the map is reconciling an event gap. These must remain distinct axes, rather than collapsing into one green/red status.</p>
-<table><thead><tr><th>Axis</th><th>Proposed presentation vocabulary</th><th>Required behavior</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>Axis</th><th>Proposed presentation vocabulary</th><th>Required behavior</th></tr></thead><tbody>
 <tr><td>Connection</td><td>Connected, disconnected, reconnecting, unavailable</td><td>Describe transport availability; never infer that a disconnected remote attempt stopped</td></tr>
 <tr><td>Projection quality</td><td>Fresh, stale, degraded, reconciling, unknown</td><td>Mark incomplete or old views; retain the last observation with its provenance and age</td></tr>
 <tr><td>Orchestration</td><td>Map the actual canonical states discovered in Psyche/Coven</td><td>Do not promote the prototype’s six visual seal states into a new normative state machine</td></tr>
 <tr><td>Command outcome</td><td>Draft, pending, committed, rejected, unknown outcome</td><td>Pending is visually and structurally distinct from committed; unknown means reconcile, not retry blindly</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>These names are an adapter proposal, not a new canonical enum. Snapshot revisions, ordering/cursor scope, completeness and reset rules must come from existing contracts. A sequence number is meaningful only within its defined owner and stream. On a gap, keep the last verified view, mark it reconciling, and request the supported snapshot/resume path. Do not splice unrelated host streams into an apparently complete ordered history.</p>
 <p>A JSON field claiming <code>authenticated</code>, <code>authoritative</code>, or <code>fresh</code> is not proof. The application establishes transport/session trust, validates the canonical envelope and scope, and derives its own observation state. The projection example <code>(../../examples/proposed-atlas-projection.json)</code> deliberately demonstrates a cached, unverified fixture.</p>
 <h2 id="doc-09-security-and-authority--4-a-protected-operation-needs-a-complete-decision-not-a-button-click">4. A protected operation needs a complete decision, not a button click</h2>
@@ -814,7 +830,7 @@ Audit evidence against every applicable row of document 07 and the presentation 
 <p>During a separately assigned implementation task, the team can inspect repositories, map existing contracts, create isolated adapters and fixtures, prepare draft issues/PRs, and gather evidence within that task&#x27;s authorization. This handoff request itself covers the source package and documentation reader; it does not dispatch the proposed production work. Once implementation is assigned, carry authorized work far enough to make a policy choice concrete instead of stopping at a generic approval note.</p>
 <p>Record a decision as <strong>proposed</strong>, <strong>accepted by owner</strong>, <strong>implemented</strong>, and <strong>verified</strong> separately. A checked-in proposal is not an owner decision; a merged patch is not proof of packaged or remote behavior. Superseded proposals remain linked to the decision that replaced them.</p>
 <h2 id="doc-11-open-decisions--decision-register">Decision register</h2>
-<table><thead><tr><th>ID</th><th>Decision and owner</th><th>Recommended starting proposal</th><th>What must be resolved before acceptance</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>ID</th><th>Decision and owner</th><th>Recommended starting proposal</th><th>What must be resolved before acceptance</th></tr></thead><tbody>
 <tr><td>D01</td><td><strong>Meaning and owner of a Project.</strong> Coven/Psyche owners; Compass product owner</td><td><strong>Naming decided by Val on 2026-11-19: Projects contain Castles.</strong> The visual enclosure is a <strong>Project</strong>, using Coven&#x27;s existing project noun. <strong>Castle definition decided by Val on 2026-11-19:</strong> a <strong>Castle</strong> is a bounded, hosted place where a Project&#x27;s work runs and its results come back, with exactly one execution owner. <code>OpenCoven/coven-host</code> provides a Castle&#x27;s folder surface (<code>Castles/&lt;name&gt;/files</code> in, <code>results</code> out); <code>OpenCoven/coven-castles</code> checks whether a sandbox is fit to back a Castle. A Project has zero or more Castles. A Castle is never the Project: its folder path and <code>castle.json</code> must not become a Project identity, and it keeps its own ID. Map the Project to an existing durable project/workspace scope. Keep a display name separate from its canonical identity and filesystem location.</td><td>Ownership is still open. Inspect current schemas and repositories to establish which canonical object backs a Project, whether missions can span Projects, whether a Project can bind multiple roots without creating a new competing project authority, and whether a Castle serves exactly one Project (a working assumption, not a contract).</td></tr>
 <tr><td>D02</td><td><strong>Host as folder/product surface.</strong> Coven owner; Host product owner</td><td>Treat Coven Host as the human-facing arrangement of files, synchronization and execution surfaces around canonical Coven authority.</td><td>Determine which existing component owns folder discovery, export/import, synchronization configuration and daemon selection. Do not create a new Host control plane to resolve naming uncertainty.</td></tr>
 <tr><td>D03</td><td><strong>Daemon connection and credential handling.</strong> Coven/SDK/security owners</td><td>Use an existing authenticated local or remote transport and canonical SDK binding. Start with a read-only view.</td><td>Pin the supported transport, origin/session rules, credential storage, principal selection and revocation behavior. A static Site must not acquire an unauthenticated loopback bridge merely to make the demo convenient.</td></tr>
@@ -827,15 +843,15 @@ Audit evidence against every applicable row of document 07 and the presentation 
 <tr><td>D10</td><td><strong>Synchronized artifact policy.</strong> Host/Coven owners; security owner</td><td>Allowlist project inputs, immutable outputs and derived exports. Keep live databases, credentials and host execution state outside generic synchronization.</td><td>Define path/type/size policy, symlink handling, content commitments, quarantine, deletion/tombstone behavior, retention and restore. Establish who can authorize a destination and transfer.</td></tr>
 <tr><td>D11</td><td><strong>Canonical metric mapping.</strong> Psyche owner; UI/Brand consumers</td><td>Preserve the current visual vocabulary while mapping each displayed quantity to a verified canonical field or computed projection.</td><td>The prototype uses role-owned target progress, wedge shares and resource-limit ratios. Decide whether equivalent production semantics exist. Unsupported metrics should show unknown or be omitted, not be approximated as authoritative progress.</td></tr>
 <tr><td>D12</td><td><strong>Pilot scope and publication.</strong> Val; component owners</td><td>A one-repository, one-Project, single-authority-host pilot with an explicit bounded operation and rollback/recovery record.</td><td>Select the repository, familiar root/revision, runtime, destination, budget, capabilities and human acceptance owner. Published or paid remote execution requires its own concrete acceptance and authorization; a successful Site simulation is not that evidence.</td></tr>
-</tbody></table>
+</tbody></table></div>
 <h2 id="doc-11-open-decisions--status-of-d01d04-discovery-delivered-awaiting-owners">Status of D01–D04: discovery delivered, awaiting owners</h2>
 <p>Sage&#x27;s read-only discovery for issue #2 is in docs/discovery/2026-11-19-d01-d04 <code>(../discovery/2026-11-19-d01-d04/README.md)</code>, pinned to exact revisions and digests. <strong>Every recommendation in it is proposed.</strong> None of these four decisions is accepted, apart from D01&#x27;s naming, which Val decided on 2026-11-19.</p>
-<table><thead><tr><th>ID</th><th>Status</th><th>Discovery headline</th><th>Proposal to review</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>ID</th><th>Status</th><th>Discovery headline</th><th>Proposal to review</th></tr></thead><tbody>
 <tr><td>D01</td><td>Naming decided (Projects contain Castles). Ownership: <strong>discovery delivered, proposed, awaiting owner</strong></td><td>No canonical Project entity exists, and one folder has three unrelated IDs (findings <code>(../discovery/2026-11-19-d01-d04/findings.md)</code>, gaps G1–G3, G10, G11)</td><td>Cave Client v1 <code>projects.list</code> backs the first read-only view. Show <code>id</code>, <code>name</code>, and <code>root</code> separately, and join work by root.</td></tr>
 <tr><td>D02</td><td><strong>Discovery delivered, proposed, awaiting owner</strong></td><td>Cave owns folder discovery, registration, and daemon selection today. Native <code>coven host</code> isn&#x27;t present (gap G4)</td><td>Compass takes no Host role. Host naming and ownership stay with the Coven and Host owners.</td></tr>
 <tr><td>D03</td><td><strong>Discovery delivered, proposed, awaiting owner</strong></td><td>No safe browser path exists: loopback TCP is unauthenticated with no CORS (gap G5)</td><td>No static-page daemon connection. Run inside Cave or as a <code>chat:read</code> Cave Client v1 consumer. Until then, live data shows as unavailable.</td></tr>
 <tr><td>D04</td><td><strong>Discovery delivered, proposed, awaiting owner</strong></td><td>No project subscription exists, and cursor dialects diverge (gaps G6–G9)</td><td>Snapshot plus poll-and-age. Show stale, reconciling, and unsupported-version states explicitly.</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>Recording an owner&#x27;s acceptance is the owner&#x27;s act. Agents may add evidence here, but they don&#x27;t change a row to accepted.</p>
 <h2 id="doc-11-open-decisions--recommended-dependency-order">Recommended dependency order</h2>
 <p>Resolve D01–D04 through repository discovery and a read-only adapter first. Those decisions make the nouns and read path concrete without changing authority. Prepare D05–D09 as a single vertical operation: one bounded mission, one attempt, one decision, one terminal receipt, including interrupted submission and cancellation. Then exercise D10 through a small synchronized artifact set, not the entire Host directory. Evaluate D11 with real canonical sample records before committing to visual metric claims. D12 is the pilot acceptance decision once the earlier evidence exists.</p>
@@ -857,7 +873,7 @@ Audit evidence against every applicable row of document 07 and the presentation 
 <article class="chapter" id="doc-12-source-ledger" data-group="Implementation" tabindex="-1">
 <h1 id="doc-12-source-ledger--source-ledger-and-evidence-limits">Source ledger and evidence limits</h1>
 <p>Prepared 18 November 2026. Links identify sources; their inclusion is not a claim that an external repository was freshly inspected. Preserve the distinction between owner requirements, local implementation, historical context, external technical references, and proposed work.</p>
-<table><thead><tr><th>ID</th><th>Source</th><th>Evidence class</th><th>Supports</th><th>Limit</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>ID</th><th>Source</th><th>Evidence class</th><th>Supports</th><th>Limit</th></tr></thead><tbody>
 <tr><td>S1</td><td><a href="#doc-user-architecture-instructions">Owner architecture instructions</a></td><td>Owner-supplied constraints</td><td>Canonical component responsibilities, identity/authority boundaries, evidence rules</td><td>Does not prove current implementation</td></tr>
 <tr><td>S2</td><td><code>dist/index.html</code> at Site v3 commit <code>d7b6f1e655140036cca49f31687131352162de13</code></td><td>Inspected prototype code</td><td>Local worlds/events, views, mission seals, synthetic decisions and conversations</td><td>Local simulation only</td></tr>
 <tr><td>S3</td><td><code>dist/atlas-ui.js</code>, <code>dist/atlas.css</code>, <code>dist/semantic-map.css</code> at v3</td><td>Inspected prototype code</td><td>Simplified chrome, scope layers, glyphs, dots, boundary markers</td><td>Browser interaction/layout not accepted</td></tr>
@@ -872,7 +888,7 @@ Audit evidence against every applicable row of document 07 and the presentation 
 <tr><td>S12</td><td>Pre-combination layout/crown source and package checks recorded in <a href="#doc-01-current-state-and-evidence">chapter 01</a></td><td>Historical source/package evidence</td><td>Suite, crown, and source checks; clean extraction/rebuild and archive verification passed (counts in chapter 01)</td><td>Applies to the layout branch before the replay/mobile merge, not the current combined artifact</td></tr>
 <tr><td>S13</td><td>Incoming commit <code>07919b421df5457e778e1b1c6a73512c8f27ba73</code> and replay/mobile audit JSON <code>(../../tests/evidence/replay-mobile-layout-audits.json)</code></td><td>Historical incoming source/Chrome evidence</td><td>Node tests and settled Chrome audits, with fingerprints and diagnostic/retest records (counts in chapter 01)</td><td>Pre-this-combined-layout evidence; not browser, native-device, or performance acceptance of the merge</td></tr>
 <tr><td>S14</td><td><code>tests/evidence/current.json</code> <code>(../../tests/evidence/current.json)</code>, generated by <code>scripts/verify-all.mjs</code></td><td>Executed current source/package evidence, checked by CI</td><td>Current suite, crown, static-checker, clean-extraction/rebuild, and archive-verification results</td><td>Static + unit only; no browser, device, or load acceptance. The 2026-11-18 handoff-edition counts are in chapter 01</td></tr>
-</tbody></table>
+</tbody></table></div>
 <h2 id="doc-12-source-ledger--how-the-sources-shape-the-proposal">How the sources shape the proposal</h2>
 <p>The architectural boundary comes from S1: Coven owns authoritative transitions/persistence, Psyche owns orchestration semantics, Threads governs protected surfaces, and clients consume canonical SDK bindings. The source in S2–S4 provides a view and a local reducer that can be reused as a demonstration/fixture; it does not establish a production integration. The recommended first slice is therefore a verified read-only projection before operational commands.</p>
 <p>S7–S8 support avoiding generic synchronization of a live database file. The proposed Host folder carries portable project inputs, approved immutable artifacts, and derived views; an authoritative daemon must own export/import and reconciliation. The exact current database, supported export mechanism, and platform recovery behavior remain discovery tasks.</p>
@@ -891,14 +907,14 @@ Audit evidence against every applicable row of document 07 and the presentation 
 <p>Compass displays a local simulation on a flat map. This guide describes the layout, navigation and detail rules for desktop and narrow viewports.</p>
 <p>The inspected implementation surfaces are <a href="../atlas-layout.js"><code>atlas-layout.js</code></a>, <a href="../atlas-viewport.js"><code>atlas-viewport.js</code></a>, <a href="../atlas-crown.js"><code>atlas-crown.js</code></a>, and the surrounding <a href="../index.html">scene</a> and <a href="../atlas-ui.js">UI adapter</a>. These presentation helpers remain separate from authoritative orchestration state. This guide supersedes earlier overview positioning and zoom-driven scope assumptions. Read it alongside the <a href="#doc-08-visual-and-interaction-contract">visual contract</a>, <a href="#doc-02-architecture-and-ownership">ownership map</a>, and <a href="#doc-09-security-and-authority">security and authority requirements</a>.</p>
 <h2 id="doc-15-scalable-atlas-layout--1-what-the-geometry-means">1. What the geometry means</h2>
-<table><thead><tr><th>Representation</th><th>Meaning</th><th>Constraint</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>Representation</th><th>Meaning</th><th>Constraint</th></tr></thead><tbody>
 <tr><td>Project outline</td><td>One project in the Coven overview</td><td>Connect the scope to its coordination route and show its mission total.</td></tr>
 <tr><td>Mission count inside a Project</td><td>Exact known mission total in that Project</td><td>Enter the Project or use the searchable mission browser for individual seals and details.</td></tr>
 <tr><td>Central crown badge</td><td>Psyche coordinates the displayed scope</td><td>Use the same canonical silhouette at every size.</td></tr>
 <tr><td>Shared branch corridor</td><td>A readable coordination connection from Psyche to a project</td><td>Shared segments do not assert execution order, dependencies, network connectivity, or shared permissions.</td></tr>
 <tr><td>Inward-facing Project gate</td><td>Where that project&#x27;s coordination route meets its enclosure</td><td>The direction is geometric. North, east, south, and west do not create authorization categories.</td></tr>
 <tr><td>Position in the lattice</td><td>A stable presentation slot</td><td>Nearness to Psyche does not imply importance, ownership, scheduling priority, or stronger authority.</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>All overview Projects use the same enclosure vocabulary, including the currently selected project. Selecting a project elsewhere must not unexpectedly substitute its full internal scene into the overview. Familiar colors and glyphs retain their existing identity-recognition role; selection and urgency remain separate signals. Exact familiar roots and revisions belong to the verified data binding, never to color or shape. <a href="#doc-08-visual-and-interaction-contract">Visual contract</a></p>
 <h2 id="doc-15-scalable-atlas-layout--2-compact-placement-for-a-changing-project-count">2. Compact placement for a changing project count</h2>
 <p>The layout helper accepts an ordered collection of unique project keys. It reserves a central hub and fills nearby lattice cells in opposite pairs. This produces a compact arrangement with balanced space around Psyche, including when the project count is odd. It avoids enlarging a single ring every time a project is added. The usable aspect ratio influences which nearby cells are selected: a wide canvas favors horizontal space, while a narrow canvas makes greater use of vertical space. <a href="../atlas-layout.js">Layout source</a></p>
@@ -935,7 +951,7 @@ Audit evidence against every applicable row of document 07 and the presentation 
 <p>Introducing a third dimension requires Val’s explicit override of the 2D-only restriction in the issue or PR before implementation. Cite that decision and update the product invariant, source guard and rendered acceptance checks together. Preferences, imported recordings and navigation routes cannot enable a different renderer. Contributor instructions <code>(../../AGENTS.md)</code></p>
 <h2 id="doc-15-scalable-atlas-layout--6-integrate-through-existing-owners">6. Integrate through existing owners</h2>
 <p>The following boundaries are supplied architecture requirements, not claims that production repositories have been inspected or integrated. <a href="#doc-02-architecture-and-ownership">Canonical ownership</a></p>
-<table><thead><tr><th>Component</th><th>Integration responsibility</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>Component</th><th>Integration responsibility</th></tr></thead><tbody>
 <tr><td>Coven Host</td><td>Present the existing workspace/project arrangement and discover its canonical bindings. Folder location and synced files do not create daemon authority.</td></tr>
 <tr><td>Coven</td><td>Retain daemon authority, durable state, sessions, runtime execution, and authoritative transitions. A layout snapshot is never a writable substitute.</td></tr>
 <tr><td>Psyche</td><td>Supply canonical task, lane, lease, approval, receipt, retry, and recovery semantics. Visual routes do not add dependency edges to that model.</td></tr>
@@ -944,7 +960,7 @@ Audit evidence against every applicable row of document 07 and the presentation 
 <tr><td>Psyche Build</td><td>Reuse the same canonical projection mapping for coding missions and lanes. Do not introduce a separate scheduler or approval implementation to support this map.</td></tr>
 <tr><td>Coven CLI</td><td>Query and request actions through existing canonical bindings. Do not create a second persistence store or control plane to synchronize with the visualization.</td></tr>
 <tr><td>SDK / Brand / UI</td><td>Provide existing public bindings, approved identity assets/tokens, and reusable presentation specimens within their established ownership.</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>Before connecting live data, inspect the owning repositories and map their existing identifiers and state fields. Keep that mapping in a constrained presentation adapter rather than declaring this Site&#x27;s fixture objects a new canonical schema. Familiars remain bound to an exact authorized root and revision. Pending decisions remain pending; a gate marker, route, selected Project, or crown never grants permission to commit a protected operation. Connection, freshness, and availability remain separate from mission lifecycle state. <a href="#doc-09-security-and-authority">Authority requirements</a></p>
 <h2 id="doc-15-scalable-atlas-layout--7-implementation-sequence-and-execution-tips">7. Implementation sequence and execution tips</h2>
 <ol start="1">
@@ -1134,7 +1150,7 @@ Use synthetic data. Do not include tokens, raw credentials, private memory, or p
 </ul>
 </article>
 <article class="chapter" id="doc-canonical-binding-inventory" data-group="Reference" tabindex="-1">
-<h1>Canonical binding inventory</h1><table><tr><th>concept</th><th>expected_owner</th><th>repository</th><th>source_revision</th><th>canonical_symbol_or_schema</th><th>transport_and_version</th><th>authentication_and_authorization</th><th>receipt_or_revision_evidence</th><th>status</th></tr><tr><td>Familiar root and exact revision</td><td>Familiar Contract</td><td>DISCOVER</td><td>UNVERIFIED</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>unverified</td></tr><tr><td>Continuity profile query</td><td>SPAR</td><td>DISCOVER</td><td>UNVERIFIED</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>unverified</td></tr><tr><td>Protected operation proposal or decision</td><td>Coven Threads with Coven commit owner</td><td>DISCOVER</td><td>UNVERIFIED</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>unverified</td></tr><tr><td>Mission task lane lease attempt semantics</td><td>Psyche</td><td>DISCOVER</td><td>UNVERIFIED</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>unverified</td></tr><tr><td>Durable authoritative transitions and recovery</td><td>Coven daemon</td><td>DISCOVER</td><td>UNVERIFIED</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>unverified</td></tr><tr><td>Public constrained binding</td><td>SDK</td><td>DISCOVER</td><td>UNVERIFIED</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>unverified</td></tr><tr><td>Project workspace identity and ownership</td><td>Existing canonical Project or Coven owner to verify</td><td>DISCOVER</td><td>UNVERIFIED</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>unverified</td></tr><tr><td>Portable Host folder export and import</td><td>Existing Coven persistence and Project owner to verify</td><td>DISCOVER</td><td>UNVERIFIED</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>proposed</td></tr><tr><td>CLI request and receipt display</td><td>Coven CLI canonical client</td><td>DISCOVER</td><td>UNVERIFIED</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>unverified</td></tr><tr><td>Coding cockpit projection</td><td>Psyche Build</td><td>DISCOVER</td><td>UNVERIFIED</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>unverified</td></tr><tr><td>Human oversight surface</td><td>Cave existing approved surface</td><td>DISCOVER</td><td>UNVERIFIED</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>unverified</td></tr><tr><td>Runtime capability and conformance</td><td>Coven Runtimes</td><td>DISCOVER</td><td>UNVERIFIED</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>unverified</td></tr><tr><td>Read-only memory view</td><td>Coven Memory</td><td>DISCOVER</td><td>UNVERIFIED</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>unverified</td></tr></table>
+<h1>Canonical binding inventory</h1><div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><tr><th>concept</th><th>expected_owner</th><th>repository</th><th>source_revision</th><th>canonical_symbol_or_schema</th><th>transport_and_version</th><th>authentication_and_authorization</th><th>receipt_or_revision_evidence</th><th>status</th></tr><tr><td>Familiar root and exact revision</td><td>Familiar Contract</td><td>DISCOVER</td><td>UNVERIFIED</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>unverified</td></tr><tr><td>Continuity profile query</td><td>SPAR</td><td>DISCOVER</td><td>UNVERIFIED</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>unverified</td></tr><tr><td>Protected operation proposal or decision</td><td>Coven Threads with Coven commit owner</td><td>DISCOVER</td><td>UNVERIFIED</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>unverified</td></tr><tr><td>Mission task lane lease attempt semantics</td><td>Psyche</td><td>DISCOVER</td><td>UNVERIFIED</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>unverified</td></tr><tr><td>Durable authoritative transitions and recovery</td><td>Coven daemon</td><td>DISCOVER</td><td>UNVERIFIED</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>unverified</td></tr><tr><td>Public constrained binding</td><td>SDK</td><td>DISCOVER</td><td>UNVERIFIED</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>unverified</td></tr><tr><td>Project workspace identity and ownership</td><td>Existing canonical Project or Coven owner to verify</td><td>DISCOVER</td><td>UNVERIFIED</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>unverified</td></tr><tr><td>Portable Host folder export and import</td><td>Existing Coven persistence and Project owner to verify</td><td>DISCOVER</td><td>UNVERIFIED</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>proposed</td></tr><tr><td>CLI request and receipt display</td><td>Coven CLI canonical client</td><td>DISCOVER</td><td>UNVERIFIED</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>unverified</td></tr><tr><td>Coding cockpit projection</td><td>Psyche Build</td><td>DISCOVER</td><td>UNVERIFIED</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>unverified</td></tr><tr><td>Human oversight surface</td><td>Cave existing approved surface</td><td>DISCOVER</td><td>UNVERIFIED</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>unverified</td></tr><tr><td>Runtime capability and conformance</td><td>Coven Runtimes</td><td>DISCOVER</td><td>UNVERIFIED</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>unverified</td></tr><tr><td>Read-only memory view</td><td>Coven Memory</td><td>DISCOVER</td><td>UNVERIFIED</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>DISCOVER</td><td>unverified</td></tr></table></div>
 </article>
 <article class="chapter" id="doc-readme" data-group="Project" tabindex="-1">
 <h1 id="doc-readme--coven-compass">Coven Compass</h1>
@@ -1230,12 +1246,12 @@ python3 scripts/verify-handoff.py artifacts/Coven_Compass_Handoff_2026-11-19.zip
 </ol>
 <p>The handoff HTML is also available at <code>dist/handoff/guide.html</code>. Markdown chapters are the editable documentation source. The Site&#x27;s Handoff entry opens the guide.</p>
 <h2 id="doc-starthere--where-to-make-a-change">Where to make a change</h2>
-<table><thead><tr><th>Change</th><th>Editable source</th><th>Focused check</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>Change</th><th>Editable source</th><th>Focused check</th></tr></thead><tbody>
 <tr><td>Project and mission navigation</td><td><code>dist/mission-navigation.js</code>, <code>dist/atlas-ui.js</code>, and their app bindings in <code>dist/index.html</code></td><td><code>node --test tests/navigation.test.cjs tests/mission-interactions.test.cjs</code></td></tr>
 <tr><td>Map placement and camera</td><td><code>dist/atlas-layout.js</code>, <code>dist/atlas-viewport.js</code></td><td><code>node --test tests/atlas-layout.test.cjs tests/atlas-viewport.test.cjs</code></td></tr>
 <tr><td>Mobile controls and focus</td><td><code>dist/mobile-ui.js</code>, <code>dist/mobile-interactions.js</code>, <code>dist/atlas.css</code></td><td><code>node --test tests/mobile-*.test.cjs</code></td></tr>
 <tr><td>Handoff chapter</td><td>Markdown under <code>docs/handoff/</code></td><td>Rebuild the guide and ZIP below, then follow the Handoff link in the preview.</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>The application in <code>dist/</code> is editable browser source. The builder generates <code>dist/handoff/guide.html</code> and a local verification archive. Preserve the baseline under <code>tests/fixtures/</code> and dated audits under <code>tests/evidence/</code> as historical evidence.</p>
 <h2 id="doc-starthere--run-and-check">Run and check</h2>
 <p>From a Git checkout, run the full verification with <code>node scripts/verify-all.mjs</code> (<code>sh scripts/verify-checkout.sh</code> is the same command). It runs every check below plus the clean-extraction checks, and exits non-zero if any step fails or is skipped. See AGENTS.md <code>(AGENTS.md)</code> for editable sources and focused checks.</p>
@@ -1257,14 +1273,14 @@ python3 -m zipfile -e artifacts/Coven_Compass_Handoff_2026-11-19.zip &quot;$expo
 python3 scripts/verify-handoff.py &quot;$export_check/Coven_Compass_Handoff_2026-11-19&quot;</code></pre>
 <p>The generated ZIP is excluded from its own contents. It can be recreated from the extracted package. The other files required to run Compass and rebuild the handoff are included.</p>
 <h2 id="doc-starthere--what-to-read-for-your-role">What to read for your role</h2>
-<table><thead><tr><th>Role</th><th>Reading order</th><th>First output</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>Role</th><th>Reading order</th><th>First output</th></tr></thead><tbody>
 <tr><td>Product / architecture owner</td><td>01 → 02 → 05 → 11</td><td>Accepted scope, canonical owners, and decisions requiring validation</td></tr>
 <tr><td>Coven / SDK implementer</td><td>02 → 03 → 09 → 07</td><td>Verified binding map and one read-only end-to-end slice</td></tr>
 <tr><td>Host / Projects implementer</td><td>02 → 04 → 09 → 07</td><td>Folder classification, authority owner, synchronization/recovery evidence</td></tr>
 <tr><td>Psyche / Psyche Build implementer</td><td>02 → 03 → 05 → 06</td><td>Canonical mission/attempt mapping and bounded execution packet</td></tr>
 <tr><td>Compass / Cave / CLI implementer</td><td>01 → 03 → 08 → 15 → 07</td><td>Client projection, scalable layout, explicit scope, and stale/proposal/error behavior</td></tr>
 <tr><td>Coordinating agent</td><td>06 → 10 → 05</td><td>Pinned inventory, lane ownership, narrow implementation, exact evidence</td></tr>
-</tbody></table>
+</tbody></table></div>
 <h2 id="doc-starthere--package-map">Package map</h2>
 <ul>
 <li><p><code>dist/</code>: complete static application plus the handoff landing page and generated reader.</p></li>
@@ -1290,16 +1306,16 @@ python3 scripts/verify-handoff.py &quot;$export_check/Coven_Compass_Handoff_2026
 <h2 id="doc-mobilereadiness--current-status-and-historical-boundary">Current status and historical boundary</h2>
 <p><strong>Current source and package counts are generated</strong> by <code>node scripts/verify-all.mjs</code> into <code>tests/evidence/current.json</code> <code>(tests/evidence/current.json)</code> and checked by CI. Everything below is a dated record and is not updated with later changes.</p>
 <p><strong>Combined source-level verification passed (2026-11-18 handoff-edition checkpoint).</strong> The scalable-layout/crown source now incorporates replay and adaptive-mobile improvements from <code>07919b421df5457e778e1b1c6a73512c8f27ba73</code>. At that checkpoint the final combined suite passed <strong>207 tests with zero failures, cancellations, or skips</strong>; the crown check passed <strong>84 view/size combinations</strong> plus canonical digest/aperture/bounds/stable-node checks; and the static source checker passed. <strong>Combined ZIP clean-extraction, rebuilding, and archive verification passed</strong>, including the same source suite and crown checks in the extracted copy. The following evidence belongs to three earlier checkpoints:</p>
-<table><thead><tr><th>Checkpoint</th><th>Evidence</th><th>What it does not establish</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>Checkpoint</th><th>Evidence</th><th>What it does not establish</th></tr></thead><tbody>
 <tr><td>Layout/crown branch before this merge</td><td>182 passing Node tests, 84 crown view/size combinations plus canonical checks, passing source checks and clean extraction/rebuild.</td><td>A passing combined suite or current browser acceptance.</td></tr>
 <tr><td>Incoming replay/adaptive-mobile branch</td><td>71 passing Node tests and 57 settled Chrome audits.</td><td>Browser acceptance of the combined lattice, crown, fit, and mobile replay layout.</td></tr>
 <tr><td>Earlier mobile/navigation baseline</td><td>51 passing Node tests and 72 settled Chrome audits, with separate supplemental checks.</td><td>Acceptance of either later branch or this merge.</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>Headless Chromium QA of the current source ran on 2026-11-19 (record <code>(tests/evidence/browser-qa-2026-11-19.json)</code>, summarized in chapter 01); it does not establish Safari, physical-device, real multi-touch, keyboard-only, or screen-reader acceptance. The incoming audit records its own source fingerprints; it is pre-this-combined-layout evidence, not a new browser run against the merged artifact. Current results belong in <a href="#doc-01-current-state-and-evidence">current state and evidence</a>. Physical iPhone/Safari acceptance remains necessary for a production device claim. The Site remains a local simulation without a native iOS binary, daemon connection, persistent mission execution, or real authorization.</p>
 <p>The overview retains compact paired placement, shared coordination corridors, and full/compact/tiny density modes. Full detail shows at most eight mission seals plus overflow; denser views show exact aggregates, with all missions available through search and drilldown. The Projects drawer provides project search and 8/16/32/64/128 sample presets; <strong>Remove extra samples</strong> preserves baseline and user-created Projects. Coven/project scope stays explicit. Measured stage changes from the adaptive dock must honor the same auto-fit policy: resize refits only in auto-fit mode and preserves manual framing. <a href="#doc-15-scalable-atlas-layout">Scalable layout guide</a></p>
 <p>The implementation adapts to viewport size and primary pointer type. It does not hard-code an iPhone model or assume that folding produces one particular CSS resolution. Mobile sheets apply through 1100 CSS pixels and on primary coarse-pointer devices.</p>
 <h2 id="doc-mobilereadiness--interaction-contract">Interaction contract</h2>
-<table><thead><tr><th>Surface</th><th>Expected behavior</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>Surface</th><th>Expected behavior</th></tr></thead><tbody>
 <tr><td>Missions</td><td>Search mission, Project, or familiar; filter by Project and state; recover from no matches with Clear filters.</td></tr>
 <tr><td>Detail exploration</td><td>Brief, Council, Tasks, and Agents use accessible tabs. Arrow keys, Home, and End move between sections. Previous/Next stays within the Project.</td></tr>
 <tr><td>Familiar scope</td><td>Back to mission returns to the whole selected mission.</td></tr>
@@ -1316,7 +1332,7 @@ python3 scripts/verify-handoff.py &quot;$export_check/Coven_Compass_Handoff_2026
 <tr><td>Typing</td><td>Editable text uses at least 16px mobile type. Composition guards preserve IME candidate keys. Drafts stay in their existing DOM nodes through viewport transitions.</td></tr>
 <tr><td>Forms</td><td>Headers and primary actions stay outside the scrolling fields, preventing a sticky action bar from covering form controls. Empty Projects have a dismissible form and a persistent New mission action.</td></tr>
 <tr><td>Source handoff</td><td>The desktop header opens the source package and guide. On mobile, the same link sits in the Projects drawer, leaving the primary mission controls clear. The handoff provides a direct return to Compass.</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>The camera actions are folded behind View and use two rows on compact screens. The workspace dock yields to modal sheets and the keyboard; it restores the original controls to their desktop placement when leaving the mobile layout. Safe-area insets, visual viewport width/height, and viewport offsets position sheets around available screen space. The visual viewport keyboard heuristic is used for layout behavior; it is not a claim that every iOS keyboard has been reproduced in testing.</p>
 <h2 id="doc-mobilereadiness--replay-and-adaptive-views-incoming-implementation">Replay and adaptive views — incoming implementation</h2>
 <ul>
@@ -1351,7 +1367,7 @@ python3 scripts/verify-handoff.py &quot;$export_check/Coven_Compass_Handoff_2026
 </ul>
 <h2 id="doc-mobilereadiness--historical-incoming-source-regression-record">Historical incoming source regression record</h2>
 <p>Before combination with the layout/crown branch, <code>node --test tests/*.test.cjs</code> passed <strong>71/71</strong> tests for the incoming replay/adaptive-mobile follow-up. These are historical per-file counts, not the combined total:</p>
-<table><thead><tr><th>File</th><th>Tests</th><th>Scope</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>File</th><th>Tests</th><th>Scope</th></tr></thead><tbody>
 <tr><td><code>tests/presentation.test.cjs</code></td><td>7</td><td>Scope visibility, familiar filtering, replay model changes, and retained seal geometry.</td></tr>
 <tr><td><code>tests/navigation.test.cjs</code></td><td>11</td><td>Route parsing/formatting, malformed links, repeated mission IDs across Projects, and stale selection cleanup.</td></tr>
 <tr><td><code>tests/mobile-interactions.test.cjs</code></td><td>13</td><td>Pointer transitions, centroid anchoring, pan/orbit bounds, lock, orbit recovery, viewport offsets, and keyboard geometry.</td></tr>
@@ -1361,24 +1377,24 @@ python3 scripts/verify-handoff.py &quot;$export_check/Coven_Compass_Handoff_2026
 <tr><td>tests/replay-clock.test.cjs <code>(tests/replay-clock.test.cjs)</code></td><td>9</td><td>Project focus, playing/paused position, elapsed frame timing, shared live extent, empty Projects, recording/live completion, and frame recovery.</td></tr>
 <tr><td>tests/replay-render.test.cjs <code>(tests/replay-render.test.cjs)</code></td><td>3</td><td>Actual focused/overview seal rendering before seating; event progression, closure, and backward seeks.</td></tr>
 <tr><td>tests/replay-emission.test.cjs <code>(tests/replay-emission.test.cjs)</code></td><td>2</td><td>Delayed inactive reports preserve playing or paused replay until the cursor advances or Go live is selected.</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>These execute real extracted functions or shared modules with DOM facades and numeric inputs. They do not provide a browser layout engine or emulate iOS.</p>
 <p>The preceding pass also recorded standalone JavaScript syntax checks, inline-script compilation, static asset/ID checks, CSS structural checks, and <code>git diff --check</code>. No non-extension application errors were observed in that pass&#x27;s final inspected Chrome interaction logs. Those results apply to its recorded revision.</p>
 <h2 id="doc-mobilereadiness--historical-verified-evidence-earlier-mobile-baseline">Historical verified evidence — earlier mobile baseline</h2>
 <h3 id="doc-mobilereadiness--historical-regression-suite">Historical regression suite</h3>
 <p>The pre-layout mobile pass ran <code>node --test tests/*.test.cjs</code> and recorded <strong>51/51</strong> tests. These are historical counts for that checkpoint, not the current source-suite total:</p>
-<table><thead><tr><th>File</th><th>Tests</th><th>Scope</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>File</th><th>Tests</th><th>Scope</th></tr></thead><tbody>
 <tr><td><code>tests/presentation.test.cjs</code></td><td>7</td><td>Scope visibility, familiar filtering, replay model changes, and retained seal geometry.</td></tr>
 <tr><td><code>tests/navigation.test.cjs</code></td><td>11</td><td>Route parsing/formatting, malformed links, repeated mission IDs across Projects, and stale selection cleanup.</td></tr>
 <tr><td><code>tests/mobile-interactions.test.cjs</code></td><td>13</td><td>Pointer transitions, centroid anchoring, pan/orbit bounds, lock, orbit recovery, viewport offsets, and keyboard geometry.</td></tr>
 <tr><td><code>tests/mobile-ui.test.cjs</code></td><td>9</td><td>Portals, nested overlays, focus restoration, Tab/IME handling, viewport scheduling, and native-dialog priority.</td></tr>
 <tr><td><code>tests/mission-interactions.test.cjs</code></td><td>11</td><td>Empty-Project recovery, form focus order, explicit agent reveal, stable agent DOM/focus, and disappearing actions.</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>These execute real extracted functions or shared modules with DOM facades and numeric inputs. They do not provide a browser layout engine or emulate iOS.</p>
 <p>At that pre-layout checkpoint, standalone JavaScript syntax checks, inline-script compilation, static asset/ID checks, CSS structural checks, and <code>git diff --check</code> also passed. No non-extension application errors were observed in the Chrome logs inspected during that historical interaction run.</p>
 <h3 id="doc-mobilereadiness--historical-rendered-layout-matrix">Historical rendered layout matrix</h3>
 <p>The historical record contains <strong>72 settled Chrome audits</strong>: four core surfaces at 17 mobile/tablet sizes, three desktop reference audits, and one final Project-form audit. Before measuring, the harness waited two animation frames for responsive portals and viewport variables to settle. These audits precede the current scalable-layout refinement.</p>
-<table><thead><tr><th>Family</th><th>CSS viewport sizes</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>Family</th><th>CSS viewport sizes</th></tr></thead><tbody>
 <tr><td>Compact and standard phones</td><td>320×568, 360×640, 375×667, 390×844, 402×874, 430×932</td></tr>
 <tr><td>Duo-oriented stress sizes</td><td>466×678, 626×890, 890×626, 678×466</td></tr>
 <tr><td>Split-width layouts</td><td>320×626, 600×800</td></tr>
@@ -1386,7 +1402,7 @@ python3 scripts/verify-handoff.py &quot;$export_check/Coven_Compass_Handoff_2026
 <tr><td>Short landscape</td><td>852×393</td></tr>
 <tr><td>Constrained height</td><td>390×360</td></tr>
 <tr><td>Desktop reference</td><td>1280×800</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>The four core surfaces were the Coven overview, mission browser, mission Brief, and conversation. All <strong>69 recorded mobile/tablet audits</strong> reported:</p>
 <ul>
 <li><p>No document horizontal overflow.</p></li>
@@ -1432,7 +1448,7 @@ python3 scripts/verify-handoff.py &quot;$export_check/Coven_Compass_Handoff_2026
 <p>Apple describes transitions among folded/unfolded use, portrait/landscape, and Split View. The implementation handles ordinary viewport/pointer changes and retains the same DOM nodes; actual folding and multitasking events must still be exercised on hardware.</p>
 <h3 id="doc-mobilereadiness--physical-device-release-acceptance">Physical-device release acceptance</h3>
 <p>These cases remain <strong>unverified</strong>. They are the next acceptance gate for a production device claim, not failures observed in the historical browser run.</p>
-<table><thead><tr><th>Case</th><th>Pass criterion</th></tr></thead><tbody>
+<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table><thead><tr><th>Case</th><th>Pass criterion</th></tr></thead><tbody>
 <tr><td>Actual Duo display geometry</td><td>Record <code>innerWidth/innerHeight</code>, visual viewport dimensions/offsets, DPR, orientation, and safe areas on both displays; repeat the core flows at those observed sizes.</td></tr>
 <tr><td>Fold/unfold with active work</td><td>Mission, familiar, tab, filters, draft text, caret, and scroll context remain coherent through display transitions. No sheet remains inert or offscreen.</td></tr>
 <tr><td>Split View resizing</td><td>Drag through supported pane widths, including the smallest permitted width; controls stay reachable and the active sheet retains focus.</td></tr>
@@ -1443,7 +1459,7 @@ python3 scripts/verify-handoff.py &quot;$export_check/Coven_Compass_Handoff_2026
 <tr><td>VoiceOver</td><td>Rotor order, selected tabs, live announcements, nested sheets, form labels/errors, agent reveal, and focus return are usable without sight.</td></tr>
 <tr><td>Text and accessibility settings</td><td>Larger Text/page zoom, Reduce Motion, and Increase Contrast preserve reading, hit targets, and task completion at short heights.</td></tr>
 <tr><td>Sustained use</td><td>Exercise repeated gestures, long conversation history, mission switches, and background/foreground recovery; record frame pacing, memory, thermal behavior, and battery impact. No device performance claim has been made from the current checks.</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p>No physical iPhone, Safari/WebKit run, on-screen iOS keyboard, actual folding hardware, VoiceOver session, or native application packaging evidence is established by this handoff. Historical browser captures and source-fixture success must not substitute for that evidence.</p>
 <h2 id="doc-mobilereadiness--reproduce-the-checks">Reproduce the checks</h2>
 <p>Run the current source suite and crown check; record their actual outcomes rather than copying the historical test total:</p>
@@ -1474,7 +1490,7 @@ node scripts/test-atlas-crown.mjs</code></pre>
 </article>
     <nav class="pager" aria-label="Adjacent chapters" hidden><a id="previous"></a><a id="next"></a></nav>
   </main>
-  <aside class="outline" hidden><nav aria-label="On this page"><h2>On this page</h2><ul></ul></nav></aside>
+  <aside class="outline-rail"><details class="outline" hidden open><summary>On this page</summary><nav aria-label="On this page"><ul></ul></nav></details></aside>
 </div>
 </body>
 </html>

@@ -377,9 +377,11 @@ def write_guide() -> int:
             content += "</table>"
         else:
             content = Markdown(path, chapter_id, chapter_ids).render(text)
+        # Keep the native table semantics inside a horizontally scrollable viewport.
+        content = content.replace("<table>", '<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table>').replace("</table>", "</table></div>")
         chapters.append(f'<article class="chapter" id="{chapter_id}" data-group="{group}" tabindex="-1">\n{content}\n</article>')
     navigation = "\n".join(
-        f'<h2>{group}</h2><ul>{"".join(groups[group])}</ul>'
+        f'<details class="chapter-group"{" open" if group == "Project" else ""}><summary>{group}</summary><ul>{"".join(groups[group])}</ul></details>'
         for group in ("Project", "Implementation", "Reference") if group in groups
     )
     template = Template(source_bytes(ROOT / "scripts/guide-template.html").decode("utf-8"))
