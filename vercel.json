@@ -1,4 +1,4 @@
 {
-  "buildCommand": "python3 scripts/build-handoff.py",
+  "buildCommand": "python3 scripts/build-handoff.py && sh scripts/with-gitleaks.sh python3 scripts/scan-secrets.py source .",
   "outputDirectory": "dist"
 }
