@@ -346,12 +346,15 @@
     shield(familiars);
     var cameraDock = node('div', 'atlas-camera-dock'); cameraDock.id = 'atlasCameraDock';
     cameraDock.setAttribute('role', 'toolbar'); cameraDock.setAttribute('aria-label', 'Map controls');
-    [['atlasZoomOut', '−', 'out', 'Zoom out'], ['atlasZoomIn', '+', 'in', 'Zoom in'], ['atlasFit', 'Fit view', 'fit', 'Fit the current selection in view'], ['atlasLock', 'Lock', 'lock', 'Lock the map']].forEach(function (item) {
-      var control = button(item[0], item[1], function () { api.camera(item[2]); });
-      if (item[0] === 'atlasLock') {
-        control.innerHTML = '<svg aria-hidden="true" viewBox="0 0 16 16"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path class="lock-closed" d="M5 7V5a3 3 0 0 1 6 0v2"/><path class="lock-open" d="M5 7V5a3 3 0 0 1 5.7-1.3"/></svg><span>Lock</span>';
-      }
-      control.setAttribute('aria-label', item[3]); control.title = item[3]; cameraDock.append(control);
+    [
+      ['atlasZoomOut', 'out', 'Zoom out', '<path d="M3 8h10"/>'],
+      ['atlasZoomIn', 'in', 'Zoom in', '<path d="M3 8h10M8 3v10"/>'],
+      ['atlasFit', 'fit', 'Fit view', '<path d="M2 6V2h4m4 0h4v4m0 4v4h-4m-4 0H2v-4"/><circle cx="8" cy="8" r="1.5"/>'],
+      ['atlasLock', 'lock', 'Lock the map', '<rect x="3" y="7" width="10" height="7" rx="1.5"/><path class="lock-closed" d="M5 7V5a3 3 0 0 1 6 0v2"/><path class="lock-open" d="M5 7V5a3 3 0 0 1 5.7-1.3"/>']
+    ].forEach(function (item) {
+      var control = button(item[0], '', function () { api.camera(item[1]); });
+      control.innerHTML = '<svg aria-hidden="true" viewBox="0 0 16 16">' + item[3] + '</svg>';
+      control.setAttribute('aria-label', item[2]); control.title = item[2]; cameraDock.append(control);
     });
     var markerLabel = node('label', 'atlas-marker-style');
     markerLabel.title = 'Psyche marker';
@@ -359,11 +362,16 @@
     var markerSelect = node('select');
     markerSelect.id = 'atlasMarkerStyle';
     markerSelect.setAttribute('aria-label', 'Psyche marker');
-    [['crown', 'Crown'], ['point', 'Point'], ['labeled', 'Labeled crown']].forEach(function (item) {
-      var option = node('option', '', item[1]); option.value = item[0]; markerSelect.append(option);
+    var markerNames = {crown: 'Crown', point: 'Point', labeled: 'Labeled crown'};
+    Object.keys(markerNames).forEach(function (key) {
+      var option = node('option', '', markerNames[key]); option.value = key; markerSelect.append(option);
     });
     markerSelect.value = document.body.dataset.psycheMarker || 'crown';
-    markerSelect.addEventListener('change', function () { api.setPsycheMarker(markerSelect.value); });
+    function describeMarker() {
+      markerSelect.title = 'Psyche marker · ' + markerNames[markerSelect.value];
+    }
+    markerSelect.addEventListener('change', function () { api.setPsycheMarker(markerSelect.value); describeMarker(); });
+    describeMarker();
     markerLabel.append(markerSelect);
     cameraDock.append(markerLabel);
     shield(cameraDock);
@@ -385,7 +393,9 @@
     document.addEventListener('focusin', function (ev) {
       if (tools.open && !tools.contains(ev.target)) tools.open = false;
     });
-    stage.append(buildNotice(), aside, missionBrowser, familiars, cameraDock, navigationStatus);
+    var footer = node('div', 'atlas-map-footer');
+    footer.append(familiars, cameraDock);
+    stage.append(buildNotice(), aside, missionBrowser, footer, navigationStatus);
     document.addEventListener('pointerdown', function (ev) {
       if (!aside.hidden && !aside.contains(ev.target) && !browse.contains(ev.target)) closeBrowse(false);
       if (!missionBrowser.hidden && !missionBrowser.contains(ev.target) && !missions.contains(ev.target)) closeMissions(false);
@@ -417,7 +427,6 @@
       if (dock.dataset.locked !== String(s.camera.locked)) {
         dock.dataset.locked = String(s.camera.locked);
         lock.setAttribute('aria-pressed', String(s.camera.locked));
-        lock.querySelector('span').textContent = s.camera.locked ? 'Unlock' : 'Lock';
         lock.title = s.camera.locked ? 'Unlock the map' : 'Lock the map';
         lock.setAttribute('aria-label', lock.title);
       }
