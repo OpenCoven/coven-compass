@@ -1664,7 +1664,7 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
         <div class="plan-head">
           <div class="ctl crumb">
           <details class="pill" id="proj">
-            <summary class="btn"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M6 2H4L2 4v6l2 2h6l2-2V4l-2-2H8" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg><span class="sr">Project: </span><span class="nm" id="projName"></span><svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
+            <summary class="btn"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 3v9h4V9h2v3h4V3h-2v2H8V3H6v2H4V3Z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg><span class="sr">Project: </span><span class="nm" id="projName"></span><svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
             <div class="pill-body glass" id="projBody"></div>
           </details>
           <span class="crumb-sep" id="crumbSep" aria-hidden="true">/</span>
@@ -1829,7 +1829,7 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
     <header class="hd"><span class="hd-i" id="keyIc"></span><h2 class="hd-t" id="keyTitle">Map key</h2><button class="btn x" type="button" id="keyX" aria-label="Close">×</button></header>
     <div class="key-reader">
       <p class="key-context">Local simulation · Decisions and chat affect sample data only.</p>
-<div class="kz-r"><span class="kz-m"><svg viewBox="0 0 20 20" aria-hidden="true"><path class="kl" d="M8 3H6L3 6v8l3 3h8l3-3V6l-3-3h-2"/></svg></span><div><b>Project</b><p>Open the boundary to explore its missions.</p></div></div>
+<div class="kz-r"><span class="kz-m"><svg viewBox="0 0 20 20" aria-hidden="true"><path class="kl" d="M3 4v13h5v-4a2 2 0 0 1 4 0v4h5V4h-3v3h-3V4H9v3H6V4Z"/></svg></span><div><b>Project</b><p>Each castle on the Coven kingdom map represents a Project. Open its courtyard to explore missions.</p></div></div>
 <div class="kz-r"><span class="kz-m"><svg viewBox="-9 -9 18 18" aria-hidden="true" style="color:var(--primary)"><use href="#crown" x="-8.4" y="-8.1" width="16.8" height="15.5" fill="currentColor"/></svg></span><div><b>Psyche</b><p>Open the crown to talk to Psyche.</p></div></div>
 <div class="kz-r"><span class="kz-m" id="kzSealMark"></span><div><b>Mission</b><p>Select a seal to see its familiars, tasks and agents.</p></div></div>
 <div class="kz-r"><span class="kz-m"><svg viewBox="0 0 18 18" aria-hidden="true"><rect x="3" y="3" width="12" height="12" rx="1" fill="none" stroke="var(--attention)"/><path d="M9 6v6" stroke="var(--attention)"/></svg></span><div><b>Decision</b><p>Open a numbered gate to review pending requests.</p></div></div>
@@ -1880,6 +1880,7 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
 <script src="seal-lab.js"></script>
 <script src="atlas-layout.js"></script>
 <script src="atlas-viewport.js"></script>
+<script src="castle-map.js"></script>
 <script src="atlas-crown.js"></script>
 <script src="atlas-presentation.js"></script>
 <script src="simulation-model.js"></script>
@@ -1981,7 +1982,7 @@ Object.assign(ICON, {
   direct: '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M1.8 7h6.6M5.9 4.3 8.6 7 5.9 9.7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="11.2" cy="7" r="1.5" fill="currentColor"/></svg>',
   layers: '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 2 12 4.6 7 7.2 2 4.6zM2 7.2 7 9.8l5-2.6M2 9.7l5 2.6 5-2.6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/></svg>',
   role: '<svg viewBox="0 0 14 14" aria-hidden="true"><rect x="2.3" y="2.8" width="9.4" height="8.4" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="7" cy="6" r="1.3" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M4.7 9.3c.5-1 1.3-1.4 2.3-1.4s1.8.4 2.3 1.4" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>',
-  fort: '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M6 2H4L2 4v6l2 2h6l2-2V4l-2-2H8" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>',
+  fort: '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 3v9h4V9h2v3h4V3h-2v2H8V3H6v2H4V3Z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>',
   flag: '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 12.2V2.2M3.5 2.8h6.8L8.6 5.3l1.7 2.5H3.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   pulse: '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M1.5 7h2.5l1.7-4 2.6 8 1.7-4h2.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   kinds: '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 3.5h9M2.5 7h6M2.5 10.5h3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>',
@@ -2519,10 +2520,13 @@ function buildScene() {
   cv.arcG = svgEl('g', {}, sc.world); cv.roadG = svgEl('g', {class: 'atlas-roads'}, sc.world); cv.laneG = svgEl('g', {class: 'atlas-lanes'}, sc.world);
   Object.keys(projects).forEach(k => { const o = worldOf(k); cv.links.push({k, ox: o[0] - here[0], oy: o[1] - here[1], road: svgEl('path', {class: 'road'}, cv.roadG), lanes: [], sig: null}); });
   const overviewBoundary = projectBoundary(4);
+  const kit = svgEl('g', {id:'overview-castle'}, defs);
+  sc.overviewCastle = window.CovenCastleMap.create(kit, overviewBoundary, svgEl, true);
   sc.ghosts = Object.keys(projects).map(k => {
     const o = worldOf(k), c2 = projects[k], g = svgEl('g', {class: 'ghostfort' + (c2.world.agents.size ? '' : ' dormant')}, sc.world);
     const rec = {k, ox: o[0] - here[0], oy: o[1] - here[1], g, floor: svgEl('polygon', {class: 'gfloor'}, g), runs: overviewBoundary};
     rec.base = rec.runs.map(() => svgEl('polyline', {class: 'wall base'}, g));
+    rec.castle = svgEl('use', {href:'#overview-castle', 'aria-hidden':'true', 'pointer-events':'none'}, g);
     rec.name = svgEl('text', {class: 'lead-name gname'}, g); rec.name.textContent = k;
     rec.sub = svgEl('text', {class: 'task-l gsub show'}, g);
     rec.aggregate = svgEl('text', {class: 'atlas-aggregate', 'aria-hidden': 'true'}, g);
@@ -2566,6 +2570,7 @@ function buildScene() {
   plan.classList.toggle('many', sc.n > 5);
   const walls = svgEl('g', {class: 'atlas-project-wall'}, detail);
   sc.runs = sc.fort.map(points => ({points, edge: svgEl('polyline', {class: 'wall base'}, walls)}));
+  sc.projectCastle = window.CovenCastleMap.create(walls, sc.fort, svgEl);
   sc.gateL = Object.keys(COMPASS).map(l => {
     const k = nearestGate(sc.n, COMPASS[l]), [x, y] = pol(sc.a, gateAng(sc.n, k)), t = svgEl('text', {class: 'gate-l'}, detail);
     t.textContent = l;
@@ -2897,7 +2902,11 @@ function project() {
   ell(sc.glow, 0, 0, 0, 260 * sc.g);
   { const q = P(0, sc.a + 44, -ZPL); sc.home.setAttribute('x', f(q[0])); sc.home.setAttribute('y', f(q[1] + 14 * U)); }
   sc.runs.forEach(run => run.edge.setAttribute('points', pts(run.points, 0)));
+  const castle = far ? sc.overviewCastle : sc.projectCastle;
+  window.CovenCastleMap.draw(castle, P, cam.yaw, cam.pitch, 560 * screenScale > 100);
   sc.ghosts.forEach(gh => {
+    const origin = P(gh.ox, gh.oy, 0);
+    gh.castle.setAttribute('transform', `translate(${f(origin[0])},${f(origin[1])})`);
     const at = (x, y, z) => P(gh.ox + x, gh.oy + y, z);
     gh.floor.setAttribute('points', pp(gh.runs.flat().map(p => at(p[0], p[1], 0))));
     gh.runs.forEach((rp, i) => gh.base[i].setAttribute('points', pp(rp.map(q => at(q[0], q[1], 0)))));
@@ -2939,7 +2948,7 @@ function project() {
       L.decisionBox.setAttribute('width', f(side)); L.decisionBox.setAttribute('height', f(side));
       L.decisionBox.setAttribute('rx', f(side * .10)); L.decisionCount.setAttribute('y', f(side * .18));
       L.decisionCount.style.fontSize = (side * .54).toFixed(1) + 'px';
-      const boundaryY = Math.max(...gh.runs.flat().map(p => P(L.ox + p[0], L.oy + p[1], 0)[1]));
+      const boundaryY = Math.max(...gh.runs.flat().map(p => P(L.ox + p[0], L.oy + p[1], 0)[1])) + 30 * cp;
       const edge = L.decision.style.display === 'none' ? boundaryY : Math.max(boundaryY, gate[1] + side / 2);
       const labelU = Math.min(U, gh.density === 'full' ? 9 : 6), fontWidth = 14 * labelU * .58 * fsz;
       const maxChars = Math.max(7, Math.floor(850 / fontWidth)), name = L.k.length > maxChars ? L.k.slice(0, maxChars - 1) + '…' : L.k;
@@ -5419,7 +5428,7 @@ function atlasProjectGhost(gh, P, f) {
   const pending = openAsks(w).length;
   gh.g.setAttribute('aria-label', gh.k + ', ' + plural(w.missions.size, 'mission') + ', ' + plural(w.agents.size, 'agent') +
     (pending ? ', ' + plural(pending, 'pending decision') : '') + '. Open project');
-  const center = P(gh.ox, gh.oy, 0);
+  const center = P(gh.ox, gh.oy, 51);
   gh.aggregate.textContent = String(w.missions.size);
   gh.aggregate.setAttribute('x', f(center[0]));
   gh.aggregate.setAttribute('y', f(center[1] + 4 / scale));
