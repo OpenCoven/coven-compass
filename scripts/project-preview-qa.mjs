@@ -172,3 +172,37 @@ test('overview preview labels match the native SVG scale at successive zoom leve
     } finally { await page.close(); }
   }
 });
+
+test('a narrow overview return fits the settled stage without rebuilding for the outgoing height', async () => {
+  const page = await browser.newPage({viewport: {width: 390, height: 844}, reducedMotion: 'reduce', hasTouch: true});
+  try {
+    await page.goto(new URL('#/project/psyche-build', base).href);
+    const map = page.locator('#atlasMobileMap');
+    const tile = page.locator('.ghostfort[aria-label^="psyche-build,"]');
+    await map.click();
+    await page.waitForFunction(() => document.body.dataset.atlasScope === 'coven');
+    await page.evaluate(async () => { for (let i = 0; i < 6; i++) await new Promise(requestAnimationFrame); });
+    const overviewHeight = await page.locator('#stage').evaluate(el => el.clientHeight);
+    await tile.tap();
+    await page.locator('.mission-tasks').first().waitFor();
+    await page.waitForFunction(height => document.body.dataset.atlasScope === 'project' && document.getElementById('stage').clientHeight < height, overviewHeight);
+    const before = await page.locator('#stage').evaluate(el => el.clientHeight);
+    await page.evaluate(() => {
+      window.overviewBuilds = 0;
+      const observer = new MutationObserver(changes => {
+        for (const change of changes) for (const node of change.addedNodes) {
+          if (node.nodeType === 1 && node.matches('.atlas-overview')) window.overviewBuilds++;
+        }
+      });
+      observer.observe(document.getElementById('plan'), {childList: true});
+    });
+    await map.click();
+    await tile.waitFor();
+    const after = await page.evaluate(async () => {
+      for (let i = 0; i < 6; i++) await new Promise(requestAnimationFrame);
+      return {height: document.getElementById('stage').clientHeight, builds: window.overviewBuilds};
+    });
+    assert.ok(after.height > before, 'stage height should expand from ' + before + ' to the overview, observed ' + after.height);
+    assert.ok(after.builds <= 1, 'overview rebuilt ' + after.builds + ' times during one scope change');
+  } finally { await page.close(); }
+});

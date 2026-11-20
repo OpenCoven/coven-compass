@@ -1,0 +1,63 @@
+{
+  "scenario": "Instrumented dense pilot on the 390 by 844 Chromium viewport. The final profiled Project-to-Coven return is shown from click through final fit. The diagnostic recorded stage.clientHeight at entry to the return, fit and scene-build functions. The separate unmodified benchmark supplies all reported latency measurements.",
+  "observations": {
+    "8ad78d5e2d17b13669fd5eabc120fa4c2fe71816": [
+      {
+        "call": "return",
+        "scope": "project",
+        "stageHeightCssPx": 596,
+        "captionCount": 0
+      },
+      {
+        "call": "fit",
+        "scope": "coven",
+        "stageHeightCssPx": 596,
+        "captionCount": 0
+      },
+      {
+        "call": "rebuild",
+        "scope": "coven",
+        "stageHeightCssPx": 596,
+        "captionCount": 0
+      },
+      {
+        "call": "fit",
+        "scope": "coven",
+        "stageHeightCssPx": 711,
+        "captionCount": 0
+      },
+      {
+        "call": "rebuild",
+        "scope": "coven",
+        "stageHeightCssPx": 711,
+        "captionCount": 0
+      }
+    ],
+    "7bd95cddc43be2f2b60fd99b7460b7ddee038442": [
+      {
+        "call": "return",
+        "scope": "project",
+        "stageHeightCssPx": 596,
+        "captionCount": 0
+      },
+      {
+        "call": "fit",
+        "scope": "coven",
+        "stageHeightCssPx": 711,
+        "captionCount": 0
+      },
+      {
+        "call": "fit",
+        "scope": "coven",
+        "stageHeightCssPx": 711,
+        "captionCount": 0
+      },
+      {
+        "call": "fit",
+        "scope": "coven",
+        "stageHeightCssPx": 711,
+        "captionCount": 0
+      }
+    ]
+  }
+}

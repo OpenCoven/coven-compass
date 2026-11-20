@@ -263,5 +263,24 @@
       }
     ],
     "alternateInput": "Focusing the Project row and pressing Enter on desktop passed the same task-group journey. This variant passed all three tests."
+  },
+  "shippingIntegration": {
+    "revision": "dc719b0ebbbb290fbd2e389a99cad528e30d5123",
+    "distTree": "b68bf32ced704de3922401458a5e47b0f8c7fe61",
+    "chromiumProjectPreviewQA": {
+      "passed": 4,
+      "failed": 0
+    },
+    "webkitProjectPreviewQA": {
+      "passed": 3,
+      "failed": 1,
+      "failure": "Desktop pointer activation of the Project drawer row left the overview visible and the task group hidden. The narrow pointer journey, native scaling and settled-stage regression passed."
+    },
+    "candidateKeyboardVariant": {
+      "revision": "7bd95cddc43be2f2b60fd99b7460b7ddee038442",
+      "engine": "WebKit 27.2",
+      "passed": 4,
+      "failed": 0
+    }
   }
 }
