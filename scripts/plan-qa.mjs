@@ -83,6 +83,41 @@ async function touchGesture(session, center, pinch) {
 }
 
 for (const [name, width, height, mobile] of [['desktop', 1440, 900, false], ['phone', 390, 844, true]]) {
+  test(name + ' switches the Psyche marker across scopes and remembers it on reload', async () => {
+    const page = await browser.newPage({viewport: {width, height}, reducedMotion: 'reduce', isMobile: mobile, hasTouch: mobile});
+    try {
+      await page.goto(url);
+      const select = page.getByRole('combobox', {name: 'Psyche marker'});
+      if (mobile) await page.locator('#atlasMobileView').click();
+      const hub = page.locator('.atlas-local-psyche');
+      const crown = hub.locator('.coord-crown');
+      assert.equal(await select.inputValue(), 'crown');
+      assert.equal(Math.round((await crown.boundingBox()).width), 16);
+      await page.locator('#atlasZoomIn').click();
+      const camera = await readView(page);
+      assert.equal(Math.round((await crown.boundingBox()).width), 16);
+      await select.selectOption('point');
+      assert.equal(await crown.isVisible(), false);
+      assert.equal(Math.round((await hub.locator('.coord-point').boundingBox()).width), 8);
+      assert.equal(Math.round((await hub.locator('.atlas-map-hit').boundingBox()).width), 44);
+      assert.deepEqual(await readView(page), camera);
+      await select.selectOption('labeled');
+      assert.equal(await crown.isVisible(), true);
+      assert.equal(await hub.locator('.coord-name').isVisible(), true);
+      await page.goto(new URL('#/coven', base).href);
+      const overview = page.locator('.hub');
+      await overview.locator('.coord-name').waitFor();
+      await page.reload();
+      await overview.locator('.coord-name').waitFor();
+      if (mobile && !(await select.isVisible())) await page.locator('#atlasMobileView').click();
+      assert.equal(await select.inputValue(), 'labeled');
+      await overview.focus();
+      await page.keyboard.press('Enter');
+      assert.equal(await page.locator('#psyche').isVisible(), true);
+    } finally {
+      await page.close();
+    }
+  });
   test(name + ' restores a flat map and keeps it flat through input, fitting and locking', async () => {
     const context = await browser.newContext({viewport: {width, height}, reducedMotion: 'reduce', isMobile: mobile, hasTouch: mobile});
     try {

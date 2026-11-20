@@ -1791,6 +1791,17 @@ const hms = t => new Date(t).toLocaleTimeString([], {hour: '2-digit', minute: '2
 const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
 const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 const store = { get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
+const markerKey = 'coven-compass-psyche-marker';
+const markerStyles = ['crown', 'point', 'labeled'];
+const savedMarker = store.get(markerKey);
+document.body.dataset.psycheMarker = markerStyles.includes(savedMarker) ? savedMarker : 'crown';
+function setPsycheMarker(style) {
+  if (!markerStyles.includes(style)) return;
+  document.body.dataset.psycheMarker = style;
+  store.set(markerKey, style);
+  if (sc) { sc.cov.scale = null; project(); }
+}
+
 const CHEV = '<svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const ICON = {
   play: '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M4.5 3v8l6.5-4z" fill="currentColor"/></svg>',
@@ -2306,18 +2317,18 @@ function buildScene() {
   sc.world = svgEl('g', {class: 'atlas-overview'}, plan);
   const layout = atlasWorldLayout(), here = worldOf(active, layout); sc.layoutSignature = layout.signature;
   // Every project has the same overview representation. Position expresses containment and coordination.
-  const cv = sc.cov = {x: -here[0], y: -here[1], hubRadius: layout.hub.radius, links: []};
+  const cv = sc.cov = {x: -here[0], y: -here[1], links: []};
+  cv.roadG = svgEl('g', {class: 'atlas-roads'}, sc.world); cv.laneG = svgEl('g', {class: 'atlas-lanes'}, sc.world);
   cv.g = svgEl('g', {class: 'hub'}, sc.world);
   cv.marker = coordinationMarker(cv.g);
   cv.sub = svgEl('text', {class: 'task-l gsub show faronly'}, cv.g); cv.need = svgEl('text', {class: 'task-l gsub show gneed faronly'}, cv.g);
   svgEl('title', {}, cv.g).textContent = 'Psyche, the one channel to every project. Open the chat';
   cv.g.addEventListener('click', ev => { ev.stopPropagation(); openPsyche(); });
   atlasFocusable(cv.g, 'Psyche, coordination across all Projects. Open simulated conversation', () => openPsyche());
-  cv.roadG = svgEl('g', {class: 'atlas-roads'}, sc.world); cv.laneG = svgEl('g', {class: 'atlas-lanes'}, sc.world);
   layout.nodes.forEach(node => {
     const route = layout.byRoute.get(node.key);
     const points = route.points.map(([x, y]) => [x - here[0], y - here[1]]);
-    const path = atlasRoutePath(points, layout.maxCornerRadius);
+    const path = atlasRoutePath([[cv.x, cv.y], ...points], layout.maxCornerRadius);
     cv.links.push({k: node.key, ox: node.x - here[0], oy: node.y - here[1], gx: route.gate.x - here[0], gy: route.gate.y - here[1],
       path, road: svgEl('path', {class: 'road', d: path}, cv.roadG), lanes: [], sig: null});
   });
@@ -2368,6 +2379,7 @@ function buildScene() {
   sc.fx = svgEl('g', {}, detail); packets = [];
   const pg = svgEl('g', {class: 'atlas-local-psyche'}, sc.nodes);
   sc.psy = {g: pg, marker: coordinationMarker(pg)};
+  svgEl('title', {}, pg).textContent = 'Psyche · Open conversation';
   atlasFocusable(pg, 'Psyche, coordination for ' + active + '. Open simulated conversation', () => openPsyche());
   pg.addEventListener('click', ev => { ev.stopPropagation(); openPsyche(); });
 }
@@ -2722,7 +2734,6 @@ function showMissionCaptions(entries) {
 function project() {
   const P = (x, y) => [x, y];
   const f = v => v.toFixed(1);
-  const drawMarker = (marker, x, y, radius) => window.CovenAtlasCrown.draw(marker, {x, y, radius});
   const seg = (el, a, b, ox, oy) => { el.setAttribute('x1', f(a[0] + (ox || 0))); el.setAttribute('y1', f(a[1] + (oy || 0))); el.setAttribute('x2', f(b[0] + (ox || 0))); el.setAttribute('y2', f(b[1] + (oy || 0))); };
   const vw = 784 / cam.zoom, screenScale = Math.max(.001, Math.min(stage.clientWidth, stage.clientHeight) / vw), kpx = Math.max(.05, screenScale), U = clamp(Math.pow(kpx, .35), .8, 1.2) / kpx;
   const minHit = (narrow.matches ? 44 : 24) / screenScale;
@@ -2743,9 +2754,10 @@ function project() {
     sc.ghosts.forEach(gh => atlasProjectGhost(gh, P, f));
     const set = (t, q, dy) => { t.setAttribute('x', f(q[0])); t.setAttribute('y', f(q[1] + dy)); };
     const hq = P(cv.x, cv.y), hubU = Math.min(U, 8);
-    drawMarker(cv.marker, cv.x, cv.y, cv.hubRadius);
+    window.CovenAtlasCrown.draw(cv.marker, {x: cv.x, y: cv.y, screenScale});
     cv.g.style.setProperty('--u', hubU.toFixed(3));
-    set(cv.sub, hq, cv.hubRadius + 14 * hubU); set(cv.need, hq, cv.hubRadius + 29 * hubU);
+    const belowMarker = (document.body.dataset.psycheMarker === 'labeled' ? 26 : 11) / screenScale;
+    set(cv.sub, hq, belowMarker + 14 * hubU); set(cv.need, hq, belowMarker + 29 * hubU);
     cv.links.forEach((L, i) => {
       const gh = sc.ghosts[i], gate = P(L.gx, L.gy);
       const center = P(L.ox, L.oy);
@@ -2806,7 +2818,7 @@ function project() {
     if (!showAgents && focusedAgent) sc.missions.get(cur().sel)?.node.focus({preventScroll: true});
   }
   const pc = P(0, 0);
-  drawMarker(sc.psy.marker, 0, 0, 49);
+  window.CovenAtlasCrown.draw(sc.psy.marker, {x: 0, y: 0, screenScale});
   sc.psy.sx = pc[0]; sc.psy.sy = pc[1];
   const captions = [];
   const lowWideMap = !far && stage.clientWidth >= 700 && stage.clientHeight < 440 && sc.missions.size <= 4;
@@ -2920,7 +2932,8 @@ function layoutMapLabels() {
     }
     if (s.tray && s.trayBox) reserve(X(s.trayBox.x), Y(s.trayBox.y), s.trayBox.width * scale, s.trayBox.height * scale);
   });
-  reserve(X(sc.psy.sx), Y(sc.psy.sy), 98 * scale, 98 * scale);
+  reserve(X(sc.psy.sx), Y(sc.psy.sy), 44, 44);
+  if (document.body.dataset.psycheMarker === 'labeled') reserve(X(sc.psy.sx), Y(sc.psy.sy) + 20, 45, 14);
   sc.gateL.forEach(g => { if (g.mark.style.display !== 'none') reserve(X(g.sx), Y(g.sy), 30, 30, g); });
   sc.seats.forEach(s => {
     if (c.sel !== s.m) return;
@@ -5533,7 +5546,7 @@ function atlasSnapshot(includeMissions) {
 }
 if (window.CovenProjection) window.CovenProjection.register(window.CovenProjection.createSimulationSource({worlds: () => Object.keys(projects).map(k => [k, projects[k].world]), summarize: SimModel.summarize}));
 if (window.CovenAtlas) {
-  window.CovenAtlas.mount({setMissionName, snapshot: atlasSnapshot, overview: atlasOverview, openProject: atlasOpenProject, openMission: atlasOpenMission, setProjectCount: atlasSetProjectCount, newProject: () => openProjectForm(), camera: atlasCamera, highlight: covHl, legend: () => $('keyBtn').click()});
+  window.CovenAtlas.mount({setMissionName, setPsycheMarker, snapshot: atlasSnapshot, overview: atlasOverview, openProject: atlasOpenProject, openMission: atlasOpenMission, setProjectCount: atlasSetProjectCount, newProject: () => openProjectForm(), camera: atlasCamera, highlight: covHl, legend: () => $('keyBtn').click()});
   $('plan').setAttribute('role', 'group');
   atlasRestoreRoute(true);
 }

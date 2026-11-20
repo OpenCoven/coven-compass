@@ -345,6 +345,17 @@
       var control = button(item[0], item[1], function () { api.camera(item[2]); });
       control.setAttribute('aria-label', item[3]); control.title = item[3]; cameraDock.append(control);
     });
+    var markerLabel = node('label', 'atlas-marker-style', 'Psyche');
+    var markerSelect = node('select');
+    markerSelect.id = 'atlasMarkerStyle';
+    markerSelect.setAttribute('aria-label', 'Psyche marker');
+    [['crown', 'Crown'], ['point', 'Point'], ['labeled', 'Labeled crown']].forEach(function (item) {
+      var option = node('option', '', item[1]); option.value = item[0]; markerSelect.append(option);
+    });
+    markerSelect.value = document.body.dataset.psycheMarker || 'crown';
+    markerSelect.addEventListener('change', function () { api.setPsycheMarker(markerSelect.value); });
+    markerLabel.append(markerSelect);
+    cameraDock.append(markerLabel);
     shield(cameraDock);
     stage.insertBefore(head, stage.firstChild);
     stage.append(buildNotice(), aside, missionBrowser, familiars, cameraDock, navigationStatus);

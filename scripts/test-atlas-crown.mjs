@@ -19,20 +19,23 @@ function svg(tag, attrs, parent) {
   return node;
 }
 const parent = {children: []}, badge = api.create(parent, svg);
-assert.deepEqual(badge.children.map(el => el.tag), ['circle', 'use', 'text']);
-const [circle, crown, label] = badge.children;
-assert.equal(circle.attrs.r, 50);
+assert.deepEqual(badge.children.map(el => el.tag), ['circle', 'circle', 'use', 'circle', 'text']);
+const [hit, face, crown, point, label] = badge.children;
+assert.equal(hit.attrs.r * 2, 44);
+assert.ok(crown.attrs.width < hit.attrs.r);
+assert.ok(point.attrs.r < face.attrs.r);
+assert.equal(point.attrs.class, 'coord-point');
 assert.equal(crown.attrs.href, '#crown');
 assert.equal(label.textContent, 'Psyche');
 assert.ok(crown.attrs.y + crown.attrs.height < label.attrs.y);
 assert.equal(label.attrs['text-anchor'], 'middle');
 let combinations = 0;
 for (const [x, y] of [[0, 0], [-400, 370], [550, -80]]) {
-  for (const radius of [25, 41, 118, 440]) {
-    api.draw(badge, {x, y, radius});
-    assert.equal(badge.attrs.transform, `translate(${x} ${y}) scale(${radius / 50})`);
-    assert.equal(badge.children.length, 3);
+  for (const screenScale of [.03, .5, 1, 5]) {
+    api.draw(badge, {x, y, screenScale});
+    assert.equal(badge.attrs.transform, `translate(${x} ${y}) scale(${1 / screenScale})`);
+    assert.equal(badge.children.length, 5);
     combinations++;
   }
 }
-console.log(`Crown checks passed: canonical path digest, ${combinations} view/size combinations, single circular badge and readable lower label.`);
+console.log(`Crown checks passed: canonical path digest, ${combinations} view/size combinations, screen-sized marks, touch target and optional lower label.`);

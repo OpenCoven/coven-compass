@@ -924,3 +924,9 @@ body.atlas-adaptive-mobile[data-mobile-layout="landscape"] .mission-captions:not
   max-height: var(--mobile-stage-height);
   align-items: start;
 }
+
+.atlas-marker-style { display: inline-flex; align-items: center; gap: 6px; padding-inline: 8px 3px; color: var(--muted-foreground); font-size: 11px; }
+.atlas-marker-style select { min-height: 32px; padding: 2px 4px; font: inherit; color: var(--foreground); background: var(--card); border: 1px solid var(--border); border-radius: 5px; }
+.atlas-marker-style select:focus-visible { outline: 2px solid var(--primary); outline-offset: 1px; }
+#atlasMobileChrome .atlas-marker-style { grid-column: 1 / -1; justify-content: space-between; }
+#atlasMobileChrome .atlas-marker-style select { min-height: 44px; }

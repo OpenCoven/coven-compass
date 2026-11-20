@@ -237,15 +237,16 @@ body.atlas-enhanced #plan .atlas-compact-decision text { display: none; }
 
 
 
-/* Both scopes use the same circular Psyche badge. */
-body.atlas-enhanced #plan .coord-face {
-  fill: #22212a;
-  stroke: #9790a8;
-  stroke-width: 1.5;
-  vector-effect: non-scaling-stroke;
-}
-body.atlas-enhanced #plan .coord-name { letter-spacing: 0; fill: #f1edf6; font-family: var(--f-body); font-weight: 500; }
-body.atlas-enhanced #plan :is(.hub, .atlas-local-psyche):is(:hover, :focus-visible) .coord-face { stroke: var(--primary); }
+/* The same small, screen-sized marker identifies Psyche at both map scopes. */
+body.atlas-enhanced #plan .coord-face { fill: var(--background); stroke: transparent; }
+body.atlas-enhanced #plan :is(.coord-crown, .coord-point) { fill: var(--primary); }
+body.atlas-enhanced #plan :is(.coord-name, .coord-point) { display: none; }
+body[data-psyche-marker="point"] #plan .coord-crown { display: none; }
+body[data-psyche-marker="point"] #plan .coord-point { display: inline; }
+body[data-psyche-marker="point"] #plan .coord-face { r: 6px; }
+body[data-psyche-marker="labeled"] #plan .coord-face { stroke: #787183; }
+body[data-psyche-marker="labeled"] #plan .coord-name { display: inline; fill: var(--foreground); font-family: var(--f-body); }
+body.atlas-enhanced #plan :is(.hub, .atlas-local-psyche):is(:hover, :focus-visible) .coord-face { stroke: var(--primary); stroke-width: 2; }
 
 body.atlas-enhanced #plan .atlas-mission-lines .thread,
 body.atlas-enhanced #plan .atlas-squad-lines .link {

@@ -1,15 +1,17 @@
-// Psyche's map badge shares the canonical mark used in the conversation and map key.
+// Map marks stay upright and use screen pixels so a close zoom keeps missions prominent.
 (() => {
   'use strict';
   function create(parent, svg) {
     const badge = svg('g', {class: 'psyche-badge', 'aria-hidden': 'true'}, parent);
-    svg('circle', {class: 'coord-face', r: 50}, badge);
-    svg('use', {href: '#crown', x: -21.5, y: -30.5, width: 43, height: 40, fill: 'var(--primary)', 'pointer-events': 'none'}, badge);
-    svg('text', {class: 'coord-name', y: 26, 'text-anchor': 'middle', 'font-size': 16, 'pointer-events': 'none'}, badge).textContent = 'Psyche';
+    svg('circle', {class: 'atlas-map-hit', r: 22}, badge);
+    svg('circle', {class: 'coord-face', r: 11}, badge);
+    svg('use', {class: 'coord-crown', href: '#crown', x: -8, y: -7.4, width: 16, height: 14.8}, badge);
+    svg('circle', {class: 'coord-point', r: 4}, badge);
+    svg('text', {class: 'coord-name', y: 24, 'text-anchor': 'middle', 'font-size': 11}, badge).textContent = 'Psyche';
     return badge;
   }
-  function draw(badge, {x, y, radius}) {
-    badge.setAttribute('transform', `translate(${x} ${y}) scale(${radius / 50})`);
+  function draw(badge, {x, y, screenScale}) {
+    badge.setAttribute('transform', `translate(${x} ${y}) scale(${1 / screenScale})`);
   }
   window.CovenAtlasCrown = Object.freeze({create, draw});
 })();
