@@ -225,7 +225,9 @@ test('miniatures retain Project-scoped mission, council and task identities as r
   update(.15);
   assert.equal(gh.preview.missions.get('m2'), preview.missions.get('m2'));
   const detailed = gh.preview.missions.get('m2');
+  detailed.labelFit = {first: detailed.name};
   update(.05);
+  assert.equal(detailed.labelFit, null, 'compact previews release the detached SVG label');
   assert.equal(gh.preview.missions.get('m2'), detailed);
   assert.deepEqual(detailed.node.children.map(el => el.getAttribute('class')), ['preview-compact-ring']);
   update(.15);

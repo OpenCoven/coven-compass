@@ -5311,7 +5311,7 @@ function syncProjectPreview(preview, project, compact = false) {
     item.captionSide = y > 0 ? -1 : 1;
     if (item.compact !== compact) {
       item.node.textContent = '';
-      item.compact = compact; item.labelName = null;
+      item.compact = compact; item.labelName = null; item.labelFit = null;
       item.members = new Map();
       if (compact) {
         item.disc = svgEl('circle', {class: 'preview-compact-ring'}, item.node);
