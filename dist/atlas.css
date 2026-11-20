@@ -956,12 +956,12 @@ body.atlas-adaptive-mobile[data-mobile-layout="landscape"] .mission-captions:not
 /* Three inspector rows: identity, activity/navigation, and sections. */
 body.atlas-enhanced .inspect .mission-header { display: grid; gap: 5px; min-width: 0; flex: none; }
 .mission-identity, .mission-path, .mission-activity { display: flex; align-items: center; min-width: 0; gap: 5px; }
-.mission-path { flex: 1; gap: 6px; }
+.mission-path { flex: 1; gap: 6px; overflow-x: auto; scrollbar-width: thin; white-space: nowrap; }
 .mission-identity > button { flex: none; }
 .mission-path-separator { color: var(--subtle); }
-body.atlas-enhanced .mission-path .mission-context, body.atlas-enhanced .mission-path .mission-title { min-width: 0; overflow-x: auto; white-space: nowrap; scrollbar-width: thin; }
-body.atlas-enhanced .mission-path .mission-context { flex: 0 1 auto; max-width: 42%; color: var(--muted-foreground); }
-body.atlas-enhanced .inspect .mission-path .mission-title { flex: 0 1 auto; font-weight: 600; letter-spacing: -.015em; }
+body.atlas-enhanced .mission-path > * { flex: none; }
+body.atlas-enhanced .mission-path .mission-context { color: var(--muted-foreground); }
+body.atlas-enhanced .inspect .mission-path .mission-title { flex: none; white-space: nowrap; font-weight: 600; letter-spacing: -.015em; }
 body.atlas-enhanced .mission-path .mission-word { max-width: none; overflow: visible; }
 .mission-activity { justify-content: space-between; gap: 4px; }
 body.atlas-enhanced .mission-header .i-counts { display: flex; align-items: baseline; flex-wrap: nowrap; gap: 7px; min-width: 0; overflow-x: auto; scrollbar-width: thin; }

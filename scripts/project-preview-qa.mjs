@@ -248,7 +248,7 @@ test('mission inspector keeps identity, activity and tabs in three rows', async 
         assert.ok(rect.y >= previousBottom - 1);
         previousBottom = rect.y + rect.height;
       }
-      for (const label of await header.locator('.mission-context, .mission-title, .i-counts, .i-view').all()) {
+      for (const label of await header.locator('.mission-path, .i-counts, .i-view').all()) {
         assert.ok(await label.evaluate(el => el.scrollWidth <= el.clientWidth + 1), 'sample details fit at width ' + width);
       }
       assert.equal(await header.locator('.mission-title').innerText(), 'Changelog');
