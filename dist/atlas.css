@@ -222,6 +222,34 @@ body.atlas-enhanced #atlasMissionReset { align-self: flex-start; flex: none; min
 body.atlas-enhanced #atlasMissionReset:hover { border-color: var(--border-strong); background: #211f28; }
 body.atlas-enhanced .atlas-mission-empty { margin: 0; padding: 20px 10px; color: var(--muted-foreground); font-size: 12px; line-height: 1.65; }
 
+/* A visible copy of an invalid-link announcement (#45): below the header, under the drawers (z 14) and phone sheets.
+   It reuses the drawer surface and the attention accent; it is not a live region (#atlasNavigationStatus is). */
+body.atlas-enhanced .atlas-notice {
+  position: absolute;
+  z-index: 12;
+  top: 76px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: max-content;
+  max-width: min(460px, calc(100% - 32px));
+  padding: 4px 4px 4px 13px;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  background: #17171c;
+  box-shadow: inset 2px 0 0 var(--attention), 0 18px 44px -10px rgba(0, 0, 0, .65);
+  animation: atlas-notice-in .18s ease-out;
+}
+body.atlas-enhanced .atlas-notice[hidden] { display: none; }
+body.atlas-enhanced .atlas-notice p { margin: 0; color: var(--foreground); font-size: 12px; line-height: 1.45; }
+body.atlas-enhanced #atlasNavigationNoticeDismiss { flex: none; min-width: 36px; min-height: 36px; padding: 0; border: 1px solid transparent; border-radius: 7px; background: transparent; color: var(--subtle); font-size: 20px; font-weight: 400; }
+body.atlas-enhanced #atlasNavigationNoticeDismiss:hover { border-color: var(--border); background: #2b2933; color: var(--foreground); }
+body.atlas-enhanced #atlasNavigationNoticeDismiss:focus-visible { outline: 2px solid var(--primary-hi); outline-offset: 1px; }
+@keyframes atlas-notice-in { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { body.atlas-enhanced .atlas-notice { animation: none; } }
+
 /* A single identity key. Numeric detail lives in each chip's title and label. */
 body.atlas-enhanced #atlasFamiliars {
   position: absolute;
@@ -590,6 +618,8 @@ body.atlas-enhanced.atlas-adaptive-mobile .atlas-brand > b { font-size: clamp(13
   body.atlas-enhanced.atlas-adaptive-mobile #atlasBrowse { width: var(--atlas-header-target); padding: 0; }
   body.atlas-enhanced.atlas-adaptive-mobile #atlasBrowse > span { display: none; }
 }
+body.atlas-enhanced.atlas-adaptive-mobile .atlas-notice { top: 70px; width: auto; max-width: none; inset-inline: 10px; transform: none; }
+body.atlas-enhanced.atlas-adaptive-mobile #atlasNavigationNoticeDismiss { min-width: 44px; min-height: 44px; }
 body.atlas-enhanced.atlas-adaptive-mobile .hud,
 body.atlas-enhanced.atlas-adaptive-mobile .manifest { top: 70px; }
 body.atlas-enhanced.atlas-adaptive-mobile .stage,

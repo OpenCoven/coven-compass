@@ -5551,6 +5551,7 @@ function atlasWriteRoute(replace) {
   if (location.hash !== hash) {
     try { history[replace ? 'replaceState' : 'pushState']({covenNavigation: true}, '', hash); } catch (e) { return; }
   }
+  if (atlasLastRoute !== hash && window.CovenAtlas && window.CovenAtlas.dismissNotice) window.CovenAtlas.dismissNotice();
   atlasLastRoute = hash;
 }
 function atlasRestoreRoute(initial) {
@@ -5558,6 +5559,7 @@ function atlasRestoreRoute(initial) {
   if (!initial && window.CovenAtlas) {
     window.CovenAtlas.closeMissions(false);
     window.CovenAtlas.closeBrowse(false);
+    if (window.CovenAtlas.dismissNotice) window.CovenAtlas.dismissNotice();
   }
   const route = window.CovenMissionNavigation.parse(location.hash); let notice = '';
   const locked = cam.locked; if (locked) setLock(false);
@@ -5582,7 +5584,8 @@ function atlasRestoreRoute(initial) {
     }
   } finally { if (locked) setLock(true); atlasRestoringRoute = false; atlasNavigationReady = true; }
   atlasWriteRoute(true);
-  if (window.CovenAtlas) { window.CovenAtlas.update(); if (notice) window.CovenAtlas.announce(notice); }
+  // Only an unreadable link is shown on screen as well (#45); the other notices stay screen-reader only.
+  if (window.CovenAtlas) { window.CovenAtlas.update(); if (notice) window.CovenAtlas.announce(notice, {visible: !route}); }
 }
 function atlasSnapshot(includeMissions) {
   const ps = [], missionItems = [], fs = new Map(Object.keys(FAM).map(k => [k, {key: k, name: fam(k).name, color: fam(k).hue, avatar: avatar(k), projects: 0, agents: 0}]));
