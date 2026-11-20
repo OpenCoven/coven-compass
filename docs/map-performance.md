@@ -59,6 +59,28 @@ During the separately profiled 128-Project desktop return, the baseline recorded
 
 Run a fresh measurement and pass its output directory to the budget checker or to `scripts/summarize-map-performance.py` for the complete breakdown. Each archive includes the served-file checksums, input observations, frame records and Chromium profiles.
 
+### Dense overview follow-up
+
+The measured starting point is PR #58, with the same application served at main revision `443c6a7c2e7ec1b6a4d389841691356d09730b44`. The final candidate is `7bd95cddc43be2f2b60fd99b7460b7ddee038442`, with `dist/` tree `67e1bf2a5c3b53cb6aa26c91c050fbaed7fac8a8`. All runs used the reference host, workload, runner and 100 ms median budget above. Each timing pair gives the warmed median in milliseconds from two independent runs.
+
+| Projects | Desktop before | Desktop after | Narrow before | Narrow after |
+| ---: | ---: | ---: | ---: | ---: |
+| 4 | 24.8 / 24.7 | 22.9 / 23.9 | 37.1 / 29.1 | 18.7 / 18.7 |
+| 32 | 45.6 / 34.1 | 23.2 / 22.5 | 65.9 / 61.3 | 43.9 / 38.1 |
+| 128 | 102.3 / 83.9 | 43.3 / 59.9 | 116.0 / 104.2 | 71.2 / 68.7 |
+
+The final candidate met the budget in 12 of 12 measured cells. The slowest individual warmed 128-Project returns were 71.6 ms on desktop and 83.9 ms on narrow. Each matrix completed all 30 journeys, including mission counts, keyboard focus, task inspection and replay. [Final matrix](../tests/evidence/dense-overview-2026-11-20/mobile.json) · [Independent repeat](../tests/evidence/dense-overview-2026-11-20/mobile-repeat.json) · [Final browser checks](../tests/evidence/dense-overview-2026-11-20/mobile-browser.json)
+
+The renderer batches SVG label preparation, measurement and drawing. It reads the base scale once, skips the hidden Project layer during overview rendering and continues expiring replay packets. Map focus synchronization checks the current Tab stop before looking for a replacement. These changes took the dense narrow medians from 116.0 / 104.2 ms to 89.5 / 94.7 ms. A third run after the public-release integration measured 101.3 ms and prompted a closer look at the responsive layout. [Initial results](../tests/evidence/dense-overview-2026-11-20/final.json) · [Repeat](../tests/evidence/dense-overview-2026-11-20/final-repeat.json) · [Integration results](../tests/evidence/dense-overview-2026-11-20/integrated.json)
+
+On a narrow return, the map first fitted the outgoing 596 px Project stage and rebuilt all 128 tiles, then rebuilt them at the settled 711 px Coven height. The final change settles the mobile controls before the first fit. The recorded return used the 711 px height immediately and reused the scene. The two final profiled 128-Project returns recorded 9 and 8 Layout events on desktop and 5 and 10 on narrow. Each profile covers one additional journey. [Stage and rebuild observations](../tests/evidence/dense-overview-2026-11-20/stage-fit.json)
+
+The renderer comparison in Chromium and Playwright WebKit 27.2 matched all 320 label-wrapping and caption-placement cases in each engine. Both engines matched the calculated font sizes to native SVG geometry. Desktop WebKit pointer activation of a Project drawer row left the overview open in three trials on each revision. The same desktop pointer timeout occurred on the shipping integration. Keyboard activation completed the journey on the fit-order candidate. [Cross-engine results and input events](../tests/evidence/dense-overview-2026-11-20/cross-engine.json)
+
+The 30-minute replay soak ran on the batched renderer at `93dc7782f412e5efb7d8385fcba66b2766b546d4`, before the final mobile fit-order change. It completed 155 dense narrow navigation and replay cycles in 1,811.2 seconds. Each cycle returned to the live overview. Attached elements went from 11,396 to 11,506, used JavaScript heap went from 10.5 to 10.8 MiB, and the p95 frame interval was 16.8 ms. The final candidate exercised replay in both matrices. [Soak checkpoints and distributions](../tests/evidence/dense-overview-2026-11-20/soak.json)
+
+After main retired the Handoff navigation and download, the final integration at `dc719b0ebbbb290fbd2e389a99cad528e30d5123` (dist tree `b68bf32ced704de3922401458a5e47b0f8c7fe61`) completed another 30/30 journeys. Its warmed medians at 128 Projects were 62.2 ms on desktop and 74.2 ms on narrow. All six workloads met the budget. [Integrated delivery matrix](../tests/evidence/dense-overview-2026-11-20/main.json) · [Integrated delivery browser checks](../tests/evidence/dense-overview-2026-11-20/main-browser.json)
+
 ## Reproduction
 
 Use Node 24, Python 3, Playwright 1.48.2 and the Chromium revision Playwright installs. The recorded hardware and OS are in each run's `run.json`. These commands assume a shell in the PR checkout and a free loopback port. Run the server in its own terminal.
