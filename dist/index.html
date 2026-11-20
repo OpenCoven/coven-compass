@@ -574,7 +574,9 @@ body{letter-spacing:-.006em;font-feature-settings:"ss01","cv11";text-rendering:o
 .manifest .plate-h .nm{flex:none}
 .leaders{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .leaders line{stroke:var(--hue,var(--primary));stroke-opacity:.5;stroke-width:1}
-.leaders circle{fill:var(--hue,var(--primary))}
+.seat-connector{color:var(--hue);pointer-events:none}
+.seat-connector path{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round}
+.seat-connector circle{fill:currentColor;stroke:var(--background);stroke-width:1}
 .plates:not(:has(.manifest)) .plate-h .rl{display:none}
 
 /* Project outlines and names in the Coven overview. */
@@ -3536,10 +3538,17 @@ function drawLeadCard(force) {
         if (others.length) { const row = html('div', 'lc-also plate-also'); row.append('Also on'); others.forEach(m => { const b = setMissionName(html('button'), m.name); b.type = 'button'; b.addEventListener('click', () => select(m.id, k, cur().detail)); row.appendChild(b); }); el.appendChild(row); }
         if (leaders) {
           ['pointerenter', 'pointerleave', 'focusin', 'focusout'].forEach(event => el.addEventListener(event, kick));
-          rec.line = svgEl('line', {}, leaders); rec.dot = svgEl('circle', {r: 3}, leaders); rec.line.style.setProperty('--hue', f.hue); rec.dot.style.setProperty('--hue', f.hue); }
+          rec.connector = svgEl('g', {class: 'seat-connector', 'data-seat': id}, leaders);
+          rec.connector.style.setProperty('--hue', f.hue);
+          rec.line = svgEl('path', {}, rec.connector);
+          rec.dot = svgEl('circle', {r: 3.5}, rec.connector);
+        }
         col.appendChild(el); notes.push(rec);
       });
-      if (wide) layer.append(leaders, col);
+      if (wide) {
+        layer.append(leaders, col);
+        col.addEventListener('scroll', kick, {passive: true});
+      }
     }
     if (next) {
       const q = next;
@@ -3571,21 +3580,55 @@ function drawLeadCard(force) {
   });
   placeCard();
 }
+// Join the card and the painted map item in the overlay's CSS-pixel coordinate system.
+function placeSeatConnector(note, seat, frame) {
+  const card = note.el.getBoundingClientRect(), rail = note.el.parentElement.getBoundingClientRect();
+  const header = note.el.firstElementChild.getBoundingClientRect();
+  const cardY = (header.top + header.bottom) / 2;
+  if (cardY < rail.top || cardY > rail.bottom) return;
+  const plane = seat.floor.getBoundingClientRect();
+  const item = plane.width && plane.height ? plane : seat.badge.querySelector('.familiar-disc').getBoundingClientRect();
+  if (!item.width || !item.height) return;
+
+  let x1, y1, x2, y2, dx = 0, dy = 0;
+  if (item.left >= card.right || item.right <= card.left) {
+    const right = item.left >= card.right;
+    x1 = right ? card.right : card.left; x2 = right ? item.left : item.right;
+    y1 = cardY; y2 = (item.top + item.bottom) / 2;
+    dx = (x2 - x1) * .4;
+  } else if (item.top >= card.bottom || item.bottom <= card.top) {
+    const below = item.top >= card.bottom;
+    y1 = below ? card.bottom : card.top; y2 = below ? item.top : item.bottom;
+    if (y1 < rail.top || y1 > rail.bottom) return;
+    x1 = (card.left + card.right) / 2; x2 = (item.left + item.right) / 2;
+    dy = (y2 - y1) * .4;
+  } else return;
+
+  if (x2 < frame.left || x2 > frame.right || y2 < frame.top || y2 > frame.bottom) return;
+  x1 -= frame.left; x2 -= frame.left; y1 -= frame.top; y2 -= frame.top;
+  note.line.setAttribute('d', `M${x1} ${y1} C${x1 + dx} ${y1 + dy}, ${x2 - dx} ${y2 - dy}, ${x2} ${y2}`);
+  note.dot.setAttribute('cx', x2); note.dot.setAttribute('cy', y2);
+  return true;
+}
 // every frame: leader lines run from each seat plate to its squad; free tags follow their anchors
 function placeCard() {
   if (!notes.length) return;
   const W = stage.clientWidth, H = stage.clientHeight, k = Math.min(W, H) / (784 / cam.zoom), X = v => W / 2 + (v - cam.px) * k, Y = v => H / 2 + (v - cam.py) * k;
-  let sr = null;
+  let overlayBounds;
   notes.forEach(n => {
     if (n.kind === 'seat') {
-      const s = sc.seats.get(n.id); if (!s || s.cx == null) { n.el.style.visibility = 'hidden'; return; }
+      const s = sc.seats.get(n.id);
+      if (!s || s.cx == null) {
+        n.el.style.visibility = 'hidden';
+        if (n.connector) n.connector.style.display = 'none';
+        return;
+      }
       n.el.style.visibility = '';
       const px = X(s.cx), py = Y(s.cy);
-      if (n.line) {
-        sr = sr || stage.getBoundingClientRect(); const r = n.el.getBoundingClientRect(), x1 = r.right - sr.left + 2, y1 = r.top - sr.top + Math.min(r.height / 2, 19), x2 = px - s.R * k - 5;
-        const show = (s.fam === cur().fam || n.el.matches(':hover, :focus-within')) && r.bottom > sr.top + 4 && r.top < sr.bottom - 4 && x2 > x1 + 6;
-        n.line.style.display = n.dot.style.display = show ? '' : 'none';
-        if (show) { n.line.setAttribute('x1', x1.toFixed(1)); n.line.setAttribute('y1', y1.toFixed(1)); n.line.setAttribute('x2', x2.toFixed(1)); n.line.setAttribute('y2', py.toFixed(1)); n.dot.setAttribute('cx', x2.toFixed(1)); n.dot.setAttribute('cy', py.toFixed(1)); }
+      if (n.connector) {
+        const active = s.fam === cur().fam || n.el.matches(':hover, :focus-within');
+        const attached = active && placeSeatConnector(n, s, overlayBounds ||= n.connector.ownerSVGElement.getBoundingClientRect());
+        n.connector.style.display = attached ? '' : 'none';
         return;
       }
       const w = n.el.offsetWidth, h = n.el.offsetHeight;                // narrow stage: a small tag under the squad

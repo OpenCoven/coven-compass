@@ -822,7 +822,7 @@ body.atlas-enhanced .plan-head #wardCtl:has(#ward[open]) { opacity: 1; }
 /* The workspace uses solid surfaces and visible borders on the same plane as the map. */
 body.atlas-enhanced :is(.atlas-header, .atlas-sidebar, .atlas-mission-browser, .atlas-camera-dock,
     .atlas-familiars, .atlas-mobile-chrome, .inspect, .pill-body, .hud, .ask-pop, .notif, .modal-card,
-    .manifest, .psyche, .plate, .plan-head, .comp, .p-h) {
+    .psyche, .plate, .plan-head, .comp, .p-h) {
   background-color: var(--card);
   background-image: none;
   border-color: var(--border-strong);

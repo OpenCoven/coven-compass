@@ -487,3 +487,27 @@ test('map key topics fit desktop, tablet, phone and short landscape screens', as
     }
   }
 });
+
+test('familiar card connector meets the painted group and stays attached on zoom', async () => {
+  const page = await browser.newPage({viewport: {width: 1440, height: 900}, reducedMotion: 'reduce'});
+  try {
+    await page.goto(new URL('#/project/psyche-build/mission/m-2?familiar=astra', base).href);
+    const connector = page.locator('.seat-connector[data-seat="m-2/astra"]');
+    await connector.locator('path').waitFor();
+    const attached = () => page.waitForFunction(() => {
+      const path = document.querySelector('.seat-connector[data-seat="m-2/astra"] path');
+      const card = document.querySelector('.manifest .seat.on').getBoundingClientRect();
+      const item = document.querySelector('.atlas-squad[data-m="m-2"][data-fam="astra"] .squad-plane rect').getBoundingClientRect();
+      const matrix = path.getScreenCTM();
+      const start = path.getPointAtLength(0).matrixTransform(matrix);
+      const end = path.getPointAtLength(path.getTotalLength()).matrixTransform(matrix);
+      return getComputedStyle(path).strokeWidth === '3px' && Math.abs(start.x - card.right) < 1 &&
+        start.y > card.top && start.y < card.bottom && Math.abs(end.x - item.left) < 1 && Math.abs(end.y - (item.top + item.bottom) / 2) < 1;
+    });
+    await attached();
+    const before = await connector.locator('path').getAttribute('d');
+    await page.locator('#atlasZoomIn').click();
+    await page.waitForFunction(old => document.querySelector('.seat-connector[data-seat="m-2/astra"] path').getAttribute('d') !== old, before);
+    await attached();
+  } finally { await page.close(); }
+});
