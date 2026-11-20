@@ -301,7 +301,8 @@ test('Tasks identifies owners and opens agent details inside the originating gro
       await agent.focus();
       await page.keyboard.press('Enter');
       const details = waiting.locator('.a-info');
-      assert.equal(await details.locator('h3').innerText(), 'Agent ' + id);
+      assert.equal(await details.locator('.id').innerText(), 'Agent ' + id);
+      assert.ok((await details.locator('h3').innerText()).length > 0);
       assert.ok(await details.locator('h3').evaluate(el => document.activeElement === el));
       await details.getByRole('button', {name: 'Close agent details'}).click();
       assert.ok(await agent.evaluate(el => document.activeElement === el));
@@ -549,5 +550,50 @@ test('task areas follow replayed assignments, reservations and retirement', asyn
     await verify('800', [['A', 2], ['B', 2], ['', 1]]);
     await verify('1000', [['A', 2], ['B', 2]]);
     await verify('500', [['A', 3], ['B', 1], ['', 1]]);
+  } finally { await page.close(); }
+});
+
+test('agent popover keeps the selected task group visible and follows keyboard selection', async () => {
+  const page = await browser.newPage({viewport: {width: 1440, height: 900}, reducedMotion: 'reduce'});
+  try {
+    await page.goto(new URL('#/project/psyche-build/mission/m-3?familiar=cody', base).href);
+    const group = page.locator('.atlas-squad[data-m="m-3"][data-fam="cody"]');
+    const floor = group.locator('.squad-plane > rect');
+    await floor.focus();
+    await floor.press('Enter');
+    const agent = group.locator('.agent[aria-label^="a-041"]');
+    await agent.focus(); await agent.press('Enter');
+    const pop = page.locator('#pop');
+    await pop.getByRole('heading', {name: 'Type-checking'}).waitFor();
+    assert.equal(await pop.locator('.agent-owner').innerText(), 'Led by Cody');
+    assert.equal(await pop.locator('.id').innerText(), 'Agent a-041');
+    assert.match(await pop.locator('.agent-status').innerText(), /Working\s+for /);
+    const card = await pop.boundingBox(), plane = await floor.boundingBox();
+    assert.ok(card.y >= plane.y + plane.height || plane.y >= card.y + card.height ||
+      card.x >= plane.x + plane.width || plane.x >= card.x + card.width);
+    const selected = group.locator('.agent.picked');
+    assert.equal(await selected.count(), 1);
+    assert.equal(await selected.locator('.hot').evaluate(el => getComputedStyle(el).strokeWidth), '2px');
+    await pop.getByRole('button', {name: 'Close agent details'}).click();
+    await pop.waitFor({state: 'hidden'});
+    assert.ok(await agent.evaluate(el => el === document.activeElement));
+  } finally { await page.close(); }
+});
+
+test('map keyboard focus uses a short accent and moves to the active item', async () => {
+  const page = await browser.newPage({viewport: {width: 1440, height: 900}, reducedMotion: 'reduce'});
+  try {
+    await page.goto(new URL('#/project/coven-cave/mission/m-1?view=tasks&detail=side', base).href);
+    const stage = page.locator('#stage');
+    await page.keyboard.press('Tab');
+    await stage.focus();
+    assert.ok(await stage.evaluate(el => {
+      const cue = getComputedStyle(el, '::after');
+      return el.matches(':focus-visible') && getComputedStyle(el).outlineStyle === 'none' &&
+        cue.width === '36px' && cue.height === '2px' && cue.pointerEvents === 'none';
+    }));
+    await page.keyboard.press('Tab');
+    assert.ok(await page.locator('#plan [data-map-item]:focus-visible').count());
+    assert.equal(await stage.evaluate(el => getComputedStyle(el, '::after').content), 'none');
   } finally { await page.close(); }
 });

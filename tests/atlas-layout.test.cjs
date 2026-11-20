@@ -249,6 +249,7 @@ test('task regions tile the whole plane in proportion to staffing and contain ev
         assert.ok(overlapX < 1e-8 || overlapY < 1e-8);
       }
       assert.equal(r.cells.length, counts[i]);
+      assert.equal(new Set(r.cells.map(cell => cell.radius)).size, 1, 'a short row keeps the same agent size');
       const positions = new Set();
       for (const c of r.cells) {
         assert.ok(c.radius > 0 && c.x - c.radius >= r.x && c.x + c.radius <= r.x + r.width);

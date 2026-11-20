@@ -798,18 +798,20 @@ body.atlas-enhanced .plan-head #wardCtl:has(#ward[open]) { opacity: 1; }
 
 /* Agent details share a hierarchy in the map popover and mission inspector. */
 #pop { width: min(calc(284px * var(--fs,1)), calc(100% - 16px)); max-height: calc(100% - 16px); overflow: auto; }
-:is(#pop,.i-agent):has(.a-info) { padding: 12px 14px 14px; background: linear-gradient(155deg,#222128,#19181e 66%); }
+:is(#pop,.i-agent):has(.a-info) { padding: 12px 14px 14px; background: var(--card-raised); }
 .a-info { min-width: 0; overflow-wrap: anywhere; }
-.a-info .a-top { min-height: 26px; gap: 8px; }
-.a-info .a-top .id { margin: 0; color: var(--muted-foreground); font-weight: 500; }
+.a-info .a-top { align-items: flex-start; min-height: 26px; gap: 8px; }
+.a-info .agent-identity { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 4px 12px; margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border); color: var(--muted-foreground); font-size: calc(12px * var(--fs,1) * var(--fsl,1)); }
+.a-info .agent-owner b { color: var(--foreground); font-weight: 550; }
+.a-info .agent-identity .id { font-size: .92em; }
 .a-info .btn.agent-close { display: grid; place-items: center; margin: -4px -5px -4px 0; width: 32px; height: 32px; padding: 0; background: transparent; border-color: transparent; box-shadow: none; }
 .a-info .agent-close::after { content: "×"; font: 20px/1 var(--f-body); }
 .a-info .btn.agent-close:hover { background: var(--card-raised); }
-.a-info .agent-activity { margin: 6px 0 4px; color: var(--foreground); font-size: calc(18px * var(--fs,1) * var(--fsl,1)); font-weight: 600; line-height: 1.25; }
+.a-info .agent-activity { margin: 0; padding-block: 2px; color: var(--foreground); font-size: calc(18px * var(--fs,1) * var(--fsl,1)); font-weight: 600; line-height: 1.25; }
 .agent-status { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; }
 .agent-elapsed { font-size: calc(12px * var(--fs,1) * var(--fsl,1)); color: var(--muted-foreground); font-variant-numeric: tabular-nums; }
-.a-info .agent-facts { display: grid; gap: 5px; margin: 12px 0 0; padding: 10px 0 0; border-top: 1px solid var(--border); }
-.agent-facts > div { display: grid; grid-template-columns: 4.2em minmax(0,1fr); gap: 8px; align-items: baseline; font-size: calc(12px * var(--fs,1) * var(--fsl,1)); line-height: 1.45; }
+.a-info .agent-facts { display: grid; gap: 4px; margin: 10px 0 0; padding: 0; }
+.agent-facts > div { display: grid; grid-template-columns: 3.5em minmax(0,1fr); gap: 8px; align-items: baseline; font-size: calc(12px * var(--fs,1) * var(--fsl,1)); line-height: 1.45; }
 .agent-facts dt { color: var(--muted-foreground); }
 .agent-facts dd { margin: 0; color: var(--foreground); }
 .a-info .btn.agent-review { min-height: 36px; background: var(--primary); color: var(--primary-foreground); }

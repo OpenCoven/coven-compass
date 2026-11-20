@@ -280,17 +280,21 @@
         return;
       }
       const pad = Math.min(1.4, width * .05, height * .05);
-      const labelHeight = width >= 17 && height >= 16 ? Math.min(6, height * .2) : 0;
+      const labelHeight = width >= 17 && height >= 16 ? Math.min(8, height * .23) : 0;
       const w = width - 2 * pad, h = height - 2 * pad - labelHeight;
-      const rows = Math.max(1, Math.min(count, Math.round(Math.sqrt(count * h / w))));
+      const estimate = Math.sqrt(count * h / w);
+      const lower = Math.max(1, Math.min(count, Math.floor(estimate))), upper = Math.min(count, lower + 1);
+      const markSize = rows => Math.min(w / Math.ceil(count / rows), h / rows);
+      const rows = markSize(upper) > markSize(lower) ? upper : lower;
+      const maxColumns = Math.ceil(count / rows), cellHeight = h / rows;
+      const radius = .35 * Math.min(w / maxColumns, cellHeight);
       const cells = [];
       for (let row = 0; row < rows; row++) {
         const start = Math.floor(row * count / rows);
         const columns = Math.floor((row + 1) * count / rows) - start;
-        const cellWidth = w / columns, cellHeight = h * columns / count;
-        const cy = y + pad + labelHeight + h * start / count + cellHeight / 2;
+        const cellWidth = w / columns, cy = y + pad + labelHeight + cellHeight * (row + .5);
         for (let col = 0; col < columns; col++) {
-          cells.push({x: x + pad + cellWidth * (col + .5), y: cy, radius: .35 * Math.min(cellWidth, cellHeight)});
+          cells.push({x: x + pad + cellWidth * (col + .5), y: cy, radius});
         }
       }
       regions.push({x, y, width, height, labelHeight, cells});

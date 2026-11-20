@@ -93,7 +93,9 @@ h1,h2,h3,p,dl,dd{margin:0}
 .stage{position:relative;flex:1;min-width:0;min-height:0;cursor:grab;touch-action:pan-y;-webkit-user-select:none;user-select:none}
 .stage.locked{cursor:default}
 .stage.panning{cursor:grabbing}
-.stage:focus-visible{outline-offset:-3px}
+#stage:focus-visible,#plan:focus-visible{outline:none}
+#stage:is(:focus-visible,:has(>#plan:focus-visible))::after{content:"";position:absolute;top:5px;left:50%;width:36px;height:2px;transform:translateX(-50%);border-radius:2px;background:color-mix(in srgb,var(--primary) 65%,transparent);pointer-events:none}
+@media (forced-colors:active){#stage:is(:focus-visible,:has(>#plan:focus-visible))::after{background:Highlight;forced-color-adjust:none}}
 #plan{position:absolute;inset:0;display:block;width:100%;height:100%;touch-action:none}
 .pill{position:relative}
 .pill summary{list-style:none}
@@ -1585,7 +1587,7 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
         </div>
         <div class="plan-body">
           <div class="stage" id="stage" tabindex="0" aria-label="Project view. Drag or use arrow keys to pan. Pinch, scroll, or use plus and minus to zoom. Press zero to fit.">
-            <svg id="plan" viewBox="-392 -392 784 784" role="group" aria-label="Coven map. Arrow keys move between items. Home and End go to the first and last."></svg>
+            <svg id="plan" tabindex="-1" viewBox="-392 -392 784 784" role="group" aria-label="Coven map. Arrow keys move between items. Home and End go to the first and last."></svg>
             <form class="empty" id="projectForm" aria-label="Project" autocomplete="off" novalidate hidden>
               <div class="hd"><span class="hd-i" id="czIcon"></span><h2 class="hd-t" id="czTitle">New project</h2><span class="hd-m" id="czMeta"></span><button class="btn x" type="button" id="czX" aria-label="Close">×</button></div>
               <div class="mobile-form-body">
@@ -2452,9 +2454,10 @@ function syncTaskPlane(seat, groups) {
     if (r.x > x) svgEl('line', {x1: 0, y1: 0, x2: 0, y2: r.height}, tile);
     if (r.y > y) svgEl('line', {x1: 0, y1: 0, x2: r.width, y2: 0}, tile);
     if (r.labelHeight) {
-      const label = svgEl('text', {x: r.width / 2, y: r.labelHeight * .84, 'font-size': 10}, tile);
+      const inset = Math.min(2, r.width * .07);
+      const label = svgEl('text', {x: inset, y: r.labelHeight * .8, 'font-size': 10}, tile);
       label.textContent = group.name;
-      seat.captions.push({label, width: r.width - 2, height: r.labelHeight});
+      seat.captions.push({label, width: r.width - 2 * inset, height: r.labelHeight});
     }
     group.members.forEach((id, index) => seat.cells.set(id, r.cells[index]));
   });
@@ -3016,9 +3019,9 @@ function project() {
       for (const caption of s.captions) {
         // Measure the full name once, then fit it to its tile as the camera zooms.
         if (!caption.emWidth) caption.emWidth = caption.label.getComputedTextLength() / 10;
-        const size = Math.min(12 / screenScale, caption.height * .76, caption.width / caption.emWidth);
+        const size = Math.min(13 / screenScale, caption.height * .68, caption.width / caption.emWidth);
         caption.label.style.fontSize = size + 'px';
-        caption.label.style.visibility = size * screenScale >= 8 ? 'visible' : 'hidden';
+        caption.label.style.visibility = size * screenScale >= 9 ? 'visible' : 'hidden';
       }
     }
     if (M) { const a = P(M.x, M.y); seg(s.link, a, badge); seg(s.lflow, a, badge); }
@@ -3093,10 +3096,23 @@ function placePop() {
   const s = sc.agents.get(c.pick.id); if (!s) return;
   const W = stage.clientWidth, H = stage.clientHeight, vw = 784 / cam.zoom, k = Math.min(W, H) / vw;
   const px = W / 2 + (s.sx - cam.px) * k, py = H / 2 + (s.sy - cam.py) * k, pw = pop.offsetWidth, ph = pop.offsetHeight;
-  let top = py - ph - 14; if (top < 8) top = py + 14;
-  const left = clamp(px - pw / 2, 8, Math.max(8, W - pw - 8));
+  const safe = atlasViewportFrame(true);
+  const frame = pw <= safe.width && ph <= safe.height ? safe : {x: 8, y: 8, width: W - 16, height: H - 16};
+  const anchor = {x: px, y: py}, size = {width: pw, height: ph};
+  const group = s.state !== 'gate' && sc.seats.get(s.seat)?.slots;
+  let position;
+  if (group) {
+    const bounds = {x: W / 2 + (group.left - cam.px) * k, y: H / 2 + (group.top - cam.py) * k,
+      width: (group.right - group.left) * k, height: (group.bottom - group.top) * k};
+    const center = {x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2};
+    position = placeAnnotation(center, size, frame, [bounds], Math.max(bounds.width, bounds.height) / 2 + 8, false);
+  }
+  const gap = 8 + (s.state === 'gate' ? 6 : (s.cell?.radius ?? 4) * k);
+  position ??= placeAnnotation(anchor, size, frame, [], gap);
+  const left = position?.x ?? clamp(px - pw / 2, 8, Math.max(8, W - pw - 8));
+  const top = position?.y ?? clamp(py - ph - gap, 8, Math.max(8, H - ph - 8));
   const key = Math.round(left) + ',' + Math.round(top);
-  if (key !== popAt) { popAt = key; pop.style.left = left + 'px'; pop.style.top = clamp(top, 8, Math.max(8, H - ph - 8)) + 'px'; }
+  if (key !== popAt) { popAt = key; pop.style.left = left + 'px'; pop.style.top = top + 'px'; }
 }
 function easeCam(dt) {
   const k = reduce ? 1 : 1 - Math.exp(-dt / 150); let busy = false;
@@ -3954,30 +3970,36 @@ function agentInfo(a, previous) {
   const w = cur().world, e = previous && previous.dataset.agent === a.id ? previous : html('div', 'a-info');
   if (!e.firstElementChild) {
     e.dataset.agent = a.id; e.setAttribute('role', 'group'); e.setAttribute('aria-labelledby', 'agentDetailTitle');
-    const top = html('div', 'a-top'), title = html('h3', 'id', 'Agent ' + a.id);
+    const top = html('div', 'a-top'), title = html('h3', 'agent-activity');
+    title.setAttribute('data-agent-field', 'work');
+    const id = html('span', 'id', 'Agent ' + a.id);
+    id.id = 'agentDetailId'; e.setAttribute('aria-describedby', id.id);
     title.id = 'agentDetailTitle'; title.tabIndex = -1; title.dataset.focus = 'agent-detail-title-' + a.id;
     const close = html('button', 'btn agent-close');
     close.type = 'button'; close.title = 'Close agent details'; close.setAttribute('aria-label', close.title);
     close.appendChild(html('span', 'sr', close.title));
     close.setAttribute('data-agent-action', 'close'); close.dataset.focus = 'agent-detail-close-' + a.id;
     close.addEventListener('click', () => clearPick(true)); top.append(title, close);
-    const work = html('p', 'agent-activity'); work.setAttribute('data-agent-field', 'work');
     const status = html('div', 'agent-status'); status.append(html('span', 'st'), html('span', 'agent-elapsed'));
     const facts = html('dl', 'agent-facts');
-    for (const [key, label] of [['task', 'Task'], ['leads', 'Led by'], ['mission', 'Mission'], ['gate', 'Gate']]) {
+    for (const [key, label] of [['task', 'Task'], ['mission', 'Mission'], ['gate', 'Gate']]) {
       const row = html('div'), val = html('dd'); val.setAttribute('data-agent-field', key);
       row.append(html('dt', '', label), val); facts.appendChild(row);
     }
     const review = html('button', 'btn agent-review', 'Review in Inbox'); review.type = 'button'; review.setAttribute('data-agent-action', 'review'); review.dataset.focus = 'agent-detail-review-' + a.id;
     review.addEventListener('click', () => { const current = cur().world.agents.get(e.dataset.agent); if (current && current.ask) flashAsk(current.ask); });
-    e.append(top, work, status, facts, review);
+    const footer = html('div', 'agent-identity'), owner = html('span', 'agent-owner'), leads = html('b');
+    leads.setAttribute('data-agent-field', 'leads');
+    owner.append(html('span', '', 'Led by '), leads);
+    footer.append(owner, id);
+    e.append(top, status, facts, review, footer);
   }
   const task = w.tasks.get(a.task), mission = w.missions.get(a.mission), request = a.state === 'gate' && w.asks.get(a.ask);
   e.style.setProperty('--hue', fam(a.fam).hue);
   const field = key => e.querySelector(`[data-agent-field="${key}"]`);
   field('work').textContent = request ? request.title : a.state === 'work' ? a.doing || 'Working on assignment' : a.state === 'gate' ? 'Waiting for approval' : 'Waiting for work';
   const state = e.querySelector('.st'); state.className = 'st ' + a.state; state.textContent = STATE[a.state];
-  e.querySelector('.agent-elapsed').textContent = ago(a) + ' in this state';
+  e.querySelector('.agent-elapsed').textContent = 'for ' + ago(a);
   field('task').textContent = task ? task.name : 'Unassigned';
   setMissionName(field('mission'), mission ? mission.name : 'No mission');
   field('leads').textContent = (task && task.leads.length ? task.leads : [a.fam]).map(k => fam(k).name).join(' and ');
