@@ -44,7 +44,7 @@ Keep internal mission placement and overview project placement distinct. The new
 
 ## 4. Reading a mission seal
 
-Compass uses one drawing plane for the overview, Project, mission details, previews and Seal lab. Psyche defaults to a small crown. Choose a point or a labeled crown in the map controls. A mission uses a filled disc with an external label. Smaller familiar badges sit at the ends of colored spokes. Selection adds an outline and preserves familiar identity colors.
+Compass uses one drawing plane for the overview, Project, mission details, previews and Seal lab. Psyche defaults to a crown with bands for working agents and missions awaiting a decision. Choose a point or a labeled crown in the map controls. A mission uses a filled disc with an external label. Smaller familiar badges sit at the ends of colored spokes. Selection adds an outline and preserves familiar identity colors.
 
 | Seal feature | Meaning |
 | --- | --- |

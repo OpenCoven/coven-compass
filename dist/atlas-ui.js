@@ -144,7 +144,9 @@
         row.dataset.project = m.project; row.dataset.mission = m.id;
         var emblem = node('span', 'atlas-mission-seal'); emblem.setAttribute('aria-hidden', 'true');
         var copy = node('span', 'atlas-mission-copy');
-        copy.append(node('b', 'atlas-mission-title'), node('span', 'atlas-mission-meta'), node('span', 'atlas-mission-stats'));
+        var heading = node('span', 'atlas-mission-heading');
+        heading.append(node('b', 'atlas-mission-title'), node('span', 'atlas-mission-meta'));
+        copy.append(heading, node('span', 'atlas-mission-project'), node('span', 'atlas-mission-stats'));
         row.append(emblem, copy);
         $('atlasMissionList').append(row); missionNodes.set(key, row);
       }
@@ -153,10 +155,12 @@
       row.hidden = !match; if (match) shown++;
       row.dataset.state = m.state;
       row.setAttribute('aria-current', String(s.active === m.project && s.missionId === m.id));
-      row.setAttribute('aria-label', m.name + ', ' + m.project + ', ' + m.stateLabel + ', ' + m.agents + ' agents. Open mission details');
+      row.setAttribute('aria-label', m.name + ', ' + m.project + ', ' + m.stateLabel + ', ' + m.agents + ' agents' + (m.needs ? ', ' + m.needs + ' pending' : '') + '. Open mission details');
       api.setMissionName(row.querySelector('.atlas-mission-title'), m.name);
-      row.querySelector('.atlas-mission-meta').textContent = m.project + ' · ' + m.stateLabel;
-      row.querySelector('.atlas-mission-stats').textContent = m.agents + ' agents · ' + m.council + (m.needs ? ' · ' + m.needs + ' pending' : '');
+      var projectName = row.querySelector('.atlas-mission-project');
+      projectName.textContent = m.project; projectName.hidden = !!missionProject;
+      row.querySelector('.atlas-mission-meta').textContent = m.stateLabel + (m.needs ? ' · ' + m.needs : '');
+      row.querySelector('.atlas-mission-stats').textContent = m.agents + (m.agents === 1 ? ' agent' : ' agents') + (m.council ? ' · ' + m.council : '');
       var emblem = row.querySelector('.atlas-mission-seal');
       if (emblem.dataset.seal !== m.seal) { emblem.dataset.seal = m.seal; emblem.innerHTML = m.seal; }
     });

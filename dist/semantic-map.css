@@ -237,13 +237,17 @@ body.atlas-enhanced #plan .atlas-compact-decision text { display: none; }
 
 
 
-/* The same small, screen-sized marker identifies Psyche at both map scopes. */
+/* Crown views summarize this scope. Point keeps a fixed footprint. */
 body.atlas-enhanced #plan .coord-face { fill: var(--background); stroke: transparent; }
 body.atlas-enhanced #plan :is(.coord-crown, .coord-point) { fill: var(--primary); }
 body.atlas-enhanced #plan :is(.coord-name, .coord-point) { display: none; }
-body[data-psyche-marker="point"] #plan .coord-crown { display: none; }
+body[data-psyche-marker="point"] #plan .coord-artwork { display: none; }
 body[data-psyche-marker="point"] #plan .coord-point { display: inline; }
-body[data-psyche-marker="point"] #plan .coord-face { r: 12px; }
+body.atlas-enhanced #plan :is(.coord-track, .coord-band) { fill: none; stroke-width: 3; }
+body.atlas-enhanced #plan .coord-track { stroke: #3a3643; }
+body.atlas-enhanced #plan .coord-work { stroke: #a39bbe; }
+body.atlas-enhanced #plan .coord-attention { stroke: var(--attention); }
+body.atlas-enhanced #plan :is(.hub, .atlas-local-psyche):focus-visible .coord-point { stroke: var(--attention); stroke-width: 2; }
 body[data-psyche-marker="labeled"] #plan .coord-face { stroke: #787183; }
 body[data-psyche-marker="labeled"] #plan .coord-name { display: inline; fill: var(--foreground); font-family: var(--f-body); }
 body.atlas-enhanced #plan :is(.hub, .atlas-local-psyche):is(:hover, :focus-visible) .coord-face { stroke: var(--primary); stroke-width: 2; }

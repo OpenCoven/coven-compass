@@ -212,7 +212,7 @@ body.atlas-enhanced .atlas-mission-tools input:focus-visible,
 body.atlas-enhanced .atlas-mission-tools select:focus-visible { outline-offset: 1px; }
 body.atlas-enhanced #atlasMissionCount { flex: none; margin: 0; padding: 0 4px; color: var(--subtle); font-size: 11px; line-height: 1.5; font-variant-numeric: tabular-nums; }
 body.atlas-enhanced #atlasMissionList { display: flex; flex-direction: column; gap: 5px; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #4a425b transparent; padding: 3px; scroll-padding-block: 6px; }
-body.atlas-enhanced .atlas-mission-row { display: grid; grid-template-columns: 32px minmax(0, 1fr); align-items: center; gap: 4px 10px; flex: none; width: 100%; min-width: 0; min-height: 88px; padding: 11px 10px; border: 1px solid transparent; border-radius: 7px; background: #1a191f; color: var(--foreground); text-align: left; }
+body.atlas-enhanced .atlas-mission-row { display: grid; grid-template-columns: 32px minmax(0, 1fr); align-items: center; gap: 4px 10px; flex: none; width: 100%; min-width: 0; min-height: 64px; padding: 10px; border: 1px solid transparent; border-radius: 7px; background: #1a191f; color: var(--foreground); text-align: left; }
 body.atlas-enhanced .atlas-mission-row:hover { border-color: var(--border-strong); background: #211f28; }
 body.atlas-enhanced .atlas-mission-row[aria-current="true"] { border-color: rgba(179, 170, 235, .4); background: #24212e; box-shadow: inset 2px 0 0 var(--primary); }
 body.atlas-enhanced .atlas-mission-row .atlas-mission-seal { grid-column: 1; grid-row: 1 / 4; display: grid; place-items: center; }
@@ -224,9 +224,10 @@ body.atlas-enhanced .mission-word { display: inline-block; max-width: 100%; text
 .lc-also button, .rowlink > span:has(.mission-word), .tname em:has(.mission-word), .cf-r .rf:has(.mission-word) { min-width: 0; max-width: 100%; }
 [data-agent-field="mission"] { min-width: 0; white-space: normal; }
 body.atlas-enhanced .atlas-mission-title { min-width: 0; font-size: 13px; font-weight: 500; line-height: 1.35; }
-body.atlas-enhanced .atlas-mission-meta { color: var(--muted-foreground); font-size: 11px; line-height: 1.4; }
-body.atlas-enhanced .atlas-mission-stats { color: var(--subtle); font-size: 10px; line-height: 1.5; font-variant-numeric: tabular-nums; }
-body.atlas-enhanced .atlas-mission-row[data-state="needsYou"] .atlas-mission-meta { color: #ded8ed; }
+body.atlas-enhanced .atlas-mission-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 8px; }
+body.atlas-enhanced .atlas-mission-meta { padding: 2px 6px; border: 1px solid var(--border); border-radius: 4px; color: var(--muted-foreground); font-size: 10px; line-height: 1.35; }
+body.atlas-enhanced .atlas-mission-stats, body.atlas-enhanced .atlas-mission-project { color: var(--muted-foreground); font-size: 11px; line-height: 1.45; }
+body.atlas-enhanced .atlas-mission-row[data-state="needsYou"] .atlas-mission-meta { border-color: #675b80; background: #332c3e; color: #e9dff9; }
 body.atlas-enhanced #atlasMissionReset { align-self: flex-start; flex: none; min-height: 34px; padding: 5px 8px; border: 1px solid transparent; border-radius: 5px; color: #c7bee4; font-size: 11px; }
 body.atlas-enhanced #atlasMissionReset:hover { border-color: var(--border-strong); background: #211f28; }
 body.atlas-enhanced .atlas-mission-empty { margin: 0; padding: 20px 10px; color: var(--muted-foreground); font-size: 12px; line-height: 1.65; }
@@ -505,7 +506,7 @@ body.atlas-enhanced :focus-visible { outline: 2px solid #c7bff4; outline-offset:
   body.atlas-enhanced #atlasMissionList { flex: none; overflow-y: visible; }
   body.atlas-enhanced .atlas-mission-tools { gap: 6px; }
   body.atlas-enhanced .atlas-mission-tools label { gap: 3px; }
-  body.atlas-enhanced .atlas-mission-row { min-height: 76px; padding-block: 8px; }
+  body.atlas-enhanced .atlas-mission-row { min-height: 64px; padding-block: 8px; }
 }
 
 /* A short viewport keeps the map useful without a portrait-sized canvas. */

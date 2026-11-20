@@ -142,3 +142,50 @@ for (const [width, height] of [[1440, 900], [390, 844]]) {
     } finally { await page.close(); }
   });
 }
+
+test('mission browsing leaves space for the selected seal and the open Inbox review', async () => {
+  const page = await browser.newPage({viewport: {width: 1908, height: 1146}, reducedMotion: 'reduce'});
+  try {
+    await page.goto(new URL('#/project/psyche-build', base).href);
+    const launcher = page.locator('#atlasMissions');
+    const drawer = page.locator('#atlasMissionBrowser');
+    const row = drawer.getByRole('button', {name: /^Source survey, psyche-build,/});
+    await launcher.click();
+    assert.equal(await row.locator('.atlas-mission-project').isVisible(), false);
+    assert.match(await row.locator('.atlas-mission-meta').innerText(), /Needs you · 1/);
+    await page.locator('#atlasMissionProject').selectOption('');
+    assert.equal(await row.locator('.atlas-mission-project').innerText(), 'psyche-build');
+    await row.click();
+    await page.locator('#mission-tab-tasks').click();
+    const tasks = page.locator('#inspect .i-task');
+    assert.ok(await tasks.count() > 0);
+    for (const task of await tasks.all()) {
+      const dots = task.locator('button.dot');
+      const count = await dots.count();
+      assert.equal(await task.locator('.i-assigned').innerText(), count + (count === 1 ? ' agent' : ' agents'));
+      const parts = [];
+      for (const [state, label] of [['gate', 'at gate'], ['work', 'working'], ['idle', 'idle']]) {
+        const n = await task.locator('.dot.' + state).count();
+        if (n) parts.push(n + ' ' + label);
+      }
+      assert.equal(await task.locator('.i-task-summary').innerText(), parts.join(' · '));
+    }
+    const note = page.locator('.ask-note');
+    await note.click();
+    await page.locator('#notif .cf').waitFor();
+    await note.waitFor({state: 'hidden'});
+    assert.equal(await page.getByRole('button', {name: 'Allow once', exact: true}).isVisible(), true);
+    await launcher.click();
+    await page.waitForFunction(() => {
+      const seal = document.querySelector('.lead-node.sel .se-face')?.getBoundingClientRect();
+      const drawer = document.querySelector('#atlasMissionBrowser').getBoundingClientRect();
+      const inspector = document.querySelector('#inspect').getBoundingClientRect();
+      return seal && seal.left > drawer.right && seal.right < inspector.left;
+    });
+    await page.keyboard.press('Escape');
+    await page.locator('#tabChat').click();
+    await note.waitFor({state: 'visible'});
+  } finally {
+    await page.close();
+  }
+});

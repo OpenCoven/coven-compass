@@ -18,26 +18,29 @@ function svg(tag, attrs, parent) {
   parent.children.push(node);
   return node;
 }
-const parent = {children: []}, badge = api.create(parent, svg);
-assert.deepEqual(badge.children.map(el => el.tag), ['circle', 'circle', 'use', 'circle', 'text']);
-const [hit, face, crown, point, label] = badge.children;
-assert.equal(hit.attrs.r * 2, 44);
-assert.equal(crown.attrs.width, 32);
-assert.ok(crown.attrs.width < hit.attrs.r * 2);
-assert.equal(point.attrs.r * 2, 16);
-assert.ok(point.attrs.r < face.attrs.r);
-assert.equal(point.attrs.class, 'coord-point');
+const parent = {children: [], setAttribute(key, value) { this[key] = value; }};
+const marker = api.create(parent, svg), crown = marker.artwork.children.find(el => el.tag === 'use');
 assert.equal(crown.attrs.href, '#crown');
-assert.equal(label.textContent, 'Psyche');
-assert.ok(crown.attrs.y + crown.attrs.height < label.attrs.y);
-assert.equal(label.attrs['text-anchor'], 'middle');
+assert.equal(marker.label.textContent, 'Psyche');
+assert.equal(marker.label.attrs['text-anchor'], 'middle');
+assert.ok(marker.work.attrs.r < marker.attention.attrs.r);
+for (const [work, agents, waiting, missions, inner, outer] of [[0, 0, 0, 0, 0, 0], [3, 4, 1, 2, 75, 50], [4, 4, 0, 2, 100, 0]]) {
+  api.update(marker, 'Project', work, agents, waiting, missions);
+  assert.equal(parseFloat(marker.work.attrs['stroke-dasharray']), inner);
+  assert.equal(parseFloat(marker.attention.attrs['stroke-dasharray']), outer);
+  assert.ok(parent['aria-label'].includes(waiting + ' of ' + missions + ' missions waiting'));
+}
 let combinations = 0;
 for (const [x, y] of [[0, 0], [-400, 370], [550, -80]]) {
   for (const screenScale of [.03, .5, 1, 5]) {
-    api.draw(badge, {x, y, screenScale});
-    assert.equal(badge.attrs.transform, `translate(${x} ${y}) scale(${1 / screenScale})`);
-    assert.equal(badge.children.length, 5);
+    const radius = 36 * screenScale;
+    api.draw(marker, {x, y, screenScale, radius});
+    assert.equal(marker.badge.attrs.transform, `translate(${x} ${y}) scale(${1 / screenScale})`);
+    assert.equal(marker.artwork.attrs.transform, `scale(${radius / 32})`);
+    assert.ok(marker.hit.attrs.r >= 22);
+    assert.ok(marker.label.attrs.y > radius);
+    assert.equal(marker.artwork.children.length, 6);
     combinations++;
   }
 }
-console.log(`Crown checks passed: canonical path digest, ${combinations} view/size combinations, screen-sized marks, touch target and optional lower label.`);
+console.log(`Crown checks passed: canonical path digest, ${combinations} view/size combinations, activity and attention fractions, target and label.`);
