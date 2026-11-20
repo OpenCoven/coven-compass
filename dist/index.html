@@ -1651,6 +1651,7 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
 @media (prefers-reduced-motion:reduce){#plan.live .seal .se-w.live .se-top,.seal.st-needsYou .se-halo{animation:none}}
 </style>
 <link rel="stylesheet" href="atlas.css">
+<link rel="stylesheet" href="brief-policy.css">
 <link rel="stylesheet" href="seal-lab.css">
 <link rel="stylesheet" href="semantic-map.css">
 </head><body>
@@ -1768,6 +1769,7 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
                 <ul class="nm-terms" id="nmTerms" aria-live="polite"></ul>
               </div>
               <div class="nm-sec"><span class="nm-l">Brief</span><div class="nm-rows" id="nmBrief"></div></div>
+              <div class="nm-sec" id="nmPolicy"></div>
               </div>
               <div class="em-act"><span class="nm-foot" id="nmFoot"></span><button class="btn pri" id="raise" type="submit">Open mission</button></div>
             </form>
@@ -1883,6 +1885,8 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
 <script src="castle-map.js"></script>
 <script src="atlas-crown.js"></script>
 <script src="atlas-presentation.js"></script>
+<script src="brief-policy.js"></script>
+<script src="brief-policy-ui.js"></script>
 <script src="simulation-model.js"></script>
 <script src="projection-source.js"></script>
 <script>
@@ -2100,7 +2104,7 @@ const SLOTS = [[214, -19], [224, 16], [298, -1], [392, 0], [252, 40], [252, -42]
 //   agent.assigned {agent, task}         (agent.spawned may also carry task)        task.lead.added {task, familiar}  (task.opened may carry leads[])
 //   project.founded {name, repo, root}  project.moved {repo?, root?}  project.renamed {name, from}  mission.renamed {mission, name}  mission.closed {mission}
 //   a round: you.said {round}  psyche.routed {round, mode, why, targets[{mission, familiar, agent?}]}  familiar.report {round, agent?}  round.closed {round}
-const KNOWN = new Set(['mission.opened', 'council.seated', 'task.opened', 'task.lead.added', 'agent.assigned', 'agent.spawned', 'agent.state', 'agent.retired', 'gate.requested', 'gate.resolved', 'familiar.report', 'psyche.said', 'psyche.routed', 'you.said', 'mission.briefed', 'mission.progress', 'artifact.state', 'mission.paused', 'mission.resumed', 'project.stopped', 'project.resumed', 'project.founded', 'project.moved', 'project.renamed', 'mission.renamed', 'mission.closed', 'round.closed']);
+const KNOWN = new Set(['brief.fixture', 'brief.hold', 'mission.opened', 'council.seated', 'task.opened', 'task.lead.added', 'agent.assigned', 'agent.spawned', 'agent.state', 'agent.retired', 'gate.requested', 'gate.resolved', 'familiar.report', 'psyche.said', 'psyche.routed', 'you.said', 'mission.briefed', 'mission.progress', 'artifact.state', 'mission.paused', 'mission.resumed', 'project.stopped', 'project.resumed', 'project.founded', 'project.moved', 'project.renamed', 'mission.renamed', 'mission.closed', 'round.closed']);
 const STRUCT = new Set(['mission.opened', 'council.seated', 'agent.spawned']);
 // A mission's brief says four things, in the same words everywhere: what it delivers, the floors it must reach ("at least"),
 // the ceilings it must stay under ("at most"), and how it will be judged.
@@ -2115,7 +2119,7 @@ function normBrief(b) {
   if (!b || typeof b !== 'object') return null;
   const pos = (o, keys) => { const r = {}; keys.forEach(k => { const v = o && o[k]; if (typeof v === 'number' && isFinite(v) && v > 0) r[k] = v; }); return r; };
   const strs = a => (Array.isArray(a) ? a : []).map(x => String(x).slice(0, 16)).slice(0, 6);
-  return closeBrief({deliver: (Array.isArray(b.deliver) ? b.deliver : []).filter(a => a && KIND[a.kind]).map(a => ({kind: a.kind, formats: strs(a.formats), langs: strs(a.langs)})),
+  return closeBrief({...(b.policy ? {policy: window.CompassBriefPolicy.valid(b.policy) ? structuredClone(b.policy) : {version: 'unsupported'}} : {}), deliver: (Array.isArray(b.deliver) ? b.deliver : []).filter(a => a && KIND[a.kind]).map(a => ({kind: a.kind, formats: strs(a.formats), langs: strs(a.langs)})),
     atLeast: pos(b.atLeast, Object.keys(FLOOR)), atMost: pos(b.atMost, Object.keys(CAP)), measure: (Array.isArray(b.measure) ? b.measure : []).filter(k => MEASURE[k])});
 }
 // Some choices bring others with them, and every brief is kept in one standard form: a website is built from a codebase,
@@ -2305,6 +2309,32 @@ function seek(c, t, quiet) {
 }
 const projects = {};
 Object.keys(SAMPLES).forEach(k => { projects[k] = makeProject(k, sampleTrace(k, Date.now()), false); projects[k].sample = true; seek(projects[k], Date.now(), true); });
+// Retain only Projects containing a fixture Brief, scoped to this browser tab.
+const briefSessionKey = 'compass-brief-fixture-traces-v1';
+let briefSessionError = '';
+try {
+  const saved = JSON.parse(sessionStorage.getItem(briefSessionKey) || '[]');
+  for (const entry of saved) {
+    if (typeof entry.key !== 'string' || !entry.key || Object.hasOwn(Object.prototype, entry.key)) continue;
+    const parsed = parseTrace(JSON.stringify(entry.trace));
+    if (parsed.bad || !parsed.events.length) throw new Error('invalid fixture trace');
+    const project = makeProject(entry.key, parsed.events, entry.recorded);
+    project.sample = !!entry.sample; project.layoutDemo = !!entry.layoutDemo;
+    projects[entry.key] = project;
+    seek(project, Date.now(), true);
+  }
+} catch { briefSessionError = 'The saved fixture session could not be restored.'; }
+function saveBriefSession() {
+  try {
+    const saved = Object.values(projects).filter(c => c.trace.some(e => e.brief?.policy)).map(c => ({
+      key: c.key, trace: c.trace, recorded: c.recorded, sample: !!c.sample, layoutDemo: !!c.layoutDemo,
+    }));
+    if (saved.length) sessionStorage.setItem(briefSessionKey, JSON.stringify(saved));
+    else sessionStorage.removeItem(briefSessionKey);
+    briefSessionError = '';
+  } catch { briefSessionError = 'Fixture history could not be saved for reload in this tab.'; }
+}
+window.addEventListener('pagehide', saveBriefSession);
 const fromHash = () => { const route = window.CovenMissionNavigation && window.CovenMissionNavigation.parse(location.hash); return route && projects[route.project] ? route.project : null; };
 let active = fromHash() || 'psyche-build';
 const cur = () => projects[active];
@@ -2333,6 +2363,7 @@ function seekTimeline(t, quiet) {
 }
 function emit(c, e) {
   SimModel.append(c, e, Date.now());
+  if (e.brief?.policy || e.type.startsWith('brief.')) saveBriefSession();
   if (STRUCT.has(e.type)) { const n0 = c.layout.n; c.layout = layoutOf(c.trace); if (c.layout.n !== n0 && c === cur()) { buildScene(); if (atlasAutoFit) atlasQueueFit(); } }
   if (live) { cursor = e.t; seekTimeline(cursor); refresh(); }
 }
@@ -3726,7 +3757,7 @@ function syncInspect(force) {
   const tasks = [...w.tasks.values()].filter(t => t.leads.some(k => order.has(seatId(t.mission, k)))).sort((a, b) => rank(seatId(a.mission, a.fam)) - rank(seatId(b.mission, b.fam)));
   const taskIds = new Set(tasks.map(t => t.id));      // a familiar's scope includes the agents of tasks it shares, wherever they sit
   const all = [...w.agents.values()].filter(a => order.has(a.seat) || (a.task && taskIds.has(a.task))).sort((a, b) => rank(a.seat) - rank(b.seat) || slotOf(a) - slotOf(b));
-  const sig = (panelView === 'brief' ? briefSig(briefState(w, M), M) + Math.floor((w.t - M.t0) / 60000) + canAct() : '') + active + M.id + '/' + (c.fam || '') + '|' + panelView + '|' + seatIds.join(',') + '|' + tasks.map(t => t.id).join(',') + '|' + all.map(a => a.id + ':' + (a.task || '')).join(',');
+  const sig = (panelView === 'brief' ? briefSig(briefState(w, M), M) + JSON.stringify([M.brief?.policy, M.reviews?.length, M.reviewHold, !!(M.brief?.policy?.limits?.deadline && w.t >= Date.parse(M.brief.policy.limits.deadline))]) + Math.floor((w.t - M.t0) / 60000) + canAct() : '') + active + M.id + '/' + (c.fam || '') + '|' + panelView + '|' + seatIds.join(',') + '|' + tasks.map(t => t.id).join(',') + '|' + all.map(a => a.id + ':' + (a.task || '')).join(',');
   if (force || sig !== insp.sig) {
     const identity = [active, M.id, c.fam, panelView].join('|'), sameView = box.dataset.selection === identity;
     const previousScroll = sameView ? box.scrollTop : 0;
@@ -3806,6 +3837,11 @@ function syncInspect(force) {
         st.caps.forEach(x => line(g, x.label, `${fmtN(x.k, x.used)} / ${fmtN(x.k, x.max)}`, x.frac, x.frac >= 1 ? 'over' : x.frac >= WARN_AT ? 'near' : '')); if (!st.caps.length) line(g, 'No limits', '');
         if (st.measures.length) { g = grp('gauge', 'Measured by', '', ''); st.measures.forEach(x => line(g, x.label, x.value)); }
       }
+      window.CompassBriefUI.inspector(sec, M, w.t, canAct(), phase => {
+        const now = Date.now(), record = window.CompassBriefPolicy.step(M.brief?.policy, M.reviews || [], phase, now, M.reviewHold);
+        if (record && canAct()) emit(c, {type: 'brief.fixture', mission: M.id, record});
+      }, reason => { if (canAct()) emit(c, {type: 'brief.hold', mission: M.id, reason}); }, jumpTo, !live && !c.recorded ? goLive : null);
+      if (briefSessionError) sec.appendChild(html('p', 'small', briefSessionError));
       if (canAct()) { const eb = html('button', 'btn sm', st ? 'Edit brief' : 'Set brief'); eb.type = 'button'; eb.addEventListener('click', () => openNew(M.id)); const wrap = html('div', 'bfg'); wrap.appendChild(eb); sec.appendChild(wrap); }
     } else if (panelView === 'council') {
       seats.forEach(x => group(fam(x.k).hue, seatLink(x), all.filter(a => a.seat === seatId(x.m.id, x.k))));
@@ -4002,7 +4038,7 @@ function drawWard() {
   review.setAttribute('aria-label', pending === 1 ? 'Review pending request' : 'Review pending requests');
   box.querySelector('.ward-status').textContent = pending ? pending + (pending === 1 ? ' pending request' : ' pending requests') : 'No pending requests';
 }
-const FAMILY = [['Missions', ['mission.opened', 'council.seated', 'task.opened', 'task.lead.added', 'mission.briefed', 'mission.progress', 'artifact.state', 'mission.paused', 'mission.resumed', 'mission.renamed', 'mission.closed', 'project.founded', 'project.moved', 'project.renamed', 'project.stopped', 'project.resumed']], ['Agents', ['agent.spawned', 'agent.state', 'agent.assigned', 'agent.retired']], ['Messages', ['you.said', 'psyche.said', 'psyche.routed', 'familiar.report', 'round.closed']], ['Gates', ['gate.requested', 'gate.resolved']]];
+const FAMILY = [['Missions', ['brief.fixture', 'brief.hold', 'mission.opened', 'council.seated', 'task.opened', 'task.lead.added', 'mission.briefed', 'mission.progress', 'artifact.state', 'mission.paused', 'mission.resumed', 'mission.renamed', 'mission.closed', 'project.founded', 'project.moved', 'project.renamed', 'project.stopped', 'project.resumed']], ['Agents', ['agent.spawned', 'agent.state', 'agent.assigned', 'agent.retired']], ['Messages', ['you.said', 'psyche.said', 'psyche.routed', 'familiar.report', 'round.closed']], ['Gates', ['gate.requested', 'gate.resolved']]];
 function drawTrace() {
   const c = cur(), tr = c.trace, t0 = tStart(c), t1 = tEnd(c), span = Math.max(1, t1 - t0);
   const mark = $('traceNow'); if (mark) mark.style.left = (clamp((cursor - t0) / span, 0, 1) * 100).toFixed(2) + '%';
@@ -4671,7 +4707,7 @@ function drawBriefForm(focusId) {
       x.addEventListener('click', () => { userTpl = userTpl.filter(u => u !== t); saveTpl(); if (nm.tpl === t.id) nm.tpl = null; drawBriefForm(); drawNew(); }); return x; });
     if (owns.length) body.push(tgs('Delete', owns));
     const sv = html('div', 'tp-save'), inp = html('input'), sb = html('button', 'btn sm', 'Save as template'); inp.type = 'text'; inp.maxLength = 28; inp.placeholder = 'Name this brief'; inp.setAttribute('aria-label', 'Template name'); inp.dataset.id = 'tp-name'; sb.type = 'button';
-    const full = userTpl.length >= TPL_MAX, okName = () => { const v = inp.value.trim(); return v.length >= 2 && !allTpl().some(t => t.name.toLowerCase() === v.toLowerCase()); };
+    const full = userTpl.length >= TPL_MAX, okName = () => { const v = inp.value.trim(); return (!nm.brief.policy || window.CompassBriefPolicy.valid(nm.brief.policy)) && v.length >= 2 && !allTpl().some(t => t.name.toLowerCase() === v.toLowerCase()); };
     sb.disabled = true; inp.disabled = full; if (full) inp.placeholder = `You have ${TPL_MAX} templates. Delete one first.`;
     inp.addEventListener('input', () => { sb.disabled = full || !okName(); }); inp.addEventListener('keydown', ev => { if (composingInput(ev)) return; if (ev.key === 'Enter') { ev.preventDefault(); sb.click(); } });
     sb.addEventListener('click', () => { if (full || !okName()) return; const name = inp.value.trim(), t = {id: 'u-' + Date.now().toString(36), name, brief: normBrief(clone(nm.brief)), own: true};
@@ -4693,6 +4729,9 @@ function drawBriefForm(focusId) {
   row('floor', 'floor', '', 'At least', fl.length ? fl.join(', ') : 'Nothing required', Object.keys(FLOOR).map(k => { const by = floorBy(b, k), min = by ? REQUIRES[by.kind].atLeast[k] : 0, r = step('fl-' + k, FLOOR[k][0] + (by ? ' · required' : ''), k, b.atLeast[k] || 0, FLOOR[k][1], min, v => { if (v) b.atLeast[k] = v; else delete b.atLeast[k]; }); if (by) r.title = `Required: ${REQUIRES[by.kind].why}`; return r; }));
   row('cap', 'cap', 'q', 'At most', Object.keys(b.atMost).map(k => capText(k, b.atMost[k])).join(' · '), Object.keys(CAP).map(k => step('cp-' + k, CAP[k][0], k, b.atMost[k], CAP[k][1], CAP[k][2], v => { b.atMost[k] = v; })));
   row('measure', 'gauge', '', 'Measured by', b.measure.length ? b.measure.map(k => MEASURE[k].toLowerCase()).join(', ') : 'Nothing', [tgs('', Object.keys(MEASURE).map(k => tog('m-' + k, MEASURE[k], b.measure.includes(k), () => flip(b.measure, k))))]);
+  window.CompassBriefUI.editor($('nmPolicy'), b, () => {
+    nm.briefTouched = true; nm.tplEdited = true; drawNew();
+  });
   if (focusId) { const el = box.querySelector(`[data-id="${focusId}"]`); if (el && !el.disabled) el.focus(); }
 }
 function setLead(k, focus) {
@@ -4726,7 +4765,7 @@ function drawNew() {
   $('emptyName').textContent = EM ? EM.name : active; $('emptyState').textContent = EM ? '' : n ? `${n} open` : 'Dormant'; $('emptyState').className = 'hd-s ' + (n ? 'on' : 'off'); $('emptyState').hidden = !!EM;
   $('emptyX').hidden = false;
   $('nmFoot').textContent = !canAct() ? 'Replaying. Go live first.' : EM ? 'Psyche tells the council.' : `Starts with 6 of up to ${nm.brief.atMost.agents} agents.`;
-  $('raise').disabled = !ok || !$('nmName').value.trim(); $('nmName').disabled = !ok || !!EM;
+  $('raise').disabled = !ok || !$('nmName').value.trim() || !!(nm.brief.policy && !window.CompassBriefPolicy.valid(nm.brief.policy)); $('nmName').disabled = !ok || !!EM;
 }
 function openNew(editId) {
   const c = cur(), M = editId ? c.world.missions.get(editId) : null;
@@ -4764,6 +4803,11 @@ $('empty').addEventListener('submit', ev => {
   ev.preventDefault();
   if (composingText.has(document.activeElement)) return;
   const c = cur(), w = c.world, name = $('nmName').value.trim().slice(0, 60), k = nm.lead, f = fam(k), brief = normBrief(nm.brief);
+  if (nm.brief.policy) {
+    if (!window.CompassBriefPolicy.valid(nm.brief.policy)) return;
+    const previous = nm.edit && w.missions.get(nm.edit)?.brief?.policy;
+    if (!previous || !window.CompassBriefPolicy.sameRule(previous, brief.policy)) brief.policy.revision = Array.from(crypto.getRandomValues(new Uint8Array(16)), byte => byte.toString(16).padStart(2, '0')).join('');
+  }
   if (nm.edit) {                                    // a changed brief is said to Psyche, who tells the council
     const M = w.missions.get(nm.edit); if (!M || !canAct()) return;
     c.composing = false; nm.edit = null; nm.briefTouched = false; nm.open = null;

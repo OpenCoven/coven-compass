@@ -1,0 +1,53 @@
+{
+  "browser": "Chromium 156.0.8078.4",
+  "playwright": "1.64.1",
+  "capturedAt": "2026-11-20T06:35:48.454Z",
+  "evidence": "Local simulation in headless Chromium",
+  "sources": {
+    "index.html": "268d5365484c9fd2f360de5e9095f58897a30af10dec937cbdf4236d372d4c29",
+    "brief-policy.js": "f992616cd25cf367dc6c3ba4071d30b1d8d931b68dcc4850450e9abd91ff2831",
+    "brief-policy-ui.js": "77e6e12ca9fc8ffd8afac0e904b02c58ea7392e697cff3739b2e766fcfda20b5",
+    "brief-policy.css": "019327d63246c903a952b19cb4efbc4c2599a5c387551c048d99a53caf82bfd3",
+    "simulation-model.js": "c7801de73c8d2cfc7e84e12ef7e4d226910fb5d1ab8d730d83f2832290d7ddef"
+  },
+  "runs": [
+    {
+      "width": 1440,
+      "height": 900,
+      "checks": [
+        "Author sees the required review, weighted rubric and target before saving",
+        "A scores 100% and a failed independent review requires revision",
+        "B waits for its own evidence",
+        "B qualifies with protected acceptance pending and cumulative usage retained",
+        "Actual timeline rewind removes the later observation",
+        "Returning to current time restores the matching observation",
+        "Reload restores all three historical observations with the original revision",
+        "An invalid edited threshold prevents saving",
+        "Edit previews the new 90% rule",
+        "Edited policy survives reload, retaining historical B and its old grade",
+        "The third attempt exhausts the cumulative limit after an edit",
+        "Inspector fits the viewport and emits no page errors"
+      ],
+      "provenance": "b83a4e5274af470cdf292970e739923b"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "checks": [
+        "Author sees the required review, weighted rubric and target before saving",
+        "A scores 100% and a failed independent review requires revision",
+        "B waits for its own evidence",
+        "B qualifies with protected acceptance pending and cumulative usage retained",
+        "Actual timeline rewind removes the later observation",
+        "Returning to current time restores the matching observation",
+        "Reload restores all three historical observations with the original revision",
+        "An invalid edited threshold prevents saving",
+        "Edit previews the new 90% rule",
+        "Edited policy survives reload, retaining historical B and its old grade",
+        "The third attempt exhausts the cumulative limit after an edit",
+        "Inspector fits the viewport and emits no page errors"
+      ],
+      "provenance": "f0860498be9cd95eb732d94a773df8ec"
+    }
+  ]
+}

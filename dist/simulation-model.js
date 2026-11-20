@@ -12,10 +12,10 @@
  * definition is shared. This is sample data only; nothing here is authoritative.
  */
 (function (root, factory) {
-  var api = factory();
+  var api = factory(root ? root.CompassBriefPolicy : require('./brief-policy.js'));
   if (typeof module === 'object' && module.exports) module.exports = api;
   if (root) root.CovenSimulationModel = api;
-}(typeof window !== 'undefined' ? window : null, function () {
+}(typeof window !== 'undefined' ? window : null, function (policy) {
 function create(deps) {
   const missing = ['normBrief', 'ART', 'KIND', 'GATE_NAME', 'CAP', 'fam'].filter(k => !deps || deps[k] == null);
   if (missing.length) throw new TypeError('CovenSimulationModel.create is missing ' + missing.join(', '));
@@ -36,6 +36,25 @@ function routeLabel(w, r) {
 function apply(w, e) {
   switch (e.type) {
     case 'mission.opened': if (e.mission && !w.missions.has(e.mission)) w.missions.set(e.mission, {id: e.mission, name: e.name || String(e.mission), seats: [], t0: e.t, brief: normBrief(e.brief), tpl: e.template ? String(e.template).slice(0, 48) : null, prog: {}, art: {}, spawned: 0, paused: null}); break;
+    case 'brief.fixture': {
+      const m = w.missions.get(e.mission), r = e.record;
+      if (!m?.brief?.policy || !r) break;
+      const history = m.reviews || [];
+      const expected = policy.step(m.brief.policy, history, r.phase, e.t, m.reviewHold);
+      if (!expected || !policy.sameRule(r.policy, expected.policy) || r.attempt !== expected.attempt || r.candidate !== expected.candidate) break;
+      const seal = expected.evidence;
+      if (seal ? (!r.evidence || ['revision', 'attempt', 'candidate', 'seal'].some(k => seal[k] !== r.evidence[k])) : r.evidence !== null) break;
+      (m.reviews ||= []).push(expected);
+      break;
+    }
+    case 'brief.hold': {
+      const m = w.missions.get(e.mission);
+      if (!m?.brief?.policy || m.reviewHold) break;
+      if (e.reason === 'cancelled') m.reviewHold = {cancelled: true};
+      if (e.reason === 'uncertain effects') m.reviewHold = {effects: 'uncertain'};
+      if (['denied', 'expired', 'revoked', 'uncertain'].includes(e.reason)) m.reviewHold = {authorization: e.reason};
+      break;
+    }
     case 'mission.paused': { const m = w.missions.get(e.mission); if (!m) break; m.paused = e.reason === 'you' ? 'you' : 'limit';       // nothing in it works until it is let on
       w.agents.forEach(a => { if (a.mission === m.id && a.state === 'work') { a.state = 'idle'; a.held = true; a.since = e.t; } }); break; }
     case 'mission.resumed': { const m = w.missions.get(e.mission); if (!m) break; m.paused = null;                 // whoever was stopped mid-work picks it up again
