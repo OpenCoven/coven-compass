@@ -1830,16 +1830,6 @@ const hms = t => new Date(t).toLocaleTimeString([], {hour: '2-digit', minute: '2
 const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
 const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 const store = { get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
-const markerKey = 'coven-compass-psyche-marker';
-const markerStyles = ['crown', 'point', 'labeled'];
-const savedMarker = store.get(markerKey);
-document.body.dataset.psycheMarker = markerStyles.includes(savedMarker) ? savedMarker : 'crown';
-function setPsycheMarker(style) {
-  if (!markerStyles.includes(style)) return;
-  document.body.dataset.psycheMarker = style;
-  store.set(markerKey, style);
-  if (sc) { sc.cov.scale = null; project(); }
-}
 
 const CHEV = '<svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const ICON = {
@@ -2942,9 +2932,8 @@ function project() {
         totalRadius += gh.preview.sealRadius * gh.preview.missions.size;
       }
       const radius = clamp(count ? totalRadius * screenScale / count : 26, 9, 110);
-      const style = document.body.dataset.psycheMarker, point = style === 'point';
-      window.CovenAtlasCrown.draw(cv.marker, {x: cv.x, y: cv.y, screenScale, radius, point});
-      const below = (point ? 10 : radius + (style === 'labeled' ? 15 : 1)) / screenScale;
+      window.CovenAtlasCrown.draw(cv.marker, {x: cv.x, y: cv.y, screenScale, radius});
+      const below = (radius + 1) / screenScale;
       const hubU = Math.min(U, 8);
       cv.g.style.setProperty('--u', hubU.toFixed(3));
       for (const [el, offset] of [[cv.sub, 14], [cv.need, 29]]) {
@@ -2979,9 +2968,8 @@ function project() {
   const radius = 43, diameter = 2 * radius * screenScale;
   const faceScale = clamp(68 / diameter, 1, sc.missions.size <= 4 ? 1.44 : 1.16);
   const hubRadius = clamp(sc.missions.size ? 41.5 * faceScale * screenScale : 26, 9, 110);
-  const point = document.body.dataset.psycheMarker === 'point';
-  sc.psy.radius = point ? 8 : hubRadius;
-  window.CovenAtlasCrown.draw(sc.psy.marker, {x: 0, y: 0, screenScale, radius: hubRadius, point});
+  sc.psy.radius = hubRadius;
+  window.CovenAtlasCrown.draw(sc.psy.marker, {x: 0, y: 0, screenScale, radius: hubRadius});
   sc.psy.sx = pc[0]; sc.psy.sy = pc[1];
   const captions = [];
   const lowWideMap = width >= 700 && height < 440 && sc.missions.size <= 4;
@@ -3103,7 +3091,6 @@ function layoutMapLabels() {
     if (s.tray && s.trayBox) reserve(X(s.trayBox.x), Y(s.trayBox.y), s.trayBox.width * scale, s.trayBox.height * scale);
   });
   reserve(X(sc.psy.sx), Y(sc.psy.sy), 2 * sc.psy.radius, 2 * sc.psy.radius);
-  if (document.body.dataset.psycheMarker === 'labeled') reserve(X(sc.psy.sx), Y(sc.psy.sy) + sc.psy.radius + 9, 45, 14);
   sc.gateL.forEach(g => { if (g.mark.style.display !== 'none') reserve(X(g.sx), Y(g.sy), 30, 30, g); });
   sc.seats.forEach(s => {
     if (c.sel !== s.m) return;
@@ -5943,7 +5930,7 @@ function atlasSnapshot(includeMissions) {
 }
 if (window.CovenProjection) window.CovenProjection.register(window.CovenProjection.createSimulationSource({worlds: () => Object.keys(projects).map(k => [k, projects[k].world]), summarize: SimModel.summarize}));
 if (window.CovenAtlas) {
-  window.CovenAtlas.mount({setMissionName, setPsycheMarker, snapshot: atlasSnapshot, overview: atlasOverview, openProject: atlasOpenProject, openMission: atlasOpenMission, setProjectCount: atlasSetProjectCount, newProject: () => openProjectForm(), camera: atlasCamera, highlight: covHl, legend: () => $('keyBtn').click()});
+  window.CovenAtlas.mount({setMissionName, snapshot: atlasSnapshot, overview: atlasOverview, openProject: atlasOpenProject, openMission: atlasOpenMission, setProjectCount: atlasSetProjectCount, newProject: () => openProjectForm(), camera: atlasCamera, highlight: covHl, legend: () => $('keyBtn').click()});
   $('plan').setAttribute('role', 'group');
   atlasRestoreRoute(true);
 }

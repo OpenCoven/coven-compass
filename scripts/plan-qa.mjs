@@ -83,11 +83,11 @@ async function touchGesture(session, center, pinch) {
 }
 
 for (const [name, width, height, mobile] of [['desktop', 1440, 900, false], ['phone', 390, 844, true]]) {
-  test(name + ' switches the Psyche marker across scopes and remembers it on reload', async () => {
+  test(name + ' keeps the crown across scopes and reload with a legacy preference', async () => {
     const page = await browser.newPage({viewport: {width, height}, reducedMotion: 'reduce', isMobile: mobile, hasTouch: mobile});
     try {
+      await page.addInitScript(value => localStorage.setItem('coven-compass-psyche-marker', JSON.stringify(value)), mobile ? 'labeled' : 'point');
       await page.goto(url);
-      const select = page.getByRole('combobox', {name: 'Psyche marker'});
       if (mobile) await page.locator('#atlasMobileView').click();
       const hub = page.locator('.atlas-local-psyche');
       const crown = hub.locator('.coord-crown');
@@ -98,29 +98,21 @@ for (const [name, width, height, mobile] of [['desktop', 1440, 900, false], ['ph
         assert.ok(Math.abs(size - average) < 2, 'Psyche bands match the average mission disc');
         assert.match(await hub.getAttribute('aria-label'), /Inner band: \d+ of \d+ agents working/);
       };
-      assert.equal(await select.inputValue(), 'crown');
+      assert.equal(await page.locator('#atlasCameraDock select').count(), 0);
+      await crown.waitFor();
       await verifyBandSize();
+      const before = await readView(page);
       await page.locator('#atlasZoomIn').click();
-      const camera = await readView(page);
+      assert.ok((await readView(page)).width < before.width);
       await verifyBandSize();
-      await select.selectOption('point');
-      assert.equal(await hub.locator('.coord-artwork').evaluate(el => getComputedStyle(el).display), 'none');
-      assert.equal(Math.round((await hub.locator('.coord-point').boundingBox()).width), 16);
-      assert.equal(Math.round((await hub.locator('.atlas-map-hit').boundingBox()).width), 44);
-      assert.deepEqual(await readView(page), camera);
-      await select.selectOption('labeled');
-      assert.notEqual(await hub.locator('.coord-artwork').evaluate(el => getComputedStyle(el).display), 'none');
-      assert.equal(await crown.isVisible(), true);
-      assert.equal(await hub.locator('.coord-name').isVisible(), true);
+      assert.ok((await hub.locator('.atlas-map-hit').boundingBox()).width >= 43.9);
       await page.goto(new URL('#/coven', base).href);
       const overview = page.locator('.hub');
-      await overview.locator('.coord-name').waitFor();
+      await overview.locator('.coord-crown').waitFor();
       await page.reload();
-      await overview.locator('.coord-name').waitFor();
+      await overview.locator('.coord-crown').waitFor();
       await page.waitForFunction(() => document.querySelector('.hub .coord-artwork')?.hasAttribute('transform'));
       assert.ok((await overview.locator('.coord-attention').boundingBox()).width > 0);
-      if (mobile && !(await select.isVisible())) await page.locator('#atlasMobileView').click();
-      assert.equal(await select.inputValue(), 'labeled');
       await overview.focus();
       await page.keyboard.press('Enter');
       assert.equal(await page.locator('#psyche').isVisible(), true);

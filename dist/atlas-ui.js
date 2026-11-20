@@ -350,24 +350,6 @@
       control.innerHTML = '<svg aria-hidden="true" viewBox="0 0 16 16">' + item[3] + '</svg>';
       control.setAttribute('aria-label', item[2]); control.title = item[2]; cameraDock.append(control);
     });
-    var markerLabel = node('label', 'atlas-marker-style');
-    markerLabel.title = 'Psyche marker';
-    markerLabel.innerHTML = '<svg viewBox="0 0 2048 1889" width="16" height="16" aria-hidden="true"><use href="#crown" width="2048" height="1889"/></svg>';
-    var markerSelect = node('select');
-    markerSelect.id = 'atlasMarkerStyle';
-    markerSelect.setAttribute('aria-label', 'Psyche marker');
-    var markerNames = {crown: 'Crown', point: 'Point', labeled: 'Labeled crown'};
-    Object.keys(markerNames).forEach(function (key) {
-      var option = node('option', '', markerNames[key]); option.value = key; markerSelect.append(option);
-    });
-    markerSelect.value = document.body.dataset.psycheMarker || 'crown';
-    function describeMarker() {
-      markerSelect.title = 'Psyche marker · ' + markerNames[markerSelect.value];
-    }
-    markerSelect.addEventListener('change', function () { api.setPsycheMarker(markerSelect.value); describeMarker(); });
-    describeMarker();
-    markerLabel.append(markerSelect);
-    cameraDock.append(markerLabel);
     shield(cameraDock);
     var bar = $('workspaceBar'), tools = $('workspaceTools'), toolsButton = tools.firstElementChild;
     bar.insertBefore(head, bar.firstChild);

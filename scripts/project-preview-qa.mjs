@@ -366,7 +366,7 @@ test('one top bar contains navigation and project actions at desktop and phone w
       await lock.click();
       assert.equal(await page.locator('#atlasZoomIn').isVisible(), false);
       assert.equal(await page.locator('#atlasFit').isVisible(), false);
-      assert.ok(await page.getByRole('combobox', {name: 'Psyche marker'}).isVisible());
+      assert.ok(await lock.isVisible());
       await lock.click();
       assert.ok(await page.locator('#atlasZoomIn').isEnabled());
       assert.ok(await page.locator('#atlasFit').isVisible());
@@ -460,9 +460,8 @@ test('camera icons share the familiar key row on the workspace surface', async (
         assert.ok(await control.getAttribute('aria-label'));
         assert.ok(await control.getAttribute('title'));
       }
-      const picker = dock.getByRole('combobox', {name: 'Psyche marker'});
-      await picker.selectOption('point');
-      assert.match(await picker.getAttribute('title'), /Point/);
+      assert.equal(await dock.getByRole('combobox').count(), 0);
+      assert.equal(await dock.getByRole('button').count(), 4);
       const lock = dock.getByRole('button', {name: 'Lock the map'});
       await lock.click();
       assert.equal(await dock.getByRole('button').count(), 1);

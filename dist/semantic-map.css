@@ -236,19 +236,13 @@ body.atlas-enhanced #plan .atlas-compact-decision text { display: none; }
 
 
 
-/* Crown views summarize this scope. Point keeps a fixed footprint. */
+/* Crown bands summarize the current scope. */
 body.atlas-enhanced #plan .coord-face { fill: var(--background); stroke: transparent; }
-body.atlas-enhanced #plan :is(.coord-crown, .coord-point) { fill: var(--primary); }
-body.atlas-enhanced #plan :is(.coord-name, .coord-point) { display: none; }
-body[data-psyche-marker="point"] #plan .coord-artwork { display: none; }
-body[data-psyche-marker="point"] #plan .coord-point { display: inline; }
+body.atlas-enhanced #plan .coord-crown { fill: var(--primary); }
 body.atlas-enhanced #plan :is(.coord-track, .coord-band) { fill: none; stroke-width: 3; }
 body.atlas-enhanced #plan .coord-track { stroke: #3a3643; }
 body.atlas-enhanced #plan .coord-work { stroke: #a39bbe; }
 body.atlas-enhanced #plan .coord-attention { stroke: var(--attention); }
-body.atlas-enhanced #plan :is(.hub, .atlas-local-psyche):focus-visible .coord-point { stroke: var(--attention); stroke-width: 2; }
-body[data-psyche-marker="labeled"] #plan .coord-face { stroke: #787183; }
-body[data-psyche-marker="labeled"] #plan .coord-name { display: inline; fill: var(--foreground); font-family: var(--f-body); }
 body.atlas-enhanced #plan :is(.hub, .atlas-local-psyche):is(:hover, :focus-visible) .coord-face { stroke: var(--primary); stroke-width: 2; }
 
 body.atlas-enhanced #plan .atlas-mission-lines .thread,
@@ -350,7 +344,7 @@ body.atlas-enhanced #plan.atlas-selected :is(.atlas-mission-lines, .atlas-squad-
 
 @media (forced-colors: active) {
   body.atlas-enhanced #plan .agent:is(.picked, :focus-visible) .agent-halo { stroke: Highlight; forced-color-adjust: none; }
-  body.atlas-enhanced #plan [data-map-item]:focus-visible :is(.se-selection, .familiar-disc, .agent-halo, .task-tray-bg, .coord-face, .coord-point, .wall.base, rect:not(.atlas-map-hit)) { stroke: Highlight; }
+  body.atlas-enhanced #plan [data-map-item]:focus-visible :is(.se-selection, .familiar-disc, .agent-halo, .task-tray-bg, .coord-face, .wall.base, rect:not(.atlas-map-hit)) { stroke: Highlight; }
 }
 @media (prefers-reduced-motion: reduce) {
   #plan :is(.atlas-mission-group, .atlas-squad) { transition: none; }
