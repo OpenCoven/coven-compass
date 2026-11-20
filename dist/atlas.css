@@ -988,16 +988,44 @@ body.atlas-enhanced .mission-header :is(.mission-identity, .mission-stepper) but
   color: var(--foreground); background: var(--card-raised);
 }
 body.atlas-enhanced .mission-header .i-view {
-  gap: 0; padding: 0; border: 0; border-bottom: 1px solid var(--border); border-radius: 0; background: transparent;
+  gap: 2px; padding: 3px; border: 1px solid var(--border); border-radius: 8px; background: var(--background);
 }
 body.atlas-enhanced .mission-header .i-view button {
-  position: relative; background: transparent; border: 0; box-shadow: none;
+  border: 1px solid transparent; border-radius: 5px; background: transparent; box-shadow: none;
 }
-body.atlas-enhanced .mission-header .i-view button[aria-selected="true"] {
-  color: var(--foreground); background: transparent; border: 0;
+body.atlas-enhanced .mission-header .i-view button[aria-selected="true"],
+body.atlas-enhanced .atlas-header .atlas-nav button[aria-pressed="true"] {
+  color: var(--foreground); background: #35323e; border-color: #56505f; box-shadow: inset 0 1px rgba(255,255,255,.07);
 }
-body.atlas-enhanced .mission-header .i-view button[aria-selected="true"]::after {
-  content: ''; position: absolute; inset: auto 14% 0; height: 2px; border-radius: 2px; background: var(--primary);
+body.atlas-enhanced .mission-header .i-view button:hover { color: var(--foreground); }
+body.atlas-enhanced .atlas-header .atlas-nav {
+  box-sizing: border-box; height: var(--atlas-header-target); align-items: stretch;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,.4); background: var(--background);
+}
+body.atlas-enhanced .atlas-header .atlas-nav button { min-height: 0; }
+body.atlas-enhanced .mission-path .mission-context { font-size: calc(11px * var(--fs,1)); }
+@media (max-width: 359px) {
+  .mission-path { display: grid; grid-template-columns: minmax(max-content, 1fr); align-content: center; gap: 0; }
+  .mission-path-separator { display: none; }
+}
+@media (min-width: 760px) {
+  body.atlas-enhanced.atlas-adaptive-mobile .atlas-header .atlas-nav { display: flex; }
+}
+#mission-section .brief-card { border: 1px solid var(--border); background: var(--card-raised); border-radius: 9px; padding: 11px 13px; }
+#mission-section .brief-card + .brief-card { margin-top: 8px; }
+.brief-heading { display: flex; align-items: center; gap: 7px; margin: 0; font-size: 1em; font-weight: 600; line-height: 1.35; }
+.brief-heading svg { width: 14px; height: 14px; flex: none; color: var(--primary); }
+.brief-heading small { margin-inline-start: auto; font-size: .86em; color: var(--muted-foreground); font-weight: 400; text-align: end; }
+.brief-card .bfg { padding: 9px 0 0; border: 0; gap: 7px; }
+.brief-card .bfg + .bfg { margin-top: 10px; border-top: 1px solid var(--border); }
+.brief-card .bfg-h { margin: 0; }
+.brief-card .bfl { padding: 0; align-items: baseline; }
+.brief-card .limit-state { margin-inline-start: 5px; color: var(--warn); white-space: nowrap; }
+#inspect #mission-section > .i-task, #inspect #mission-section > .arows {
+  margin-block: 6px; padding: 9px; border: 1px solid var(--border); border-radius: 8px; background: var(--card-raised);
+}
+@media (forced-colors: active) {
+  .mission-header .i-view [aria-selected="true"], .atlas-header .atlas-nav [aria-pressed="true"] { outline: 2px solid Highlight; outline-offset: -3px; }
 }
 
 body.atlas-enhanced .mission-header .i-counts .gate:not(.zero) dd::before { content: ''; display: inline-block; width: 5px; height: 5px; margin-inline-end: 4px; vertical-align: 2px; border: 1px solid currentColor; border-radius: 1px; }

@@ -1410,7 +1410,10 @@ button.fm-r:hover svg{color:var(--hue,var(--primary))}
 /* ================= composer: one field. The route is its top strip, the message its body, both on one left edge ================= */
 .comp{padding:10px 12px 12px;gap:8px}
 .comp .field{flex-wrap:wrap;gap:0 8px;padding:0;align-items:center;background:var(--well);border-color:var(--border-strong);box-shadow:inset 0 2px 5px rgba(0,0,0,.55),0 1px 0 rgba(255,255,255,.04)}
-.comp .field:focus-within{border-color:var(--primary);box-shadow:inset 0 2px 5px rgba(0,0,0,.55),0 0 0 3px var(--primary-soft)}
+#comp #say{border-bottom:2px solid transparent}
+#comp #say:focus-visible{outline:none;border-bottom-color:var(--primary)}
+#comp button:focus-visible{outline-offset:-2px}
+@media (forced-colors:active){#comp #say:focus-visible{border-bottom-color:Highlight}}
 .comp .field>.route{flex:0 0 100%;box-sizing:border-box;min-height:calc(34px * var(--fs,1));padding:5px 6px 5px 13px;gap:5px 7px;flex-wrap:nowrap;border-bottom:1px solid var(--border);border-radius:calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.015))}
 .comp .field>.route .rt-k{flex:none}
 .comp .field>.route .rt-c{flex:0 1 auto;min-width:0;min-height:calc(22px * var(--fs,1));overflow:hidden}
@@ -1679,24 +1682,46 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
   <div class="modal-bg" id="keyBg"></div>
   <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="keyTitle">
     <header class="hd"><span class="hd-i" id="keyIc"></span><h2 class="hd-t" id="keyTitle">Map key</h2><button class="btn x" type="button" id="keyX" aria-label="Close">×</button></header>
+    <div class="key-tabs" role="tablist" aria-label="Map key topics">
+      <button type="button" role="tab" id="key-tab-map" aria-controls="key-panel-map" aria-selected="true" tabindex="0">Map</button>
+      <button type="button" role="tab" id="key-tab-teams" aria-controls="key-panel-teams" aria-selected="false" tabindex="-1">Teams</button>
+      <button type="button" role="tab" id="key-tab-seals" aria-controls="key-panel-seals" aria-selected="false" tabindex="-1">Seals</button>
+      <button type="button" role="tab" id="key-tab-signals" aria-controls="key-panel-signals" aria-selected="false" tabindex="-1">Signals</button>
+      <button type="button" role="tab" id="key-tab-controls" aria-controls="key-panel-controls" aria-selected="false" tabindex="-1">Controls</button>
+    </div>
     <div class="key-reader">
-      <p class="key-context">Local simulation · Decisions and chat affect sample data only.</p>
-<div class="kz-r"><span class="kz-m"><svg viewBox="0 0 20 20" aria-hidden="true"><path class="kl" d="M5 3h10l2 2v10l-2 2H5l-2-2V5Z"/></svg></span><div><b>Project</b><p>Open a Project outline to explore its missions. The number inside is its mission count.</p></div></div>
-<div class="kz-r"><span class="kz-m"><svg viewBox="-9 -9 18 18" aria-hidden="true" style="color:var(--primary)"><use href="#crown" x="-8.4" y="-8.1" width="16.8" height="15.5" fill="currentColor"/></svg></span><div><b>Psyche</b><p>Open the center marker to talk to Psyche. Its inner band shows the share of agents working. Its outer band shows the share of missions waiting for you.</p></div></div>
-<div class="kz-r"><span class="kz-m" id="kzSealMark"></span><div><b>Mission</b><p>Each cog beside a seal is a task. Open the group to see its tasks and agents. Selecting a mission reveals a tinted plane for each familiar’s agents.</p></div></div>
-<div class="kz-r"><span class="kz-m"><svg viewBox="0 0 18 18" aria-hidden="true"><rect x="3" y="3" width="12" height="12" rx="1" fill="none" stroke="var(--attention)"/><path d="M9 6v6" stroke="var(--attention)"/></svg></span><div><b>Decision</b><p>Open a numbered gate to review pending requests.</p></div></div>
-<details class="key-topic" name="map-key-topic"><summary>Familiars, tasks and agents</summary><div><div id="kzFams" class="kz-fams"></div><div class="kz-r"><span class="kz-m" id="kzDots"></span><div><b>Familiar color</b><p>Connects the familiar to its mission and agents. Moving highlights indicate working agents.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="-1.2 -1.2 2.4 2.4" aria-hidden="true"><circle r=".96" fill="var(--fam-astra)"/><rect x="-.28" y="-.28" width=".56" height=".56" fill="var(--card)"/></svg></span><div><b>Agent and assignment</b><p>Each dot is an agent. A square center marks a task assignment. Working agents are filled. Idle agents are hollow.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 14 14" aria-hidden="true"><circle class="kc on" cx="7" cy="7" r="4.5"/><circle cx="7" cy="7" r="2" fill="var(--fam-cody)"/></svg></span><div><b>Shared task</b><p>A second hub color identifies a co-leading familiar. A dashed spot reserves a waiting agent’s place.</p></div></div></div></details>
-<details class="key-topic" name="map-key-topic"><summary>Mission progress and limits</summary><div>
-<div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><circle r="8" fill="var(--fam-cody)" opacity=".55"/><path d="M0 -8a8 8 0 0 1 8 8" fill="none" stroke="var(--fam-cody)" stroke-width="3"/></svg></span><div><b>Council slices</b><p>Each slice shows a familiar’s share of the agents. Its bright outer arc shows progress on that familiar’s targets.</p></div></div>
+      <section class="key-panel" role="tabpanel" id="key-panel-map" aria-labelledby="key-tab-map" tabindex="0">
+        <h3>Map symbols</h3>
+        <div class="key-entries"><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 20 20" aria-hidden="true"><path class="kl" d="M5 3h10l2 2v10l-2 2H5l-2-2V5Z"/><text x="10" y="13" text-anchor="middle" fill="currentColor" font-size="9">3</text></svg></span><div><b>Project</b><p>Open the outline to explore a project. Its number counts the missions inside.</p></div></div>
+<div class="kz-r"><span class="kz-m"><svg viewBox="-9 -9 18 18" aria-hidden="true" style="color:var(--primary)"><circle r="8" fill="none" stroke="currentColor" stroke-opacity=".45"/><circle r="6.5" fill="none" stroke="currentColor" stroke-dasharray="26 15"/><use href="#crown" x="-5.4" y="-5.1" width="10.8" height="10.2" fill="currentColor"/></svg></span><div><b>Psyche</b><p>Open the crown to chat. The inner band tracks working agents. The outer band tracks missions waiting for you.</p></div></div>
+<div class="kz-r"><span class="kz-m" id="kzSealMark"></span><div><b>Mission</b><p>Select a seal to see its team. Open the cogs beside it for the task list.</p></div></div>
+<div class="kz-r"><span class="kz-m"><svg viewBox="0 0 18 18" aria-hidden="true"><rect x="3" y="3" width="12" height="12" rx="1" fill="none" stroke="var(--attention)"/><path d="M9 6v6" stroke="var(--attention)"/></svg></span><div><b>Decision</b><p>Open the numbered gate to review requests waiting for you.</p></div></div></div>
+      </section>
+      <section class="key-panel" role="tabpanel" id="key-panel-teams" aria-labelledby="key-tab-teams" tabindex="0" hidden>
+        <h3>Familiars and agents</h3>
+        <div class="key-entries"><div id="kzFams" class="kz-fams"></div><div class="kz-r"><span class="kz-m" id="kzDots"></span><div><b>Familiar color</b><p>Each familiar keeps its color across the map. Select its tinted group to center its agents.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="-1.2 -1.2 2.4 2.4" aria-hidden="true"><circle r=".96" fill="var(--fam-astra)"/><rect x="-.28" y="-.28" width=".56" height=".56" fill="var(--card)"/></svg></span><div><b>Agent and assignment</b><p>Each dot is an agent. A square center marks a task assignment. Working agents are filled. Idle agents are hollow.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 14 14" aria-hidden="true"><circle class="kc on" cx="7" cy="7" r="4.5"/><circle cx="7" cy="7" r="2" fill="var(--fam-cody)"/></svg></span><div><b>Shared task</b><p>A second hub color identifies a co-leading familiar. A dashed spot reserves a waiting agent’s place.</p></div></div></div>
+      </section>
+      <section class="key-panel" role="tabpanel" id="key-panel-seals" aria-labelledby="key-tab-seals" tabindex="0" hidden>
+        <h3>Mission seals</h3>
+        <div class="key-entries"><div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><circle r="8" fill="var(--fam-cody)" opacity=".55"/><path d="M0 -8a8 8 0 0 1 8 8" fill="none" stroke="var(--fam-cody)" stroke-width="3"/></svg></span><div><b>Council slices</b><p>Each slice shows a familiar’s share of the agents. Its bright outer arc shows progress on that familiar’s targets.</p></div></div>
 <div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><circle r="9" fill="none" stroke="var(--primary)" stroke-dasharray="2 2"/></svg></span><div><b>Mission state</b><p>The name sits beside the seal. Its outline shows the mission state.</p></div></div>
-<div class="kz-states" id="kzStates"></div><div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><circle r="9" fill="none" stroke="var(--border-strong)"/><path d="M0,-9A9,9 0 1 1 -8.6,2.8" fill="none" stroke="var(--warn)" stroke-width="2"/></svg></span><div><b>Resource limit</b><p>A coral arc marks a limit at or above 85% of time, tokens or budget.</p></div></div></div></details>
-<details class="key-topic" name="map-key-topic"><summary>Connections and messages</summary><div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M2 7h22" stroke="var(--muted-foreground)" stroke-width="1.3"/></svg></span><div><b>Project connection</b><p>Psyche coordinates this Project. Filter by familiar to highlight its missions.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M2 7h22" stroke="var(--muted-foreground)" stroke-width="1.3" stroke-dasharray="2 4"/></svg></span><div><b>Dormant connection</b><p>No agents are assigned to this Project.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 26 14" aria-hidden="true"><path class="kl dim" d="M2 7h14" stroke-dasharray="1.5 3"/><circle cx="20" cy="7" r="2.6" fill="var(--primary)"/></svg></span><div><b>Message in transit</b><p>Lavender goes out from Psyche. Familiar colors come back. White marks a request for you.</p></div></div></div></details>
-<details class="key-topic" name="map-key-topic"><summary>Keyboard and text size</summary><div><div class="kz-k"><kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd><span>Move</span></div>
+<div class="kz-states" id="kzStates"></div><div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><circle r="9" fill="none" stroke="var(--border-strong)"/><path d="M0,-9A9,9 0 1 1 -8.6,2.8" fill="none" stroke="var(--warn)" stroke-width="2"/></svg></span><div><b>Resource limit</b><p>A coral arc marks a limit at or above 85% of time, tokens or budget.</p></div></div></div>
+      </section>
+      <section class="key-panel" role="tabpanel" id="key-panel-signals" aria-labelledby="key-tab-signals" tabindex="0" hidden>
+        <h3>Connections and messages</h3>
+        <div class="key-entries"><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M2 7h22" stroke="var(--muted-foreground)" stroke-width="1.3"/></svg></span><div><b>Project connection</b><p>Psyche coordinates this Project. Filter by familiar to highlight its missions.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M2 7h22" stroke="var(--muted-foreground)" stroke-width="1.3" stroke-dasharray="2 4"/></svg></span><div><b>Dormant connection</b><p>No agents are assigned to this Project.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 26 14" aria-hidden="true"><path class="kl dim" d="M2 7h14" stroke-dasharray="1.5 3"/><circle cx="20" cy="7" r="2.6" fill="var(--primary)"/></svg></span><div><b>Message in transit</b><p>Lavender goes out from Psyche. Familiar colors come back. White marks a request for you.</p></div></div></div>
+      </section>
+      <section class="key-panel" role="tabpanel" id="key-panel-controls" aria-labelledby="key-tab-controls" tabindex="0" hidden>
+        <h3>Keyboard and text size</h3>
+        <div class="key-entries"><div class="kz-k"><kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd><span>Move between map items</span></div>
+        <div class="kz-k"><kbd>Enter</kbd><span>Open the focused item</span></div>
         <div class="kz-k"><kbd>+</kbd><kbd>−</kbd><span>Zoom</span></div>
         <div class="kz-k"><kbd>0</kbd><span>Reset the view</span></div>
         <div class="kz-k"><kbd>Tab</kbd><span>Take Psyche’s suggested message</span></div>
-        <div class="kz-k"><kbd>Esc</kbd><span>Close, or step back out</span></div><div class="key-fs"><span>Text size</span><div class="seg fsz" role="group" aria-label="Text size"><button type="button" id="fsDown" aria-label="Smaller text"><span class="sm">A</span></button><button type="button" id="fsUp" aria-label="Larger text"><span class="lg">A</span></button></div></div></div></details>
+        <div class="kz-k"><kbd>Esc</kbd><span>Close, or step back out</span></div><div class="key-fs"><span>Text size</span><div class="seg fsz" role="group" aria-label="Text size"><button type="button" id="fsDown" aria-label="Smaller text"><span class="sm">A</span></button><button type="button" id="fsUp" aria-label="Larger text"><span class="lg">A</span></button></div></div></div>
+      </section>
     </div>
+    <p class="key-context">Local simulation · Chat and decisions affect sample data only.</p>
   </section>
 </div>
 
@@ -2521,9 +2546,15 @@ function sync() {
         s = {id, m: M.id, fam: k, x: p.x, y: p.y, rot: p.rot, ln,
           link: svgEl('line', {class: 'link'}, ln), lflow: svgEl('line', {class: 'flow task-flow'}, ln), g: svgEl('g', {class: 'atlas-squad', 'data-m': M.id, 'data-fam': k}, sc.nodes)};
         s.g.style.setProperty('--hue', hue);
-        s.plane = svgEl('g', {class: 'squad-plane', 'pointer-events': 'none', 'aria-hidden': 'true'}, s.g);
-        s.stem = svgEl('line', {}, s.plane);
+        s.plane = svgEl('g', {class: 'squad-plane'}, s.g);
+        s.stem = svgEl('line', {'pointer-events': 'none', 'aria-hidden': 'true'}, s.plane);
         s.floor = svgEl('rect', {rx: 10}, s.plane);
+        const focusGroup = () => {
+          select(M.id, k, 'card', {group: true, focus: false});
+          s.floor.focus({preventScroll: true});
+        };
+        atlasFocusable(s.floor, 'Focus ' + fam(k).name + ' group on ' + M.name, focusGroup);
+        s.floor.addEventListener('click', ev => { ev.stopPropagation(); focusGroup(); });
         s.label = svgEl('text', {class: 'task-l show'}, s.g);
         s.label.textContent = fam(k).name;
         s.badge = svgEl('g', {class: 'seat'}, s.g);
@@ -2571,8 +2602,15 @@ function sync() {
       s = {id: a.id, el: e, halo, mark, co: null,
         p: reduce || !tg ? q.slice() : [tg.bx, tg.by], q, state: null, ghost: null, home: null};
       svgEl('title', {}, e).textContent = a.id + ' · ' + fam(a.fam).name;
-      e.addEventListener('click', ev => { ev.stopPropagation(); pick(a.id, 'plan'); });
-      atlasFocusable(e, a.id + ', agent led by ' + fam(a.fam).name, () => pick(a.id, 'plan'));
+      const openAgent = () => {
+        const cc = cur(), agent = cc.world.agents.get(a.id);
+        if (agent && agent.state !== 'gate' && cc.sel === agent.mission && cc.focusGroup !== agent.seat) {
+          select(agent.mission, agent.fam, 'card', {group: true, focus: false});
+        }
+        pick(a.id, 'plan');
+      };
+      e.addEventListener('click', ev => { ev.stopPropagation(); openAgent(); });
+      atlasFocusable(e, a.id + ', agent led by ' + fam(a.fam).name, openAgent);
       sc.agents.set(a.id, s);
     }
     const task = w.tasks.get(a.task);
@@ -2679,6 +2717,7 @@ function applySel() {
   sc.seats.forEach(s => {
     s.badge.classList.toggle('sel', c.fam === s.fam && c.sel === s.m);
     s.plane.style.display = s.slots && c.sel === s.m ? '' : 'none';
+    s.floor.setAttribute('aria-pressed', String(c.focusGroup === s.id));
   });
   sc.agents.forEach(s => {
     const a = w.agents.get(s.id), visible = !!a && c.sel === a.mission;
@@ -2879,7 +2918,7 @@ function project() {
   const showAgents = detailVisible(sc.agentDetail, HEX_D * .866 * screenScale, 11, 9);
   if (showAgents !== sc.agentDetail) {
     sc.agentDetail = showAgents;
-    const focusedAgent = document.activeElement?.closest?.('#plan .agent');
+    const focusedAgent = document.activeElement?.closest?.('#plan .agent, #plan .squad-plane');
     plan.classList.toggle('atlas-agent-detail', showAgents);
     if (!showAgents && focusedAgent) sc.missions.get(cur().sel)?.node.focus({preventScroll: true});
   }
@@ -3385,6 +3424,7 @@ function select(m, k, mode, options) {
   if (m && atlasScope === 'coven') { atlasScope = 'project'; atlasFitScene(false); }
   if (m) atlasAutoFit = true;
   if (k && (!mission || !mission.seats.includes(k))) k = null;
+  c.focusGroup = options.group && k ? seatId(m, k) : null;
   if (m && m !== was) c.selectionOrigin = origin?.closest?.('#plan [data-map-item]') || null;
   clearPick(); if (m && c.composing) { c.composing = false; drawNew(); }
   if (k && sc.hl && sc.hl !== k) { sc.hl = null; syncCoven(); }
@@ -3411,6 +3451,12 @@ function fitTarget(c) {
   };
   add(ms.x, ms.y, 43);
   const focusedSeat = c.fam && sc.seats.get(seatId(M.id, c.fam));
+  if (focusedSeat && c.focusGroup === focusedSeat.id && focusedSeat.slots) {
+    const b = focusedSeat.slots, pad = 24;
+    const bounds = {x0: b.left - pad, x1: b.right + pad, y0: b.top - pad, y1: b.bottom + pad};
+    const target = window.CovenAtlasViewport.fit(bounds, {width: stage.clientWidth, height: stage.clientHeight, frame: atlasViewportFrame(true), fill: .88, minZoom: ZMIN, maxZoom: 4});
+    return {zoom: target.zoom, px: clamp(target.px, -PAN, PAN), py: clamp(target.py, -PAN, PAN)};
+  }
   for (const k of focusedSeat ? [c.fam] : M.seats) {
     const seat = sc.seats.get(seatId(M.id, k));
     if (seat) { add(seat.x, seat.y, seat.R + 6); add(seat.bx, seat.by, 16); }
@@ -3617,8 +3663,8 @@ function syncInspect(force) {
     path.title = context.textContent + ' / ' + title.textContent + ' · ' + role;
     path.tabIndex = 0; path.dataset.focus = 'mission-path';
     path.setAttribute('role', 'group'); path.setAttribute('aria-label', path.title);
-    const separator = html('span', 'mission-path-separator', '/'); separator.setAttribute('aria-hidden', 'true');
-    path.append(context, separator, title);
+    const separator = html('span', 'mission-path-separator', '·'); separator.setAttribute('aria-hidden', 'true');
+    path.append(title, separator, context);
     back.addEventListener('click', () => {
       if (c.fam) select(M.id, null, 'side');
       else if (c.missionBrowserOrigin) closeMissionDetails();
@@ -3710,19 +3756,56 @@ function syncInspect(force) {
     };
     if (panelView === 'brief') {
       const st = briefState(w, M);
-      const grp = (icon, title, tone, right) => { const g = html('div', 'bfg' + (tone ? ' ' + tone : '')), h2 = html('div', 'bfg-h'); h2.innerHTML = ICON[icon]; h2.appendChild(html('span', null, title)); if (right) h2.appendChild(html('em', null, right)); g.appendChild(h2); sec.appendChild(g); return g; };
-      const line = (g, label, value, frac, cls) => { const r = html('div', 'bfl' + (cls ? ' ' + cls : '')); r.append(html('span', null, label), html('b', null, value)); if (frac != null) { const mt = html('i', 'meter'), fi = html('i'); fi.style.width = Math.max(0, Math.min(100, Math.round(frac * 100))) + '%'; mt.appendChild(fi); r.appendChild(mt); } g.appendChild(r); };
-      if (!st) sec.appendChild(html('p', 'small', 'No brief has been set for this mission. Set one to say what it delivers, what it must reach and what it must stay under.'));
+      const section = (title, icon, summary) => {
+        const card = html('section', 'brief-card');
+        const heading = html('h3', 'brief-heading');
+        heading.innerHTML = ICON[icon];
+        heading.appendChild(document.createTextNode(title));
+        if (summary) heading.appendChild(html('small', '', summary));
+        card.appendChild(heading); sec.appendChild(card);
+        return card;
+      };
+      const group = (card, label, summary) => {
+        const g = html('div', 'bfg');
+        if (label) {
+          const heading = html('h4', 'bfg-h', label);
+          if (summary) heading.appendChild(html('em', '', summary));
+          g.appendChild(heading);
+        }
+        card.appendChild(g);
+        return g;
+      };
+      const line = (g, label, value, frac, cls) => {
+        const row = html('div', 'bfl' + (cls ? ' ' + cls : ''));
+        const name = html('span', '', label);
+        if (cls === 'near' || cls === 'over') name.appendChild(html('small', 'limit-state', cls === 'over' ? 'At limit' : 'Near limit'));
+        row.append(name, html('b', '', value));
+        if (frac != null) {
+          const meter = html('i', 'meter'), fill = html('i');
+          meter.setAttribute('aria-hidden', 'true');
+          fill.style.width = Math.max(0, Math.min(100, Math.round(frac * 100))) + '%';
+          meter.appendChild(fill); row.appendChild(meter);
+        }
+        g.appendChild(row);
+      };
+      if (!st) sec.appendChild(html('p', 'small', 'Set a brief to define this mission’s deliverables, targets and limits.'));
       else {
-        const done = st.deliver.filter(x => x.state === 'delivered').length, fm = st.floors.filter(x => x.met).length;
-        { const tg = grp('layers', 'Template', '', M.tpl || 'Custom'); tg.classList.add('flat'); }
-        let g = grp('doc', 'Deliver', 't-ok', st.deliver.length ? `${done} of ${st.deliver.length}` : '');
-        st.deliver.forEach(x => line(g, artText(x.a), ART[x.state], null, x.state)); if (!st.deliver.length) line(g, 'Nothing named', '');
-        g = grp('floor', 'At least', fm === st.floors.length && fm ? 't-ok' : '', st.floors.length ? `${fm} of ${st.floors.length} met` : '');
-        st.floors.forEach(x => line(g, x.label, `${fmtN(x.k, x.have)} / ${fmtN(x.k, x.need)}`, x.have / x.need, x.met ? 'met' : '')); if (!st.floors.length) line(g, 'Nothing required', '');
-        g = grp('cap', 'At most', M.paused || (st.worst && st.worst.frac >= WARN_AT) ? 't-q' : '', M.paused === 'you' ? 'paused by you' : M.paused ? 'stopped until you decide' : '');
-        st.caps.forEach(x => line(g, x.label, `${fmtN(x.k, x.used)} / ${fmtN(x.k, x.max)}`, x.frac, x.frac >= 1 ? 'over' : x.frac >= WARN_AT ? 'near' : '')); if (!st.caps.length) line(g, 'No limits', '');
-        if (st.measures.length) { g = grp('gauge', 'Measured by', '', ''); st.measures.forEach(x => line(g, x.label, x.value)); }
+        const done = st.deliver.filter(x => x.state === 'delivered').length, met = st.floors.filter(x => x.met).length;
+        const goals = section('Mission goals', 'doc', (M.tpl || 'Custom') + ' brief');
+        let g = group(goals, 'Deliverables', st.deliver.length ? done + ' of ' + st.deliver.length + ' delivered' : '');
+        st.deliver.forEach(x => line(g, artText(x.a), ART[x.state], null, x.state));
+        if (!st.deliver.length) line(g, 'No deliverables set', '');
+        g = group(goals, 'Minimum targets', st.floors.length ? met + ' of ' + st.floors.length + ' met' : '');
+        st.floors.forEach(x => line(g, x.label, fmtN(x.k, x.have) + ' / ' + fmtN(x.k, x.need), x.have / x.need, x.met ? 'met' : ''));
+        if (!st.floors.length) line(g, 'No minimums set', '');
+        const limits = section('Resource limits', 'cap', M.paused === 'you' ? 'Paused by you' : M.paused ? 'Awaiting decision' : '');
+        g = group(limits);
+        st.caps.forEach(x => line(g, x.label, fmtN(x.k, x.used) + ' / ' + fmtN(x.k, x.max), x.frac, x.frac >= 1 ? 'over' : x.frac >= WARN_AT ? 'near' : ''));
+        if (!st.caps.length) line(g, 'No limits set', '');
+        if (st.measures.length) {
+          g = group(section('Performance', 'gauge'));
+          st.measures.forEach(x => line(g, x.label, x.value));
+        }
       }
       if (editable) addAction('edit-brief', st ? 'Edit brief' : 'Set brief', ICON.doc, 'Deliverables and limits', () => {
         openNew(M.id); nm.fromInspector = true;
@@ -4859,22 +4942,41 @@ function closeWheel() { if ($('cpModal').hidden) return; $('cpModal').hidden = t
     if (ev.shiftKey && i <= 0) { ev.preventDefault(); f[f.length - 1].focus(); } else if (!ev.shiftKey && i === f.length - 1) { ev.preventDefault(); f[0].focus(); } });
 }
 // ------------------------------------------------------------ the key: one dialog, a compartment for each kind of meaning
+const keyTabs = [...$('keyModal').querySelectorAll('[role="tab"]')];
+function showKeyTopic(tab) {
+  for (const item of keyTabs) {
+    const active = item === tab;
+    item.setAttribute('aria-selected', String(active));
+    item.tabIndex = active ? 0 : -1;
+    $(item.getAttribute('aria-controls')).hidden = !active;
+  }
+  $('keyModal').querySelector('.key-reader').scrollTop = 0;
+}
+keyTabs.forEach((tab, index) => {
+  tab.addEventListener('click', () => showKeyTopic(tab));
+  tab.addEventListener('keydown', ev => {
+    const dest = {Home: 0, End: keyTabs.length - 1, ArrowLeft: (index + keyTabs.length - 1) % keyTabs.length, ArrowRight: (index + 1) % keyTabs.length}[ev.key];
+    if (dest === undefined) return;
+    ev.preventDefault(); ev.stopPropagation();
+    showKeyTopic(keyTabs[dest]); keyTabs[dest].focus();
+  });
+});
 function openKey() {
   document.querySelectorAll('details.pill[open]').forEach(d => d.open = false);
   const dots = $('kzDots'), fams = $('kzFams'); dots.textContent = fams.textContent = '';
   Object.keys(FAM).forEach(k => { const f = FAM[k], d = html('i', 'kd'), r = html('span', 'kz-f'); d.style.setProperty('--hue', f.hue); dots.appendChild(d);
     r.style.setProperty('--hue', f.hue); r.innerHTML = avatar(k); r.append(html('b', null, f.name), html('span', null, (f.roles || [f.role]).join(', '))); fams.appendChild(r); });
   { const demo = (state, o) => { const ks = Object.keys(FAM).slice(0, 3), sh = [.45, .33, .22]; let a = -90; return Object.assign({state, burn: .4, warn: false, wedges: ks.map((k, i) => { const x = {k, share: sh[i], progress: state === 'sealed' ? 1 : state === 'planned' ? 0 : [0.7, 0.45, 0.2][i], a0: a, a1: a + sh[i] * 360, live: state === 'active' ? 1 : 0, blocked: state === 'stalled' && i === 1, asking: state === 'needsYou' && i === 1, lead: !i}; a = x.a1; return x; })}, o || {}); };
-    $('kzSealMark').innerHTML = sealSvg(demo('active'), 16); const box = $('kzStates'); box.textContent = '';
-    Object.keys(SEAL_STATE).forEach(st => { const r = html('div', 'kz-st'); r.innerHTML = sealSvg(demo(st, {warn: st === 'broken'}), 26); r.append(html('b', null, SEAL_STATE[st][0])); r.title = SEAL_STATE[st][0] + ': ' + SEAL_STATE[st][1]; box.appendChild(r); }); }
-  $('keyIc').innerHTML = $('keyBtn').innerHTML; $('keyModal').hidden = false; $('keyBtn').setAttribute('aria-expanded', 'true'); $('keyX').focus();
+    $('kzSealMark').innerHTML = sealSvg(demo('active'), 34); const box = $('kzStates'); box.textContent = '';
+    Object.keys(SEAL_STATE).forEach(st => { const r = html('div', 'kz-st'); r.innerHTML = sealSvg(demo(st, {warn: st === 'broken'}), 26); r.append(html('b', null, SEAL_STATE[st][0]), html('span', null, SEAL_STATE[st][1])); box.appendChild(r); }); }
+  $('keyIc').innerHTML = $('keyBtn').innerHTML; $('keyModal').hidden = false; $('keyBtn').setAttribute('aria-expanded', 'true'); showKeyTopic(keyTabs[0]); keyTabs[0].focus();
 }
 function closeKey() { $('keyModal').hidden = true; $('keyBtn').setAttribute('aria-expanded', 'false'); (document.body.dataset.atlasScope === 'coven' ? $('atlasBrowse') : $('workspaceTools').open ? $('keyBtn') : $('workspaceTools').firstElementChild).focus(); }
 $('keyBtn').addEventListener('click', ev => { ev.stopPropagation(); openKey(); });
 $('keyX').addEventListener('click', closeKey); $('keyBg').addEventListener('click', closeKey);
 $('keyModal').addEventListener('click', ev => ev.stopPropagation());
 $('keyModal').addEventListener('keydown', ev => {      // focus stays inside the dialog while it is open
-  if (ev.key !== 'Tab') return; const f = [...$('keyModal').querySelectorAll('summary,button:not(:disabled)')].filter(el => el.getClientRects().length), i = f.indexOf(document.activeElement);
+  if (ev.defaultPrevented || ev.key !== 'Tab') return; const f = [...$('keyModal').querySelectorAll('button:not(:disabled),[tabindex="0"]')].filter(el => el.tabIndex >= 0 && el.getClientRects().length), i = f.indexOf(document.activeElement);
   if (ev.shiftKey && i <= 0) { ev.preventDefault(); f[f.length - 1].focus(); } else if (!ev.shiftKey && i === f.length - 1) { ev.preventDefault(); f[0].focus(); }
 });
 // ------------------------------------------------------------ projects: a project is a name, a repository and a folder on this machine

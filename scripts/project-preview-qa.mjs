@@ -210,18 +210,30 @@ test('mission focus traces the seal and reveals the planes for its agents', asyn
     assert.ok(await page.locator('.atlas-squad.dim .squad-plane').evaluateAll(planes =>
       planes.every(plane => getComputedStyle(plane).display === 'none')));
     for (const plane of await planes.all()) {
-      const rect = await plane.locator('rect').boundingBox();
-      assert.ok(rect.width > 0 && rect.height > 0);
-      const marks = plane.locator('..').locator('.agent-mark:visible, .cell-ghost:visible');
-      for (const mark of await marks.all()) {
-        const box = await mark.boundingBox();
-        assert.ok(box.x >= rect.x - 1 && box.x + box.width <= rect.x + rect.width + 1);
-        assert.ok(box.y >= rect.y - 1 && box.y + box.height <= rect.y + rect.height + 1);
-      }
+      // Read moving SVG geometry in one animation frame.
+      assert.ok(await plane.evaluate(el => {
+        const rect = el.querySelector('rect').getBoundingClientRect();
+        return rect.width > 0 && rect.height > 0 && [...el.parentNode.querySelectorAll('.agent-mark,.cell-ghost')].every(mark => {
+          const box = mark.getBoundingClientRect();
+          return !box.width || (box.left >= rect.left - 1 && box.right <= rect.right + 1 &&
+            box.top >= rect.top - 1 && box.bottom <= rect.bottom + 1);
+        });
+      }));
     }
+    const floor = planes.first().locator('rect');
+    const bounds = await floor.boundingBox();
+    await floor.click({position: {x: bounds.width / 2, y: 3}});
+    await page.locator('.squad-plane rect[aria-pressed="true"]').waitFor();
+    const otherName = await page.locator('.atlas-squad.dim .squad-plane:visible rect').first().getAttribute('aria-label');
+    const other = page.getByRole('button', {name: otherName, exact: true});
+    await other.focus();
+    await other.press('Space');
+    assert.equal(await other.getAttribute('aria-pressed'), 'true');
     const distant = page.locator('.atlas-mission-group.dim').first();
     assert.ok(await distant.evaluate(el => Number(getComputedStyle(el).opacity) < .5));
     await mission.focus();
+    await page.keyboard.press('Escape');
+    await page.locator('.atlas-squad .seat.sel').waitFor({state: 'hidden'});
     await page.keyboard.press('Escape');
     await page.locator('#plan:not(.atlas-selected)').waitFor();
     assert.ok(await page.locator('.squad-plane').evaluateAll(planes =>
@@ -348,6 +360,14 @@ test('inspector actions open the brief and conversation and desktop title rows a
       const actions = page.locator('.inspect-actions'), edit = actions.getByRole('button', {name: 'Edit brief', exact: true});
       const ask = actions.getByRole('button', {name: 'Ask Psyche', exact: true});
       await edit.waitFor();
+      assert.deepEqual(await page.locator('.brief-heading').allTextContents(), ['Mission goalsCustom brief', 'Resource limits', 'Performance']);
+      assert.ok(await page.locator('.brief-card .limit-state').count() > 0);
+      if (width > 1100) {
+        const scope = await page.locator('.atlas-nav').boundingBox();
+        const browse = await page.locator('#atlasBrowse').boundingBox();
+        assert.equal(scope.height, browse.height);
+        assert.equal(scope.y, browse.y);
+      }
       const a = await edit.boundingBox(), b = await ask.boundingBox();
       assert.equal(a.height, b.height);
       assert.ok(a.height >= (width < 500 ? 44 : 36));
@@ -360,6 +380,23 @@ test('inspector actions open the brief and conversation and desktop title rows a
       await ask.click();
       const say = page.locator('#say');
       assert.ok(await say.evaluate(el => el === document.activeElement));
+      await say.press('Shift+Tab');
+      const field = page.locator('#comp .field');
+      const frame = () => field.evaluate(el => {
+        const s = getComputedStyle(el);
+        return [s.borderColor, s.boxShadow];
+      });
+      const buttonFrame = await frame();
+      await page.keyboard.press('Tab');
+      assert.ok(await say.evaluate(el => el.matches(':focus-visible') &&
+        getComputedStyle(el).outlineStyle === 'none' &&
+        getComputedStyle(el).borderBottomWidth === '2px' &&
+        getComputedStyle(el).borderBottomColor !== 'rgba(0, 0, 0, 0)'));
+      assert.deepEqual(await frame(), buttonFrame);
+      await say.fill('Check this draft');
+      await say.press('Tab');
+      assert.ok(await page.evaluate(() => document.activeElement.matches('#comp button:focus-visible') &&
+        getComputedStyle(document.activeElement).outlineStyle !== 'none'));
       if (width > 1100) {
         await page.locator('#dockBtn').click();
         const bar = await page.locator('#workspaceBar').boundingBox();
@@ -410,5 +447,43 @@ test('camera icons share the familiar key row on the workspace surface', async (
       assert.ok(await dock.getByRole('button', {name: 'Unlock the map'}).isVisible());
       assert.equal((await dock.boundingBox()).height, (await key.boundingBox()).height);
     } finally { await page.close(); }
+  }
+});
+
+test('map key topics fit desktop, tablet, phone and short landscape screens', async () => {
+  for (const [width, height] of [[1440, 900], [768, 1024], [390, 844], [320, 568], [667, 320]]) {
+    const page = await browser.newPage({viewport: {width, height}, reducedMotion: 'reduce'});
+    try {
+      await page.goto(new URL('#/project/coven-cave', base).href);
+      await page.locator('#workspaceTools > summary').click();
+      await page.locator('#keyBtn').click();
+      const dialog = page.getByRole('dialog', {name: 'Map key'});
+      const tabs = dialog.getByRole('tab');
+      assert.equal(await tabs.count(), 5);
+      await tabs.first().focus();
+      await page.keyboard.press('End');
+      assert.equal(await tabs.last().getAttribute('aria-selected'), 'true');
+      await dialog.getByRole('button', {name: 'Larger text'}).click();
+      for (const tab of await tabs.all()) {
+        await tab.click();
+        assert.equal(await tab.getAttribute('aria-selected'), 'true');
+        const panel = dialog.getByRole('tabpanel');
+        assert.equal(await panel.count(), 1);
+        assert.equal(await panel.getAttribute('aria-labelledby'), await tab.getAttribute('id'));
+        assert.ok(await panel.evaluate(el => el.scrollWidth <= el.clientWidth + 1));
+        const tabBox = await tab.boundingBox();
+        assert.ok(tabBox.x >= 0 && tabBox.x + tabBox.width <= width && tabBox.height >= 44);
+        const last = panel.locator('button:visible, .kz-r, .kz-k').last();
+        await last.scrollIntoViewIfNeeded();
+        const close = await dialog.getByRole('button', {name: 'Close', exact: true}).boundingBox();
+        assert.ok(close.y >= 0 && close.y + close.height <= height);
+      }
+      await tabs.last().press('ArrowRight');
+      assert.equal(await tabs.first().getAttribute('aria-selected'), 'true');
+      await page.keyboard.press('Escape');
+      await dialog.waitFor({state: 'hidden'});
+    } finally {
+      await page.close();
+    }
   }
 });

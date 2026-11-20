@@ -462,6 +462,13 @@ test('selected-mission fit remains centered in its asymmetric safe frame after t
     near(center[0], frame.cx, 'selected item stays horizontally centered with an off-center squad');
     near(center[1], frame.cy, 'selected item stays vertically centered with an off-center squad');
   }
+  seat.id = project.focusGroup = 'm1/astra';
+  seat.slots = {left: 330, right: 400, top: -190, bottom: -140};
+  const groupCamera = context.fitTarget(project);
+  const groupCenter = projectToScreen([365, -165], [0, 0], groupCamera, f.stage);
+  near(groupCenter[0], frame.cx, 'agent plane center in safe frame');
+  near(groupCenter[1], frame.cy, 'agent plane center in safe frame');
+  assert.ok(groupCamera.zoom > camera.zoom);
   project.sel = 'removed'; assert.equal(context.fitTarget(project), null, 'replay removal has no stale fit target');
 });
 

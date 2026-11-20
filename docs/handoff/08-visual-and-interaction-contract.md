@@ -64,6 +64,8 @@ The workspace bar and Psyche title share a height. Mission details open on the l
 
 One top bar holds workspace navigation. Project tools opens the project and mission selectors, Ward, trace and display controls. Inbox and Stop stay in the top bar when available. The map shares the workspace surface color. Its familiar key and camera controls sit on one bottom row. On small screens, View reveals the controls beside the scrollable familiar key. Camera icons offer zoom, fit, lock and the Psyche marker picker. A locked camera shows the unlock and marker controls.
 
+The Map key opens on four illustrated map symbols. Its topic tabs keep familiar identities, mission seals, connections and keyboard controls within reach while the selected panel scrolls. Selecting a familiar’s agent plane frames its members in the available map area and uses the familiar’s own color for the selection. The camera lock preserves a manually chosen view.
+
 The Coven view shows Project previews, exact mission counts, decision badges, and a compact identity filter. The Projects drawer is closed by default and overlays the map without changing its dimensions. Project view reveals useful controls and group counts. Mission selection opens task/agent detail. Retain the existing replay and Seal lab as clearly scoped controls.
 
 Project view shows connected mission seals and familiar badges. Selection exposes agent and task detail. The Inbox retains every pending decision.

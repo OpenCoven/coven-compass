@@ -138,7 +138,8 @@ function presentationFixture() {
     sc.missions.set(M.id, { g, node: svgEl('g', {}, g), court: svgEl('path', { 'data-m': M.id }, plan) });
     M.seats.forEach(k => {
       const seat = svgEl('g', { 'data-m': M.id, 'data-fam': k }, plan);
-      sc.seats.set(`${M.id}:${k}`, { m: M.id, fam: k, g: seat, plane: svgEl('g', {}, seat), slots: {}, badge: svgEl('g', {}, seat) });
+      const id = M.id + ':' + k, plane = svgEl('g', {}, seat);
+      sc.seats.set(id, { id, m: M.id, fam: k, g: seat, plane, floor: svgEl('rect', {}, plane), slots: {}, badge: svgEl('g', {}, seat) });
     });
   });
   agents.forEach(a => {

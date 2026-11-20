@@ -268,19 +268,40 @@ body.atlas-enhanced #plan .atlas-squad-lines .link { stroke: var(--hue); }
     stroke-width: 2; stroke-dasharray: 3 12; vector-effect: non-scaling-stroke; animation: flow 2s linear infinite;
   }
 }
-#keyModal .modal-card { width: min(420px, 100%); }
+#keyModal .modal-card { width: min(38rem, 100%); height: min(30rem, 100%); min-height: 0; }
 #keyModal .hd-t { flex: 1; }
-.key-reader { padding: 10px 18px 14px; overflow-y: auto; overscroll-behavior: contain; }
-.key-reader > .kz-r { align-items: center; padding: 8px 0; }
-.key-reader .kz-m svg { height: 18px; }
-.key-topic { border-top: 1px solid var(--border); }
-.key-topic:first-of-type { margin-top: 12px; }
-.key-topic summary { cursor: pointer; padding: 12px 2px; min-height: 44px; font-weight: 500; }
-.key-topic > div { padding-bottom: 12px; }
-.key-topic .kz-fams { margin: 0 0 10px; padding: 0; border: 0; }
-
-.key-context { margin: 2px 0 8px; color: var(--muted-foreground); font-size: .85em; }
-
+.key-tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); flex: none; padding: 0 12px; border-bottom: 1px solid var(--border); }
+.key-tabs button { min-height: 44px; padding: 0 2px; font: inherit; color: var(--muted-foreground); background: transparent; border: 0; border-bottom: 2px solid transparent; cursor: pointer; }
+.key-tabs button:hover { color: var(--foreground); background: var(--muted); }
+.key-tabs button[aria-selected="true"] { color: var(--primary); border-bottom-color: currentColor; font-weight: 600; }
+.key-tabs button:focus-visible, .key-panel:focus-visible { outline-offset: -3px; }
+.key-reader { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
+.key-panel { padding: 18px; }
+.key-panel h3 { margin: 0 0 14px; font-size: 1.15em; font-weight: 580; }
+.key-panel .kz-r { align-items: center; padding: 8px 0; }
+.key-panel .kz-m svg { height: 24px; max-width: 100%; }
+.key-panel .kz-r p { line-height: 1.48; }
+#key-panel-map .key-entries { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+#key-panel-map .kz-r { align-content: start; grid-template-columns: 1fr; gap: 8px; padding: 14px; background: var(--card-raised); border: 1px solid var(--border); border-radius: var(--radius); }
+#key-panel-map .kz-m { width: 36px; height: 36px; color: var(--primary); }
+#key-panel-map .kz-m svg { height: 32px; }
+.key-panel .kz-fams { margin: 0 0 10px; padding: 0; border: 0; }
+.key-panel .kz-f span { white-space: normal; overflow-wrap: anywhere; }
+.key-panel .kz-st span { grid-column: 1 / -1; margin-top: 4px; color: var(--muted-foreground); }
+.key-panel .kz-k { min-height: 36px; border-bottom: 1px solid var(--border); }
+.key-context { flex: none; margin: 0; padding: 10px 18px; border-top: 1px solid var(--border); color: var(--muted-foreground); font-size: .85em; }
+@media (max-width: 540px) {
+  #keyModal .modal-card { height: min(36rem, 100%); }
+  .key-panel { padding: 14px; }
+  .key-tabs { padding: 0 4px; }
+  #key-panel-map .key-entries { grid-template-columns: 1fr; }
+  #key-panel-map .kz-r { grid-template-columns: 36px minmax(0, 1fr); padding: 10px; gap: 12px; }
+  .key-panel .kz-states { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 360px) {
+  #keyModal { padding-inline: 6px; }
+  .key-panel .kz-fams { grid-template-columns: 1fr; }
+}
 
 body.atlas-enhanced #plan .agent-mark .o { stroke-width: .16; }
 body.atlas-enhanced #plan .agent-task { fill: var(--card); }
@@ -296,6 +317,9 @@ body.atlas-enhanced #plan .agent.co .agent-task { fill: var(--hue2); }
 .task-tray-well { fill: #19171e; stroke: #423b4b; stroke-width: .6; }
 .squad-plane rect { fill: color-mix(in srgb, var(--hue) 10%, #19181e); stroke: color-mix(in srgb, var(--hue) 38%, #302d38); }
 .squad-plane :is(rect, line) { vector-effect: non-scaling-stroke; stroke-width: 1; }
+.squad-plane rect { cursor: pointer; }
+.squad-plane rect[aria-pressed="true"], .squad-plane rect:focus-visible { stroke: var(--hue); stroke-width: 2; fill: color-mix(in srgb, var(--hue) 19%, #19181e); outline: none; }
+.cell-ghost { pointer-events: none; }
 .squad-plane line { stroke: var(--hue); stroke-opacity: .45; }
 body.atlas-enhanced #plan:not(.atlas-agent-detail) .squad-plane { display: none; }
 .task-cog { fill: var(--hue); }
