@@ -104,11 +104,12 @@ for (const [name, width, height, mobile] of [['desktop', 1440, 900, false], ['ph
       const camera = await readView(page);
       await verifyBandSize();
       await select.selectOption('point');
-      assert.equal(await crown.isVisible(), false);
+      assert.equal(await hub.locator('.coord-artwork').evaluate(el => getComputedStyle(el).display), 'none');
       assert.equal(Math.round((await hub.locator('.coord-point').boundingBox()).width), 16);
       assert.equal(Math.round((await hub.locator('.atlas-map-hit').boundingBox()).width), 44);
       assert.deepEqual(await readView(page), camera);
       await select.selectOption('labeled');
+      assert.notEqual(await hub.locator('.coord-artwork').evaluate(el => getComputedStyle(el).display), 'none');
       assert.equal(await crown.isVisible(), true);
       assert.equal(await hub.locator('.coord-name').isVisible(), true);
       await page.goto(new URL('#/coven', base).href);
