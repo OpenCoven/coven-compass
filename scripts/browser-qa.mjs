@@ -49,9 +49,9 @@ const missionNameClashes = () => {
   const names = labels.filter(shown).map(el => {
     const face = box(el.closest('.mission-face').querySelector('.se-face')), text = box(el);
     const centered = Math.abs((text.x + text.x2 - face.x - face.x2) / 2) < 1;
-    const inside = text.x > face.x && text.y > face.y && text.x2 < face.x2 && text.y2 < face.y2;
+    const outside = text.y2 <= face.y - 1 || text.y >= face.y2 + 1;
     const pixels = parseFloat(getComputedStyle(el).fontSize) * el.getScreenCTM().a;
-    return { t: [...el.children].map(line => line.textContent).join(' '), centered, inside, pixels, ...text };
+    return { t: [...el.children].map(line => line.textContent).join(' '), centered, outside, pixels, ...text };
   });
   const crown = names.filter(n => crownParts.some(c => hit(n, c))).map(n => n.t);
   const pairs = [];
@@ -60,7 +60,7 @@ const missionNameClashes = () => {
   const squads = [...document.querySelectorAll('#plan .atlas-squad > .task-l')].filter(shown).map(el => ({ t: el.textContent, ...box(el) }));
   const squadPairs = [];
   squads.forEach((a, i) => squads.slice(i + 1).concat(names).forEach(b => { if (hit(a, b)) squadPairs.push(`${a.t} / ${b.t}`); }));
-  return { total: labels.length, shown: names.length, centers: names.filter(n => n.centered && n.inside).length, smallestFont: Math.min(...names.map(n => n.pixels)), crown, pairs, squads: squads.length, squadPairs };
+  return { total: labels.length, shown: names.length, centers: names.filter(n => n.centered && n.outside).length, smallestFont: Math.min(...names.map(n => n.pixels)), crown, pairs, squads: squads.length, squadPairs };
 };
 
 const browser = await chromium.launch();
@@ -231,10 +231,10 @@ async function compactMissionLabel() {
       const box = el.getBoundingClientRect();
       const centerError = Math.abs((box.left + box.right - face.left - face.right) / 2);
       const fontPixels = parseFloat(getComputedStyle(el).fontSize) * el.getScreenCTM().a;
-      return {centerError, fontPixels, fits: box.width < face.width && box.height < face.height};
+      return {centerError, fontPixels, outside: box.bottom <= face.top - 1 || box.top >= face.bottom + 1};
     });
-    check(mode, vp.name, 'focused compact label visible and centered inside ring', await visibleLabel() &&
-      lettering.centerError < 1 && lettering.fontPixels >= 10 && lettering.fits, JSON.stringify({name, ...lettering}));
+    check(mode, vp.name, 'focused compact label visible and centered outside ring', await visibleLabel() &&
+      lettering.centerError < 1 && lettering.fontPixels >= 10 && lettering.outside, JSON.stringify({name, ...lettering}));
     await shot(page, 'desktop-compact-keyboard-label');
     // Keep the same mission, zoom, focus and hover state. Remove only the focus visibility rule.
     await page.evaluate(() => {
@@ -300,7 +300,7 @@ for (const vp of VIEWPORTS) {
       await page.waitForTimeout(2500);
       const named = await page.evaluate(missionNameClashes);
       const minimumText = vp.height < 400 ? 8.5 : 10;
-      check(mode, vp.name, 'every sample mission name is readable inside its ring at Project fit',
+      check(mode, vp.name, 'every sample mission name is readable outside its ring at Project fit',
         named.total > 0 && named.centers === named.total && named.smallestFont >= minimumText,
         `${named.centers} of ${named.total} centered names, smallest text ${named.smallestFont.toFixed(1)}px`);
       check(mode, vp.name, 'mission names clear the crown and each other', !named.crown.length && !named.pairs.length,

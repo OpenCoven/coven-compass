@@ -20,7 +20,7 @@ const ctx = vm.createContext({});
 new vm.Script(extract('missionNameLines')).runInContext(ctx);
 const lines = (name, width) => Array.from(ctx.missionNameLines(name, text => Array.from(text).length <= width));
 
-test('mission names wrap at word boundaries within the ring and retain short names on one line', () => {
+test('mission names wrap at word boundaries in the caption and retain short names on one line', () => {
   assert.deepEqual(lines('Config refactor', 9), ['Config', 'refactor']);
   assert.deepEqual(lines('Review readiness', 9), ['Review', 'readiness']);
   assert.deepEqual(lines('  Source   survey  ', 13), ['Source survey']);
@@ -39,7 +39,7 @@ test('seal labels use one-third design size, a screen-pixel floor and a caption 
   const ctx = vm.createContext({
     fsz: 1,
     svgEl(_tag, _attrs, parent) {
-      const span = {setAttribute() {}, getComputedTextLength() { return this.textContent.length * parseFloat(parent.style.fontSize) / 2; }};
+      const span = {setAttribute(key, value) { this[key] = value; }, getComputedTextLength() { return this.textContent.length * parseFloat(parent.style.fontSize) / 2; }};
       parent.lines.push(span);
       return span;
     },
@@ -49,6 +49,9 @@ test('seal labels use one-third design size, a screen-pixel floor and a caption 
   ctx.labelMission(s, 'Source survey', 3, 2);
   assert.ok(Math.abs(s.labelUnits - 13 / 3) < .1);
   assert.equal(s.name.lines[0].textContent, 'Source survey');
+  assert.ok(s.name.lines[0].y - s.labelUnits > 43, 'caption clears the lower rim');
+  ctx.labelMission(s, 'Source survey', 3, 2, -1);
+  assert.ok(s.name.lines[0].y + s.labelUnits / 2 < -43, 'changing sides clears the upper rim');
   ctx.labelMission(s, 'x'.repeat(90), .85, 2);
   assert.ok(s.labelUnits * .85 >= 10.5);
   assert.equal(s.needsCaption, true);
@@ -58,7 +61,7 @@ test('seal labels use one-third design size, a screen-pixel floor and a caption 
   assert.equal(s.name.lines[0].textContent, 'Review');
 });
 
-test('ring text sits on the interactive face while its accessible name retains the full mission name and state', () => {
+test('external caption belongs to the interactive mission while its accessible name retains the full mission name and state', () => {
   assert.match(source, /s\.name = svgEl\('text', \{class: 'lead-name', 'aria-hidden': 'true'\}, s\.face\)/);
   assert.match(source, /ms\.node\.setAttribute\('aria-label', M2\.name \+ ', ' \+ stateName/);
   assert.match(source, /labelMission\(s, mission\.name,/);

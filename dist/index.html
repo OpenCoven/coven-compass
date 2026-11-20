@@ -2665,28 +2665,32 @@ function setMissionName(el, name) {
   });
   return el;
 }
-function labelMission(s, name, scale, reference) {
+function labelMission(s, name, scale, reference, side = 1) {
   const pixels = 10.5 * fsz;
   const units = Math.ceil(10 * Math.max(13 / 3, pixels / Math.max(scale, .01))) / 10;
-  if (s.labelName === name && s.labelUnits === units && s.reference === reference) return;
+  if (s.labelName === name && s.labelUnits === units && s.reference === reference && s.labelSide === side) return;
   s.name.style.fontSize = units + 'px';
   s.name.textContent = '';
   const first = svgEl('tspan', {x: 0}, s.name);
   const fits = text => {
     first.textContent = text;
-    return first.getComputedTextLength() <= 70;
+    return first.getComputedTextLength() <= 112;
   };
   const lines = missionNameLines(name, fits);
   const leading = units * 1.13;
   s.needsCaption = lines.length * leading > 49 || lines.some(line => !fits(line));
   const display = s.needsCaption && reference ? [String(reference)] : lines;
+  const height = leading * display.length;
+  const gap = units * .5;
+  s.labelDepth = gap + height;
+  const center = side * (43 + gap + height / 2);
   display.forEach((line, i) => {
     const span = i ? svgEl('tspan', {x: 0}, s.name) : first;
-    span.setAttribute('y', (i - (display.length - 1) / 2) * leading + units * .32);
+    span.setAttribute('y', center + (i - (display.length - 1) / 2) * leading + units * .32);
     span.textContent = line;
   });
   if (!name || first.getComputedTextLength() > 0) {
-    s.labelName = name; s.labelUnits = units; s.reference = reference;
+    s.labelName = name; s.labelUnits = units; s.reference = reference; s.labelSide = side;
   }
 }
 
@@ -2822,24 +2826,25 @@ function project() {
     s.g.classList.toggle('atlas-compact-seal', !s.readable);
     const reveal = Math.max(faceScale, 34 / (radius * screenScale));
     s.face.style.setProperty('--mission-reveal', reveal);
+    const side = s.y > 0 ? -1 : 1;
+    const captionScale = s.readable ? faceScale : reveal;
     if (!far && mission) {
-      labelMission(s, mission.name, screenScale * (s.readable ? faceScale : reveal), missionNumber);
+      labelMission(s, mission.name, screenScale * captionScale, missionNumber, side);
       if (s.needsCaption || !s.readable) {
         s.referenceMark.textContent = String(missionNumber);
         captions.push([active, s.id, mission.name, missionNumber]);
       }
     }
+    const nameDepth = (s.labelDepth || 0) * captionScale;
     if (s.tray) {
       const size = clamp(1 / screenScale, .75, 1.9);
-      const direction = s.y > 0 ? -1 : 1;
-      const ring = radius * (selected && !s.readable ? reveal : faceScale);
-      const stateGap = selected && direction > 0 ? 15 * U : 0;
-      const y = q[1] + direction * (ring + 13 * size + stateGap);
+      const stateGap = selected && side > 0 ? 15 * U : 0;
+      const y = q[1] + side * (radius * captionScale + nameDepth + 13 * size + stateGap);
       s.trayBox = {x: q[0], y, width: s.trayWidth * size, height: 16 * size};
       s.tray.setAttribute('transform', `translate(${f(q[0])} ${f(y)}) scale(${size})`);
     }
     s.stateLabel.setAttribute('x', f(q[0]));
-    s.stateLabel.setAttribute('y', f(q[1] + radius * (s.readable ? faceScale : reveal) + 12 * U));
+    s.stateLabel.setAttribute('y', f(q[1] + radius * captionScale + (side > 0 ? nameDepth : 0) + 12 * U));
     s.g.classList.toggle('atlas-mission-current', selected);
     const a = pc, b = q, [nx, ny] = unit(-(b[1] - a[1]), b[0] - a[0]);
     seg(s.thread, a, b); seg(s.out, a, b); seg(s.inn, a, b, -nx * 2.2, -ny * 2.2);   // instructions go out on one lane, reports come back on the other
@@ -2903,6 +2908,10 @@ function layoutMapLabels() {
   sc.missions.forEach(s => {
     const diameter = Math.max(s.diameter, s.id === c.sel && !s.readable ? 68 : 0);
     reserve(X(s.sx), Y(s.sy), diameter, diameter);
+    if (s.readable || c.sel === s.id || s.node.matches(':hover, :focus-visible')) {
+      const box = s.name.getBoundingClientRect();
+      if (box.width) reserve(box.left - stageRect.left + box.width / 2, box.top - stageRect.top + box.height / 2, box.width + 4, box.height + 2);
+    }
     if (s.tray && s.trayBox) reserve(X(s.trayBox.x), Y(s.trayBox.y), s.trayBox.width * scale, s.trayBox.height * scale);
   });
   reserve(X(sc.psy.sx), Y(sc.psy.sy), 98 * scale, 98 * scale);
@@ -5249,6 +5258,7 @@ function syncProjectPreview(preview, project, compact = false) {
     }
     item.link.setAttribute('x2', x); item.link.setAttribute('y2', y);
     item.node.setAttribute('transform', `translate(${x} ${y})`);
+    item.captionSide = y > 0 ? -1 : 1;
     if (item.compact !== compact) {
       item.node.textContent = '';
       item.compact = compact; item.labelName = null;
@@ -5319,7 +5329,7 @@ function updateVisibleProjectPreviews(ghosts, camera, scale, width, height) {
     if (560 * scale >= 320) {
       for (const [id, item] of gh.preview.missions) {
         const reference = captions.length + 1;
-        labelMission(item, item.fullName, item.name.getScreenCTM().a, reference);
+        labelMission(item, item.fullName, item.name.getScreenCTM().a, reference, item.captionSide);
         if (item.needsCaption) captions.push([gh.k, id, item.fullName, reference]);
       }
     }
@@ -5519,7 +5529,7 @@ if (window.CovenAtlas) {
   $('plan').setAttribute('role', 'group');
   atlasRestoreRoute(true);
 }
-if (window.CovenSealLab) window.CovenSealLab.mount({svgEl, fam, sigil, labelMission, buildSeal, drawSeal, WARN_AT});
+if (window.CovenSealLab) window.CovenSealLab.mount({svgEl, fam, sigil, buildSeal, drawSeal, WARN_AT});
 if (window.CovenMobileUI) window.CovenMobileUI.mount({
   openActivity: () => { openPsyche(); setTab('chat', false); },
   close: {

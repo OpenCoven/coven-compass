@@ -172,17 +172,11 @@
     const body = el('div', 'csl-body');
     const preview = el('section', 'csl-preview');
     preview.setAttribute('aria-label', 'Mission seal preview');
-    const specimen = el('div', 'csl-specimen');
+    const specimen = el('figure', 'csl-specimen');
     ui.scene = api.svgEl('svg', { class: 'csl-scene', viewBox: '-50 -50 100 100', role: 'img' });
     seal = { g: api.svgEl('g', {}, ui.scene) };
     api.buildSeal(seal, data());
-    ui.mission = {name: api.svgEl('text', {class: 'csl-mission-name', 'aria-hidden': 'true'}, ui.scene)};
-    specimen.append(ui.scene);
-    if (typeof ResizeObserver === 'function') {
-      new ResizeObserver(() => {
-        if (dialog.open) api.labelMission(ui.mission, MISSION_NAME, ui.scene.getScreenCTM().a);
-      }).observe(ui.scene);
-    }
+    specimen.append(ui.scene, el('figcaption', 'csl-mission-name', MISSION_NAME));
     preview.append(specimen);
 
     ui.stateCard = el('div', 'csl-state-card');
@@ -301,7 +295,7 @@
 
   function mount(renderer) {
     if (dialog) return;
-    for (const key of ['svgEl', 'fam', 'labelMission', 'buildSeal', 'drawSeal']) {
+    for (const key of ['svgEl', 'fam', 'buildSeal', 'drawSeal']) {
       if (typeof renderer[key] !== 'function') throw new Error(`Mission seal explorer needs renderer.${key}`);
     }
     api = renderer;
@@ -314,7 +308,6 @@
     if (dialog.open) return;
     returnFocus = invoker || document.activeElement;
     dialog.showModal();
-    api.labelMission(ui.mission, MISSION_NAME, ui.scene.getScreenCTM().a);
     document.body.classList.add('csl-open');
     refresh();
     dialog.scrollTop = 0;
