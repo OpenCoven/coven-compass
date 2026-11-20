@@ -1,0 +1,127 @@
+{
+  "source_revision": "c15823626a073540c3a8a5bff08f018eb360a091",
+  "deployment_id": "dpl_5Zc7xXTcwWJSCgy9fKd7LC5p54Pp",
+  "served_file_receipt": "served-2026-11-20-c158236.json",
+  "device": {
+    "model": "iPhone Duo (iPhone19,4)",
+    "os": "iOS 27.2 (24B91020)",
+    "browser": "Safari 27.2 (8625.2.8.21.5)"
+  },
+  "outer_display": {
+    "native_capture_px": [
+      1398,
+      2034
+    ],
+    "safari_observation": {
+      "url": "https://coven-compass.vercel.app/#/project/psyche-build/mission/m-2?view=brief&detail=side",
+      "layout": [
+        373,
+        580
+      ],
+      "visual": [
+        373,
+        580,
+        0,
+        0,
+        1
+      ],
+      "safeAreaTRBL": [
+        "0px",
+        "0px",
+        "0px",
+        "0px"
+      ],
+      "dpr": 3,
+      "screen": [
+        457,
+        678
+      ],
+      "orientation": "portrait-primary",
+      "heading": "Source survey",
+      "focus": {
+        "role": null,
+        "id": "",
+        "label": null
+      },
+      "selectedTabs": [
+        "Brief",
+        "Conversation"
+      ],
+      "reducedMotion": true,
+      "moreContrast": false,
+      "scrollWidth": 373,
+      "closeControl": [
+        {
+          "width": 44,
+          "height": 44,
+          "visible": true
+        }
+      ]
+    }
+  },
+  "inner_display": {
+    "native_panel_px": [
+      1878,
+      2670
+    ],
+    "active_landscape_capture_px": [
+      2853,
+      2007
+    ],
+    "orientation_reported": "landscapeRight",
+    "mission": "Source survey",
+    "mission_position": "2 of 4",
+    "tab": "Brief",
+    "css_geometry": null
+  },
+  "input": [
+    "human touch with VoiceOver",
+    "standard software keyboard appearance"
+  ],
+  "observations": [
+    {
+      "step": "Focus result",
+      "reported_speech": "Source survey. Psyche build needs you. Open mission details button",
+      "capture": "ios-reported-result"
+    },
+    {
+      "step": "Double-tap result",
+      "reported_speech": "Source heading level 2. Source survey",
+      "capture": "ios-opened"
+    },
+    {
+      "step": "Focus close button",
+      "reported_speech": "Close details button",
+      "capture": "ios-close-announcement"
+    },
+    {
+      "step": "Double-tap close button",
+      "reported_speech": "Source survey...",
+      "capture": "ios-return"
+    },
+    {
+      "step": "Reload the public mission permalink in Safari",
+      "reported_heading": "Source survey",
+      "capture": "ios-after-reload"
+    },
+    {
+      "step": "Unfold from outer portrait to inner landscape",
+      "reported_retention": [
+        "Source survey",
+        "Brief"
+      ],
+      "capture": "ios-inner-active"
+    }
+  ],
+  "capture_sha256": {
+    "ios-home": "63dba1fbc34ecadcc7a5a94a2027fbcdcafa1a40b1974099eca72670c89bd8f5",
+    "ios-ready": "52d7885ed1327d5d6c0ea0503ceaaf746cdb7f381bd19e88c84db9195d9d281b",
+    "ios-reported-result": "00bbc770c2f0c62727ff1e217f7096ad6be954a0a7a4135c7e17744b5fc7a08d",
+    "ios-opened": "6588ca4ba7b54b7c9e8c72161603bea3910ad82a29e64b195e4144e71fd2ca38",
+    "ios-close-announcement": "a76689b7a47da9f57e51d7a22800117c5c87d18fca40d1a203af215d1dacac82",
+    "ios-return": "c5a1696bef4e0425cec94c4296237fb5d5205037d2d4a7aa56258d150f06e8bf",
+    "ios-after-reload": "236bd4f6b75b139b2f9a1187c41600bae7f92dc0f314d1bb1d1ee14bad41ad67",
+    "ios-inner-active": "76cb42f9ac3d48e2952514fe09d921cc314be2c8654592fec0fc773d9c199209"
+  },
+  "issue_record": "https://github.com/OpenCoven/coven-compass/issues/39#issuecomment-7036702576"
+}
