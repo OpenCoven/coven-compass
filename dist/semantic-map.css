@@ -333,3 +333,29 @@ body.atlas-enhanced #plan:not(.flat) .seat > .sig { display: none; }
 .castle-cap .castle-face { fill: #aba2af; }
 .castle-roof .castle-face { fill: #494450; }
 .ghostfort.dormant .castle-stonework, .ghostfort.dormant use[href="#overview-castle"] { opacity: .6; }
+
+/* Architectural detail appears once a course of paving occupies several pixels. */
+body.atlas-enhanced #plan.atlas-material-detail :is(.floor,.gfloor) { fill: url(#atlas-flagstones); fill-opacity: 1; }
+.castle-stonework .castle-shade { fill: #211f29; fill-opacity: .52; stroke: none; }
+.castle-stonework .castle-joints { fill: none; stroke: #292630; stroke-opacity: .68; stroke-width: .85; }
+.castle-roof .castle-joints { stroke: #a59da9; stroke-opacity: .52; }
+.castle-tower .castle-face, .castle-roof .castle-face { fill: url(#atlas-gunmetal); }
+
+body.atlas-enhanced #plan .coord-face, .se-base-top { fill: url(#atlas-gunmetal); stroke: url(#atlas-bevel); }
+.coord-inset { fill: none; stroke: #aca4b7; stroke-opacity: .48; stroke-width: .8; vector-effect: non-scaling-stroke; }
+#plan:not(.atlas-material-detail) .coord-inset { display: none; }
+.seal:is(.st-active,.st-needsYou,.st-sealed) .se-sg,
+.seal2 .sg:not(.hollow) { stroke: url(#atlas-bevel); }
+.se-engraving, .seal2 .seal-edge { fill: none; stroke: url(#atlas-bevel); stroke-opacity: .66; stroke-width: .5; }
+.seal2:is(.st-broken,.st-planned) .seal-edge { display: none; }
+
+.familiar-setting { fill: url(#atlas-gunmetal); stroke: var(--hue); stroke-width: .85; pointer-events: none; }
+#plan:not(.flat) .familiar-setting { display: none; }
+body.atlas-enhanced #plan .so-face { stroke: url(#atlas-bevel); stroke-width: .65; }
+.cog-collar { fill: none; stroke: url(#atlas-bevel); stroke-width: .11; }
+.cog-side { stroke: #322e39; stroke-width: .06; }
+
+.route-bed { fill: none; stroke: #494450; stroke-width: 4.8; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; pointer-events: none; }
+.atlas-roads .route-bed { stroke-width: 3.8; }
+#plan:not(.atlas-material-detail) .route-bed,
+.route-bed:has(+ .road.dormant) { display: none; }

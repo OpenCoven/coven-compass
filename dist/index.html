@@ -1655,6 +1655,11 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
 <link rel="stylesheet" href="semantic-map.css">
 </head><body>
 
+<!-- Shared finishes also serve seals rendered outside the map, including Seal Lab. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <linearGradient id="atlas-gunmetal" x2="78%" y2="100%"><stop stop-color="#514d5b"/><stop offset=".38" stop-color="#302e38"/><stop offset=".56" stop-color="#393541"/><stop offset="1" stop-color="#211f27"/></linearGradient>
+  <linearGradient id="atlas-bevel" x2="78%" y2="100%"><stop stop-color="#e2dce9"/><stop offset=".42" stop-color="#ada4b6"/><stop offset=".57" stop-color="#605968"/><stop offset="1" stop-color="#77717f"/></linearGradient>
+</defs></svg>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="crown" viewBox="409 391 1232 1137"><path fill-rule="evenodd" clip-rule="evenodd" d="M 1024.7 392.6 C 1024.4 393.6 1022.3 401.4 1020 410 C 1015.9 425.4 1005.1 459.1 997.9 479 C 986.7 510.2 966.1 559.5 950.7 592.5 C 937.5 620.4 915.2 664.7 902.3 688.1 C 879 730.8 861.5 760.8 838.8 797.5 C 817.5 831.8 799.4 859.4 767.9 905.5 C 750 931.6 727 963 725.7 963 C 725.2 963 719.7 959 713.6 954.1 C 692 936.9 672.2 922.5 646.5 905.5 C 574 857.4 513 827 434.6 800.1 C 424.8 796.7 415.7 794 414.4 794 C 413 794 411.5 794.8 410.8 796.2 C 408.9 799.7 408.6 817.6 409.9 851 C 412.2 913.6 416.7 959.7 426 1017.9 C 431.5 1052.4 435.5 1072.2 444.5 1110.5 C 449.9 1133.3 451.7 1139.9 457.5 1159.5 C 471.6 1206.9 490.8 1257.6 508.5 1294.6 C 512.2 1302.2 516.2 1310.7 517.4 1313.5 C 525.2 1330.6 551 1375.6 572.7 1410 C 581 1423 596.9 1446.2 608.5 1462.1 C 620.4 1478.4 643.3 1507.5 653.2 1519 L 660.5 1527.5 L 673.7 1527.4 C 681 1527.4 724.4 1527.3 770.1 1527.2 L 853.2 1527 L 852.5 1522.2 C 851.1 1512.3 845.6 1492 840.8 1479 C 834.2 1461.3 825.6 1443.7 817.8 1432 C 810.3 1420.8 796.6 1405.3 787.2 1397.3 C 777.9 1389.4 765.8 1381.7 753.7 1376 C 748.1 1373.3 736.5 1369 728 1366.4 C 698.5 1357.6 675.9 1344.6 655.7 1325 C 636.8 1306.8 625.8 1292.8 611.7 1269.5 C 597.6 1246.1 582.4 1214.3 573 1188.5 C 566.5 1170.7 558.7 1146.7 555 1133.5 C 548.5 1110.1 540.1 1072.5 535.5 1046.5 C 531.9 1025.9 528.7 1002.1 529.5 1000.9 C 529.8 1000.4 530.9 1000 532 1000 C 536 1000 575.8 1021.6 602 1037.9 C 619.9 1049.2 643.6 1066.7 665 1084.4 C 692.3 1107.1 727.1 1142.1 751.1 1171 C 792.9 1221.1 826.5 1278.5 848.9 1337.5 C 863.8 1376.8 872.9 1413.1 880.4 1463 C 882.5 1477.4 884.2 1493.1 886.5 1518.7 C 886.9 1522.6 887.7 1526.3 888.4 1526.9 C 889.2 1527.6 934.6 1527.8 1025 1527.5 C 1099.5 1527.3 1161 1527.1 1161.6 1527.1 C 1163 1526.9 1163.4 1524.1 1164.9 1505 C 1166.9 1480.2 1172 1443.6 1176.1 1425 C 1179.8 1407.7 1186.9 1380.5 1190.5 1369.4 C 1200.6 1338.6 1212.3 1310 1225.5 1284 C 1255.3 1225.2 1292.4 1174.6 1343 1123.9 C 1354.2 1112.6 1370.2 1097.5 1378.5 1090.5 C 1395.3 1076.2 1422.2 1055.7 1438 1045.2 C 1465.6 1026.9 1513.8 1000 1519.1 1000 L 1521.2 1000 L 1520.6 1008.7 C 1519.1 1030.3 1510.6 1074.6 1501.4 1109.3 C 1492.3 1143.5 1484.8 1166.7 1473 1197 C 1457.5 1236.6 1436 1275.6 1415 1301.8 C 1403.6 1316.1 1386.3 1333.1 1375 1341.2 C 1362.1 1350.3 1343.7 1359.2 1324.5 1365.5 C 1289.7 1376.9 1270.6 1388 1251.5 1408.1 C 1228.4 1432.2 1212.7 1462.1 1202.1 1502 C 1199.2 1512.8 1196.7 1526 1197.4 1526.7 C 1198.3 1527.6 1387.9 1527.1 1389.4 1526.2 C 1393.7 1523.6 1432.3 1474.4 1453.3 1444.8 C 1465.4 1427.6 1481.6 1402.6 1495.1 1380 C 1507.7 1359 1509.9 1355.1 1518.4 1338.9 C 1545.4 1287.9 1560.7 1252.7 1578.9 1200 C 1589 1170.8 1596 1147.1 1603 1118.4 C 1616.1 1064.5 1622.4 1032.5 1627.9 991 C 1636 930.4 1640.9 864.7 1640.9 815.8 C 1641 793.2 1640.7 792.4 1634.2 794.1 C 1626.5 796.2 1591.9 808.4 1576.1 814.6 C 1541.5 828.1 1508.7 843.7 1473.5 863.4 C 1424.6 890.8 1387.8 915.2 1340.8 951.6 C 1332.7 957.8 1325.9 963 1325.6 963 C 1325.1 963 1307.2 938.4 1292.4 917.5 C 1287 909.8 1280.1 899.9 1277 895.5 C 1268.1 882.8 1234.2 831.8 1224.7 817 C 1204.4 784.9 1185.4 753 1166.4 719.5 C 1120.9 638.7 1083.5 559.8 1056 486.5 C 1047.4 463.3 1036.1 428.1 1030.4 406.5 C 1028.3 398.8 1026.4 392.1 1025.9 391.6 C 1025.5 391.2 1025 391.6 1024.7 392.6 Z M 1033.3 772.5 C 1047.3 806.5 1061.9 837.3 1079.3 869.3 C 1084.1 878 1088 885.3 1088 885.6 C 1088 886.5 1113.9 929.9 1121.9 942.5 C 1126.2 949.1 1132 958.3 1134.9 963 C 1146.6 981.6 1181.7 1031.9 1200.6 1057.3 L 1211 1071.1 L 1196.7 1086.8 C 1159.4 1127.6 1129.9 1167.1 1101.9 1213.5 C 1090.3 1232.8 1070.7 1272 1059.6 1298.2 C 1051.4 1317.2 1045.2 1334.1 1034 1368 C 1030.1 1379.8 1026.6 1390.1 1026.3 1391 C 1025.9 1392.3 1025.7 1392.3 1025 1391 C 1024.6 1390.1 1021.9 1381.8 1019 1372.5 C 1004.6 1325.4 981.9 1271.8 958 1228.2 C 946.6 1207.4 922.5 1170 908.6 1151.5 C 890.7 1127.7 868.2 1100.7 849.8 1081 C 844.3 1075.2 841.3 1071.2 841.8 1070.5 C 848.9 1061.3 870.8 1031.3 878.1 1021 C 903.1 985.4 928.7 945.7 948.6 911.5 C 967.6 878.9 990.1 836.1 1002 809.9 C 1008.3 795.9 1018 773.2 1022.1 762.6 C 1023.8 758.3 1025.5 755.1 1025.9 755.6 C 1026.3 756.1 1029.6 763.7 1033.3 772.5 Z"/></symbol></defs></svg>
 <div class="app" id="app">
 
@@ -2488,6 +2493,7 @@ function coordinationMarker(parent) {
   return {
     base: svgEl('ellipse', {class: 'coord-base'}, parent),
     face: svgEl('ellipse', {class: 'coord-face'}, parent),
+    inset: svgEl('ellipse', {class:'coord-inset', 'pointer-events':'none'}, parent),
     crown: window.CovenAtlasCrown.create(parent, svgEl)
   };
 }
@@ -2503,6 +2509,10 @@ function buildScene() {
   { const L0 = cur().layout; sc.n = L0.n; sc.g = L0.g; sc.a = L0.a; sc.fort = projectBoundary(L0.n); sc.outline = sc.fort.flat(); }
   const defs = svgEl('defs', {}, plan);
   svgEl('polygon', {id: 'agent-cog-profile', points: cogOutline}, defs);
+  sc.paving = svgEl('pattern', {id:'atlas-flagstones', patternUnits:'userSpaceOnUse', width:72, height:48}, defs);
+  svgEl('rect', {width:72, height:48, fill:'#201f25'}, sc.paving);
+  svgEl('path', {d:'M0 0H72V24H0Z', fill:'#232127'}, sc.paving);
+  svgEl('path', {d:'M0 1H72M0 25H72M1 0V24M37 24V48', fill:'none', stroke:'#37343c', 'stroke-width':1.1}, sc.paving);
   const glow = svgEl('radialGradient', {id: 'glow'}, defs);
   [['0', '.2'], ['.4', '.05'], ['1', '0']].forEach(([o, op]) => svgEl('stop', {offset: o, class: 's-glow', 'stop-opacity': op}, glow));
   const disc = svgEl('linearGradient', {id: 'disc', x1: 0, y1: 0, x2: 0, y2: 1}, defs);
@@ -2518,7 +2528,7 @@ function buildScene() {
   cv.g.addEventListener('click', ev => { ev.stopPropagation(); openPsyche(); });
   atlasFocusable(cv.g, 'Psyche, coordination across all Projects. Open simulated conversation', () => openPsyche());
   cv.arcG = svgEl('g', {}, sc.world); cv.roadG = svgEl('g', {class: 'atlas-roads'}, sc.world); cv.laneG = svgEl('g', {class: 'atlas-lanes'}, sc.world);
-  Object.keys(projects).forEach(k => { const o = worldOf(k); cv.links.push({k, ox: o[0] - here[0], oy: o[1] - here[1], road: svgEl('path', {class: 'road'}, cv.roadG), lanes: [], sig: null}); });
+  Object.keys(projects).forEach(k => { const o = worldOf(k); cv.links.push({k, ox: o[0] - here[0], oy: o[1] - here[1], bed: svgEl('path', {class:'route-bed'}, cv.roadG), road: svgEl('path', {class: 'road'}, cv.roadG), lanes: [], sig: null}); });
   const overviewBoundary = projectBoundary(4);
   const kit = svgEl('g', {id:'overview-castle'}, defs);
   sc.overviewCastle = window.CovenCastleMap.create(kit, overviewBoundary, svgEl, true);
@@ -2650,7 +2660,7 @@ function sync() {
       const id = M.id, [x, y] = missionXY(c, id);
       const ln = svgEl('g', {class: 'atlas-mission-lines', 'data-m': id}, sc.lines);
       const s = {id, x, y, ln, courtSh: svgEl('path', {class: 'court-sh', 'data-m': id}, sc.courts), court: svgEl('path', {class: 'court atlas-court-mission', 'data-m': id}, sc.courts), hull: [], shadow: svgEl('ellipse', {class: 'shadow'}, ln), stem: svgEl('line', {class: 'stem'}, ln),
-        thread: svgEl('line', {class: 'thread'}, ln), out: svgEl('line', {class: 'flow out'}, ln), inn: svgEl('line', {class: 'flow in'}, ln), g: svgEl('g', {class: 'atlas-mission-group', 'data-m': id}, sc.sorted)};
+        bed: svgEl('line', {class:'route-bed'}, ln), thread: svgEl('line', {class: 'thread'}, ln), out: svgEl('line', {class: 'flow out'}, ln), inn: svgEl('line', {class: 'flow in'}, ln), g: svgEl('g', {class: 'atlas-mission-group', 'data-m': id}, sc.sorted)};
       s.node = svgEl('g', {class: 'lead-node'}, s.g);
       svgEl('circle', {class: 'halo', r: 23}, s.node); svgEl('circle', {class: 'disc', r: 17}, s.node);
       svgEl('g', {class: 'sig'}, s.node).innerHTML = SIGIL.mission;
@@ -2670,7 +2680,7 @@ function sync() {
         const p = c.layout.seat.get(id) || {x: 0, y: 0, rot: 0}, hue = fam(k).hue;
         const ln = svgEl('g', {class: 'atlas-squad-lines', 'data-m': M.id, 'data-fam': k}, sc.lines); ln.style.setProperty('--hue', hue);
         s = {id, m: M.id, fam: k, x: p.x, y: p.y, rot: p.rot, ln, shadow: svgEl('ellipse', {class: 'shadow'}, ln), stem: svgEl('line', {class: 'stem'}, ln),
-          link: svgEl('line', {class: 'link'}, ln), lflow: svgEl('line', {class: 'flow task-flow'}, ln), g: svgEl('g', {class: 'atlas-squad', 'data-m': M.id, 'data-fam': k}, sc.sorted), lshow: null};
+          bed: svgEl('line', {class:'route-bed'}, ln), link: svgEl('line', {class: 'link'}, ln), lflow: svgEl('line', {class: 'flow task-flow'}, ln), g: svgEl('g', {class: 'atlas-squad', 'data-m': M.id, 'data-fam': k}, sc.sorted), lshow: null};
         s.g.style.setProperty('--hue', hue);
         s.pad = svgEl('path', {class: 'pad atlas-court-squad', 'data-m': M.id, 'data-fam': k}, sc.courts); s.pad.style.setProperty('--hue', hue); s.hull = [];
         s.side = svgEl('path', {class: 'puck-side'}, s.g); s.disc = svgEl('ellipse', {class: 'task'}, s.g);
@@ -2682,6 +2692,7 @@ function sync() {
         s.badge = svgEl('g', {class: 'seat'}, s.g);
         svgEl('circle', {class: 'atlas-glyph-hit', r: 18}, s.badge);
         svgEl('circle', {class: 'halo', r: 16.5}, s.badge); svgEl('circle', {class: 'disc', r: 12.5}, s.badge);
+        svgEl('circle', {class:'familiar-setting', r:10}, s.badge);
         svgEl('g', {class: 'sig', transform: 'scale(.8)'}, s.badge).innerHTML = sigil(k);
         s.foot = svgEl('ellipse', {class: 'so-foot'}, s.badge); s.solid = makeSolid(s.badge, k);
         svgEl('title', {}, s.badge).textContent = `${fam(k).name}, on the ${M.name} council`;
@@ -2725,6 +2736,7 @@ function sync() {
       const side = svgEl('g', {class: 'cog-side'}, cog);
       svgEl('use', {href: '#agent-cog-profile', class: 'cog-rotor'}, side);
       svgEl('use', {href: '#agent-cog-profile', class: 'cog-rotor cog-face'}, cog);
+      svgEl('circle', {class:'cog-collar', r:.52}, cog);
       svgEl('circle', {class: 'cog-bore', r: .35}, cog);
       svgEl('rect', {class: 'cog-drive', x: -.28, y: -.28, width: .56, height: .56}, cog);
       s = {id: a.id, el: e, halo, cog, side, co: null,
@@ -2865,11 +2877,15 @@ function project() {
   const drawMarker = (marker, x, y, radius) => {
     ell(marker.base, x, y, 0, radius);
     const top = ell(marker.face, x, y, radius * .12, radius);
+    ell(marker.inset, x, y, radius * .12, radius * .85);
     window.CovenAtlasCrown.draw(marker.crown, {x: top[0], y: top[1], size: radius * Math.min(1.05, 1.65 * cp)});
   };
   const seg = (el, a, b, ox, oy) => { el.setAttribute('x1', f(a[0] + (ox || 0))); el.setAttribute('y1', f(a[1] + (oy || 0))); el.setAttribute('x2', f(b[0] + (ox || 0))); el.setAttribute('y2', f(b[1] + (oy || 0))); };
   const hex = (el, p, rot, h) => { let d = ''; for (let i = 0; i < 6; i++) { const a = (rot + 30 + 60 * i) * RAD, v = P(p[0] + h * Math.cos(a), p[1] + h * Math.sin(a), p[2]); d += f(v[0]) + ',' + f(v[1]) + ' '; } el.setAttribute('points', d); };
   const vw = 784 / cam.zoom, screenScale = Math.max(.001, Math.min(stage.clientWidth, stage.clientHeight) / vw), kpx = Math.max(.05, screenScale), U = clamp(Math.pow(kpx, .35), .8, 1.2) / kpx;
+  const pavingTransform = `matrix(${cy} ${sy*cp} ${-sy} ${cy*cp} 0 0)`;
+  if (sc.paving.getAttribute('patternTransform') !== pavingTransform) sc.paving.setAttribute('patternTransform', pavingTransform);
+  plan.classList.toggle('atlas-material-detail', 24 * screenScale * cp >= 5);
   const minHit = (narrow.matches ? 44 : 24) / screenScale;
   const squareHit = el => {
     el.setAttribute('x', f(-minHit / 2)); el.setAttribute('y', f(-minHit / 2));
@@ -2923,7 +2939,7 @@ function project() {
       const route = layout.byRoute.get(L.k); if (!route) return;
       const points = route.points.map(p => P(p[0] - origin[0], p[1] - origin[1], 0).slice(0, 2));
       const path = atlasRoutePath(points, layout.maxCornerRadius);
-      L.road.setAttribute('d', path); L.lanes.forEach(x => x.el.setAttribute('d', path));
+      L.bed.setAttribute('d', path); L.road.setAttribute('d', path); L.lanes.forEach(x => x.el.setAttribute('d', path));
       const gh = byK.get(L.k); if (!gh) return;
       const gate = P(route.gate.x - origin[0], route.gate.y - origin[1], 0);
       const center = P(L.ox, L.oy, 0);
@@ -3005,7 +3021,7 @@ function project() {
     s.g.classList.toggle('atlas-mission-current', selected);
     s.stem.style.display = 'none';
     const a = pc, b = q, [nx, ny] = unit(-(b[1] - a[1]), b[0] - a[0]);
-    seg(s.thread, a, b); seg(s.out, a, b); seg(s.inn, a, b, -nx * 2.2, -ny * 2.2);   // instructions go out on one lane, reports come back on the other
+    seg(s.bed, a, b); seg(s.thread, a, b); seg(s.out, a, b); seg(s.inn, a, b, -nx * 2.2, -ny * 2.2);   // instructions go out on one lane, reports come back on the other
     ell(s.shadow, s.x, s.y, 0, 15); seg(s.stem, P(s.x, s.y, 0), q);
     s.sx = q[0]; s.sy = q[1];
     depth.push([q[2], s.g]);
@@ -3031,7 +3047,7 @@ function project() {
     if (!flat) { const g0 = P(s.bx, s.by, ZT); s.foot.setAttribute('cx', f(g0[0] - bq[0])); s.foot.setAttribute('cy', f(g0[1] - bq[1])); s.foot.setAttribute('rx', 15); s.foot.setAttribute('ry', f(Math.max(.01, 15 * cp))); putSolid(s.solid, s.bx, s.by, ZT, .72, bq); }
     s.bstem.style.display = flat ? '' : 'none';
     s.bsx = bq[0]; s.bsy = bq[1]; s.cx = q[0]; s.cy = q[1]; s.ry = ry;
-    if (M) { const a = P(M.x, M.y, ZL); seg(s.link, a, bq); seg(s.lflow, a, bq); }
+    if (M) { const a = P(M.x, M.y, ZL); seg(s.bed, a, bq); seg(s.link, a, bq); seg(s.lflow, a, bq); }
     depth.push([q[2], s.g]);
   });
   sc.agents.forEach(s => {
@@ -3427,7 +3443,7 @@ function sealSvg(d, px) {
   const sg = d.state === 'sealed' ? '<circle class="sg" r="4.6"/><circle class="sg-in" r="2.6"/>' : d.state === 'needsYou' ? '<circle class="sg-halo" r="5"/><circle class="sg" r="2.9"/>'
     : d.state === 'stalled' ? '<circle class="sg hollow" r="3.4"/><path class="sg-pause" d="M-1,-1.6v3.2m2,-3.2v3.2"/>'
     : d.state === 'broken' ? '<circle class="sg hollow" r="2.9"/><path class="sg-slash" d="M-3.4,3.4L3.4,-3.4"/>' : `<circle class="sg${d.state === 'planned' ? ' hollow' : ''}" r="2.9"/>`;
-  return `<svg class="seal2 st-${d.state}${d.warn ? ' warn' : ''}" viewBox="-11.5 -11.5 23 23" width="${px}" height="${px}" aria-hidden="true">${wed}${sg}</svg>`;
+  return `<svg class="seal2 st-${d.state}${d.warn ? ' warn' : ''}" viewBox="-11.5 -11.5 23 23" width="${px}" height="${px}" aria-hidden="true">${wed}<circle class="seal-edge" r="9.5"/>${sg}</svg>`;
 }
 // the seal on the map: an extruded disc, drawn back to front
 function buildSeal(se, d) {
@@ -3437,7 +3453,7 @@ function buildSeal(se, d) {
   se.selection = svgEl('path', {class: 'se-selection'}, se.g);
   se.rimBg = svgEl('path', {class: 'se-rim-bg'}, se.g); se.rim = svgEl('path', {class: 'se-rim'}, se.g); se.pips = svgEl('g', {class: 'se-pips'}, se.g); se.wg = svgEl('g', {}, se.g);
   se.wedges = d.wedges.map(x => { const g = svgEl('g', {class: 'se-w'}, se.wg); g.style.setProperty('--hue', fam(x.k).hue);
-    const o = {g, sa: svgEl('path', {class: 'se-side'}, g), sb: svgEl('path', {class: 'se-side'}, g), wall: svgEl('path', {class: 'se-wall'}, g), top: svgEl('path', {class: 'se-top'}, g), pip: x.lead && d.wedges.length > 1 ? svgEl('ellipse', {class: 'se-lead'}, g) : null};
+    const o = {g, sa: svgEl('path', {class: 'se-side'}, g), sb: svgEl('path', {class: 'se-side'}, g), wall: svgEl('path', {class: 'se-wall'}, g), top: svgEl('path', {class: 'se-top'}, g), engraving: svgEl('path', {class:'se-engraving', 'pointer-events':'none'}, g), pip: x.lead && d.wedges.length > 1 ? svgEl('ellipse', {class: 'se-lead'}, g) : null};
     svgEl('title', {}, o.top).textContent = `${fam(x.k).name}, ${(fam(x.k).roles || []).join(', ')}`; return o; });
   se.sgSide = svgEl('path', {class: 'se-sg-side'}, se.g); se.halo = svgEl('ellipse', {class: 'se-halo'}, se.g); se.sgTop = svgEl('ellipse', {class: 'se-sg'}, se.g); se.sgIn = svgEl('ellipse', {class: 'se-sg-in'}, se.g); se.slash = svgEl('line', {class: 'se-slash'}, se.g);
   se.pause = svgEl('path', {class: 'se-pause'}, se.g);
@@ -3462,6 +3478,9 @@ function drawSeal(se, d, s, q, o) {
     const h = HM * progress, z1 = zb + h, gap = d.wedges.length > 1 ? 1.4 : 0, a0 = x.a0 + gap / 2, a1 = x.a1 - gap / 2; top = Math.max(top, h); mean += h * x.share;
     const oT = arc(a0, a1, R, z1), iT = arc(a0, a1, r0, z1).reverse();
     el.top.setAttribute('d', path(oT.concat(iT)));
+    // A shallow machined groove follows the wedge, leaving the status rim clear.
+    const inset = Math.min(4, (a1 - a0) / 4);
+    el.engraving.setAttribute('d', o.compact || o.far || d.state === 'planned' || (d.state === 'broken' && x.lead) ? '' : line(arc(a0 + inset, a1 - inset, R * .86, z1)));
     if (h > 0) { const side = a => { const c = Math.cos(a * RAD), sn = Math.sin(a * RAD); return path([at(r0 * c, r0 * sn, z1), at(R * c, R * sn, z1), at(R * c, R * sn, zb), at(r0 * c, r0 * sn, zb)]); };
       el.wall.setAttribute('d', path(oT.concat(arc(a0, a1, R, zb).reverse()))); el.sa.setAttribute('d', gap ? side(a0) : ''); el.sb.setAttribute('d', gap ? side(a1) : ''); }
     else { el.wall.setAttribute('d', ''); el.sa.setAttribute('d', ''); el.sb.setAttribute('d', ''); }

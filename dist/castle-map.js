@@ -47,7 +47,11 @@
     const g = svg('g', {'aria-hidden':'true', 'pointer-events':'none', class:'castle-stonework'}, parent);
     return {g, pieces: model(runs, overview).map(piece => {
       const group = svg('g', {class:'castle-' + piece.material}, g);
-      return {...piece, group, side: svg('path', {class:'castle-side'}, group), face: svg('path', {class:'castle-face'}, group)};
+      const side = svg('path', {class:'castle-side'}, group);
+      const shade = svg('path', {class:'castle-shade'}, group);
+      const face = svg('path', {class:'castle-face'}, group);
+      const joints = ['wall', 'tower', 'roof'].includes(piece.material) ? svg('path', {class:'castle-joints'}, group) : null;
+      return {...piece, group, side, shade, face, joints};
     })};
   }
 
@@ -62,15 +66,44 @@
       if (piece.detail && !detail) continue;
       const top = piece.points.map(([x,y]) => project(x,y,piece.top));
       const base = piece.points.map(([x,y]) => project(x,y,piece.bottom));
-      let sides = '';
+      const point = p => p[0].toFixed(1) + ',' + p[1].toFixed(1);
+      const line = (a,b) => 'M' + point(a) + 'L' + point(b);
+      let sides = '', shade = '', joints = '';
       if (pitch && piece.top > piece.bottom) {
         top.forEach((p,i) => {
           const j = (i+1) % top.length;
-          if (top[j][0] < p[0]) sides += path([base[i],base[j],top[j],p]);
+          if (top[j][0] >= p[0]) return;
+          const panel = path([base[i],base[j],top[j],p]);
+          sides += panel;
+          const [x,y] = piece.points[i], [nx,ny] = piece.points[j];
+          const dx = nx-x, dy = ny-y;
+          // The horizontal component of the familiar meshes' world-space light.
+          if (dy * -.35 - dx * .45 < 0) shade += panel;
+          if (detail && piece.joints) {
+            const mid = (piece.top + piece.bottom) / 2;
+            joints += line(project(x,y,mid), project(nx,ny,mid));
+            for (let offset = 16; offset < Math.hypot(dx,dy); offset += 32) {
+              const t = offset / Math.hypot(dx,dy);
+              joints += line(project(x+t*dx,y+t*dy,mid), project(x+t*dx,y+t*dy,piece.top));
+            }
+          }
         });
       }
       piece.side.setAttribute('d', sides);
+      piece.shade.setAttribute('d', shade);
       piece.face.setAttribute('d', path(top));
+      if (detail && piece.material === 'roof') {
+        joints += path(piece.points.map(([x,y]) => project(piece.x+(x-piece.x)*.79, piece.y+(y-piece.y)*.79, piece.top)));
+      }
+      if (detail && piece.material === 'wall') {
+        const [a,b,,d] = piece.points;
+        const length = Math.hypot(b[0]-a[0], b[1]-a[1]);
+        for (let offset = 32; offset < length; offset += 32) {
+          const t = offset / length, x = (b[0]-a[0])*t, y = (b[1]-a[1])*t;
+          joints += line(project(a[0]+x,a[1]+y,piece.top), project(d[0]+x,d[1]+y,piece.top));
+        }
+      }
+      if (piece.joints) piece.joints.setAttribute('d', joints);
       layers.push([project(piece.x,piece.y,(piece.top+piece.bottom)/2)[2],piece.group]);
     }
     layers.sort((a,b) => a[0]-b[0]).forEach(([,g]) => castle.g.appendChild(g));

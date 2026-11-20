@@ -96,6 +96,12 @@ window.CovenAtlasCrown.draw(crown, {
 
 Load the renderer before creating the scene crown. Coordinates are already projected SVG coordinates; `size` is the nominal full width in the same units. Keep the existing group's hit target and accessible Psyche label. The crown's own group is decorative and ignores pointer events. Reuse its record on redraw instead of rebuilding SVG nodes. Apply the same renderer at the Coven center and the project center; scale alone must not change what the crown means.
 
+### Map materials
+
+Project courtyards use staggered flagstones. Paving follows the ground plane through orbit, and masonry joints follow the projected tower and wall faces. Fine paving and path borders drop out when projected courses become too small to resolve. The shapes and colors of decision markers, working agents and mission states carry their own meanings at every scale.
+
+Psyche’s mount and mission seals use a graphite metal finish. Familiar faces and cog hubs retain their identity colors. An engraved groove follows each detailed seal wedge inside the separate resource rim. Seal Lab uses the same geometry as the map, and small inline seals use a single bevel around the face.
+
 ## 6. Integrate through existing owners
 
 The following boundaries are supplied architecture requirements, not claims that production repositories have been inspected or integrated. [Canonical ownership](02-architecture-and-ownership.md)
