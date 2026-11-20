@@ -4,7 +4,7 @@
 
 The scalable layout/crown refinement is **implemented; combined source-level verification passed**; start its presentation handoff with [guide 15](15-scalable-atlas-layout.md). It supersedes earlier positioning and zoom-driven scope assumptions while preserving the semantic visual vocabulary. Current browser QA is unavailable because of the prior browser URL-policy block.
 
-For the **historical pre-layout** 51-test and Chrome mobile pass, read [Mobile readiness](../../MOBILE_READINESS.md). Those results and the older v3 baseline do not verify the current refinement. Its exact source/package outcomes belong in chapter 01.
+For the **historical pre-layout** Node and Chrome mobile pass, read [Mobile readiness](../../MOBILE_READINESS.md). Those results and the older v3 baseline do not verify the current refinement. Its exact source/package outcomes belong in chapter 01.
 
 | Chapter | Purpose |
 | --- | --- |

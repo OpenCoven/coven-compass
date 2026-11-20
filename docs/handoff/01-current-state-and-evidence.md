@@ -60,6 +60,12 @@ This is a navigation aid, not a promise that similarly named functions exist in 
 
 ## 5. Verified baseline evidence
 
+### Current evidence: generated, not hand-written
+
+Current counts live in one file, [`tests/evidence/current.json`](../../tests/evidence/current.json). `node scripts/verify-all.mjs` runs the static source checker, the Node suite, the crown check, a handoff build, ZIP verification, and the source/test/crown/manifest checks in a clean extraction of the built ZIP, then writes the counts it measured. CI runs `node scripts/verify-all.mjs --check` on every pull request and fails if that file is stale. `--report PATH` adds the commit, runtimes, time, and per-step results for one run; CI uploads that report as a workflow artifact. Evidence level: static + unit only.
+
+Everything after this subsection is a **dated historical record**. It keeps its counts as recorded and is not updated with later changes. Other documents link here or to `current.json` instead of repeating counts, and `scripts/check-source.mjs` enforces that.
+
 At the v3 checkpoint, seven Node tests passed with zero failures or skips. They cover mission insertion/removal across replay without a wall-count change; hidden agents before selection; selected-mission agents, reserved places, gate links and gate decisions; familiar filters within projects; local/global selection consistency; unchanged seal logic; and all six seal states across three detail tiers after normalizing the ground origin.
 
 `sealOf`, `buildSeal`, and `drawSeal` matched the earlier v2 source at `494a08f6bf10c9a0606c82e86821fed8a253f066`. The meaningful presentation change set the shared ground plane to zero. The bundled `tests/fixtures/v2-index.html` is extracted from that exact source path and commit; `baseline.json` records its digest. The test loader verifies the fixture before comparison, without requiring `.git`.
@@ -80,9 +86,9 @@ The handoff's validation tooling records checks at the source/package level. The
 
 The incoming branch at `07919b421df5457e778e1b1c6a73512c8f27ba73` recorded **71 passing Node tests** and **57 settled Chrome audits**, including 56 mobile/tablet checks across 17 viewport sizes and one desktop reference. [Its JSON audit](../../tests/evidence/replay-mobile-layout-audits.json) preserves source fingerprints, diagnostic failures, successful retests, and interaction notes. This is evidence from before the combined layout; it does not establish browser acceptance of the merged lattice, crown, fit, and adaptive dock. Its repository-only replay JPG is excluded from the handoff.
 
-### Combined layout, replay, and adaptive mobile — source-level verified
+### Combined layout, replay, and adaptive mobile — 2026-11-18 handoff-edition checkpoint
 
-The final combined suite passed **207 tests with zero failures, cancellations, or skips**. This includes merge-boundary regressions for nested mobile HUD measurement, hidden chrome, modal-inspector exclusion, HUD creation before fit, keyboard-resize guards, and restoration of a manual camera after replay selection cleanup. The dedicated crown check passed **84 view/size combinations** plus canonical digest, aperture, bounds, and stable-node checks. The static checker passed: **3 HTML files, 22 JavaScript files, 1 inline script, 6 CSS files, 7 JSON files, 22 Markdown files, and 155 local references** at that recorded run. **Combined clean-extraction, rebuilding, and package verification passed**, as detailed below. Commands used:
+At the 2026-11-18 handoff edition, the final combined suite passed **207 tests with zero failures, cancellations, or skips**. This includes merge-boundary regressions for nested mobile HUD measurement, hidden chrome, modal-inspector exclusion, HUD creation before fit, keyboard-resize guards, and restoration of a manual camera after replay selection cleanup. The dedicated crown check passed **84 view/size combinations** plus canonical digest, aperture, bounds, and stable-node checks. The static checker passed: **3 HTML files, 22 JavaScript files, 1 inline script, 6 CSS files, 7 JSON files, 22 Markdown files, and 155 local references** at that recorded run. **Combined clean-extraction, rebuilding, and package verification passed**, as detailed below. Commands used:
 
 ```sh
 node scripts/check-source.mjs
