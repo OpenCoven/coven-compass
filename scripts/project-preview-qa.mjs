@@ -20,6 +20,7 @@ for (const [width, height] of [[1440, 900], [390, 844]]) {
       const project = page.locator('.ghostfort[aria-label^="psyche-build,"]');
       await project.locator('.preview-mission').first().waitFor({state: 'visible'});
       assert.equal(await project.locator('.preview-mission').count(), 4);
+      assert.equal(await project.locator('.gname').textContent(), 'psyche-build');
       assert.equal(await page.locator('.ghostfort.dormant .preview-mission').count(), 0);
       assert.match(page.url(), /#\/coven/);
       if (width < 500) await project.tap();

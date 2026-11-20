@@ -2229,7 +2229,17 @@ function atlasWorldLayout(remeasure) {
   const signature = key + '|' + JSON.stringify(options);
   if (atlasLayoutCache && atlasLayoutCache.signature === signature) return atlasLayoutCache;
   const layout = window.CovenAtlasLayout.layout(keys, options);
-  atlasLayoutCache = Object.assign(layout, {key, signature, byKey: new Map(layout.nodes.map(n => [n.key, n])), byRoute: new Map(layout.routes.map(r => [r.key, r]))});
+  // Fit once per layout. Project reservations already include their labels, while routes need room on either side.
+  const contentBounds = {x0: -500, y0: -575, x1: 500, y1: 575};
+  const include = (x, y, dx, dy) => {
+    contentBounds.x0 = Math.min(contentBounds.x0, x - dx);
+    contentBounds.x1 = Math.max(contentBounds.x1, x + dx);
+    contentBounds.y0 = Math.min(contentBounds.y0, y - dy);
+    contentBounds.y1 = Math.max(contentBounds.y1, y + dy);
+  };
+  for (const n of layout.nodes) include(n.x, n.y, n.width / 2, n.height / 2);
+  for (const route of layout.routes) for (const [x, y] of route.points) include(x, y, 60, 60);
+  atlasLayoutCache = Object.assign(layout, {key, signature, contentBounds, byKey: new Map(layout.nodes.map(n => [n.key, n])), byRoute: new Map(layout.routes.map(r => [r.key, r]))});
   return atlasLayoutCache;
 }
 function atlasFitScene(remeasure) {
@@ -2237,8 +2247,8 @@ function atlasFitScene(remeasure) {
   let bounds;
   if (atlasScope === 'coven') {
     const layout = atlasWorldLayout(remeasure), origin = worldOf(active, layout);
-    // Layout bounds already contain every node and route with aisle padding.
-    bounds = window.CovenAtlasViewport.projectedBounds([layout.bounds, {x0: -500, y0: -575, x1: 500, y1: 575}], {originX: origin[0], originY: origin[1]});
+    // The viewport supplies the outer margin. Fit the occupied geometry to keep narrow Project labels legible.
+    bounds = window.CovenAtlasViewport.projectedBounds([layout.contentBounds], {originX: origin[0], originY: origin[1]});
     if (sc && sc.layoutSignature !== layout.signature) { buildScene(); sync(); }
   } else if (cur().sel) {
     const target = fitTarget(cur()); if (target) Object.assign(camT, target);
