@@ -1,0 +1,143 @@
+{
+  "url": "https://coven-compass.vercel.app/",
+  "source": "c15823626a073540c3a8a5bff08f018eb360a091",
+  "dist_tree": "0d2f6427615a8aa272693621a45acf6e203f9e33",
+  "deployment": "dpl_5Zc7xXTcwWJSCgy9fKd7LC5p54Pp",
+  "audience": "anonymous",
+  "browser_report": "browser-qa-2026-11-20-public-c158236.json",
+  "browser_report_sha256": "c5816ef9c53f63f599877494fc42b918da762f4fee35043d2ca97bd53d86e6d1",
+  "source_command": "node scripts/verify-served.mjs https://coven-compass.vercel.app/ c15823626a073540c3a8a5bff08f018eb360a091",
+  "source_command_exit": 0,
+  "files": [
+    {
+      "path": "/",
+      "status": 200,
+      "sha256": "97e818681e9fe8d6799c65966c06ad2cf7da6c2e56b882dac405e522bae26150"
+    },
+    {
+      "path": "atlas-crown.js",
+      "status": 200,
+      "sha256": "bfc8e0d43478dae89845106d742b15c0137bfb4c4f7e001ece046647259c35b7"
+    },
+    {
+      "path": "atlas-layout.js",
+      "status": 200,
+      "sha256": "5a60be428732aac77cadcd04eeb424df5116611a4ec388e760ded2751f6919dc"
+    },
+    {
+      "path": "atlas-presentation.js",
+      "status": 200,
+      "sha256": "1f1b8ca02f23211ccdeeb1122b99a0d41b1c0725d201f58eea580a1fccda6f69"
+    },
+    {
+      "path": "atlas-ui.js",
+      "status": 200,
+      "sha256": "c2d52a937a266ab651e03e485d4da698a0f8eea5b2194f84ff4fbfe227ebac21"
+    },
+    {
+      "path": "atlas-viewport.js",
+      "status": 200,
+      "sha256": "e1169491750637c102f8b10cb72e0bc03f89c864fbf95fcb4efb00f679c379a1"
+    },
+    {
+      "path": "atlas.css",
+      "status": 200,
+      "sha256": "84ce07303e55b132e986123da83409465caf6d2ae6ea428c40331d011fcdba68"
+    },
+    {
+      "path": "fixtures/cave-projects-list.json",
+      "status": 200,
+      "sha256": "a885f550d02795300a296c6381f07d8294d026df9f624049d6e6eaa3327337fb"
+    },
+    {
+      "path": "handoff/guide.html",
+      "status": 200,
+      "sha256": "def9334626610b225e2016175c262484f02c2cd17c4a06557925694163766db3"
+    },
+    {
+      "path": "handoff/handoff.css",
+      "status": 200,
+      "sha256": "dd8e6978712b042d287dbd2a53aec7f00afce5e5cec81f311795be1b6b57bc9b"
+    },
+    {
+      "path": "handoff/index.html",
+      "status": 200,
+      "sha256": "c7a087e1fc60c6eb2ea210f7a9f2f0efa2ad23bf735aa3b2b62aef4d5caa7ed9"
+    },
+    {
+      "path": "index.html",
+      "status": 200,
+      "sha256": "97e818681e9fe8d6799c65966c06ad2cf7da6c2e56b882dac405e522bae26150"
+    },
+    {
+      "path": "map-focus.js",
+      "status": 200,
+      "sha256": "8436ea79f43d0b1042ce4b4520edf5f5b6b647c6ef6f5feb85eeaf77d2ad40ac"
+    },
+    {
+      "path": "mission-navigation.js",
+      "status": 200,
+      "sha256": "ae26a09a9dc4aaa65018880b34b8f4e645bcdffd4db5a35d5ca474ac1e37875b"
+    },
+    {
+      "path": "mobile-interactions.js",
+      "status": 200,
+      "sha256": "27a749c19ed6927f2eba87305101ac6f1463208dc1e0f617d870516fede2d4e8"
+    },
+    {
+      "path": "mobile-ui.js",
+      "status": 200,
+      "sha256": "8011a539a36705a3dd720d38125e35c3c0f1026090b84931d6251b577362172a"
+    },
+    {
+      "path": "projection-source.js",
+      "status": 200,
+      "sha256": "5b0f26f045f00f3dad3f017d9f1d7545bf5c3bdffc25eeb51eaf6a17c59d13c3"
+    },
+    {
+      "path": "seal-lab.css",
+      "status": 200,
+      "sha256": "91ce12acbb06fbaee478f4374ba5abd520f2ca4f463324129058eb91602a8035"
+    },
+    {
+      "path": "seal-lab.js",
+      "status": 200,
+      "sha256": "85becc493f02bc6018a4b040b39497ae1f4b027089b27c26b232c302d862bd7d"
+    },
+    {
+      "path": "semantic-map.css",
+      "status": 200,
+      "sha256": "d2c2f8c2e17f06e6df0cc89904b0dbf6f318243f01e8f217b34343f1a6849713"
+    },
+    {
+      "path": "simulation-model.js",
+      "status": 200,
+      "sha256": "5a63d3375bc4b2a9282976f6cbd1187ec88ce1ca9b8c1c6f4b3f2695f42aa9aa"
+    }
+  ],
+  "plan_command": "node plan-qa.mjs https://coven-compass.vercel.app/",
+  "plan_command_exit": 0,
+  "plan_passed": 4,
+  "plan_skipped": 0,
+  "handoff_steps": "At each viewport, open Handoff from the header when visible or from the Projects drawer, then choose Read the complete guide and read the first heading.",
+  "handoff": [
+    {
+      "width": 1440,
+      "height": 900,
+      "url": "https://coven-compass.vercel.app/handoff/guide.html",
+      "title": "Complete implementation guide"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "url": "https://coven-compass.vercel.app/handoff/guide.html",
+      "title": "Complete implementation guide"
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "url": "https://coven-compass.vercel.app/handoff/guide.html",
+      "title": "Complete implementation guide"
+    }
+  ]
+}
