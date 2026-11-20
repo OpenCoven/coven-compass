@@ -138,7 +138,7 @@
     var status = $('atlasProjectCount');
     if (status) status.textContent = count + (count === 1 ? ' Project' : ' Projects') + (needle ? ' found' : ' in this Coven');
   }
-  var projectIcon = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M10 4H7L4 7v10l3 3h10l3-3V7l-3-3h-3" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>';
+  var projectIcon = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 5v15h6v-5a3 3 0 0 1 6 0v5h6V5h-4v4h-3V5h-4v4H7V5Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>';
   function headerAction(control, label, drawing) {
     control.innerHTML = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + drawing + '</svg>';
     control.append(node('span', '', label));
@@ -162,7 +162,7 @@
     );
     var browse = headerAction(button('atlasBrowse', '', function () {
       if ($('atlasSidebar').hidden) openBrowse(); else closeBrowse(false);
-    }), 'Projects', '<path d="M8 3H6L3 6v8l3 3h8l3-3V6l-3-3h-2"/>');
+    }), 'Projects', '<path d="M3 4v13h5v-4a2 2 0 0 1 4 0v4h5V4h-3v3h-3V4H9v3H6V4Z"/>');
     browse.setAttribute('aria-expanded', 'false'); browse.setAttribute('aria-controls', 'atlasSidebar');
     browse.title = 'Browse Projects'; browse.setAttribute('aria-label', 'Browse Projects');
     var missions = headerAction(button('atlasMissions', '', function () {

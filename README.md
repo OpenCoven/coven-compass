@@ -28,7 +28,7 @@ The tests include their exact reference fixture and work without Git history. Th
 
 ## Scalable overview refinement
 
-**Implemented; combined source-level verification passed.** The current refinement uses uniform four-corner Projects in an aspect-aware compact lattice, paired positions, and shared branch corridors that meet each project's inward-facing gate. Routes show coordination, not execution dependencies or authority. Read [the scalable layout and crown guide](docs/handoff/15-scalable-atlas-layout.md) for implementation and integration details.
+**Implemented; combined source-level verification passed.** The current refinement uses castle courtyards for Projects in an aspect-aware compact lattice, paired positions, and shared branch corridors that meet each project's inward-facing gate. Routes show coordination, not execution dependencies or authority. Read [the scalable layout and crown guide](docs/handoff/15-scalable-atlas-layout.md) for implementation and integration details.
 
 The Coven overview shows an exact mission count within each Project enclosure and a separate badge for pending decisions. The mission browser and Project drilldown retain all known missions. The map reduces detail based on projected spacing while preserving the underlying collection.
 
@@ -38,7 +38,7 @@ Coven/project scope is explicit and separate from camera zoom. Fit uses measured
 
 ## Visual language
 
-- **Uniform four-corner enclosure:** one project's scope. Every project uses the same overview treatment, including the currently active project.
+- **Castle courtyard:** one project's scope. Every project uses the same overview treatment, including the currently active project.
 - **Circular mission seal:** one mission. Wedge angle is the share of its agents led by each familiar; wedge height is progress on that familiar's role-owned targets; the central signet expresses mission state.
 - **Stable familiar glyph and hue:** identity across projects, councils, and delegated agents. Changing the camera angle does not change the familiar's mark.
 - **Agent marks:** cogs represent agents and square hubs indicate task assignments in the selected mission. Their state and familiar affiliation remain available in the detail views.

@@ -322,3 +322,14 @@ body.atlas-enhanced #plan:not(.flat) .seat > .sig { display: none; }
   #plan.atlas-agent-detail.map-running .agent.work .cog-rotor { animation-play-state: running; }
   #plan.atlas-agent-detail .agent.work.reverse-cog .cog-rotor { animation-direction: reverse; }
 }
+
+/* Cool slate walls sit below the richer familiar colors and mission seals. */
+.castle-stonework { stroke-linejoin: round; }
+.castle-side { fill: #393643; stroke: #605c6b; }
+.castle-face { fill: #696574; stroke: #a09aaa; }
+.castle-stonework path { stroke-width: .75; vector-effect: non-scaling-stroke; }
+.castle-tower .castle-side { fill: #45404d; }
+.castle-rim .castle-face { fill: #817989; }
+.castle-cap .castle-face { fill: #aba2af; }
+.castle-roof .castle-face { fill: #494450; }
+.ghostfort.dormant .castle-stonework, .ghostfort.dormant use[href="#overview-castle"] { opacity: .6; }
