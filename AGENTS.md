@@ -1,13 +1,101 @@
-# Working on Coven Compass
+# AGENTS.md: working in coven-compass
 
-Use Node.js 24 and Python 3.10 or newer. From the checkout root, run `sh scripts/verify-checkout.sh`. This runs the source checker, all Node tests, the crown checks, and the handoff builder and ZIP verifier. The builder refreshes the tracked guide, manifest, and checksums and writes the ignored archive under `dist/downloads/`. Review generated diffs alongside their source changes.
+Coven Compass is a buildless, dependency-free static Site (`dist/`) that maps Projects, missions, and familiars. **It is a local simulation.** It doesn't connect to a Coven daemon, run agents, or grant authority. The integration plan in `docs/handoff/` is a proposal, not a contract.
+
+People reading this: Val owns the repo and merges. Nova coordinates and routes work. Familiars such as Sage (research) and Cody (Claude Code, implementation) take lanes.
+
+## One command
+
+```bash
+node scripts/verify-all.mjs           # run before every commit; writes tests/evidence/current.json
+node scripts/verify-all.mjs --check   # what CI runs; also fails on stale generated files
+sh scripts/verify-checkout.sh         # same command (wrapper kept from #6)
+```
+
+It runs static source checks, the Node suite, the crown check, a handoff build into a temp dir, ZIP verification, and the same source/test/crown/manifest checks in a clean extraction of that ZIP. It exits non-zero if any step fails or is skipped. You need Node.js 24 and Python 3.10+. There's no npm install. To preview: `python3 -m http.server 8000 --bind 127.0.0.1 --directory dist`.
+
+Commit everything verify-all regenerates (`tests/evidence/current.json`, `dist/handoff/guide.html`). CI is `.github/workflows/verify.yml`.
+
+## Where to make a change
+
+The table comes from #6. Run its focused check while you work, then `verify-all` before you commit.
 
 | Change | Edit | Focused check |
 | --- | --- | --- |
-| Project form and mission inspector | `dist/index.html` | `node --test tests/mission-interactions.test.cjs` and exercise the form in a desktop and narrow browser |
-| Routes and mission browser | `dist/mission-navigation.js`, `dist/atlas-ui.js`, and bindings in `dist/index.html` | `node --test tests/navigation.test.cjs tests/mission-interactions.test.cjs` |
+| Project form and mission inspector | `dist/index.html` | `node --test tests/mission-interactions.test.cjs`, then exercise the form in a desktop and a narrow browser |
+| Routes and mission browser | `dist/mission-navigation.js`, `dist/atlas-ui.js`, and their bindings in `dist/index.html` | `node --test tests/navigation.test.cjs tests/mission-interactions.test.cjs` |
 | Map and camera | `dist/atlas-layout.js`, `dist/atlas-viewport.js` | `node --test tests/atlas-layout.test.cjs tests/atlas-viewport.test.cjs` |
 | Mobile controls and focus | `dist/mobile-ui.js`, `dist/mobile-interactions.js`, `dist/atlas.css` | `node --test tests/mobile-*.test.cjs` |
-| Handoff | Edit chapters in `docs/handoff/` or the landing page in `dist/handoff/index.html`. The builder generates `dist/handoff/guide.html`. | Run the checkout command and follow Handoff in the browser. |
+| Simulation fold (what an event does to the world) | `dist/simulation-model.js` | `node --test tests/simulation-model.test.cjs tests/replay-*.test.cjs` |
+| Projection sources (`?source=`) | `dist/projection-source.js`, `dist/fixtures/`, the guard at the top of the inline script in `dist/index.html` | `node --test tests/projection-source.test.cjs` |
+| Handoff | Chapters in `docs/handoff/`, or the landing page `dist/handoff/index.html`. The builder generates `dist/handoff/guide.html`. | `node scripts/verify-all.mjs`, then follow Handoff in the preview |
 
-Preview with `python3 -m http.server 8000 --bind 127.0.0.1 --directory dist`. The app runs as a local simulation. Preserve the historical fixtures and evidence in `tests/fixtures/` and `tests/evidence/`. For an extracted delivery, run `python3 scripts/verify-handoff.py .` before editing it. The strict inventory includes only delivered files.
+Keep `tests/fixtures/` (the pinned baseline) and the dated audits in `tests/evidence/` as historical evidence. If you're working from an extracted delivery rather than a checkout, run `python3 scripts/verify-handoff.py .` before editing it.
+
+## Invariants (never break)
+
+1. **It's a simulation.** Nothing may silently fall back to sample data, fake an acknowledgement, or show a success the browser generated itself. A future real-data mode must say when it's stale, disconnected, or unavailable.
+2. **Decisions D01–D12 belong to their owners** ([register](docs/handoff/11-open-decisions.md)). You may record a proposal or evidence. Never mark a decision accepted. Keep *proposed*, *accepted by owner*, *implemented*, and *verified* separate.
+3. **No live daemon transport.** D03 is unresolved: the daemon's loopback TCP listener is unauthenticated and sends no CORS headers, so a static page can't safely reach it.
+4. **No outward actions without explicit authorization.** That means no deploys or Site publishes, no edits to other OpenCoven repos, and no messages outside GitHub. Linked issues are how you reach other repos.
+5. **Report evidence exactly:** command, exit code, and counts. List skipped checks as skipped. Don't loosen a test or gate just to get to green.
+6. **Vocabulary:** *Projects contain Castles.* The map's enclosure is a **Project**. A **Castle** is a hosted place where a familiar runs work (`coven-castles`). Don't reintroduce "Castle" for the enclosure.
+
+## Generated files: never hand-edit
+
+| File | Generated by | Source of truth |
+| --- | --- | --- |
+| `dist/handoff/guide.html` | `scripts/build-handoff.py` (via verify-all) | `docs/handoff/*.md`, `docs/handoff/templates/*.csv`, README, START_HERE, MOBILE_READINESS, `examples/README.md` |
+| `tests/evidence/current.json` | `scripts/verify-all.mjs` | the test, crown, and package runs |
+| `HANDOFF_MANIFEST.json`, `CHECKSUMS.sha256` | `scripts/build-handoff.py`, **inside the ZIP only** | not committed; `.gitignore`d |
+| `dist/downloads/*.zip` | `scripts/build-handoff.py` | not committed |
+
+**Counts live in one place.** Current numbers belong only in `current.json`. Dated historical numbers belong only in [chapter 01](docs/handoff/01-current-state-and-evidence.md) and [MOBILE_READINESS.md](MOBILE_READINESS.md). `check-source` fails if a count of tests, audits, crown combinations, or package files appears anywhere else, so link to those files instead.
+
+`python3 scripts/verify-handoff.py .` works only in an *extracted ZIP*. In a git checkout it refuses on purpose and points you to verify-all.
+
+## File map
+
+| Path | What it is |
+| --- | --- |
+| `dist/index.html` | ~5.5k lines: sample traces, `seek`/`emit` (selection, camera, effects), scene build/sync/projection, seal renderer, replay loop. The main monolith. |
+| `dist/simulation-model.js` | The simulation model: a pure fold over a trace (`newWorld`, `apply`, `advance`, `append`, `summarize`). No DOM or timers; the page injects its constants. |
+| `dist/atlas-ui.js`, `dist/atlas.css` | Header, project search and sample presets, mission browser, drawer, familiar chips |
+| `dist/atlas-layout.js` | Pure geometry: paired project placement, corridors, gates, bounded mission packing |
+| `dist/atlas-viewport.js` | Measured safe-area fit |
+| `dist/atlas-crown.js` | Canonical Psyche crown faces and extrusion (decorative) |
+| `dist/mission-navigation.js` | Route codec (`#/project/<name>[/mission/<id>…]`), replay selection reconciliation |
+| `dist/projection-source.js`, `dist/fixtures/` | **The projection seam.** `?source=simulation` (the default) or `?source=fixture&scenario=…`. Every source implements `read() → Projection`. Add a live adapter here, never inside the simulation. |
+| `dist/mobile-ui.js`, `dist/mobile-interactions.js` | Adaptive dock, portals, focus, gestures, visual viewport |
+| `dist/seal-lab.js`, `dist/semantic-map.css` | Isolated seal explorer; scope-specific scene visibility |
+| `dist/handoff/` | Handoff landing page (hand-written `index.html`) and generated `guide.html` |
+| `tests/*.test.cjs` | Node tests using DOM facades; `tests/fixtures/` pins the v2 reference source |
+| `tests/evidence/` | `current.json` (generated) and historical JSON audits |
+| `scripts/` | `verify-all.mjs`, `check-source.mjs`, `test-atlas-crown.mjs`, `build-handoff.py`, `verify-handoff.py` |
+| `docs/handoff/` | Architecture, plan, acceptance, security, decisions: the editable doc source |
+| `docs/discovery/` | Read-only discovery deliverables imported byte-for-byte from familiar lanes, with pins and `SHA256SUMS`. Never edit them; add a new dated folder instead. |
+| `examples/` | Inert conceptual JSON, not wire schemas |
+
+For a function-level map of `dist/index.html`, see [chapter 01 §4](docs/handoff/01-current-state-and-evidence.md#4-source-map-for-an-implementer).
+
+## Evidence and status vocabulary
+
+- **Evidence level:** `static` | `unit` | `browser` | `daemon` | `packaged CLI` | `remote Host`. verify-all establishes `static` and `unit` only. Browser evidence comes from `scripts/browser-qa.mjs` (headless Chromium, run outside verify-all; see its header). The latest record is `tests/evidence/browser-qa-2026-11-19.json`. It doesn't cover Safari, physical devices, real touch, keyboard-only use, or screen readers.
+- **Packet status:** `implemented` | `verified` | `proposed` | `blocked` | `unknown`.
+- **Completion record:** every PR or handoff ends with the exact record in [document 10](docs/handoff/10-agent-task-prompts.md#required-completion-record).
+
+## How work flows (from issues #1–#3)
+
+1. **Claim it.** Comment on the issue that you're taking it and name the branch, for example "Claiming this — Cody (Claude Code) is picking up …".
+2. **Branch** `compass/<topic>` off `main`. Make one bounded change per branch. If a PR depends on another open PR, stack it (base it on that branch) and say so in the body.
+3. **Open a PR against `main`. Don't merge it; Val merges.** In the body include what changed, any deliberate departures from the brief, the commands with their results, what wasn't checked, and the completion record. A PR closes an issue only when Val approves.
+4. **Out-of-brief work gets its own branch and PR.** If you find uncommitted edits you didn't make, don't commit or discard them. Report them with timestamps and ask. When Val decides to discard, keep a backup patch outside the repo.
+5. **Read-only lanes** (discovery, research) cite the exact pinned revision of every repo they read. They deliver files with sha256 digests and a receipt id (for example `NOVA-SAGE-COMPASS-20261119-D01D04`). They mark recommendations as proposals, not owner decisions.
+6. **Status comments** say plainly what's merged, open, committed, or pending, so another agent can pick up the work.
+
+## Where to read next
+
+- [START_HERE.md](START_HERE.md): human handoff, and reading order by role
+- [docs/handoff/05-implementation-plan.md](docs/handoff/05-implementation-plan.md): phases W01–W14
+- [docs/handoff/09-security-and-authority.md](docs/handoff/09-security-and-authority.md): authority boundaries
+- [docs/handoff/15-scalable-atlas-layout.md](docs/handoff/15-scalable-atlas-layout.md): layout, crown, and presentation contract

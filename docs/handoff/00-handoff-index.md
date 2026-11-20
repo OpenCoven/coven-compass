@@ -2,9 +2,9 @@
 
 **Status:** complete source handoff with proposed integration work. Start with [START_HERE](../../START_HERE.md). The implementation plan is not an assertion of production implementation.
 
-The scalable layout/crown refinement is **implemented; combined source-level verification passed**; start its presentation handoff with [guide 15](15-scalable-atlas-layout.md). It supersedes earlier positioning and zoom-driven scope assumptions while preserving the semantic visual vocabulary. Current browser QA is unavailable because of the prior browser URL-policy block.
+The scalable layout/crown refinement is **implemented; combined source-level verification passed**; start its presentation handoff with [guide 15](15-scalable-atlas-layout.md). It supersedes earlier positioning and zoom-driven scope assumptions while preserving the semantic visual vocabulary. Headless Chromium QA of the current source ran on 2026-11-19 ([record](../../tests/evidence/browser-qa-2026-11-19.json), summarized in chapter 01); it does not establish Safari, physical-device, real multi-touch, keyboard-only, or screen-reader acceptance.
 
-For the **historical pre-layout** 51-test and Chrome mobile pass, read [Mobile readiness](../../MOBILE_READINESS.md). Those results and the older v3 baseline do not verify the current refinement. Its exact source/package outcomes belong in chapter 01.
+For the **historical pre-layout** Node and Chrome mobile pass, read [Mobile readiness](../../MOBILE_READINESS.md). Those results and the older v3 baseline do not verify the current refinement. Its exact source/package outcomes belong in chapter 01.
 
 | Chapter | Purpose |
 | --- | --- |

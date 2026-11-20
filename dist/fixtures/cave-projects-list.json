@@ -1,0 +1,88 @@
+{
+  "about": "STATIC FIXTURE. Not live data, not a canonical schema. Shaped after Cave Client v1 projects.list as cited in docs/discovery/2026-11-19-d01-d04/findings.md: the envelope base {apiVersion, minimumClientVersion, capabilities, operations, requestId} (coven-cave@57b44a3a8 src/lib/server/client-v1/responses.ts:82-89), keyset pages of {projects} plus a cursor (src/app/api/client/v1/projects/route.ts:77-88), and CaveProject {id, name, root} (src/lib/cave-projects-types.ts:11-19). Assumptions not in the citations: the cursor field is named nextCursor, null on the last page; the capabilities and operations values; the 'x-fixture' scenario wrapper (pages keyed by the cursor that requests them, observedAgoMs, connection). All ids and roots are fake.",
+  "staleAfterMs": 60000,
+  "scenarios": {
+    "fresh": {
+      "connection": "connected",
+      "observedAgoMs": 5000,
+      "pages": {
+        "": {
+          "apiVersion": "1.0",
+          "minimumClientVersion": "0.0.1",
+          "capabilities": ["projects.list"],
+          "operations": ["projects.list"],
+          "requestId": "fixture-req-0001",
+          "projects": [
+            {"id": "fxtA1b2C3d4", "name": "Compass", "root": "/fixture/workspace/coven-compass"},
+            {"id": "fxtE5f6G7h8", "name": "Cave", "root": "/fixture/workspace/coven-cave"}
+          ],
+          "nextCursor": "fixture-cursor-page-2"
+        },
+        "fixture-cursor-page-2": {
+          "apiVersion": "1.0",
+          "minimumClientVersion": "0.0.1",
+          "capabilities": ["projects.list"],
+          "operations": ["projects.list"],
+          "requestId": "fixture-req-0002",
+          "projects": [
+            {"id": "fxtI9j0K1l2", "name": "Psyche Build", "root": "/fixture/workspace/psyche-build"}
+          ],
+          "nextCursor": null
+        }
+      }
+    },
+    "stale": {
+      "connection": "connected",
+      "observedAgoMs": 900000,
+      "pages": {
+        "": {
+          "apiVersion": "1.0",
+          "minimumClientVersion": "0.0.1",
+          "capabilities": ["projects.list"],
+          "operations": ["projects.list"],
+          "requestId": "fixture-req-0003",
+          "projects": [
+            {"id": "fxtA1b2C3d4", "name": "Compass", "root": "/fixture/workspace/coven-compass"}
+          ],
+          "nextCursor": null
+        }
+      }
+    },
+    "partial": {
+      "connection": "connected",
+      "observedAgoMs": 5000,
+      "pages": {
+        "": {
+          "apiVersion": "1.0",
+          "minimumClientVersion": "0.0.1",
+          "capabilities": ["projects.list"],
+          "operations": ["projects.list"],
+          "requestId": "fixture-req-0004",
+          "projects": [
+            {"id": "fxtA1b2C3d4", "name": "Compass", "root": "/fixture/workspace/coven-compass"}
+          ],
+          "nextCursor": "fixture-cursor-missing"
+        }
+      }
+    },
+    "disconnected": {
+      "connection": "disconnected",
+      "pages": {}
+    },
+    "unsupported-version": {
+      "connection": "connected",
+      "observedAgoMs": 5000,
+      "pages": {
+        "": {
+          "apiVersion": "2.0",
+          "minimumClientVersion": "2.0.0",
+          "capabilities": ["projects.list"],
+          "operations": ["projects.list"],
+          "requestId": "fixture-req-0005",
+          "projects": [],
+          "nextCursor": null
+        }
+      }
+    }
+  }
+}

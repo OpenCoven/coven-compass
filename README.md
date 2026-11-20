@@ -8,6 +8,14 @@ Open [START_HERE.md](START_HERE.md) for the runnable ZIP workflow and [the hando
 
 The handoff preserves the prototype as a simulation. Production APIs, schemas, and command paths require current-repository discovery and acceptance; conceptual JSON examples are inert documentation fixtures.
 
+Run every check with one command. CI runs the same command on every pull request (`.github/workflows/verify.yml`, repository only):
+
+```bash
+node scripts/verify-all.mjs
+```
+
+It runs the steps below, then repeats the source, test, crown, and manifest checks in a clean extraction of the built ZIP. It exits non-zero if any step fails or is skipped. When everything passes it writes the measured counts to [`tests/evidence/current.json`](tests/evidence/current.json); commit that file with your change. CI runs `--check`, which fails if the file is stale.
+
 ```bash
 node scripts/check-source.mjs
 node --test tests/*.test.cjs
@@ -62,6 +70,12 @@ Replay renders missions before their first council seat, so opening events no lo
 
 The starting model contains four Projects, seven missions, and 114 delegated agents. All displayed totals are derived from the simulation. Activity changes over time. Chat and approval controls affect sample data only; they do not send communications, run agents, authorize real operations, or write to external projects.
 
+## Projection sources
+
+The mode is explicit. With no `source` parameter the Site runs the simulation exactly as before. `?source=fixture` (optionally `&scenario=fresh|stale|partial|disconnected|unsupported-version`) reads a static fixture shaped after Cave Client v1 `projects.list`, as cited in the [D01–D04 discovery](docs/discovery/2026-11-19-d01-d04/README.md). It shows each Project's name, root, and Cave id separately, and labels the state explicitly as *fresh*, *stale*, *reconciling* (incomplete pages), or *unavailable* (disconnected, unsupported version, unreadable). Any non-simulation mode stops before the simulation boots, and an unknown `source` value shows *unavailable*, so sample data never stands in for another source. There is no live mode: D03 is unresolved.
+
+Both sources implement one interface, `read() → Promise<Projection>`, described at the top of `dist/projection-source.js`. A live adapter would be a third implementation of that interface. In simulation mode the map still renders from its own state; the registered simulation source wraps `atlasSnapshot` for consumers of the interface.
+
 ## Source
 
 - `dist/index.html`: original simulation and seal renderer, with scope-based scene visibility and the orchestration-atlas integration.
@@ -70,6 +84,7 @@ The starting model contains four Projects, seven missions, and 114 delegated age
 - `dist/atlas-viewport.js`: measured safe-area fitting for the projected scene and visible chrome.
 - `dist/atlas-crown.js`: exact canonical crown faces with sampled extrusion walls and restrained solid shading.
 - `dist/mission-navigation.js`: canonical route codec and replay selection reconciliation.
+- `dist/projection-source.js`, `dist/fixtures/cave-projects-list.json`: the projection seam and its static fixture (see Projection sources below).
 - `dist/mobile-interactions.js`: pointer geometry, camera gestures, and visual viewport geometry.
 - `dist/mobile-ui.js`: responsive portals, adaptive workspace dock, measured map space, modal stacking, focus restoration, keyboard handling, and viewport variables.
 - `dist/semantic-map.css`: scope-specific scene visibility, familiar glyphs, agent dots, and boundary decision markers.
@@ -83,18 +98,14 @@ The starting model contains four Projects, seven missions, and 114 delegated age
 
 No build step or runtime dependencies are required. Google Fonts is the inherited optional typography dependency, with system font fallbacks.
 
-## Verification and evidence boundary — November 18, 2026
+## Verification and evidence boundary
 
-**Combined source-level verification passed.** The source integrates layout/crown work with replay and adaptive-mobile improvements from `07919b421df5457e778e1b1c6a73512c8f27ba73`. `node --test --test-reporter=tap tests/*.test.cjs` passed **207 tests with zero failures, cancellations, or skips**. The crown check passed **84 view/size combinations** plus canonical digest, aperture, bounds, and stable-node checks; the static source checker passed. **Combined clean-extraction, rebuilding, and ZIP verification passed**: 67 files, 65 payload entries, and 66 SHA-256 checks. Earlier branch results remain distinct below.
+**Current counts are generated, not written by hand.** `node scripts/verify-all.mjs` records the current test, crown, and package counts in [`tests/evidence/current.json`](tests/evidence/current.json), and CI fails when that file is stale. Its evidence level is static + unit: Node fixtures with DOM facades, not a browser, device, daemon, packaged CLI, or remote Host.
 
-| Earlier checkpoint | Recorded evidence | Boundary |
-| --- | --- | --- |
-| Layout/crown branch before this merge | 182 Node tests passed with zero failures/skips; 84 crown view/size combinations and canonical digest/aperture/bounds checks passed; source checks and clean extraction/rebuild passed. | Historical pre-combination source/package evidence; browser QA unavailable. |
-| Incoming replay/adaptive-mobile branch | 71 Node tests and 57 settled Chrome audits, including 56 mobile/tablet checks across 17 viewport sizes and one desktop reference. | Applies to the incoming source fingerprinted in its audit record, before this combined layout. |
-| Earlier mobile/navigation baseline | 51 Node tests and 72 settled Chrome layout audits. | Historical pre-layout evidence. |
+The source integrates layout/crown work with replay and adaptive-mobile improvements from `07919b421df5457e778e1b1c6a73512c8f27ba73`. Earlier checkpoints (the layout/crown branch, the incoming replay/adaptive-mobile branch with its Chrome audits, and the mobile/navigation baseline) are historical records with their own counts in [current state and evidence](docs/handoff/01-current-state-and-evidence.md) and [Mobile readiness](MOBILE_READINESS.md). They do not verify the current source.
 
 The [incoming replay/mobile audit record](tests/evidence/replay-mobile-layout-audits.json) retains diagnostic failures separately from successful retests, source fingerprints, and interaction notes. It covers replay, the adaptive dock, mission surfaces, focus, and draft retention for that earlier source. Historical browser JPGs remain in the repository only, including `tests/evidence/replay-mobile-320.jpg`; they are excluded from the handoff. [Mobile readiness](MOBILE_READINESS.md) preserves the detailed records without treating them as validation of this merge.
 
 Layout geometry covers selected project counts through 128: 0, 1, 2, 4, 8, 12, 24, 64, and 128. Mission-packing integration covers every integer count from 0 through 128. These source cases are not browser load or production benchmarks.
 
-Browser QA for the current combined source is unavailable because of the previously encountered browser URL-policy block. Incoming Chrome evidence does not remove that current limitation or verify the merged layout. Node fixtures use DOM facades and numeric inputs. Historical Chrome audits used a browser layout engine but did not establish Safari, a physical keyboard, real multi-touch, VoiceOver, or folding-hardware behavior. This remains a local visual simulation; production integration and device acceptance require separate evidence.
+Headless Chromium QA of the current source ran on 2026-11-19 ([record](tests/evidence/browser-qa-2026-11-19.json), summarized in chapter 01); it does not establish Safari, physical-device, real multi-touch, keyboard-only, or screen-reader acceptance. Incoming Chrome evidence does not remove that current limitation or verify the merged layout. Node fixtures use DOM facades and numeric inputs. Historical Chrome audits used a browser layout engine but did not establish Safari, a physical keyboard, real multi-touch, VoiceOver, or folding-hardware behavior. This remains a local visual simulation; production integration and device acceptance require separate evidence.

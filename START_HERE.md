@@ -12,7 +12,7 @@ The scalable overview and crown refinement now incorporates adaptive-mobile repl
 
 1. Start at the root of your Git checkout. If you received the ZIP, extract it and work from the extracted `Coven_Compass_Handoff_2026-11-19` directory.
 2. Read this file, then [current state and evidence](docs/handoff/01-current-state-and-evidence.md).
-3. For an extracted delivery, run `python3 scripts/verify-handoff.py .` before making edits. In a Git checkout, use the source checks and verify a rebuilt export as described below.
+3. For an extracted delivery, run `python3 scripts/verify-handoff.py .` before making edits. In a Git checkout, run `node scripts/verify-all.mjs` instead: the manifest and checksums are generated into the ZIP and aren't committed, so `verify-handoff.py .` refuses a checkout and says so.
 4. Preview Compass locally. Enter a Project, select a mission, inspect its agents and pending decisions, and try familiar filters and Seal lab. In Projects, use project search and **Try a larger Coven** to explore the 8/16/32/64/128 sample presets; **Remove extra samples** preserves baseline and user-created Projects. Start replay and switch Projects while it plays; on mobile, explore the Map, Missions, Activity, and View dock.
 5. Read [architecture and ownership](docs/handoff/02-architecture-and-ownership.md), then take the discovery packet in the [implementation plan](docs/handoff/05-implementation-plan.md).
 
@@ -31,7 +31,7 @@ The application in `dist/` is editable browser source. The builder generates `di
 
 ## Run and check
 
-From a Git checkout, run the full verification with `sh scripts/verify-checkout.sh`. See [AGENTS.md](AGENTS.md) for editable sources and focused checks.
+From a Git checkout, run the full verification with `node scripts/verify-all.mjs` (`sh scripts/verify-checkout.sh` is the same command). It runs every check below plus the clean-extraction checks, and exits non-zero if any step fails or is skipped. See [AGENTS.md](AGENTS.md) for editable sources and focused checks.
 
 The package has no npm dependencies and needs no application build. Use Node.js 24 and Python 3.10 or newer; the tested runtimes are Node.js 24.22.1 and Python 3.12.14. Exact results are recorded in [the evidence note](docs/handoff/01-current-state-and-evidence.md). The bundled reference fixture makes the unit tests independent of Git history and network access.
 
@@ -44,11 +44,11 @@ python3 -m http.server 8000 --bind 127.0.0.1 --directory dist
 
 Open `http://127.0.0.1:8000/` in your browser. Stop the local preview with Ctrl+C. These preview instructions are for the recipient's local development machine; a managed Sites environment should use its documented preview tooling.
 
-**Combined source-level verification passed:** the full suite recorded **207 passing tests with zero failures, cancellations, or skips**; the crown check passed **84 view/size combinations** plus canonical digest/aperture/bounds/stable-node checks; and the static source checker passed. **Combined clean-extraction, archive rebuilding, and verification passed**, including the full suite and crown/source checks in the extracted copy. The earlier layout/crown branch's 182-test and clean-extraction/rebuild pass is a historical pre-merge checkpoint.
+**Current results are generated:** run `node scripts/verify-all.mjs` from a source checkout. It runs the source, unit, crown, build, ZIP, and clean-extraction checks and records the current counts in [`tests/evidence/current.json`](tests/evidence/current.json). Historical checkpoints, including the earlier layout/crown branch, keep their own counts in [current state and evidence](docs/handoff/01-current-state-and-evidence.md).
 
-The incoming replay/adaptive-mobile branch at `07919b421df5457e778e1b1c6a73512c8f27ba73` recorded 71 Node tests and 57 Chrome audits before this combined layout. It adds a shared live replay timeline that preserves elapsed time and playing/paused state across project focus changes, while imported recordings keep their own extent. Delayed reports do not force replay to the live edge. Its adaptive workspace reuses the original controls; measured header/dock space and the visible viewport support compact, short-landscape, and tablet arrangements.
+The incoming replay/adaptive-mobile branch at `07919b421df5457e778e1b1c6a73512c8f27ba73` recorded its own Node and Chrome evidence before this combined layout. It adds a shared live replay timeline that preserves elapsed time and playing/paused state across project focus changes, while imported recordings keep their own extent. Delayed reports do not force replay to the live edge. Its adaptive workspace reuses the original controls; measured header/dock space and the visible viewport support compact, short-landscape, and tablet arrangements.
 
-Read [MOBILE_READINESS.md](MOBILE_READINESS.md) for the distinct incoming 71-test/57-audit record, the older 51-test/72-audit baseline, and native-device limits. Neither record verifies the combined source. Browser QA for this merge is unavailable because of the prior browser URL-policy block. The current evidence note records the combined source and ZIP results, including the exact clean-extraction commands and inventory counts.
+Read [MOBILE_READINESS.md](MOBILE_READINESS.md) for the distinct incoming replay/mobile record, the older mobile baseline, and native-device limits. Neither record verifies the combined source. Headless Chromium QA of the current source ran on 2026-11-19 ([record](tests/evidence/browser-qa-2026-11-19.json), summarized in chapter 01); it does not establish Safari, physical-device, real multi-touch, keyboard-only, or screen-reader acceptance. The current evidence note records the combined source and ZIP results, including the exact clean-extraction commands and inventory counts.
 
 The checksum verifier validates the delivered snapshot. After intentionally editing files, changed checksums are expected; run the source/unit checks and rebuild the export. A checksum manifest detects byte changes relative to itself. It is not a cryptographic signature or a proof of trust.
 
@@ -87,7 +87,7 @@ The generated ZIP is excluded from its own contents. It can be recreated from th
 - `tests/`: source regression coverage for presentation/layout/viewport geometry, navigation, replay timing/rendering/delayed reports, adaptive mobile controls, gestures/overlays, and mission interactions; the pinned v2 reference source; and historical JSON evidence. Run the full command for the combined count. Replay cases are in [clock](tests/replay-clock.test.cjs), [render](tests/replay-render.test.cjs), and [emission](tests/replay-emission.test.cjs) tests.
 - `MOBILE_READINESS.md`: separate historical mobile and incoming replay/mobile checkpoints, the combined refinement's evidence boundary, and remaining native-device checks.
 - `scripts/`: source and crown checks, repeatable package generation with a fresh export timestamp, and archive/extracted-directory verification.
-- `HANDOFF_MANIFEST.json`, `CHECKSUMS.sha256`: export provenance, file inventory, and byte-integrity checks.
+- `HANDOFF_MANIFEST.json`, `CHECKSUMS.sha256`: export provenance, file inventory, and byte-integrity checks. `build-handoff.py` generates them into each ZIP; they are not committed to the source repository.
 
 Git metadata, credentials, local runtime state, browser profiles, historical QA screenshots, installed dependencies, and previous export archives are intentionally excluded. No license or production authority is created by this package. Preserve the applicable upstream terms and current repository instructions when integrating.
 

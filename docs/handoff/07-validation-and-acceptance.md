@@ -2,7 +2,7 @@
 
 ## Current scalable-layout refinement
 
-**Implemented; combined source-level verification passed.** The final combined suite passed **207 tests with zero failures, cancellations, or skips**; the crown check passed **84 view/size combinations** plus canonical digest/aperture/bounds/stable-node checks; and the static source checker passed. Combined clean-extraction, rebuilding, and archive verification passed; the extracted copy repeated the full suite and crown/source checks successfully. The earlier layout branch's 182-test/package pass and incoming replay branch's 71-test/57-audit pass remain historical checkpoints in [current state and evidence](01-current-state-and-evidence.md). Commands:
+**Implemented; combined source-level verification passed.** `node scripts/verify-all.mjs` runs the suite, crown, and static source checks, then clean-extraction, rebuilding, and archive verification, repeating the suite and crown/source checks in the extracted copy. Current counts are in [`tests/evidence/current.json`](../../tests/evidence/current.json). The earlier layout branch's package pass and the incoming replay branch's Node/Chrome pass remain historical checkpoints in [current state and evidence](01-current-state-and-evidence.md). Commands:
 
 ```sh
 node scripts/check-source.mjs
@@ -10,7 +10,7 @@ node --test --test-reporter=tap tests/*.test.cjs
 node scripts/test-atlas-crown.mjs
 ```
 
-The layout module's sweep covers selected project counts through 128 (0, 1, 2, 4, 8, 12, 24, 64, and 128) as geometric correctness cases; mission packing covers every integer count from 0 through 128. It is not a load test or production benchmark. Current browser QA is unavailable because of the prior browser URL-policy block. Historical pre-layout Chrome records and source fingerprints do not establish visual or interaction acceptance of the new layout, density modes, sample controls, crown, or fit behavior. [Guide 15](15-scalable-atlas-layout.md) supplies the current presentation contract and remaining browser cases.
+The layout module's sweep covers selected project counts through 128 (0, 1, 2, 4, 8, 12, 24, 64, and 128) as geometric correctness cases; mission packing covers every integer count from 0 through 128. It is not a load test or production benchmark. Headless Chromium QA of the current source ran on 2026-11-19 ([record](../../tests/evidence/browser-qa-2026-11-19.json), summarized in chapter 01); it does not establish Safari, physical-device, real multi-touch, keyboard-only, or screen-reader acceptance. Historical pre-layout Chrome records and source fingerprints do not establish visual or interaction acceptance of the new layout, density modes, sample controls, crown, or fit behavior. [Guide 15](15-scalable-atlas-layout.md) supplies the current presentation contract and remaining browser cases.
 
 ## Historical v3 baseline evidence
 
@@ -32,7 +32,7 @@ The source ledger records a generated static preview for the saved v3 Site versi
 
 ## Historical pre-layout mobile verification
 
-Before the scalable-layout refinement, `node --test tests/*.test.cjs` passed **51/51 tests** in the mobile pass. [MOBILE_READINESS.md](../../MOBILE_READINESS.md) records that historical navigation, gesture, overlay, and mission-interaction coverage, 72 settled Chrome layout audits, observed browser flows, and remaining checks. These results supplement the original seven-test baseline; they are not the current source-suite total or a current browser pass. Chrome viewport stress tests also do not establish native iOS keyboard or device acceptance.
+Before the scalable-layout refinement, the mobile pass ran `node --test tests/*.test.cjs` with no failures. [MOBILE_READINESS.md](../../MOBILE_READINESS.md) records that historical test count, navigation, gesture, overlay, and mission-interaction coverage, its settled Chrome layout audits, observed browser flows, and remaining checks. These results supplement the original seven-test baseline; they are not the current source-suite total or a current browser pass. Chrome viewport stress tests also do not establish native iOS keyboard or device acceptance.
 
 The source/package checkers and clean-extraction verification supply additional export evidence when run and recorded. They do not establish a real daemon, installed CLI, remote Host, security review, production conformance, or pilot acceptance. Those remain **unknown/unverified** until the following gates are satisfied.
 
