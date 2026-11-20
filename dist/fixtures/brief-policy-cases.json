@@ -1,0 +1,214 @@
+{
+  "schema": "coven-compass.brief-policy-cases/proposal-0",
+  "synthetic": true,
+  "note": "Synthetic cases for the issue #35 proposal. None of these records came from Psyche or Coven, and none is authoritative. Digests and ids are placeholders.",
+  "asOf": "2026-11-20T12:00:00Z",
+  "policies": {
+    "report-r1": {
+      "revision": "pol-report-r1",
+      "required": [
+        {"id": "tests", "label": "Tests pass on the candidate", "remediable": true},
+        {"id": "no-secrets", "label": "No credentials in the delivered files", "remediable": false}
+      ],
+      "rubric": {
+        "scale": {"min": 1, "max": 5},
+        "aggregation": "weighted-mean/1",
+        "minScore": 3.5,
+        "criteria": [
+          {"id": "clarity", "label": "Clarity", "weight": 1, "floor": 2, "anchors": {"1": "A reviewer can't follow it", "3": "Followable with effort", "5": "Clear to a newcomer"}},
+          {"id": "accuracy", "label": "Accuracy", "weight": 2, "floor": 3, "anchors": {"1": "Claims contradict the sources", "3": "Mostly sourced", "5": "Every claim traced to a source"}}
+        ]
+      },
+      "limits": {"maxAttempts": 3, "resources": {"usd": 12, "minutes": 90}, "deadline": "2026-12-01T00:00:00Z"},
+      "onExhausted": "escalate"
+    },
+    "report-r2": {
+      "revision": "pol-report-r2",
+      "required": [
+        {"id": "tests", "label": "Tests pass on the candidate", "remediable": true},
+        {"id": "no-secrets", "label": "No credentials in the delivered files", "remediable": false}
+      ],
+      "rubric": {
+        "scale": {"min": 1, "max": 5},
+        "aggregation": "weighted-mean/1",
+        "minScore": 4,
+        "criteria": [
+          {"id": "clarity", "label": "Clarity", "weight": 1, "floor": 2, "anchors": {"1": "A reviewer can't follow it", "3": "Followable with effort", "5": "Clear to a newcomer"}},
+          {"id": "accuracy", "label": "Accuracy", "weight": 2, "floor": 3, "anchors": {"1": "Claims contradict the sources", "3": "Mostly sourced", "5": "Every claim traced to a source"}}
+        ]
+      },
+      "limits": {"maxAttempts": 3, "resources": {"usd": 12, "minutes": 90}, "deadline": "2026-12-01T00:00:00Z"},
+      "onExhausted": "escalate"
+    }
+  },
+  "cases": {
+    "brief-rubric-pass": {
+      "title": "Rubric pass",
+      "mission": "Release note",
+      "summary": "Both required conditions pass and the rubric scores 4 of 5 on the current candidate.",
+      "policy": "report-r1",
+      "record": {
+        "candidate": {"digest": "sha256:c1-placeholder", "attempt": "att_1"},
+        "attempts": [{"id": "att_1", "state": "completed", "usd": 3, "minutes": 25, "effects": "settled"}],
+        "evaluations": [{"id": "ver_1", "policyRevision": "pol-report-r1", "candidate": {"digest": "sha256:c1-placeholder", "attempt": "att_1"},
+          "evaluator": {"id": "reviewer-sage", "method": "anchored rubric review"}, "evidence": [{"id": "evi_1", "digest": "sha256:e1-placeholder"}],
+          "conditions": {"tests": "pass", "no-secrets": "pass"}, "scores": {"clarity": 4, "accuracy": 4}}],
+        "authorization": null, "cancelled": false
+      },
+      "expect": {"action": "request-authorized-acceptance", "reason": "eligible"}
+    },
+    "brief-rubric-fail": {
+      "title": "Rubric fail",
+      "mission": "Release note",
+      "summary": "Both required conditions pass, but the rubric scores 3 of 5, under its minimum of 3.5. One of three attempts is used.",
+      "policy": "report-r1",
+      "record": {
+        "candidate": {"digest": "sha256:c1-placeholder", "attempt": "att_1"},
+        "attempts": [{"id": "att_1", "state": "completed", "usd": 3, "minutes": 25, "effects": "settled"}],
+        "evaluations": [{"id": "ver_1", "policyRevision": "pol-report-r1", "candidate": {"digest": "sha256:c1-placeholder", "attempt": "att_1"},
+          "evaluator": {"id": "reviewer-sage", "method": "anchored rubric review"}, "evidence": [{"id": "evi_1", "digest": "sha256:e1-placeholder"}],
+          "conditions": {"tests": "pass", "no-secrets": "pass"}, "scores": {"clarity": 3, "accuracy": 3}}],
+        "authorization": null, "cancelled": false
+      },
+      "expect": {"action": "request-bounded-revision", "reason": "remediable-failure"}
+    },
+    "brief-hard-failure": {
+      "title": "Hard failure",
+      "mission": "Release note",
+      "summary": "The rubric scores a perfect 5, but a credential was found in the delivered files. That condition allows no revision.",
+      "policy": "report-r1",
+      "record": {
+        "candidate": {"digest": "sha256:c1-placeholder", "attempt": "att_1"},
+        "attempts": [{"id": "att_1", "state": "completed", "usd": 3, "minutes": 25, "effects": "settled"}],
+        "evaluations": [{"id": "ver_1", "policyRevision": "pol-report-r1", "candidate": {"digest": "sha256:c1-placeholder", "attempt": "att_1"},
+          "evaluator": {"id": "reviewer-sage", "method": "anchored rubric review"}, "evidence": [{"id": "evi_1", "digest": "sha256:e1-placeholder"}, {"id": "evi_2", "digest": "sha256:e2-placeholder"}],
+          "conditions": {"tests": "pass", "no-secrets": "fail"}, "scores": {"clarity": 5, "accuracy": 5}}],
+        "authorization": null, "cancelled": false
+      },
+      "expect": {"action": "stop-escalate", "reason": "hard-failure"}
+    },
+    "brief-missing-evidence": {
+      "title": "Missing evidence",
+      "mission": "Release note",
+      "summary": "Tests pass, but nobody has reported on credentials. A second evaluation cites no sealed evidence, so it isn't counted.",
+      "policy": "report-r1",
+      "record": {
+        "candidate": {"digest": "sha256:c1-placeholder", "attempt": "att_1"},
+        "attempts": [{"id": "att_1", "state": "completed", "usd": 3, "minutes": 25, "effects": "settled"}],
+        "evaluations": [
+          {"id": "ver_1", "policyRevision": "pol-report-r1", "candidate": {"digest": "sha256:c1-placeholder", "attempt": "att_1"},
+            "evaluator": {"id": "reviewer-sage", "method": "anchored rubric review"}, "evidence": [{"id": "evi_1", "digest": "sha256:e1-placeholder"}],
+            "conditions": {"tests": "pass"}, "scores": {"clarity": 4, "accuracy": 4}},
+          {"id": "ver_2", "policyRevision": "pol-report-r1", "candidate": {"digest": "sha256:c1-placeholder", "attempt": "att_1"},
+            "evaluator": {"id": "familiar-self-report", "method": "model self-report"}, "evidence": [],
+            "conditions": {"no-secrets": "pass"}}
+        ],
+        "authorization": null, "cancelled": false
+      },
+      "expect": {"action": "wait-for-evidence", "reason": "evidence-missing"}
+    },
+    "brief-stale-evaluation": {
+      "title": "Stale candidate and policy",
+      "mission": "Release note",
+      "summary": "The rubric changed (revision r2) and a second candidate exists. One grade is for the old policy and one is for the old candidate, so neither counts.",
+      "policy": "report-r2",
+      "record": {
+        "candidate": {"digest": "sha256:c2-placeholder", "attempt": "att_2"},
+        "attempts": [
+          {"id": "att_1", "state": "completed", "usd": 3, "minutes": 25, "effects": "settled"},
+          {"id": "att_2", "state": "completed", "usd": 2, "minutes": 20, "effects": "settled"}
+        ],
+        "evaluations": [
+          {"id": "ver_1", "policyRevision": "pol-report-r1", "candidate": {"digest": "sha256:c2-placeholder", "attempt": "att_2"},
+            "evaluator": {"id": "reviewer-sage", "method": "anchored rubric review"}, "evidence": [{"id": "evi_3", "digest": "sha256:e3-placeholder"}],
+            "conditions": {"tests": "pass", "no-secrets": "pass"}, "scores": {"clarity": 5, "accuracy": 5}},
+          {"id": "ver_2", "policyRevision": "pol-report-r2", "candidate": {"digest": "sha256:c1-placeholder", "attempt": "att_1"},
+            "evaluator": {"id": "reviewer-sage", "method": "anchored rubric review"}, "evidence": [{"id": "evi_1", "digest": "sha256:e1-placeholder"}],
+            "conditions": {"tests": "pass", "no-secrets": "pass"}, "scores": {"clarity": 5, "accuracy": 5}}
+        ],
+        "authorization": null, "cancelled": false
+      },
+      "expect": {"action": "wait-for-evidence", "reason": "evidence-missing"}
+    },
+    "brief-remediable-failure": {
+      "title": "Remediable failure",
+      "mission": "Release note",
+      "summary": "The rubric passes, but tests fail. That condition allows a revision, and the limits leave room for one.",
+      "policy": "report-r1",
+      "record": {
+        "candidate": {"digest": "sha256:c1-placeholder", "attempt": "att_1"},
+        "attempts": [{"id": "att_1", "state": "completed", "usd": 3, "minutes": 25, "effects": "settled"}],
+        "evaluations": [{"id": "ver_1", "policyRevision": "pol-report-r1", "candidate": {"digest": "sha256:c1-placeholder", "attempt": "att_1"},
+          "evaluator": {"id": "ci-runner", "method": "test suite on the candidate"}, "evidence": [{"id": "evi_1", "digest": "sha256:e1-placeholder"}],
+          "conditions": {"tests": "fail", "no-secrets": "pass"}, "scores": {"clarity": 4, "accuracy": 4}}],
+        "authorization": null, "cancelled": false
+      },
+      "expect": {"action": "request-bounded-revision", "reason": "remediable-failure"}
+    },
+    "brief-budget-exhausted": {
+      "title": "Exhausted budget",
+      "mission": "Release note",
+      "summary": "The third attempt still scores under the minimum. Three of three attempts and $12 of $12 are used across all attempts.",
+      "policy": "report-r1",
+      "record": {
+        "candidate": {"digest": "sha256:c3-placeholder", "attempt": "att_3"},
+        "attempts": [
+          {"id": "att_1", "state": "completed", "usd": 5, "minutes": 30, "effects": "settled"},
+          {"id": "att_2", "state": "completed", "usd": 4, "minutes": 25, "effects": "settled"},
+          {"id": "att_3", "state": "completed", "usd": 3, "minutes": 20, "effects": "settled"}
+        ],
+        "evaluations": [{"id": "ver_3", "policyRevision": "pol-report-r1", "candidate": {"digest": "sha256:c3-placeholder", "attempt": "att_3"},
+          "evaluator": {"id": "reviewer-sage", "method": "anchored rubric review"}, "evidence": [{"id": "evi_5", "digest": "sha256:e5-placeholder"}],
+          "conditions": {"tests": "pass", "no-secrets": "pass"}, "scores": {"clarity": 3, "accuracy": 3}}],
+        "authorization": null, "cancelled": false
+      },
+      "expect": {"action": "stop-escalate", "reason": "limits-exhausted"}
+    },
+    "brief-cancelled": {
+      "title": "Cancellation",
+      "mission": "Release note",
+      "summary": "The mission was cancelled while its first attempt was being graded.",
+      "policy": "report-r1",
+      "record": {
+        "candidate": {"digest": "sha256:c1-placeholder", "attempt": "att_1"},
+        "attempts": [{"id": "att_1", "state": "cancelled", "usd": 1, "minutes": 8, "effects": "settled"}],
+        "evaluations": [],
+        "authorization": null, "cancelled": true
+      },
+      "expect": {"action": "stop-escalate", "reason": "cancelled"}
+    },
+    "brief-unresolved-effects": {
+      "title": "Unresolved prior effects",
+      "mission": "Release note",
+      "summary": "The rubric fails on the second attempt. The first attempt's external effects were never resolved, so no third attempt may start.",
+      "policy": "report-r1",
+      "record": {
+        "candidate": {"digest": "sha256:c2-placeholder", "attempt": "att_2"},
+        "attempts": [
+          {"id": "att_1", "state": "unknown", "usd": 2, "minutes": 15, "effects": "unresolved"},
+          {"id": "att_2", "state": "completed", "usd": 3, "minutes": 25, "effects": "settled"}
+        ],
+        "evaluations": [{"id": "ver_2", "policyRevision": "pol-report-r1", "candidate": {"digest": "sha256:c2-placeholder", "attempt": "att_2"},
+          "evaluator": {"id": "reviewer-sage", "method": "anchored rubric review"}, "evidence": [{"id": "evi_4", "digest": "sha256:e4-placeholder"}],
+          "conditions": {"tests": "pass", "no-secrets": "pass"}, "scores": {"clarity": 3, "accuracy": 3}}],
+        "authorization": null, "cancelled": false
+      },
+      "expect": {"action": "stop-escalate", "reason": "unresolved-prior-effects"}
+    },
+    "brief-authorization-expired": {
+      "title": "Expired authorization",
+      "mission": "Release note",
+      "summary": "The rubric fails and another attempt was requested, but its authorization expired. It isn't retried automatically.",
+      "policy": "report-r1",
+      "record": {
+        "candidate": {"digest": "sha256:c1-placeholder", "attempt": "att_1"},
+        "attempts": [{"id": "att_1", "state": "completed", "usd": 3, "minutes": 25, "effects": "settled"}],
+        "evaluations": [{"id": "ver_1", "policyRevision": "pol-report-r1", "candidate": {"digest": "sha256:c1-placeholder", "attempt": "att_1"},
+          "evaluator": {"id": "reviewer-sage", "method": "anchored rubric review"}, "evidence": [{"id": "evi_1", "digest": "sha256:e1-placeholder"}],
+          "conditions": {"tests": "pass", "no-secrets": "pass"}, "scores": {"clarity": 3, "accuracy": 3}}],
+        "authorization": {"for": "attempt", "state": "expired"}, "cancelled": false
+      },
+      "expect": {"action": "stop-escalate", "reason": "authorization-needs-resolution"}
+    }
+  }
+}
