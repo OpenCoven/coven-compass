@@ -3856,26 +3856,39 @@ function syncInspect(force) {
   all.forEach(a => { const r = insp.dots.get(a.id); if (!r) return; r.dot.className = 'dot ' + a.state + (r.co ? ' co' : ''); if (r.st) r.st.textContent = ', ' + STATE[a.state].toLowerCase(); else r.btn.setAttribute('aria-label', `${a.id}, ${STATE[a.state].toLowerCase()}`); });
 }
 function agentInfo(a, previous) {
-  const c = cur(), e = previous && previous.dataset.agent === a.id ? previous : html('div', 'a-info'), name = fam(a.fam).name, M = c.world.missions.get(a.mission);
+  const w = cur().world, e = previous && previous.dataset.agent === a.id ? previous : html('div', 'a-info');
   if (!e.firstElementChild) {
     e.dataset.agent = a.id; e.setAttribute('role', 'group'); e.setAttribute('aria-labelledby', 'agentDetailTitle');
-    const top = html('div', 'a-top'), title = html('h3', 'id', 'Agent ' + a.id), actions = html('div', 'tgs');
+    const top = html('div', 'a-top'), title = html('h3', 'id', 'Agent ' + a.id);
     title.id = 'agentDetailTitle'; title.tabIndex = -1; title.dataset.focus = 'agent-detail-title-' + a.id;
-    top.append(title, html('span', 'st')); e.appendChild(top);
-    ['work', 'context', 'mission'].forEach((key, i) => { const line = html('div', i ? 'sub' : 'ln'); line.setAttribute('data-agent-field', key); e.appendChild(line); });
-    const review = html('button', 'btn', 'Review in Inbox'); review.type = 'button'; review.setAttribute('data-agent-action', 'review'); review.dataset.focus = 'agent-detail-review-' + a.id;
+    const close = html('button', 'btn agent-close');
+    close.type = 'button'; close.title = 'Close agent details'; close.setAttribute('aria-label', close.title);
+    close.appendChild(html('span', 'sr', close.title));
+    close.setAttribute('data-agent-action', 'close'); close.dataset.focus = 'agent-detail-close-' + a.id;
+    close.addEventListener('click', () => clearPick(true)); top.append(title, close);
+    const work = html('p', 'agent-activity'); work.setAttribute('data-agent-field', 'work');
+    const status = html('div', 'agent-status'); status.append(html('span', 'st'), html('span', 'agent-elapsed'));
+    const facts = html('dl', 'agent-facts');
+    for (const [key, label] of [['task', 'Task'], ['leads', 'Led by'], ['mission', 'Mission'], ['gate', 'Gate']]) {
+      const row = html('div'), val = html('dd'); val.setAttribute('data-agent-field', key);
+      row.append(html('dt', '', label), val); facts.appendChild(row);
+    }
+    const review = html('button', 'btn agent-review', 'Review in Inbox'); review.type = 'button'; review.setAttribute('data-agent-action', 'review'); review.dataset.focus = 'agent-detail-review-' + a.id;
     review.addEventListener('click', () => { const current = cur().world.agents.get(e.dataset.agent); if (current && current.ask) flashAsk(current.ask); });
-    const close = html('button', 'btn', 'Close agent details'); close.type = 'button'; close.setAttribute('data-agent-action', 'close'); close.dataset.focus = 'agent-detail-close-' + a.id;
-    close.addEventListener('click', () => clearPick(true)); actions.append(review, close); e.appendChild(actions);
+    e.append(top, work, status, facts, review);
   }
+  const task = w.tasks.get(a.task), mission = w.missions.get(a.mission), request = a.state === 'gate' && w.asks.get(a.ask);
   e.style.setProperty('--hue', fam(a.fam).hue);
+  const field = key => e.querySelector(`[data-agent-field="${key}"]`);
+  field('work').textContent = request ? request.title : a.state === 'work' ? a.doing || 'Working on assignment' : a.state === 'gate' ? 'Waiting for approval' : 'Waiting for work';
   const state = e.querySelector('.st'); state.className = 'st ' + a.state; state.textContent = STATE[a.state];
-  const q = a.ask ? c.world.asks.get(a.ask) : null, gated = a.state === 'gate' && q, T = a.task ? c.world.tasks.get(a.task) : null;
-  e.querySelector('[data-agent-field="work"]').textContent = gated ? q.title : a.state === 'work' ? a.doing : 'Waiting for work';
-  e.querySelector('[data-agent-field="context"]').textContent = gated ? `${name} · ${GATE_NAME[q.gate]} gate · waiting ${ago(a)}` : `${T ? 'Task: ' + T.name : 'No task'} · ${a.state === 'work' ? 'for' : 'idle'} ${ago(a)}`;
-  const mission = e.querySelector('[data-agent-field="mission"]'); mission.hidden = !!gated;
-  if (!gated) mission.textContent = `${T && T.leads.length > 1 ? 'Led by ' + T.leads.map(k => fam(k).name).join(' and ') : name} on ${M ? M.name : 'no mission'}`;
-  e.querySelector('[data-agent-action="review"]').hidden = !gated;
+  e.querySelector('.agent-elapsed').textContent = ago(a) + ' in this state';
+  field('task').textContent = task ? task.name : 'Unassigned';
+  field('mission').textContent = mission ? mission.name : 'No mission';
+  field('leads').textContent = (task && task.leads.length ? task.leads : [a.fam]).map(k => fam(k).name).join(' and ');
+  const gate = field('gate'); gate.parentNode.hidden = !request;
+  if (request) gate.textContent = (GATE_NAME[request.gate] || request.gate) + ' gate';
+  e.querySelector('[data-agent-action="review"]').hidden = !request;
   return e;
 }
 function pick(id, via) {
