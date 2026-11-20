@@ -7,6 +7,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
+const { loadSimulationModel } = require('./simulation-model-deps.cjs');
 const test = require('node:test');
 const layout = require('../dist/atlas-layout.js');
 const viewport = require('../dist/atlas-viewport.js');
@@ -400,7 +401,7 @@ test('replay removal restores the pre-selection manual camera and automatic-fit 
     camBack: {zoom: 0.4, px: 17, py: -20, autoFit: false},
   };
   const context = load(['seek'], {
-    newWorld, window: {CovenMissionNavigation: navigation}, atlasNavigationReady: true,
+    newWorld, SimModel: loadSimulationModel(), window: {CovenMissionNavigation: navigation}, atlasNavigationReady: true,
     atlasAutoFit: true, cam: {locked: false}, camT: {zoom: 2.3, px: 5, py: 9, yaw: 17, pitch: 24},
     cur: () => project, projects: {sample: project}, active: 'sample',
   });

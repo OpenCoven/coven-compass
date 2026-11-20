@@ -40,6 +40,22 @@ test('simulation source wraps the existing snapshot and is labelled simulated, n
   assert.equal(p.projects[1].missions, 0, 'a real simulated zero stays zero');
 });
 
+test('simulation source can read the simulation model directly through worlds and summarize', async () => {
+  const model = require('./simulation-model-deps.cjs').loadSimulationModel();
+  const w = model.newWorld();
+  model.apply(w, {t: 1, type: 'mission.opened', mission: 'm1'});
+  let reads = 0;
+  const source = P.createSimulationSource({worlds: () => { reads++; return [['Northwatch', w], ['Saltmarsh', model.newWorld()]]; }, summarize: model.summarize});
+  assert.equal(reads, 0, 'creating the source must not read the simulation');
+  const p = await source.read();
+  assert.equal(p.availability.state, 'simulated');
+  assert.equal(p.source.authoritative, false);
+  assert.deepEqual(p.projects, [
+    {id: 'Northwatch', name: 'Northwatch', root: null, missions: 1, agents: 0, needs: 0},
+    {id: 'Saltmarsh', name: 'Saltmarsh', root: null, missions: 0, agents: 0, needs: 0}]);
+  assert.throws(() => P.createSimulationSource({worlds: () => []}), /snapshot function, or worlds and summarize/);
+});
+
 test('fresh fixture follows keyset pages and keeps id, name, and root separate', async () => {
   const p = await read('fresh');
   assert.equal(p.availability.state, 'fresh');
@@ -138,7 +154,7 @@ test('index.html stops before the simulation boots in any non-simulation mode', 
   assert.match(block, /renderStandalone\(/);
   assert.match(block, /\n {2}return;\n\}/, 'non-simulation modes return before the simulation');
   assert.match(block, /did not load\. No sample data is shown\./, 'a missing module still does not fall back to the simulation');
-  assert.match(index, /register\(window\.CovenProjection\.createSimulationSource\(\{snapshot: \(\) => atlasSnapshot\(false\)\}\)\)/);
+  assert.match(index, /register\(window\.CovenProjection\.createSimulationSource\(\{worlds: \(\) => Object\.keys\(projects\)\.map\(k => \[k, projects\[k\]\.world\]\), summarize: SimModel\.summarize\}\)\)/);
 });
 
 function fakeDocument() {
