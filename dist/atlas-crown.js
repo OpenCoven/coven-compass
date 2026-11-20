@@ -1,7 +1,7 @@
 /*
  * Coven Atlas — dimensional scene crown.
- * Front and back reference the unmodified canonical #crown symbol. Flat UI marks
- * are outside this renderer. No filters, gradients, animation, or external code.
+ * The front uses the shared faceted Psyche symbol. The rear and side contours
+ * follow its canonical silhouette. The whole mark stays upright during orbit.
  *
  * The two edge contours below are derived from dist/index.html's #crown path,
  * not a replacement brand asset. Cubic Béziers were adaptively subdivided with
@@ -56,14 +56,14 @@
       'aria-hidden': 'true', focusable: 'false', 'pointer-events': 'none',
       'shape-rendering': 'geometricPrecision', filter: 'none'
     }, parent);
-    function face(cls, fill) {
+    function face(cls, fill, symbol) {
       return make('use', {
-        'class': cls, href: '#crown',
+        'class': cls, href: symbol,
         x: -0.5, y: -ASPECT / 2, width: 1, height: ASPECT,
         fill: fill, stroke: 'none', filter: 'none'
       }, g);
     }
-    var back = face('atlas-crown-back', RIM_FILL);
+    var back = face('atlas-crown-back', RIM_FILL, '#crown');
     var sides = make('g', { 'class': 'atlas-crown-sides' }, g);
     var edges = [];
     CONTOURS.forEach(function (points, contour) {
@@ -83,7 +83,7 @@
         });
       });
     });
-    var front = face('atlas-crown-front', FACE_FILL);
+    var front = face('atlas-crown-front', FACE_FILL, '#psyche-crown');
     var record = { g: g, back: back, sides: sides, front: front, edges: edges, bounds: null };
     draw(record, { x: 0, y: 0, size: 1 });
     return record;

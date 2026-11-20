@@ -153,7 +153,7 @@
     var stage = $('stage');
     var head = node('header', 'atlas-header'); head.id = 'atlasHeader';
     var brand = node('div', 'atlas-brand');
-    brand.innerHTML = '<svg viewBox="0 0 2048 1889" aria-hidden="true"><use href="#crown" width="2048" height="1889"/></svg>';
+    brand.innerHTML = '<svg viewBox="0 0 2048 1889" aria-hidden="true"><use href="#psyche-crown" width="2048" height="1889"/></svg>';
     brand.append(node('b', '', 'Compass'));
     var nav = node('nav', 'atlas-nav'); nav.setAttribute('aria-label', 'Workspace scope');
     nav.append(

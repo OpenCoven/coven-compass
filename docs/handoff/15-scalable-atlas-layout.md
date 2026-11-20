@@ -79,9 +79,9 @@ When replay removes a selected mission, selection reconciliation restores the sa
 
 ## 5. One canonical crown with restrained depth
 
-The scene crown uses the existing `#crown` symbol as its exact front and back faces. Derived edge samples form the extrusion's side walls, including the central aperture. The canonical path remains the identity-bearing asset; the sampled geometry is a rendering aid, not an alternative logo. Its provenance is recorded in the renderer and guarded by the dedicated crown check. [Renderer](../../dist/atlas-crown.js) · [Crown check](../../scripts/test-atlas-crown.mjs)
+The scene, header, key and conversation use the same faceted Psyche crown. Its inset section projects along a fourth coordinate to three quarters of the outer section. The connecting facets are clipped to the original crown silhouette. The scene adds a shallow rear face using the same silhouette. Derived edge samples form the extrusion's side walls, including the central aperture. The canonical path remains the identity-bearing asset; the sampled geometry is a rendering aid, not an alternative logo. Its provenance is recorded in the renderer and guarded by the dedicated crown check. [Renderer](../../dist/atlas-crown.js) · [Crown check](../../scripts/test-atlas-crown.mjs)
 
-Both map centers use the same lavender as the flat Psyche marks. A single darker lavender rim adds shallow, proportional depth along the bottom. The face stays upright as the camera orbits, preserving the canonical proportions and aperture. The rim is decorative, while mission-seal relief represents progress.
+Both map centers use the same lavender as the flat Psyche marks. A single darker lavender rim adds shallow, proportional depth along the bottom. The face stays upright as the camera orbits, preserving the canonical proportions and aperture. The tetrahedron familiar also keeps its upright portrait and level base in orbit and in the familiar editor. The rim is decorative, while mission-seal relief represents progress.
 
 The integration interface is:
 

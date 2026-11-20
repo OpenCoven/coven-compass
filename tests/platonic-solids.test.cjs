@@ -26,3 +26,16 @@ test('familiar solids have regular faces, equal edges, and a closed surface', ()
     assert.equal(V.length - edges.size + F.length, 2, name);
   }
 });
+
+test('tetrahedron portrait has a centered apex, a level base and two visible faces', () => {
+  const {V, F} = meshes.Tetrahedron;
+  const tetra = vm.runInNewContext(source.slice(source.indexOf('const tetrahedronView'), source.indexOf('function solidPreview')) + '\ntetrahedronView');
+  const [apex, ...base] = V;
+  assert.equal(new Set(base.map(p => p[2])).size, 1);
+  const [tipX, tipY] = tetra.point(apex);
+  assert.equal(tipX, 0);
+  assert(base.every(vertex => tetra.point(vertex)[1] > tipY));
+  assert.equal(tetra.point(base[0])[1], tetra.point(base[1])[1]);
+  assert.equal(tetra.point(base[0])[0], -tetra.point(base[1])[0]);
+  assert.equal(F.filter(({n}) => n.reduce((sum, v, i) => sum + v * tetra.direction[i], 0) > 0).length, 2);
+});
