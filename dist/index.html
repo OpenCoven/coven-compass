@@ -3069,6 +3069,7 @@ $('vAll').addEventListener('click', () => {
   if (cur().sel) select(null, null, null, {history: false, focus: false});
   atlasScope = 'coven'; document.body.dataset.atlasScope = 'coven';
   drawNew();
+  window.CovenMobileUI?.settleMapViewport();
   atlasFitScene(true);
   if (window.CovenAtlas) window.CovenAtlas.update();
   atlasWriteRoute();
