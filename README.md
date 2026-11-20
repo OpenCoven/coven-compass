@@ -41,12 +41,12 @@ Coven/project scope is explicit and separate from camera zoom. Fit uses measured
 - **Uniform four-corner enclosure:** one project's scope. Every project uses the same overview treatment, including the currently active project.
 - **Circular mission seal:** one mission. Wedge angle is the share of its agents led by each familiar; wedge height is progress on that familiar's role-owned targets; the central signet expresses mission state.
 - **Stable familiar glyph and hue:** identity across projects, councils, and delegated agents. Changing the camera angle does not change the familiar's mark.
-- **Small uniform dots:** individual agents, revealed for the selected mission. Their state and familiar affiliation remain available in the detail views.
+- **Agent marks:** circles indicate unassigned agents and tiles indicate task assignments in the selected mission. Their state and familiar affiliation remain available in the detail views.
 - **Near-white boundary square:** a pending permission or resource-limit decision. Selecting it opens that project's pending decisions; its presence does not mean the requested operation was approved.
 - **Central Psyche crown:** coordination within the current scope. Its relief is decorative, while project connections remain neutral until a familiar filter highlights that familiar's assignments.
 - **Coral seal rim:** the tightest time, token, or budget limit has reached 85%, or the mission is broken after stopping at a limit.
 
-The Coven overview shows Project boundaries, exact mission counts, and pending-decision badges. Entering a Project reveals mission seals and familiar glyphs. Selecting a mission shows its state, one decision preview, and individual agent dots when spacing allows. The Inbox holds all pending decisions, and mission details retain exact counts. Zoom changes presentation density while preserving the current scope.
+The Coven overview shows Project boundaries, exact mission counts, and pending-decision badges. Entering a Project reveals mission seals and familiar glyphs. Selecting a mission shows its state, one decision preview, and individual agent marks when spacing allows. The Inbox holds all pending decisions, and mission details retain exact counts. Zoom changes presentation density while preserving the current scope.
 
 The v27 seal constraints remain: a 12-degree minimum wedge angle, at most eight rendered council wedges, and at most twelve working pips per familiar. The minimum angle can enlarge very small shares; exact agent counts remain available in detail views.
 
@@ -87,7 +87,7 @@ Both sources implement one interface, `read() → Promise<Projection>`, describe
 - `dist/projection-source.js`, `dist/fixtures/cave-projects-list.json`: the projection seam and its static fixture (see Projection sources below).
 - `dist/mobile-interactions.js`: pointer geometry, camera gestures, and visual viewport geometry.
 - `dist/mobile-ui.js`: responsive portals, adaptive workspace dock, measured map space, modal stacking, focus restoration, keyboard handling, and viewport variables.
-- `dist/semantic-map.css`: scope-specific scene visibility, familiar glyphs, agent dots, and boundary decision markers.
+- `dist/semantic-map.css`: scope-specific scene visibility, familiar glyphs, agent marks, and boundary decision markers.
 - `dist/seal-lab.js`, `dist/seal-lab.css`: an isolated visual explorer using the actual seal renderer.
 - `tests/*.test.cjs`: focused Node regression tests for layout, viewport geometry, routes, replay, focus, modal ownership, forms, gestures, and preserved seal geometry. Run the command above for the current count.
 - `scripts/test-atlas-crown.mjs`: canonical-path provenance, aperture, finite geometry, footprint, and SVG record-reuse checks.

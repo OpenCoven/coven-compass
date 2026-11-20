@@ -1828,57 +1828,22 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
 <div class="modal" id="keyModal" hidden>
   <div class="modal-bg" id="keyBg"></div>
   <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="keyTitle">
-    <header class="hd"><span class="hd-i" id="keyIc"></span><h2 class="hd-t" id="keyTitle">Key</h2><span class="hd-m">what each mark means, and how to move around</span><button class="btn x" type="button" id="keyX" aria-label="Close">×</button></header>
-    <div class="kz-grid">
-      <div class="kz-col">
-      <section class="kz" aria-labelledby="kzColor"><h3 id="kzColor"><i class="kz-t" style="--hue:var(--primary)"></i>Color <span>who it belongs to</span></h3>
-        <div class="kz-r"><span class="kz-m"><i class="kd" style="--hue:var(--primary)"></i></span><div><b>Lavender</b><p>Psyche, the ward, and what Psyche sends</p></div></div>
-        <div class="kz-r"><span class="kz-m"><i class="kd" style="--hue:var(--attention)"></i></span><div><b>Near-white</b><p>Waiting on you</p></div></div>
-        <div class="kz-r"><span class="kz-m"><i class="kd" style="--hue:var(--warn)"></i></span><div><b>Coral</b><p>A resource limit is near or the mission was kept stopped at a limit</p></div></div>
-        <div class="kz-r"><span class="kz-m" id="kzDots"></span><div><b>A familiar’s color</b><p>That familiar and everything it leads</p></div></div>
-        <div class="kz-fams" id="kzFams"></div>
-      </section>
-      <section class="kz" aria-labelledby="kzMove"><h3 id="kzMove"><i class="kz-t"></i>Moving around <span>with the map focused</span></h3>
-        <div class="kz-k"><kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd><span>Move</span></div>
+    <header class="hd"><span class="hd-i" id="keyIc"></span><h2 class="hd-t" id="keyTitle">Map key</h2><button class="btn x" type="button" id="keyX" aria-label="Close">×</button></header>
+    <div class="key-reader">
+      <p class="key-context">Local simulation · Decisions and chat affect sample data only.</p>
+<div class="kz-r"><span class="kz-m"><svg viewBox="0 0 20 20" aria-hidden="true"><path class="kl" d="M8 3H6L3 6v8l3 3h8l3-3V6l-3-3h-2"/></svg></span><div><b>Project</b><p>Open the boundary to explore its missions.</p></div></div>
+<div class="kz-r"><span class="kz-m"><svg viewBox="-9 -9 18 18" aria-hidden="true" style="color:var(--primary)"><use href="#crown" x="-8.4" y="-8.1" width="16.8" height="15.5" fill="currentColor"/></svg></span><div><b>Psyche</b><p>Open the crown to talk to Psyche.</p></div></div>
+<div class="kz-r"><span class="kz-m" id="kzSealMark"></span><div><b>Mission</b><p>Select a seal to see its familiars, tasks and agents.</p></div></div>
+<div class="kz-r"><span class="kz-m"><svg viewBox="0 0 18 18" aria-hidden="true"><rect x="3" y="3" width="12" height="12" rx="1" fill="none" stroke="var(--attention)"/><path d="M9 6v6" stroke="var(--attention)"/></svg></span><div><b>Decision</b><p>Open a numbered gate to review pending requests.</p></div></div>
+<details class="key-topic" name="map-key-topic"><summary>Familiars, tasks and agents</summary><div><div id="kzFams" class="kz-fams"></div><div class="kz-r"><span class="kz-m" id="kzDots"></span><div><b>Familiar color</b><p>Connects the familiar to its mission and agents. Moving highlights indicate working agents.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 34 14" aria-hidden="true"><circle class="kc on" cx="6" cy="7" r="4"/><circle class="kc" cx="17" cy="7" r="4"/><rect class="kc on" x="24" y="3" width="8" height="8" rx="1"/></svg></span><div><b>Agent and assignment</b><p>A circle is unassigned. A tile carries a task. Working agents are larger and filled. Idle agents are smaller and hollow.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 14 14" aria-hidden="true"><circle class="kc on" cx="7" cy="7" r="4.5"/><circle cx="7" cy="7" r="2" fill="var(--fam-cody)"/></svg></span><div><b>Shared task</b><p>A second color identifies a co-leading familiar. A dashed spot reserves a waiting agent’s place.</p></div></div></div></details>
+<details class="key-topic" name="map-key-topic"><summary>Mission progress and limits</summary><div><div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><path d="M0,0L0,-10A10,10 0 0 1 9.5,3.1Z" fill="var(--fam-astra)"/><path d="M0,0L9.5,3.1A10,10 0 0 1 -8.7,5Z" fill="var(--fam-cody)" opacity=".45"/><path d="M0,0L-8.7,5A10,10 0 0 1 0,-10Z" fill="var(--fam-echo)" opacity=".45"/></svg></span><div><b>Wedge</b><p>Width shows a familiar’s share of agents. Height shows progress on its targets.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><circle r="10" fill="none" stroke="var(--border-strong)"/><circle r="3.2" fill="var(--primary)"/></svg></span><div><b>Center mark</b><p>Shows the mission state.</p></div></div><div class="kz-states" id="kzStates"></div><div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><circle r="9" fill="none" stroke="var(--primary)" stroke-opacity=".2" stroke-width="2"/><path d="M0,-9A9,9 0 1 1 -8.6,2.8" fill="none" stroke="var(--warn)" stroke-width="2" stroke-linecap="round"/></svg></span><div><b>Resource rim</b><p>Coral marks a limit at or above 85% of time, tokens or budget.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><path d="M0,0L0,-10A10,10 0 0 1 9.5,3.1Z" fill="var(--fam-astra)"/><circle cx="3.6" cy="-4.4" r="1.5" fill="#4B4390"/></svg></span><div><b>Lead familiar</b><p>The dot marks the lead familiar’s wedge.</p></div></div></div></details>
+<details class="key-topic" name="map-key-topic"><summary>Connections and messages</summary><div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M2 7h22" stroke="var(--muted-foreground)" stroke-width="1.3"/></svg></span><div><b>Project connection</b><p>Psyche coordinates this Project. Filter by familiar to highlight its missions.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M2 7h22" stroke="var(--muted-foreground)" stroke-width="1.3" stroke-dasharray="2 4"/></svg></span><div><b>Dormant connection</b><p>No agents are assigned to this Project.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 26 14" aria-hidden="true"><path class="kl dim" d="M2 7h14" stroke-dasharray="1.5 3"/><circle cx="20" cy="7" r="2.6" fill="var(--primary)"/></svg></span><div><b>Message in transit</b><p>Lavender goes out from Psyche. Familiar colors come back. White marks a request for you.</p></div></div></div></details>
+<details class="key-topic" name="map-key-topic"><summary>Keyboard and text size</summary><div><div class="kz-k"><kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd><span>Move</span></div>
         <div class="kz-k"><kbd>Shift</kbd><kbd>←</kbd><kbd>→</kbd><span>Orbit</span></div>
         <div class="kz-k"><kbd>+</kbd><kbd>−</kbd><span>Zoom</span></div>
         <div class="kz-k"><kbd>0</kbd><span>Reset the view</span></div>
         <div class="kz-k"><kbd>Tab</kbd><span>Take Psyche’s suggested message</span></div>
-        <div class="kz-k"><kbd>Esc</kbd><span>Close, or step back out</span></div>
-      </section>
-      <section class="kz" aria-labelledby="kzShow"><h3 id="kzShow"><i class="kz-t"></i>Display <span>kept in this browser</span></h3>
-        <div class="key-fs"><span>Text size</span><div class="seg fsz" role="group" aria-label="Text size"><button type="button" id="fsDown" aria-label="Smaller text"><span class="sm">A</span></button><button type="button" id="fsUp" aria-label="Larger text"><span class="lg">A</span></button></div></div>
-      </section>
-      </div>
-      <div class="kz-col">
-      <section class="kz" aria-labelledby="kzShape"><h3 id="kzShape"><i class="kz-t"></i>Shape <span>what it is</span></h3>
-        <div class="kz-r"><span class="kz-m"><svg viewBox="0 0 20 20" aria-hidden="true"><path class="kl" d="M2 2 6 4h8l4-2-2 4v8l2 4-4-2H6l-4 2 2-4V6Z"/></svg></span><div><b>Angular boundary</b><p>One project. Its missions stay inside it; a quiet empty boundary is dormant</p></div></div>
-        <div class="kz-r"><span class="kz-m"><svg viewBox="-9 -9 18 18" aria-hidden="true" style="color:var(--primary)"><use href="#crown" x="-8.4" y="-8.1" width="16.8" height="15.5" fill="currentColor"/></svg></span><div><b>Crown</b><p>Psyche, at the center of each project and of the Coven</p></div></div>
-        <div class="kz-r"><span class="kz-m" id="kzSealMark"></span><div><b>Seal</b><p>A mission. Its parts and states are set out under Mission seal</p></div></div>
-        <div class="kz-r"><span class="kz-m"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="m7 3-5 6 5 6M11 3l5 6-5 6" fill="none" stroke="var(--fam-cody)" stroke-width="1.5"/></svg></span><div><b>Familiar glyph</b><p>A persistent identity. The same mark and color follow it from project to mission to agent</p></div></div>
-        <div class="kz-r"><span class="kz-m"><svg viewBox="0 0 34 14" aria-hidden="true"><circle class="kc on" cx="6" cy="7" r="4"/><circle class="kc" cx="17" cy="7" r="4"/><circle class="kc dash" cx="28" cy="7" r="4"/></svg></span><div><b>Agent dot</b><p>Filled is working, hollow is idle. A dashed place remains reserved while its agent waits at a gate. Select a mission to reveal its agents</p></div></div>
-        <div class="kz-r"><span class="kz-m"><svg viewBox="0 0 14 14" aria-hidden="true"><circle class="kc on" cx="7" cy="7" r="4.5"/><circle cx="7" cy="7" r="2" fill="var(--fam-cody)"/></svg></span><div><b>Dot with a second color</b><p>An agent whose task is shared by two familiars</p></div></div>
-        <div class="kz-r"><span class="kz-m"><svg viewBox="0 0 18 18" aria-hidden="true"><rect x="3" y="3" width="12" height="12" rx="1" fill="none" stroke="var(--attention)"/><path d="M9 6v6" stroke="var(--attention)"/></svg></span><div><b>Boundary square</b><p>Pending decisions. The count includes permission requests and resource-limit requests. Open it to review</p></div></div>
-      </section>
-      <section class="kz" aria-labelledby="kzCoven"><h3 id="kzCoven"><i class="kz-t"></i>Coven <span>every project at once</span></h3>
-        <div class="kz-r"><span class="kz-m"><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M2 7h22" stroke="var(--muted-foreground)" stroke-width="1.3"/></svg></span><div><b>Connection</b><p>Psyche coordinates that project. Choose a familiar below the map to color its connections and highlight its missions</p></div></div>
-        <div class="kz-r"><span class="kz-m"><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M2 7h22" stroke="var(--muted-foreground)" stroke-width="1.3" stroke-dasharray="2 4"/></svg></span><div><b>Dotted connection</b><p>No agents are assigned to that project</p></div></div>
-        <div class="kz-r"><span class="kz-m"><svg viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="6" fill="none" stroke="var(--border-strong)"/><circle cx="9" cy="9" r="2" fill="var(--primary)"/></svg></span><div><b>Position</b><p>Projects surround Psyche. Missions sit inside their project; familiar groups sit beside their mission. Positions stay stable during replay</p></div></div>
-      </section>
-      </div>
-      <div class="kz-col">
-      <section class="kz" aria-labelledby="kzMotion"><h3 id="kzMotion"><i class="kz-t"></i>Motion <span>what is happening</span></h3>
-        <div class="kz-r"><span class="kz-m"><svg viewBox="0 0 26 14" aria-hidden="true"><path class="kl dim" d="M2 7h14" stroke-dasharray="1.5 3"/><circle cx="20" cy="7" r="2.6" fill="var(--primary)"/></svg></span><div><b>Moving dot</b><p>A message event in this local simulation. Lavender goes out, a familiar’s color comes back, white is a request for you</p></div></div>
-        <div class="kz-r"><span class="kz-m"><svg viewBox="0 0 14 14" aria-hidden="true"><path class="kl" d="M2 12V9M6 12V6M10 12V2"/></svg></span><div><b>Rising wedge</b><p>Progress on the targets that familiar’s roles own. Everything else shares one ground plane; height does not imply authority or rank</p></div></div>
-      </section>
-      <section class="kz" aria-labelledby="kzSeal"><h3 id="kzSeal"><i class="kz-t" style="--hue:var(--primary)"></i>Mission seal <span>one per mission</span></h3>
-        <div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><path d="M0,0L0,-10A10,10 0 0 1 9.5,3.1Z" fill="var(--fam-astra)"/><path d="M0,0L9.5,3.1A10,10 0 0 1 -8.7,5Z" fill="var(--fam-cody)" opacity=".45"/><path d="M0,0L-8.7,5A10,10 0 0 1 0,-10Z" fill="var(--fam-echo)" opacity=".45"/></svg></span><div><b>Wedge</b><p>One familiar on the council. Its angle is its share of the mission’s agents, its height how far the targets its roles own have come, its top bright while its agents work</p></div></div>
-        <div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><circle r="10" fill="none" stroke="var(--border-strong)"/><circle r="3.2" fill="var(--primary)"/></svg></span><div><b>Signet</b><p>The lavender cap in the middle. It carries the mission’s state and nothing else</p></div></div>
-        <div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><circle r="9" fill="none" stroke="var(--primary)" stroke-opacity=".2" stroke-width="2"/><path d="M0,-9A9,9 0 1 1 -8.6,2.8" fill="none" stroke="var(--warn)" stroke-width="2" stroke-linecap="round"/></svg></span><div><b>Rim</b><p>The tightest limit: the most used of time, tokens and budget. Lavender, then coral from 85%</p></div></div>
-        <div class="kz-r"><span class="kz-m"><svg viewBox="-11 -11 22 22" aria-hidden="true"><path d="M0,0L0,-10A10,10 0 0 1 9.5,3.1Z" fill="var(--fam-astra)"/><circle cx="3.6" cy="-4.4" r="1.5" fill="#4B4390"/></svg></span><div><b>Lead pip</b><p>The dark dot on the wedge of the familiar leading the mission. Its wedge starts at twelve o’clock</p></div></div>
-        <div class="kz-states" id="kzStates"></div>
-      </section>
-      </div>
+        <div class="kz-k"><kbd>Esc</kbd><span>Close, or step back out</span></div><div class="key-fs"><span>Text size</span><div class="seg fsz" role="group" aria-label="Text size"><button type="button" id="fsDown" aria-label="Smaller text"><span class="sm">A</span></button><button type="button" id="fsUp" aria-label="Larger text"><span class="lg">A</span></button></div></div></div></details>
     </div>
   </section>
 </div>
@@ -2530,7 +2495,7 @@ function buildScene() {
   const cv = sc.cov = {x: -here[0], y: -here[1], links: [], fams: []};
   cv.g = svgEl('g', {class: 'hub'}, sc.world);
   cv.marker = coordinationMarker(cv.g);
-  cv.name = svgEl('text', {class: 'hub-l faronly'}, cv.g); cv.name.textContent = 'PSYCHE'; cv.sub = svgEl('text', {class: 'task-l gsub show faronly'}, cv.g); cv.need = svgEl('text', {class: 'task-l gsub show gneed faronly'}, cv.g);
+  cv.sub = svgEl('text', {class: 'task-l gsub show faronly'}, cv.g); cv.need = svgEl('text', {class: 'task-l gsub show gneed faronly'}, cv.g);
   svgEl('title', {}, cv.g).textContent = 'Psyche, the one channel to every project. Open the chat';
   cv.g.addEventListener('click', ev => { ev.stopPropagation(); openPsyche(); });
   atlasFocusable(cv.g, 'Psyche, coordination across all Projects. Open simulated conversation', () => openPsyche());
@@ -2602,8 +2567,7 @@ function buildScene() {
   sc.sorted = svgEl('g', {}, detail);
   sc.fx = svgEl('g', {}, detail); packets = [];
   const pg = svgEl('g', {class: 'atlas-local-psyche'}, sc.sorted);
-  sc.psy = {g: pg, marker: coordinationMarker(pg), label: svgEl('text', {class: 'psy-l'}, pg)};
-  sc.psy.label.textContent = 'PSYCHE';
+  sc.psy = {g: pg, marker: coordinationMarker(pg)};
   atlasFocusable(pg, 'Psyche, coordination for ' + active + '. Open simulated conversation', () => openPsyche());
   pg.addEventListener('click', ev => { ev.stopPropagation(); openPsyche(); });
 }
@@ -2704,7 +2668,7 @@ function sync() {
         sc.seats.set(id, s);
       }
       const tl = tally.get(id) || {tot: 0, work: 0}, txt = String(tl.tot), mp = missionXY(c, M.id);
-      s.R = seatR(c, id); s.frac = tl.tot ? tl.work / tl.tot : 0;
+      s.R = seatR(c, id); s.frac = tl.tot ? tl.work / tl.tot : 0; s.ln.classList.toggle('working', tl.work > 0);
       const [ux, uy] = unit(mp[0] - s.x, mp[1] - s.y); s.bx = s.x + ux * (s.R + 7); s.by = s.y + uy * (s.R + 7);   // the familiar sits at the head of its squad, facing the mission
       if (s.lnum.textContent !== txt) s.lnum.textContent = txt;
       s.badge.setAttribute('aria-label', fam(k).name + ', ' + tl.tot + ' agents on ' + M.name + ', ' + tl.work + ' working');
@@ -2716,6 +2680,7 @@ function sync() {
   sc.missions.forEach(ms => { ms.pts = ring(ms.x, ms.y, 37); const M2 = w.missions.get(ms.id); if (!M2) return;
     const d = sealOf(w, M2), se = ms.seal, built = d.wedges.map(x => x.k + (x.lead ? '*' : '') + fam(x.k).name).join('+'); se.data = d;
     const stateName = SEAL_STATE[d.state][0];
+    ms.ln.classList.toggle('working', d.wedges.some(wedge => wedge.live));
     if (ms.stateLabel) ms.stateLabel.textContent = stateName + (d.warn ? ' · Limit' : '');
     ms.node.setAttribute('aria-label', M2.name + ', ' + stateName + (d.warn ? ', resource limit warning' : '') + '. Show its agents and tasks');
     if (built !== se.built) { se.built = built; buildSeal(se, d); }
@@ -2734,13 +2699,18 @@ function sync() {
       const e = svgEl('g', {class: 'agent', 'data-m': a.mission, 'data-fam': a.fam});
       e.style.setProperty('--hue', fam(a.fam).hue);
       e.style.setProperty('--dur', (4 + rand() * 4).toFixed(1) + 's'); e.style.setProperty('--delay', (-rand() * 6).toFixed(1) + 's');
-      s = {id: a.id, el: e, halo: svgEl('ellipse', {class: 'hot'}, e), cell: svgEl('ellipse', {class: 'o'}, e), core: svgEl('ellipse', {class: 'core'}, e), dot: svgEl('circle', {class: 'i', r: 1.8}, e), co: null,
+      s = {id: a.id, el: e, halo: svgEl('ellipse', {class: 'hot'}, e), cell: svgEl('ellipse', {class: 'o'}, e), assignmentDepth: svgEl('path', {class: 'assignment-depth'}, e), assignment: svgEl('rect', {class: 'assignment', rx: 1}, e), core: svgEl('ellipse', {class: 'core'}, e), dot: svgEl('circle', {class: 'i', r: 1.8}, e), co: null,
         p: reduce || !tg ? q.slice() : [tg.bx, tg.by, ZS], q, state: null, ghost: null, home: null};
       svgEl('title', {}, e).textContent = a.id + ' · ' + fam(a.fam).name;
       e.addEventListener('click', ev => { ev.stopPropagation(); pick(a.id, 'plan'); });
       atlasFocusable(e, a.id + ', agent led by ' + fam(a.fam).name, () => pick(a.id, 'plan'));
       sc.agents.set(a.id, s);
     }
+    const task = w.tasks.get(a.task);
+    s.el.classList.toggle('assigned', !!task);
+    const description = [a.id, fam(a.fam).name, task ? task.name : 'Unassigned', a.state === 'gate' ? 'Waiting at gate' : a.state === 'work' ? 'Working' : 'Idle'].join(' · ');
+    s.el.setAttribute('aria-label', description);
+    s.el.querySelector('title').textContent = description;
     s.q = q; s.seat = a.seat; s.rot = lt ? lt.rot : 0;
     const co = coLead(w, a); if (co !== s.co) { s.co = co; s.el.classList.toggle('co', !!co); if (co) s.el.style.setProperty('--hue2', fam(co).hue); }
     if (s.state !== a.state) { s.el.classList.remove('work', 'idle', 'gate'); s.el.classList.add(a.state); s.state = a.state; }
@@ -2922,7 +2892,7 @@ function project() {
     const hq = P(cv.x, cv.y, 0), hubU = Math.min(U, 8);
     drawMarker(cv.marker, cv.x, cv.y, layout.hub.radius);
     cv.g.style.setProperty('--u', hubU.toFixed(3));
-    set(cv.name, hq, layout.hub.radius * cp + 14 * hubU); set(cv.sub, hq, layout.hub.radius * cp + 29 * hubU); set(cv.need, hq, layout.hub.radius * cp + 44 * hubU);
+    set(cv.sub, hq, layout.hub.radius * cp + 14 * hubU); set(cv.need, hq, layout.hub.radius * cp + 29 * hubU);
     const byK = new Map(sc.ghosts.map(g => [g.k, g]));
     cv.links.forEach(L => {
       const route = layout.byRoute.get(L.k); if (!route) return;
@@ -2985,14 +2955,13 @@ function project() {
   const pc = P(0, 0, ZP);
   drawMarker(sc.psy.marker, 0, 0, 29);
   sc.psy.sx = pc[0]; sc.psy.sy = pc[1];
-  sc.psy.label.setAttribute('x', f(pc[0])); sc.psy.label.setAttribute('y', f(pc[1] + 29 * cp + 15 * U));
   ell(sc.pBase, 0, 0, 0, 24); seg(sc.pStem, P(0, 0, 0), pc);
   depth.push([pc[2], sc.psy.g]);
 
   const outline = (pts, z) => pts.length ? pts.map((v, i) => { const g = P(v[0], v[1], z); return (i ? 'L' : 'M') + f(g[0]) + ',' + f(g[1]); }).join('') + 'Z' : '';
   ell(sc.pDais, 0, 0, ZT - 1, 46);
   sc.missions.forEach(s => {
-    const q = P(s.x, s.y, ZL), [ux, uy] = unit(s.x, s.y);
+    const q = P(s.x, s.y, ZL);
     const mission = cur().world.missions.get(s.id);
     s.seal.g.style.opacity = sc.hl && mission && !mission.seats.includes(sc.hl) ? '.76' : '1';
     s.court.setAttribute('d', outline(s.hull, ZT - 1)); s.courtSh.setAttribute('d', outline(s.hull, 0));
@@ -3010,8 +2979,8 @@ function project() {
     s.g.classList.toggle('atlas-compact-seal', !s.relief);
     s.g.classList.toggle('atlas-mission-current', selected);
     s.stem.style.display = 'none';
-    const md = Math.hypot(s.x, s.y), a = P(ux * 62, uy * 62, ZP), b = P(ux * (md - 23), uy * (md - 23), ZL), [nx, ny] = unit(-(b[1] - a[1]), b[0] - a[0]);
-    seg(s.thread, a, b); seg(s.out, a, b, nx * 2.2, ny * 2.2); seg(s.inn, a, b, -nx * 2.2, -ny * 2.2);   // instructions go out on one lane, reports come back on the other
+    const a = pc, b = q, [nx, ny] = unit(-(b[1] - a[1]), b[0] - a[0]);
+    seg(s.thread, a, b); seg(s.out, a, b); seg(s.inn, a, b, -nx * 2.2, -ny * 2.2);   // instructions go out on one lane, reports come back on the other
     ell(s.shadow, s.x, s.y, 0, 15); seg(s.stem, P(s.x, s.y, 0), q);
     s.sx = q[0]; s.sy = q[1];
     depth.push([q[2], s.g]);
@@ -3034,20 +3003,26 @@ function project() {
     ell(s.shadow, s.x, s.y, 0, s.R * .92); seg(s.stem, P(s.x, s.y, 0), b);
     const bq = P(s.bx, s.by, ZS);
     s.badge.setAttribute('transform', `translate(${f(bq[0])},${f(bq[1])})`); seg(s.bstem, P(s.bx, s.by, ZT), bq);
-    if (!flat) { const g0 = P(s.bx, s.by, ZT); s.foot.setAttribute('cx', f(g0[0] - bq[0])); s.foot.setAttribute('cy', f(g0[1] - bq[1])); s.foot.setAttribute('rx', 15); s.foot.setAttribute('ry', f(Math.max(.01, 15 * cp))); putSolid(s.solid, s.bx, s.by, ZT, 1.12, bq); }
+    if (!flat) { const g0 = P(s.bx, s.by, ZT); s.foot.setAttribute('cx', f(g0[0] - bq[0])); s.foot.setAttribute('cy', f(g0[1] - bq[1])); s.foot.setAttribute('rx', 15); s.foot.setAttribute('ry', f(Math.max(.01, 15 * cp))); putSolid(s.solid, s.bx, s.by, ZT, .72, bq); }
     s.bstem.style.display = flat ? '' : 'none';
     s.bsx = bq[0]; s.bsy = bq[1]; s.cx = q[0]; s.cy = q[1]; s.ry = ry;
-    if (M) { const [ux, uy] = unit(s.bx - M.x, s.by - M.y), a = P(M.x + ux * 24, M.y + uy * 24, ZL); seg(s.link, a, bq); seg(s.lflow, a, bq); }
+    if (M) { const a = P(M.x, M.y, ZL); seg(s.link, a, bq); seg(s.lflow, a, bq); }
     depth.push([q[2], s.g]);
   });
   sc.agents.forEach(s => {
     const q = P(s.p[0], s.p[1], s.p[2]);
-    const dotR = 3.2 / screenScale, spacedHit = Math.min(10, HEX_D * .4 * cp * screenScale) / screenScale;
+    const dotR = (s.state === 'idle' ? 2.8 : 3.6) / screenScale, spacedHit = Math.min(10, HEX_D * .4 * cp * screenScale) / screenScale;
     const dot = (el, radius) => {
       el.setAttribute('cx', f(q[0])); el.setAttribute('cy', f(q[1]));
       el.setAttribute('rx', f(radius)); el.setAttribute('ry', f(radius));
     };
     dot(s.cell, dotR); dot(s.halo, Math.max(dotR, spacedHit));
+    if (s.el.classList.contains('assigned') && !flat) {
+      const y = q[1] + dotR * cp, lip = dotR * (s.state === 'work' ? .7 : .32) * sp;
+      s.assignmentDepth.setAttribute('d', `M${f(q[0] - dotR)},${f(y)}h${f(2 * dotR)}v${f(lip)}h-${f(2 * dotR)}Z`);
+    }
+    s.assignment.setAttribute('x', f(q[0] - dotR)); s.assignment.setAttribute('width', f(dotR * 2));
+    s.assignment.setAttribute('y', f(q[1] - dotR * cp)); s.assignment.setAttribute('height', f(dotR * cp * 2));
     if (s.co) dot(s.core, dotR * .52);
     s.dot.setAttribute('r', f(dotR * .42));
     s.dot.setAttribute('cx', f(q[0])); s.dot.setAttribute('cy', f(q[1]));
@@ -3067,7 +3042,7 @@ function project() {
       const M = sc.missions.get(pk.m), st = sc.seats.get(pk.seat), u = (now - pk.t0) / pk.dur;
       if (!M || u >= 1) { pk.el.remove(); return false; }
       if (u < 0) return true;
-      const [ux, uy] = unit(M.x, M.y), path = [[ux * 62, uy * 62, ZP], [M.x, M.y, ZL]];
+      const path = [[0, 0, ZP], [M.x, M.y, ZL]];
       if (st) path.push([st.bx, st.by, ZS]);
       const e = u < .5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2, w = pk.dir === 'out' ? e : 1 - e, n = path.length - 1;
       const at = Math.min(n - 1e-6, w * n), i = Math.floor(at), tt = at - i, A = path[i], B2 = path[i + 1];
@@ -4906,7 +4881,7 @@ $('keyBtn').addEventListener('click', ev => { ev.stopPropagation(); openKey(); }
 $('keyX').addEventListener('click', closeKey); $('keyBg').addEventListener('click', closeKey);
 $('keyModal').addEventListener('click', ev => ev.stopPropagation());
 $('keyModal').addEventListener('keydown', ev => {      // focus stays inside the dialog while it is open
-  if (ev.key !== 'Tab') return; const f = [...$('keyModal').querySelectorAll('button:not(:disabled)')], i = f.indexOf(document.activeElement);
+  if (ev.key !== 'Tab') return; const f = [...$('keyModal').querySelectorAll('summary,button:not(:disabled)')].filter(el => el.getClientRects().length), i = f.indexOf(document.activeElement);
   if (ev.shiftKey && i <= 0) { ev.preventDefault(); f[f.length - 1].focus(); } else if (!ev.shiftKey && i === f.length - 1) { ev.preventDefault(); f[0].focus(); }
 });
 // ------------------------------------------------------------ projects: a project is a name, a repository and a folder on this machine
@@ -5265,7 +5240,7 @@ function timelineUI() {
     c.trace.forEach(e => { const ask = e.type === 'gate.requested'; if (!ask && e.type !== 'familiar.report' && e.type !== 'you.said') return;
       const i = html('i', ask ? 'mk-q' : null); i.style.left = (clamp((e.t - t0) / span, 0, 1) * 100).toFixed(2) + '%'; m.appendChild(i); });
   }
-  $('traceKind').textContent = !has ? 'empty' : c.recorded ? 'loaded' : live ? 'live' : 'replay'; plan.classList.toggle('live', live && has);
+  $('traceKind').textContent = !has ? 'empty' : c.recorded ? 'loaded' : live ? 'live' : 'replay'; plan.classList.toggle('live', live && has); plan.classList.toggle('map-running', has && (live || playing));
   { const sp = $('traceSpark'), cut = Math.ceil(p * sp.children.length); sp.classList.toggle('live', live && has); for (let i = 0; i < sp.children.length; i++) sp.children[i].classList.toggle('off', !has || (!live && i >= cut)); }
   $('traceInfo').textContent = has ? `${plural(c.trace.length, 'event')} · ${Math.max(1, Math.round((c.trace[c.trace.length - 1].t - c.trace[0].t) / 60000))} min` : '';
   const chip = $('traceChip'); chip.textContent = !has ? 'Empty' : c.recorded ? 'Loaded' : 'Sample'; chip.className = 'hd-s ' + (!has ? 'off' : c.recorded ? '' : 'on');

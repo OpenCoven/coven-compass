@@ -11,7 +11,7 @@ The [scalable layout and crown guide](15-scalable-atlas-layout.md) supersedes ea
 | Uniform four-corner Project enclosure | One project's work scope | A runtime sandbox, filesystem permission, authorized execution grant, or four-project limit |
 | Circular divided seal | One mission and its council | A task, familiar identity, or approval token |
 | Familiar glyph and stable hue | Familiar identity within the active binding | That a display name or color is a globally unique identity |
-| Small agent dot | One delegated agent in the selected mission | A second familiar identity root |
+| Agent circle or task tile | One delegated agent in the selected mission | A second familiar identity root |
 | Near-white boundary square | A count of pending decisions | An approved or completed operation |
 | Psyche crown at the center | Coordination within the displayed scope | That the model or UI owns daemon authority |
 | Neutral connection | A project participates in this coordination scope | Network reachability or active execution by itself |
@@ -24,7 +24,7 @@ Use `dist/semantic-map.css` for the presentational rules. Keep the canonical cro
 
 ## 2. Color has a stable job
 
-Familiar hues remain consistent across Projects, mission wedges, group glyphs, and agent dots. Read the current familiar presentation settings rather than scattering colors through new components. A hue is a display aid; the accessible name and exact bound identity belong in the data/details.
+Familiar hues remain consistent across Projects, mission wedges, group glyphs, and agent marks. Read the current familiar presentation settings rather than scattering colors through new components. A hue is a display aid; the accessible name and exact bound identity belong in the data/details.
 
 Lavender identifies Psyche and its coordination treatment. Near-white marks a decision waiting for the principal. Coral on a seal rim signals a near resource limit or the existing broken-after-limit condition. Do not use a familiar's own hue as a universal success, warning, or error color.
 
@@ -36,7 +36,7 @@ At Coven scale, project enclosures surround Psyche. All projects use the same ov
 
 Overview positions come from an aspect-aware compact lattice with opposite pairs, reserved Project/label rectangles, and shared routing corridors. The inward-facing gate terminates the route for that Project. Location is presentation structure, not priority or execution topology. Preserve stable caller ordering; at unchanged geometry options, appending projects retains existing positions. Resizing or explicitly reordering the collection can change placement and must not imply that canonical ownership changed. [Current positioning contract](15-scalable-atlas-layout.md)
 
-Inside a project, mission seals connect to familiar groups. Selecting a mission reveals its individual agents, reserved positions, task detail, and relevant requests. Working dots are filled, idle dots are hollow, and reserved places use a dashed outline. Waiting agents remain inside the boundary. The boundary marker invites review; it does not depict an operation already crossing the boundary.
+Inside a project, mission seals connect to familiar groups. Selecting a mission reveals its individual agents, reserved positions, task detail, and relevant requests. Circles identify unassigned agents and tiles identify agents assigned to a task. Working marks are larger and filled. Idle marks are smaller and hollow. In orbit, the task tile has a shallow edge that rises for working agents. Dashed outlines reserve places for agents at gates. Waiting agents remain inside the boundary. The boundary marker invites review; it does not depict an operation already crossing the boundary.
 
 Within the overview, a boundary marker aggregates pending decisions for that project at its coordination-facing gate. Within a project, markers correspond to the simulation's gate locations and selected-mission scope. A future implementation must map this deliberately from canonical decision data; do not assign a new permission category based on north/east/south/west placement.
 
