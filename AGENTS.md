@@ -77,7 +77,7 @@ Keep `tests/fixtures/` (the pinned baseline) and the dated audits in `tests/evid
 | `tests/evidence/` | `current.json` (generated) and historical JSON audits |
 | `scripts/` | `verify-all.mjs`, `check-source.mjs`, `test-atlas-crown.mjs`, `build-handoff.py`, `verify-handoff.py` |
 | `docs/handoff/` | Architecture, plan, acceptance, security, decisions: the editable doc source |
-| `docs/discovery/` | Read-only discovery deliverables imported byte-for-byte from familiar lanes, with pins and `SHA256SUMS`. Never edit them; add a new dated folder instead. |
+| `docs/discovery/` | Dated discovery records. Keep the pinned private source packet intact. The release contains only the reviewed public summary. |
 | `examples/` | Inert conceptual JSON, not wire schemas |
 
 For a function-level map of `dist/index.html`, see [chapter 01 §4](docs/handoff/01-current-state-and-evidence.md#4-source-map-for-an-implementer).
@@ -98,7 +98,7 @@ For a function-level map of `dist/index.html`, see [chapter 01 §4](docs/handoff
 2. **Branch** `compass/<topic>` off `main`. Make one bounded change per branch. If a PR depends on another open PR, stack it (base it on that branch) and say so in the body.
 3. **Open a PR against `main`. Don't merge it; Val merges.** In the body include what changed, any deliberate departures from the brief, the commands with their results, what wasn't checked, and the completion record. A PR closes an issue only when Val approves.
 4. **Out-of-brief work gets its own branch and PR.** If you find uncommitted edits you didn't make, don't commit or discard them. Report them with timestamps and ask. When Val decides to discard, keep a backup patch outside the repo.
-5. **Read-only lanes** (discovery, research) cite the exact pinned revision of every repo they read. They deliver files with sha256 digests and a receipt id (for example `NOVA-SAGE-COMPASS-20261119-D01D04`). They mark recommendations as proposals, not owner decisions.
+5. **Read-only lanes** (discovery, research) cite the exact pinned revision of every repo they read. They deliver files with sha256 digests and a receipt id (for example `RESEARCH-YYYYMMDD-TOPIC`). They mark recommendations as proposals, not owner decisions.
 6. **Status comments** say plainly what's merged, open, committed, or pending, so another agent can pick up the work.
 
 ## Where to read next
