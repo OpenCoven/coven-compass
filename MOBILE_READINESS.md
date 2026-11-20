@@ -34,9 +34,8 @@ The implementation adapts to viewport size and primary pointer type. It does not
 | Mobile workspace | Map, Missions, and Activity open existing surfaces. Replay and Go live remain reachable on the map. View expands the existing camera controls; Escape folds them without leaving the selected mission. |
 | Adaptive views | Compact, short-landscape, and tablet arrangements use visible viewport geometry and measured header/dock heights. Rotation retains an explicit camera expansion and the original control/draft nodes. |
 | 2D traversal | A direct drag pans without changing the viewing plane. |
-| 3D traversal | Orbit changes yaw/pitch; Move pans. Orbit has a six-degree lower bound so a downward drag does not strand the user in 2D mode. The 2D control deliberately selects the flat plane. |
 | Two-pointer traversal | Pan and pinch are calculated together around the moving centroid. Adding/removing a pointer rebases the gesture rather than jumping. |
-| Scope, Fit, and Lock | Coven/project scope is explicit and does not switch at a zoom threshold. Fit restores the current scope using measured chrome-safe space and enables auto-fit; resize preserves a manually adjusted camera. Lock disables the seven camera actions and direct map gestures; Unlock remains available. |
+| Scope, Fit, and Lock | Coven/project scope is explicit and does not switch at a zoom threshold. Fit restores the current scope using measured chrome-safe space and enables auto-fit; resize preserves a manually adjusted camera. Lock disables camera adjustment and direct map gestures; Unlock remains available. |
 | Mobile overlays | Only the top managed sheet is interactive. Tab wraps, Escape closes the top surface, and nested closes restore focus. A native Seal Lab dialog retains priority. |
 | Typing | Editable text uses at least 16px mobile type. Composition guards preserve IME candidate keys. Drafts stay in their existing DOM nodes through viewport transitions. |
 | Forms | Headers and primary actions stay outside the scrolling fields, preventing a sticky action bar from covering form controls. Empty Projects have a dismissible form and a persistent New mission action. |

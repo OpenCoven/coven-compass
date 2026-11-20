@@ -2,7 +2,7 @@
 
 **Implemented in the prototype; proposed as the integration's presentation contract.** Preserve the meanings below when replacing fixtures with canonical data. Authoritative operational state belongs to Coven, using Psyche's orchestration semantics, and is exposed through a verified read projection. Shapes, colors, screen positions, and cached labels do not establish authority.
 
-The [scalable layout and crown guide](15-scalable-atlas-layout.md) supersedes earlier overview positioning and zoom-driven scope assumptions. That refinement is **implemented; combined source-level verification passed**. It specifies compact paired placement, bounded density, explicit scope, measured fit, and canonical crown relief. Headless Chromium QA of the current source ran on 2026-11-19 ([record](../../tests/evidence/browser-qa-2026-11-19.json)); historical mobile/Chrome evidence applies only to its recorded pre-layout source.
+Read the [layout guide](15-scalable-atlas-layout.md) for placement, scope, measured fit and the 2D rendering restriction. Browser evidence is revision-specific.
 
 ## 1. A small vocabulary
 
@@ -11,7 +11,7 @@ The [scalable layout and crown guide](15-scalable-atlas-layout.md) supersedes ea
 | Uniform four-corner Project enclosure | One project's work scope | A runtime sandbox, filesystem permission, authorized execution grant, or four-project limit |
 | Circular divided seal | One mission and its council | A task, familiar identity, or approval token |
 | Familiar glyph and stable hue | Familiar identity within the active binding | That a display name or color is a globally unique identity |
-| Agent cog | One delegated agent in the selected mission | A second familiar identity root |
+| Agent dot | One delegated agent in the selected mission | A second familiar identity root |
 | Near-white boundary square | A count of pending decisions | An approved or completed operation |
 | Psyche crown at the center | Coordination within the displayed scope | That the model or UI owns daemon authority |
 | Neutral connection | A project participates in this coordination scope | Network reachability or active execution by itself |
@@ -24,7 +24,7 @@ Use `dist/semantic-map.css` for the presentational rules. Keep the canonical cro
 
 ## 2. Color has a stable job
 
-Familiar hues remain consistent across Projects, mission wedges, group glyphs, and agent marks. Read the current familiar presentation settings rather than scattering colors through new components. A hue is a display aid; the accessible name and exact bound identity belong in the data/details.
+Familiar hues remain consistent across Projects, mission rings, group glyphs, and agent marks. Read the current familiar presentation settings rather than scattering colors through new components. A hue is a display aid; the accessible name and exact bound identity belong in the data/details.
 
 Lavender identifies Psyche and its coordination treatment. Near-white marks a decision waiting for the principal. Coral on a seal rim signals a near resource limit or the existing broken-after-limit condition. Do not use a familiar's own hue as a universal success, warning, or error color.
 
@@ -36,28 +36,25 @@ At Coven scale, project enclosures surround Psyche. All projects use the same ov
 
 Overview positions come from an aspect-aware compact lattice with opposite pairs, reserved Project/label rectangles, and shared routing corridors. The inward-facing gate terminates the route for that Project. Location is presentation structure, not priority or execution topology. Preserve stable caller ordering; at unchanged geometry options, appending projects retains existing positions. Resizing or explicitly reordering the collection can change placement and must not imply that canonical ownership changed. [Current positioning contract](15-scalable-atlas-layout.md)
 
-Inside a project, mission seals connect to familiar groups. Selecting a mission reveals its individual agents, reserved positions, task detail, and relevant requests. A round hub identifies an unassigned agent. A square hub identifies an assigned task. Working marks are larger and filled. Idle marks are smaller and hollow. In orbit, cogs have a shallow edge. Working cogs counter-rotate during playback unless reduced motion is enabled. Dashed outlines reserve places for agents at gates. Waiting agents remain inside the boundary. The boundary marker invites review; it does not depict an operation already crossing the boundary.
+Inside a project, mission seals connect to familiar groups. Selecting a mission reveals its individual agents, reserved positions, task detail, and relevant requests. A round hub identifies an unassigned agent. A square hub identifies an assigned task. Working marks are larger and filled. Idle marks are smaller and hollow. Dashed outlines reserve places for agents at gates. Waiting agents remain inside the boundary. The boundary marker invites review; it does not depict an operation already crossing the boundary.
 
 Within the overview, a boundary marker aggregates pending decisions for that project at its coordination-facing gate. Within a project, markers correspond to the simulation's gate locations and selected-mission scope. A future implementation must map this deliberately from canonical decision data; do not assign a new permission category based on north/east/south/west placement.
 
 Keep internal mission placement and overview project placement distinct. The newer overview helper supersedes the earlier trace/ring positioning assumptions; local mission data still drives each project's contents. Preserve context through filtering, replay, snapshot replacement, and brief changes. A filtered item may dim or disappear; reappearance should not imply it moved between projects. If canonical assignments change, display the actual move as a data change with corresponding details.
 
-## 4. Topography is measured
+## 4. Reading a mission ring
 
-Entity placement shares a ground plane. Mission seal relief conveys measured progress; removed terraces, familiar statues, and decorative halo stacks should not reappear as unlabelled “importance.” The requested Psyche crown is a specific decorative extrusion of the exact canonical silhouette, including its aperture. Its height conveys no progress, priority, or authority. Flat UI marks remain flat, and the scene sculpture uses no spin, glow, or gradients. [Crown contract](15-scalable-atlas-layout.md)
+Compass uses one drawing plane for the overview, Project, mission details, previews and Seal lab. Psyche uses the canonical crown inside a circular badge. A mission uses a labeled ring. Smaller familiar badges sit at the ends of colored spokes. Selection adds an outline and preserves familiar identity colors.
 
-| Seal feature | Current v27 meaning |
+| Seal feature | Meaning |
 | --- | --- |
-| Wedge angle | Familiar's share of mission agents, subject to the visual minimum |
-| Wedge height | Progress on targets owned by that familiar's roles; unowned targets contribute to every relevant wedge |
-| Wedge brightness | Working agents are present |
-| Dark lead pip | Lead familiar's wedge, beginning at twelve o'clock |
-| Central signet | Mission state: Planned, Active, Needs you, Stalled, Sealed, or Broken |
+| Segment span | Familiar’s share of mission agents, subject to the visual minimum |
+| Brighter length inside a segment | Progress on targets assigned to that familiar’s roles |
+| Outer outline | Mission state, also named in details and accessible labels |
 | Rim sweep | Tightest time, token, or budget limit |
 | Coral threshold | 85% or the existing broken state |
-| Selected-seal edge pips | Working agents, visually capped per familiar |
 
-The renderer permits at most eight council wedges, a minimum wedge angle of 12 degrees, and at most twelve working pips per familiar. Therefore small angular shares and pip counts are not exact numerical displays. Exact counts belong in details. Preserve these qualifications rather than suggesting a miniature seal is a precision chart.
+Council arcs provide a readable summary even for small shares. Details and the Seal lab supply exact counts and percentages.
 
 Current progress ownership uses `TARGET_ROLES` in the prototype. Production integration must inspect canonical target ownership, counters, and completion semantics. Do not copy this fixture mapping into a second orchestration schema. “Sealed” requires canonical completion evidence; a local 100% animation or a model's report is insufficient.
 
@@ -65,7 +62,7 @@ Current progress ownership uses `TARGET_ROLES` in the prototype. Production inte
 
 The Coven view carries boundaries, exact mission counts, decision badges, and a compact identity filter. The Projects drawer is closed by default and overlays the map without changing its dimensions. Project view reveals useful controls and group counts. Mission selection opens task/agent detail. Retain the existing replay and Seal lab as clearly scoped controls.
 
-Project view shows mission seals on a common shallow base. Wedge height adds role-owned progress when the projected seal is large enough to read. The selected mission has a neutral selection ring, a state label, and a single review preview. Its detail pages retain exact agent counts and the Inbox retains every pending decision. Project search and the sample presets keep larger compositions navigable.
+Project view shows connected mission rings and familiar badges. Selection exposes agent and task detail. The Inbox retains every pending decision.
 
 Coven and project scope are explicit navigation state, separate from camera zoom. A Fit action uses measured chrome-safe space and enables auto-fit; resize refits only in that mode. Manual camera framing is retained. Camera fitting includes screen-facing crown and label bounds as well as the projected ground. [Scope and fit details](15-scalable-atlas-layout.md)
 

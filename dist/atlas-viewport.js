@@ -11,12 +11,11 @@
  *
  * fit: bounds are already projected world units. Optional padding is another
  * screen-pixel inset of frame; fill is a fraction, clamped to 0.000001..1.
- * px/py are projected camera offsets, not inverse-rotated ground coordinates.
+ * px/py are map coordinates at the center of the viewport.
  *
- * projectedBounds: subtract the ground-plane origin, rotate by yaw degrees,
- * then multiply Y by cos(pitch degrees), matching project() at z=0. Include
- * crown, labels and route footprints explicitly; elevated geometry needs its
- * own bounds. Empty input returns a point at the projected origin.
+ * projectedBounds: union map rectangles relative to the given map origin.
+ * Include icon, label and route footprints explicitly. Empty input returns
+ * a point at (0, 0).
  *
  * Invalid numbers use finite defaults, viewport dimensions are at least1,
  * and input magnitudes are limited to Number.MAX_SAFE_INTEGER. Degenerate
@@ -96,9 +95,13 @@
     const y0 = scalar(b.y0, 0), y1 = scalar(b.y1, y0);
     const boundsWidth = Math.max(1, Math.abs(x1 - x0)), boundsHeight = Math.max(1, Math.abs(y1 - y0));
     const fill = clamp(scalar(options.fill, 0.94), 0.000001, 1);
-    const scale = Math.min(target.width / boundsWidth, target.height / boundsHeight) * fill;
+    const viewportScale = Math.min(width, height) / 784;
+    const fitted = Math.min(target.width / boundsWidth, target.height / boundsHeight) * fill / viewportScale;
+    const minZoom = positive(options.minZoom, 0), maxZoom = Math.max(minZoom, positive(options.maxZoom, Infinity));
+    const zoom = clamp(fitted, minZoom, maxZoom > 0 ? maxZoom : Infinity);
+    const scale = zoom * viewportScale;
     return {
-      zoom: scale * 784 / Math.min(width, height),
+      zoom,
       px: (x0 + x1) / 2 - (target.cx - width / 2) / scale,
       py: (y0 + y1) / 2 - (target.cy - height / 2) / scale,
       scale
@@ -107,23 +110,16 @@
 
   function projectedBounds(rectangles, input) {
     const options = object(input);
-    const yaw = scalar(options.yaw, 0) % 360 * Math.PI / 180;
-    const pitch = scalar(options.pitch, 24) % 360 * Math.PI / 180;
-    const cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch);
     const originX = scalar(options.originX, 0), originY = scalar(options.originY, 0);
     let result = null;
     for (const value of Array.isArray(rectangles) ? rectangles : []) {
       const r = object(value);
       if (![r.x0, r.y0, r.x1, r.y1].every(Number.isFinite)) continue;
-      for (const x0 of [r.x0, r.x1]) for (const y0 of [r.y0, r.y1]) {
-        const x = scalar(x0, 0) - originX, y = scalar(y0, 0) - originY;
-        const px = x * cy - y * sy, py = (x * sy + y * cy) * cp;
-        if (!result) result = { x0: px, y0: py, x1: px, y1: py };
-        else {
-          result.x0 = Math.min(result.x0, px); result.y0 = Math.min(result.y0, py);
-          result.x1 = Math.max(result.x1, px); result.y1 = Math.max(result.y1, py);
-        }
-      }
+      const ax = scalar(r.x0, 0) - originX, bx = scalar(r.x1, 0) - originX;
+      const ay = scalar(r.y0, 0) - originY, by = scalar(r.y1, 0) - originY;
+      if (!result) result = { x0: ax, y0: ay, x1: ax, y1: ay };
+      result.x0 = Math.min(result.x0, ax, bx); result.x1 = Math.max(result.x1, ax, bx);
+      result.y0 = Math.min(result.y0, ay, by); result.y1 = Math.max(result.y1, ay, by);
     }
     return result || { x0: 0, y0: 0, x1: 0, y1: 0 };
   }

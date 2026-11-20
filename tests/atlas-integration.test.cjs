@@ -95,8 +95,8 @@ function scopeFixture() {
     openAsks: world => world.asks.filter(ask => ask.status === 'open'),
     countOf: (world, predicate) => [...world.agents.values()].filter(predicate).length,
     sealOf: () => ({state: 'planned'}), SEAL_STATE: {planned: ['Planned']}, sealSvg: () => '<svg></svg>',
-    $: () => null, sc: {hl: null, g: 1}, cam: {zoom: 1, locked: false}, camT: {zoom: 1, pitch: 24},
-    atlasScope: 'coven', atlasGestureMode: 'pan', panelView: 'agents',
+    $: () => null, sc: {hl: null, g: 1}, cam: {zoom: 1, locked: false}, camT: {zoom: 1},
+    atlasScope: 'coven', panelView: 'agents',
     atlasNavigationReady: true, atlasRestoringRoute: false, atlasLastRoute: null,
     window: {CovenMissionNavigation: navigation}, history, location,
   });
@@ -255,7 +255,7 @@ function fitFixture(width, height, count) {
   context = load(['atlasViewportFrame', 'atlasWorldLayout', 'atlasFitScene'], {
     ...f.globals, projects, active: keys.at(-1), cur: () => projects[context.active],
     atlasScope: 'coven', atlasLayoutCache: null, atlasAutoFit: false,
-    camT: {yaw: 17, pitch: 24, zoom: 1, px: 0, py: 0}, sc: null,
+    camT: {zoom: 1, px: 0, py: 0}, sc: null,
     clamp, RAD: Math.PI / 180, ZMIN: 0.00001,
     saveView() { calls.save++; }, kick() { calls.kick++; },
     buildScene() { calls.build++; context.sc.layoutSignature = context.atlasLayoutCache.signature; },
@@ -265,10 +265,7 @@ function fitFixture(width, height, count) {
 }
 
 function projectToScreen(point, origin, camera, stage) {
-  const yaw = camera.yaw * Math.PI / 180, pitch = camera.pitch * Math.PI / 180;
-  const x = point[0] - origin[0], y = point[1] - origin[1];
-  const px = x * Math.cos(yaw) - y * Math.sin(yaw);
-  const py = (x * Math.sin(yaw) + y * Math.cos(yaw)) * Math.cos(pitch);
+  const px = point[0] - origin[0], py = point[1] - origin[1];
   const scale = Math.min(stage.clientWidth, stage.clientHeight) * camera.zoom / 784;
   return [stage.clientWidth / 2 + (px - camera.px) * scale, stage.clientHeight / 2 + (py - camera.py) * scale];
 }
@@ -293,25 +290,56 @@ test('actual Coven fit contains every project reservation and branch inside meas
   }
 });
 
-test('Coven fit caps an incoming 78-degree orbit and contains the screen-facing hub; project pitch remains independent', () => {
-  for (const [width, height] of [[1600, 900], [390, 844]]) {
-    const f = fitFixture(width, height, 4), {context} = f;
-    context.camT.pitch = 78; context.atlasFitScene(true);
-    assert.equal(context.camT.pitch, 45, 'Coven pitch retains clearance for screen-facing labels');
-    const snapshot = context.atlasWorldLayout(), active = snapshot.byKey.get(context.active);
-    const frame = context.atlasViewportFrame(false);
-    const center = projectToScreen([0, 0], [active.x, active.y], context.camT, f.stage);
-    const scale = Math.min(width, height) * context.camT.zoom / 784;
-    for (const dx of [-500, 500]) for (const dy of [-350, 560]) {
-      const x = center[0] + dx * scale, y = center[1] + dy * scale;
-      assert.ok(Number.isFinite(x) && Number.isFinite(y));
-      assert.ok(x >= frame.x - EPS && x <= frame.x + frame.width + EPS, 'uncompressed hub horizontal bounds');
-      assert.ok(y >= frame.y - EPS && y <= frame.y + frame.height + EPS, 'uncompressed crown and label vertical bounds');
+test('Project fit frames actual content for empty, single-mission, and dense projects', () => {
+  for (const [width, height] of [[1600, 900], [390, 844]]) for (const count of [0, 1, 4, 128]) {
+    const f = fitFixture(width, height, 1), {context} = f;
+    context.atlasScope = 'project';
+    const missions = new Map(), seats = new Map(), points = [[-49, -49], [49, 49]];
+    for (let i = 0; i < count; i++) {
+      const x = i % 8 * 170, y = Math.floor(i / 8) * 195;
+      missions.set(i, {x, y}); points.push([x - 43, y - 43], [x + 43, y + 60]);
+      seats.set(i, {bx: x + 74, by: y - 78}); points.push([x + 48, y - 93], [x + 100, y - 46]);
     }
-    context.atlasScope = 'project'; context.camT.pitch = 78; context.fortExt = () => 362;
+    const gateL = [{x: 180, y: 0, asks: count ? [{}] : []}, {x: 9e4, y: 8e4, asks: []}];
+    if (count) points.push([166, -14], [194, 14]);
+    context.sc = {missions, seats, gateL};
     context.atlasFitScene(false);
-    assert.equal(context.camT.pitch, 78, 'project detail may keep its steeper orbit');
+    const frame = context.atlasViewportFrame(false);
+    const screen = points.map(p => projectToScreen(p, [0, 0], context.camT, f.stage));
+    for (const [x, y] of screen) {
+      assert.ok(x >= frame.x - EPS && x <= frame.x + frame.width + EPS);
+      assert.ok(y >= frame.y - EPS && y <= frame.y + frame.height + EPS);
+    }
+    const xs = screen.map(p => p[0]), ys = screen.map(p => p[1]);
+    const fill = Math.max((Math.max(...xs) - Math.min(...xs)) / frame.width, (Math.max(...ys) - Math.min(...ys)) / frame.height);
+    assert.ok(fill >= .9 || context.camT.zoom === 6, 'content fills the limiting safe-frame dimension');
   }
+});
+
+test('landscape Project uses the full map height beside its left-hand controls', () => {
+  const f = frameFixture(820, 292);
+  f.globals.document.body.dataset = {mobileLayout: 'landscape', atlasScope: 'project'};
+  f.elements.atlasHeader = f.box(10, 8, 314, 56);
+  f.elements.atlasFamiliars = f.box(10, 230, 322, 52);
+  f.elements.atlasCameraDock.hidden = true;
+  const context = load(['atlasViewportFrame'], f.globals);
+  assert.deepEqual(plain(context.atlasViewportFrame(false)), {x: 342, y: 10, width: 468, height: 272, cx: 576, cy: 146});
+});
+
+test('saved views retain pan, zoom and lock across a legacy preference migration', () => {
+  const camT = {px: 0, py: 0, zoom: 1}, cam = {...camT, locked: false}, writes = [];
+  const context = load(['saveView', 'restoreView'], {
+    cam, camT, clamp, PAN: 1000, ZMIN: .1,
+    store: {set: (key, value) => writes.push([key, plain(value)])},
+    setLock: on => { cam.locked = on; context.saveView(); }
+  });
+  context.restoreView({yaw: 62, pitch: 71, zoom: 4, px: -20, py: 53, locked: true});
+  assert.deepEqual(cam, {px: -20, py: 53, zoom: 4, locked: true});
+  assert.deepEqual(writes.at(-1), ['coven-compass-view', cam]);
+  context.restoreView({zoom: 100, px: 4000, py: -8000, locked: false});
+  assert.deepEqual(cam, {px: 1000, py: -1000, zoom: 6, locked: false});
+  context.restoreView({zoom: Infinity, px: 80, py: 90});
+  assert.deepEqual(camT, {px: 1000, py: -1000, zoom: 6});
 });
 
 test('layout cache retains mission-only changes and rebuilds the scene on topology changes', () => {
@@ -335,11 +363,11 @@ test('selected-mission fit remains centered in its asymmetric safe frame after t
   const position = {x: 200, y: -100};
   const context = load(['atlasViewportFrame', 'fitTarget'], {
     ...f.globals, sc: {missions: new Map([[M.id, position]]), seats: new Map(), agents: new Map()},
-    camT: {yaw: 0, pitch: 0}, clamp, RAD: Math.PI / 180, ZL: 0, ZT: 0, ZS: 0, ZMIN: 0.00001, PAN: 1000000,
+    clamp, ZMIN: 0.00001, PAN: 1000000,
   });
   const camera = context.fitTarget(project), frame = context.atlasViewportFrame(true);
   assert.equal(camera.zoom, 2.3, 'this mission exercises the upper zoom cap');
-  const screen = projectToScreen([position.x, position.y], [0, 0], {...camera, yaw: 0, pitch: 0}, f.stage);
+  const screen = projectToScreen([position.x, position.y], [0, 0], camera, f.stage);
   near(screen[0], frame.cx, 'capped mission horizontal center'); near(screen[1], frame.cy, 'capped mission vertical center');
   project.sel = 'removed'; assert.equal(context.fitTarget(project), null, 'replay removal has no stale fit target');
 });
@@ -354,13 +382,13 @@ test('replay removal restores the pre-selection manual camera and automatic-fit 
   };
   const context = load(['seek'], {
     newWorld, SimModel: loadSimulationModel(), window: {CovenMissionNavigation: navigation}, atlasNavigationReady: true,
-    atlasAutoFit: true, cam: {locked: false}, camT: {zoom: 2.3, px: 5, py: 9, yaw: 17, pitch: 24},
+    atlasAutoFit: true, cam: {locked: false}, camT: {zoom: 2.3, px: 5, py: 9},
     cur: () => project, projects: {sample: project}, active: 'sample',
   });
   assert.equal(context.seek(project, 500, true), true);
   assert.equal(project.sel, null); assert.equal(project.camBack, null);
   assert.equal(context.atlasAutoFit, false, 'replay removal must restore manual framing, just as deselection does');
-  assert.deepEqual(plain(context.camT), {zoom: 0.4, px: 17, py: -20, yaw: 17, pitch: 24}, 'only position and zoom return; orbit is unchanged');
+  assert.deepEqual(plain(context.camT), {zoom: 0.4, px: 17, py: -20}, 'position and zoom return');
 });
 
 test('actual rounded branch paths keep finite endpoints and cap corners to adjacent segment lengths', () => {

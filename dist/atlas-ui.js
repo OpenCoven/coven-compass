@@ -320,7 +320,7 @@
     shield(familiars);
     var cameraDock = node('div', 'atlas-camera-dock'); cameraDock.id = 'atlasCameraDock';
     cameraDock.setAttribute('role', 'toolbar'); cameraDock.setAttribute('aria-label', 'Map controls');
-    [['atlasPlan', '2D', 'plan', 'Use the 2D map'], ['atlas3d', '3D', '3d', 'Use the 3D map'], ['atlasMove', 'Move', 'move', 'Drag to move the map'], ['atlasOrbit', 'Orbit', 'orbit', 'Drag to orbit the 3D map'], ['atlasZoomOut', '−', 'out', 'Zoom out'], ['atlasZoomIn', '+', 'in', 'Zoom in'], ['atlasFit', 'Fit', 'fit', 'Fit the current selection in view'], ['atlasLock', 'Lock', 'lock', 'Lock the map']].forEach(function (item) {
+    [['atlasZoomOut', '−', 'out', 'Zoom out'], ['atlasZoomIn', '+', 'in', 'Zoom in'], ['atlasFit', 'Fit', 'fit', 'Fit the current selection in view'], ['atlasLock', 'Lock', 'lock', 'Lock the map']].forEach(function (item) {
       var control = button(item[0], item[1], function () { api.camera(item[2]); });
       control.setAttribute('aria-label', item[3]); control.title = item[3]; cameraDock.append(control);
     });
@@ -351,12 +351,10 @@
     $('atlasProject').setAttribute('aria-label', 'Open current project, ' + s.active);
     $('atlasMissions').setAttribute('aria-label', 'Browse ' + s.missions + ' missions');
     if (s.camera) {
-      $('atlasPlan').setAttribute('aria-pressed', String(!s.camera.is3d)); $('atlas3d').setAttribute('aria-pressed', String(s.camera.is3d));
-      $('atlasMove').setAttribute('aria-pressed', String(s.camera.gestureMode === 'pan')); $('atlasOrbit').setAttribute('aria-pressed', String(s.camera.gestureMode === 'orbit'));
-      ['atlasPlan', 'atlas3d', 'atlasMove', 'atlasOrbit', 'atlasZoomOut', 'atlasZoomIn', 'atlasFit'].forEach(function (id) { $(id).disabled = s.camera.locked; });
+      ['atlasZoomOut', 'atlasZoomIn', 'atlasFit'].forEach(function (id) { $(id).disabled = s.camera.locked; });
       $('atlasLock').setAttribute('aria-pressed', String(s.camera.locked)); $('atlasLock').textContent = s.camera.locked ? 'Unlock' : 'Lock';
       $('atlasLock').setAttribute('aria-label', s.camera.locked ? 'Unlock the map' : 'Lock the map');
-      $('atlasCameraDock').setAttribute('aria-label', s.camera.locked ? 'Map controls. Map locked.' : 'Map controls. Drag to ' + (s.camera.gestureMode === 'pan' ? 'move' : 'orbit') + '. Pinch with two fingers to zoom.');
+      $('atlasCameraDock').setAttribute('aria-label', s.camera.locked ? 'Map controls. Map locked.' : 'Map controls. Drag to pan. Pinch with two fingers to zoom.');
     }
     if (!$('atlasMissionBrowser').hidden) updateMissions(s);
     var signature = JSON.stringify([s.projects, s.familiars, s.highlight, s.active]);

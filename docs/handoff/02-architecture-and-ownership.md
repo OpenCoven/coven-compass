@@ -25,7 +25,7 @@ The Site reduces sample events into browser-side worlds using `apply`, advances 
 | `atlasSnapshot` in `dist/index.html` | Derive project, familiar, mission, and attention summaries. | Its current objects and fields are local presentation contracts, not canonical SDK schemas. |
 | `dist/atlas-ui.js` | Scope navigation, optional project drawer, familiar filtering, keyboard labels. | Clicking a control must not directly commit daemon state. |
 | `dist/semantic-map.css` | Show project boundaries, mission seals, familiar glyphs, selected agents, and decision markers. | Visibility and color never grant permissions. |
-| `dist/atlas-layout.js`, `dist/atlas-viewport.js`, `dist/atlas-crown.js` | Compact project placement, safe-space fit, bounded detail, and exact canonical crown relief. | Geometry and camera scope are presentation state; routes are not execution dependencies or authority. |
+| `dist/atlas-layout.js`, `dist/atlas-viewport.js`, `dist/atlas-crown.js` | Compact project placement, safe-space fit, bounded detail, and exact canonical flat crown. | Geometry and camera scope are presentation state; routes are not execution dependencies or authority. |
 | `sealOf` / `drawSeal` | Quantitative mission representation at three detail levels. | Input measures must come from authoritative evidence, with unknown values explicit. |
 | `dist/seal-lab.js` | Explore the renderer's states and measurements in isolation. | Lab settings must remain isolated from operational projects. |
 | `tests/presentation.test.cjs` | Source-level regression fixtures with a small DOM facade. | These are not browser, daemon, device, or recovery qualification. |
@@ -86,7 +86,7 @@ A runtime being able to launch a process does not establish that it can durably 
 
 ## Preserve visual meaning without overstating evidence
 
-The source seal has six states: Planned, Active, Needs you, Stalled, Sealed, and Broken. It gives each council familiar a wedge, derives progress from role-owned targets, and uses the rim for the tightest time/token/budget limit. The renderer applies a 12-degree minimum wedge, an eight-wedge ceiling, and a twelve-working-pip cap per familiar. Those display limits must remain visible in exact detail; they must not become limits on the canonical underlying model. [S1] [S2]
+Mission state has six values: Planned, Active, Needs you, Stalled, Sealed and Broken. The ring shows each familiar’s share of assigned agents and progress on role-owned targets. A coral arc warns about resource usage. Exact counts and state labels are available in details.
 
 The production adapter needs additional **freshness and availability** information alongside lifecycle state. Disconnected, stale, reconciling, rejected, and unavailable cannot honestly be painted Active simply because the last snapshot was active. Keep the six visual states where their meanings fit, and supply a separate factual freshness indicator. Unknown progress must not become zero; absent evidence must not become success.
 

@@ -28,27 +28,27 @@ The tests include their exact reference fixture and work without Git history. Th
 
 ## Scalable overview refinement
 
-**Implemented; combined source-level verification passed.** The current refinement uses castle courtyards for Projects in an aspect-aware compact lattice, paired positions, and shared branch corridors that meet each project's inward-facing gate. Routes show coordination, not execution dependencies or authority. Read [the scalable layout and crown guide](docs/handoff/15-scalable-atlas-layout.md) for implementation and integration details.
+**Implemented; combined source-level verification passed.** The current refinement uses flat Project outlines in an aspect-aware compact lattice, paired positions, and shared branch corridors that meet each project's inward-facing gate. Routes show coordination, not execution dependencies or authority. Read [the scalable layout and crown guide](docs/handoff/15-scalable-atlas-layout.md) for implementation and integration details.
 
 The Coven overview shows an exact mission count within each Project enclosure and a separate badge for pending decisions. The mission browser and Project drilldown retain all known missions. The map reduces detail based on projected spacing while preserving the underlying collection.
 
 Open **Projects → Try a larger Coven** for 8, 16, 32, 64, or 128-Project sample presets. **Remove extra samples** removes only generated layout samples and preserves existing baseline and user-created Projects. A preset never reduces the user's existing collection to meet its target, so the actual total can exceed the requested preset. These samples explore composition; 128 is neither a production capacity claim nor an architectural limit.
 
-Coven/project scope is explicit and separate from camera zoom. Fit uses measured chrome-safe space; resize refits only in auto-fit mode and preserves a manually adjusted camera. The canonical Psyche crown has restrained projected relief in both scene scopes, with its exact aperture and leaf silhouette. Flat UI marks remain unchanged; the sculpture does not spin or glow.
+Compass uses a strictly 2D map. Pan and zoom frame the current scope. Fit accounts for the header, drawers and labels, and resizing preserves a manually adjusted view. The same upright crown identifies Psyche throughout the interface. Changing this restriction requires an explicit override from Val, recorded with the change. [Presentation policy](AGENTS.md#invariants-never-break)
 
 ## Visual language
 
-- **Castle courtyard:** one project's scope. Every project uses the same overview treatment, including the currently active project.
-- **Circular mission seal:** one mission. Wedge angle is the share of its agents led by each familiar; wedge height is progress on that familiar's role-owned targets; the central signet expresses mission state.
-- **Stable familiar glyph and hue:** identity across projects, councils, and delegated agents. Changing the camera angle does not change the familiar's mark.
-- **Agent marks:** cogs represent agents and square hubs indicate task assignments in the selected mission. Their state and familiar affiliation remain available in the detail views.
+- **Project outline:** one project and its mission count in the Coven overview.
+- **Mission ring:** the center names the mission. Each familiar’s arc shows its share of the council’s agents, and the brighter length within that arc shows progress on its targets.
+- **Familiar badge:** the same planar glyph and hue identify a familiar on the map, in filters, and in mission details.
+- **Agent marks:** dots represent agents and square hubs indicate task assignments in the selected mission. Their state and familiar affiliation remain available in the detail views.
 - **Near-white boundary square:** a pending permission or resource-limit decision. Selecting it opens that project's pending decisions; its presence does not mean the requested operation was approved.
-- **Central Psyche crown:** coordination within the current scope. Its relief is decorative, while project connections remain neutral until a familiar filter highlights that familiar's assignments.
+- **Psyche badge:** the lavender crown marks the coordinator. Spokes connect it to the work in the current scope.
 - **Coral seal rim:** the tightest time, token, or budget limit has reached 85%, or the mission is broken after stopping at a limit.
 
 The Coven overview shows Project boundaries, exact mission counts, and pending-decision badges. Entering a Project reveals mission seals and familiar glyphs. Selecting a mission shows its state, one decision preview, and individual agent marks when spacing allows. The Inbox holds all pending decisions, and mission details retain exact counts. Zoom changes presentation density while preserving the current scope.
 
-The v27 seal constraints remain: a 12-degree minimum wedge angle, at most eight rendered council wedges, and at most twelve working pips per familiar. The minimum angle can enlarge very small shares; exact agent counts remain available in detail views.
+The council ring summarizes agent shares with a minimum visible segment. Mission details give the exact counts, progress, working agents, state and limits.
 
 ## Interactions
 
@@ -58,7 +58,7 @@ The v27 seal constraints remain: a 12-degree minimum wedge angle, at most eight 
 4. Open mission details for Brief, Council, Tasks, and Agents. Previous/Next explores the current Project; Back to mission leaves a familiar view; All missions restores the search and selected row.
 5. Use Seal lab to explore Planned, Active, Needs you, Stalled, Sealed, and Broken, plus target progress, working counts, and resource limits.
 6. Replay the shared live timeline, pause or scrub to a moment, and change the focused Project without restarting playback. Go live returns to the current sample state. Imported recordings keep their own extent and finish paused.
-7. On mobile, use **Map**, **Missions**, **Activity**, and **View** in the bottom workspace dock. Replay and Go live stay reachable while browsing the map; View reveals the 2D, 3D, Move, Orbit, zoom, Fit, and Lock controls. Drag to pan in 2D; choose Move or Orbit in 3D. Two-pointer pan/pinch preserves the point under the gesture centroid. Fit enables automatic framing; a manual camera adjustment preserves that framing through later resize events.
+7. On mobile, use **Map**, **Missions**, **Activity**, and **View** in the workspace dock. Drag to pan and pinch to zoom. View reveals zoom, Fit, and Lock. Replay and Go live stay reachable while browsing the map.
 
 Mission routes include Project identity, mission, section, familiar scope, and card/detail mode. Browser Back/Forward and reload restore that state. A mission that disappears at an earlier replay position clears its selection with an explanatory status message.
 
@@ -82,7 +82,7 @@ Both sources implement one interface, `read() → Promise<Projection>`, describe
 - `dist/atlas-ui.js`, `dist/atlas.css`: navigation, searchable mission browser, responsive sheets, familiar filters, and touch camera controls.
 - `dist/atlas-layout.js`: compact paired project placement, corridor routing, bounds, and bounded overview mission packing.
 - `dist/atlas-viewport.js`: measured safe-area fitting for the projected scene and visible chrome.
-- `dist/atlas-crown.js`: exact canonical crown faces with sampled extrusion walls and restrained solid shading.
+- `dist/atlas-crown.js`: canonical crown silhouette, circular badge and Psyche label.
 - `dist/mission-navigation.js`: canonical route codec and replay selection reconciliation.
 - `dist/projection-source.js`, `dist/fixtures/cave-projects-list.json`: the projection seam and its static fixture (see Projection sources below).
 - `dist/mobile-interactions.js`: pointer geometry, camera gestures, and visual viewport geometry.

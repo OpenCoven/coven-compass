@@ -6,7 +6,7 @@ This package contains the complete runnable Compass source, its regression fixtu
 
 **The implemented application is a local simulation. The backend integration is a proposal.** This handoff does not establish that a production repository implements a proposed API, folder layout, lease, receipt, or authorization behavior. Verify canonical contracts at current pinned revisions before implementation.
 
-The scalable overview and crown refinement now incorporates adaptive-mobile replay improvements; **combined source-level verification passed**. It adds compact project placement, bounded overview mission detail, project search and sample presets, explicit scope, chrome-safe fit, and canonical crown relief. See [guide 15](docs/handoff/15-scalable-atlas-layout.md); historical browser evidence does not qualify these changes.
+The scalable overview and crown refinement now incorporates adaptive-mobile replay improvements; **combined source-level verification passed**. It adds compact project placement, bounded overview mission detail, project search and sample presets, explicit scope, chrome-safe fit, and canonical flat crown. See [guide 15](docs/handoff/15-scalable-atlas-layout.md); historical browser evidence does not qualify these changes.
 
 ## Start in ten minutes
 

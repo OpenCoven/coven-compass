@@ -42,7 +42,9 @@ Preserve angular project scope, circular missions, stable familiar identity mark
 
 For the new overview, test uniform four-corner Projects, compact paired placement, non-intersecting reserved rectangles, and shared corridor routes ending at inward gates. Inspect full/compact/tiny density transitions, up to eight miniature seals plus an exact remainder, aggregate counts, and the full searchable mission collection. Exercise project search, 8/16/32/64/128 sample presets, and reset without removing baseline or user-created Projects. Verify that the removed cosmetic creation caps do not reappear as navigation limits.
 
-Keep Coven/project scope explicit across pan, zoom, orbit, search, and history navigation. Fit must include the measured chrome-safe viewport and visible crown/label bounds. Resize should refit in auto-fit mode and preserve manual framing otherwise. Inspect the canonical crown aperture at low pitch in both scopes, with flat UI marks unchanged and no spinning or glow. These source contracts still require browser evidence for rendered clearance, focus, touch targets, and readability.
+Keep Coven/project scope explicit across pan, zoom, search, and history navigation. Fit must include the measured chrome-safe viewport and visible crown/label bounds. Resize should refit in auto-fit mode and preserve manual framing otherwise. Inspect the canonical crown aperture at multiple zoom levels in both scopes, with flat UI marks unchanged and no spinning or glow. These source contracts still require browser evidence for rendered clearance, focus, touch targets, and readability.
+
+Use `scripts/plan-qa.mjs` to exercise the plan-only restriction, legacy saved settings and desktop and mobile camera inputs. The external Playwright setup and local preview commands are in [AGENTS.md](../../AGENTS.md).
 
 ### Combined mobile, replay, and fit boundaries
 
@@ -60,7 +62,7 @@ Source regressions for these boundaries do not replace a browser pass at the com
 
 For every canonical fixture, independently calculate familiar agent shares, owned-target progress, and the tightest time/token/budget limit. Check all six states: Planned, Active, Needs you, Stalled, Sealed, Broken. Near-white indicates a need for human attention; coral indicates at least 85% of the relevant limit or the defined broken-state treatment. Neither color grants authority.
 
-Verify minimum 12° wedges, maximum eight wedges, and maximum twelve working pips per familiar against exact textual counts. A shape enlarged for legibility must not imply a different count. Missing or stale source data must remain explicitly missing/stale. Connection health is separate from mission state; avoid silently turning a disconnected mission into Planned, Stalled, or zero agents.
+Verify that the ring displays council share and target progress as separate quantities. Compare the labeled state, resource warning and exact counts with the inspector.
 
 ## Authority and recovery test matrix
 
