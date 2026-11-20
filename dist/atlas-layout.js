@@ -248,5 +248,56 @@
     };
   }
 
-  return Object.freeze({ layout, missionPacking });
+  // A task owns one share of the plane for every assigned agent, including gate reservations.
+  function taskPacking(counts, bounds) {
+    if (!counts.length) return [];
+    const prefix = [0], regions = [];
+    for (const count of counts) {
+      if (!Number.isSafeInteger(count) || count < 1) throw new RangeError('Expected a positive agent count');
+      prefix.push(prefix[prefix.length - 1] + count);
+    }
+    function split(first, end, x, y, width, height) {
+      const count = prefix[end] - prefix[first];
+      if (end - first > 1) {
+        const half = prefix[first] + count / 2;
+        let lo = first + 1, hi = end - 1;
+        while (lo < hi) {
+          const mid = Math.floor((lo + hi) / 2);
+          if (prefix[mid] < half) lo = mid + 1;
+          else hi = mid;
+        }
+        const cut = lo > first + 1 && half - prefix[lo - 1] < prefix[lo] - half ? lo - 1 : lo;
+        const share = (prefix[cut] - prefix[first]) / count;
+        if (width >= height) {
+          const w = width * share;
+          split(first, cut, x, y, w, height);
+          split(cut, end, x + w, y, width - w, height);
+        } else {
+          const h = height * share;
+          split(first, cut, x, y, width, h);
+          split(cut, end, x, y + h, width, height - h);
+        }
+        return;
+      }
+      const pad = Math.min(1.4, width * .05, height * .05);
+      const labelHeight = width >= 17 && height >= 16 ? Math.min(6, height * .2) : 0;
+      const w = width - 2 * pad, h = height - 2 * pad - labelHeight;
+      const rows = Math.max(1, Math.min(count, Math.round(Math.sqrt(count * h / w))));
+      const cells = [];
+      for (let row = 0; row < rows; row++) {
+        const start = Math.floor(row * count / rows);
+        const columns = Math.floor((row + 1) * count / rows) - start;
+        const cellWidth = w / columns, cellHeight = h * columns / count;
+        const cy = y + pad + labelHeight + h * start / count + cellHeight / 2;
+        for (let col = 0; col < columns; col++) {
+          cells.push({x: x + pad + cellWidth * (col + .5), y: cy, radius: .35 * Math.min(cellWidth, cellHeight)});
+        }
+      }
+      regions.push({x, y, width, height, labelHeight, cells});
+    }
+    split(0, counts.length, bounds.x, bounds.y, bounds.width, bounds.height);
+    return regions;
+  }
+
+  return Object.freeze({ layout, missionPacking, taskPacking });
 });

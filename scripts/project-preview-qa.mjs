@@ -511,3 +511,43 @@ test('familiar card connector meets the painted group and stays attached on zoom
     await attached();
   } finally { await page.close(); }
 });
+
+test('task areas follow replayed assignments, reservations and retirement', async () => {
+  const page = await browser.newPage({viewport: {width: 1440, height: 900}, reducedMotion: 'reduce'});
+  try {
+    await page.goto(new URL('#/project/psyche-build', base).href);
+    await page.locator('#workspaceTools > summary').click();
+    await page.locator('#traceBox > summary').click();
+    await page.locator('#traceLoad > summary').click();
+    const records = [];
+    const add = (sec, type, properties) => records.push({t: 1800000000000 + sec * 1000, type, mission: 'sizing', familiar: 'astra', ...properties});
+    add(0, 'mission.opened', {name: 'Layout'});
+    add(0, 'council.seated');
+    for (const task of ['A', 'B', 'Empty']) add(0, 'task.opened', {task, name: task});
+    for (let i = 0; i < 5; i++) add(0, 'agent.spawned', {agent: 'agent-' + i, task: i < 3 ? 'A' : i === 3 ? 'B' : null});
+    add(5, 'gate.requested', {ask: 'ask', gate: 'N', agents: ['agent-0']});
+    add(60, 'agent.assigned', {agent: 'agent-2', task: 'B'});
+    add(90, 'agent.retired', {agent: 'agent-4'});
+    const chooser = page.waitForEvent('filechooser');
+    await page.locator('#traceDrop').click();
+    await (await chooser).setFiles({name:'sizing.jsonl', mimeType:'text/plain', buffer:Buffer.from(records.map(e => JSON.stringify(e)).join('\n'))});
+    const squad = page.locator('.atlas-squad[data-m="sizing"][data-fam="astra"]');
+    await squad.locator('.task-region').first().waitFor({state: 'attached'});
+    const scrub = page.locator('#scrub');
+    const verify = async (value, expected) => {
+      await scrub.fill(value);
+      const result = await squad.evaluate(el => {
+        const floor = el.querySelector('.squad-plane > rect'), area = floor.width.baseVal.value * floor.height.baseVal.value;
+        return [...el.querySelectorAll('.task-region')].map(tile => [tile.dataset.task, Number(tile.dataset.agents), tile.width.baseVal.value * tile.height.baseVal.value / area]);
+      });
+      const total = expected.reduce((sum, [, n]) => sum + n, 0);
+      assert.deepEqual(result.map(([id, n]) => [id, n]), expected);
+      for (const [, count, share] of result) assert.ok(Math.abs(count / total - share) < .00001);
+      assert.equal(await squad.locator('.cell-ghost').count(), 1);
+    };
+    await verify('500', [['A', 3], ['B', 1], ['', 1]]);
+    await verify('800', [['A', 2], ['B', 2], ['', 1]]);
+    await verify('1000', [['A', 2], ['B', 2]]);
+    await verify('500', [['A', 3], ['B', 1], ['', 1]]);
+  } finally { await page.close(); }
+});
