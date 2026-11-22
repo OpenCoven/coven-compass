@@ -205,6 +205,24 @@ test('mission focus traces the seal and reveals the planes for its agents', asyn
     await page.locator('#plan.atlas-selected').waitFor();
     const selected = page.locator('.atlas-mission-group.atlas-mission-current');
     await selected.locator('.task-tray-well').waitFor({state: 'visible'});
+    const hierarchy = await selected.evaluate(group => {
+      const title = group.querySelector('.lead-name'), status = group.querySelector('.atlas-mission-state');
+      const pixels = text => parseFloat(getComputedStyle(text).fontSize) * text.getScreenCTM().a;
+      const bounds = node => node.getBoundingClientRect();
+      const tray = group.querySelector('.task-tray-bg');
+      return {title: pixels(title), status: pixels(status), warning: status.textContent,
+        count: group.querySelector('.mission-tasks .task-caption').textContent,
+        rowsClear: bounds(title).bottom <= bounds(status).top && bounds(status).bottom <= bounds(tray).top,
+        gatesClear: [...document.querySelectorAll('.atlas-project-decision .gate-l.on')].every(label => {
+          if (getComputedStyle(label).visibility === 'hidden') return true;
+          const a = bounds(label), b = bounds(tray);
+          return a.right <= b.left || a.left >= b.right || a.bottom <= b.top || a.top >= b.bottom;
+        })};
+    });
+    assert.ok(hierarchy.title >= 14 && hierarchy.title > hierarchy.status);
+    assert.match(hierarchy.warning, /Needs you · Tokens \d+%/);
+    assert.equal(hierarchy.count, '3 tasks');
+    assert.ok(hierarchy.rowsClear && hierarchy.gatesClear);
     const planes = page.locator('.atlas-squad:not(.dim) .squad-plane:visible');
     assert.ok(await planes.evaluateAll(items => items.some(plane => getComputedStyle(plane).display !== 'none')));
     assert.ok(await page.locator('.atlas-squad.dim .squad-plane').evaluateAll(planes =>
