@@ -129,8 +129,13 @@ for (const [name, width, height, mobile] of [['desktop', 1440, 900, false], ['ph
       await page.goto(url);
       await page.locator('.atlas-project-detail .lead-node[transform]').first().waitFor({state: 'visible'});
       await verifyGeometry(page);
-      const names = await page.locator('.atlas-project-detail .lead-name').evaluateAll(els => els.filter(el => el.checkVisibility({opacityProperty: true, visibilityProperty: true})).map(el => el.textContent));
-      assert.equal(names.length, 4, 'all four sample mission names are visible in the fitted Project');
+      const names = await page.evaluate(() => {
+        const visible = el => el.checkVisibility({opacityProperty: true, visibilityProperty: true});
+        const onMap = [...document.querySelectorAll('.atlas-project-detail .lead-name')].filter(visible).map(el => el.textContent);
+        const captions = [...document.querySelectorAll('#missionCaptions > button')].filter(visible).map(el => el.children[1].textContent);
+        return [...onMap, ...captions].map(name => name.replace(/\s+/g, '')).sort();
+      });
+      assert.deepEqual(names, ['Configrefactor', 'Releasenote', 'Reviewreadiness', 'Sourcesurvey'], 'each mission is named on its seal or its visible linked caption');
       const storage = await page.evaluate(key => JSON.parse(localStorage.getItem(key)), viewKey);
       assert.deepEqual(Object.keys(storage).sort(), ['locked', 'px', 'py', 'zoom']);
       assert.equal(storage.locked, true);
@@ -265,6 +270,10 @@ test('familiar identities and task controls remain distinct at Project fit', asy
         const bounds = selector => [...document.querySelectorAll('.atlas-project-detail ' + selector)]
           .map(el => el.getBoundingClientRect()).filter(r => r.width > 0 && r.height > 0);
         const trays = bounds('.task-tray-hit');
+        for (const action of document.querySelectorAll('#missionCaptions [data-tasks="true"]')) {
+          const rect = action.getBoundingClientRect();
+          if (rect.width && rect.height) trays.push(rect);
+        }
         const controls = [...bounds('.atlas-project-decision rect:not(.atlas-map-hit)'), ...bounds('.atlas-local-psyche')];
         const intersects = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
         return {

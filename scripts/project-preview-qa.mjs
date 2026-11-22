@@ -77,8 +77,8 @@ for (const [width, height] of [[1440, 900], [390, 844]]) {
         return getComputedStyle(el).whiteSpace === 'nowrap' && el.scrollLeft > 0 &&
           getComputedStyle(el).textOverflow !== 'ellipsis' && el.scrollLeft + el.clientWidth >= el.scrollWidth - 1;
       }), 'the last grapheme of an oversized word can be read without breaking it');
-      assert.equal(await unstaffed.locator('.task-cog').count(), 3);
-      assert.equal(await unstaffed.locator('.task-overflow').textContent(), '+2');
+      assert.equal(await unstaffed.locator('.task-cog').count(), 1);
+      assert.match(await unstaffed.getAttribute('aria-label'), /5 tasks.*Brief · Cody, Review · Cody, Copy · Cody, and 2 more/);
       // Start from the overview again, this time with a Project containing only unstaffed tasks.
       await page.locator(width < 500 ? '#atlasMobileMap' : '#atlasOverview').click();
       await project.locator('.preview-mission').first().waitFor();
@@ -172,10 +172,14 @@ test('mission browsing leaves space for the selected seal and the open Inbox rev
       }
       assert.equal(await task.locator('.i-task-summary').innerText(), parts.join(' · '));
     }
-    const note = page.locator('.ask-note');
-    await note.click();
+    const review = page.locator('#inspect [data-focus="review-request"]');
+    await review.click();
+    await page.getByRole('button', {name: 'Inspect opening event'}).waitFor();
+    assert.equal(await page.locator('#queueDetail').getByRole('button', {name: 'Allow once'}).count(), 0);
+    await page.locator('#queueClose').click();
+    await page.locator('#needBtn').click();
+    await page.locator('#notif .nrow').filter({hasText: 'Source survey'}).first().click();
     await page.locator('#notif .cf').waitFor();
-    await note.waitFor({state: 'hidden'});
     assert.equal(await page.getByRole('button', {name: 'Allow once', exact: true}).isVisible(), true);
     await launcher.click();
     await page.waitForFunction(() => {
@@ -186,7 +190,7 @@ test('mission browsing leaves space for the selected seal and the open Inbox rev
     });
     await page.keyboard.press('Escape');
     await page.locator('#tabChat').click();
-    await note.waitFor({state: 'visible'});
+    await review.waitFor({state: 'visible'});
   } finally {
     await page.close();
   }
@@ -242,6 +246,33 @@ test('Review readiness lets the keyboard switch familiar groups and return to th
   }
 });
 
+test('selected mission captions pair status with an actionable task count at desktop and phone widths', async () => {
+  for (const [width, height] of [[1440,900], [390,844], [320,568]]) {
+    const page = await browser.newPage({viewport: {width, height}, reducedMotion: 'reduce', hasTouch: width < 500});
+    try {
+      await page.goto(new URL('#/project/ui/mission/m-1?detail=card', base).href);
+      const group = page.locator('.atlas-mission-group.atlas-mission-current');
+      const state = group.locator('.atlas-mission-state'), tasks = group.locator('.mission-tasks');
+      assert.equal(await state.textContent(), 'In progress');
+      assert.match(await tasks.getAttribute('aria-label'), /3 tasks on Rebuild UI specimens: Build examples · Cody, Build registry · Cody, Run visual checks · Charm/);
+      await page.waitForFunction(() => {
+        const group = document.querySelector('.atlas-mission-group.atlas-mission-current');
+        const box = sel => group.querySelector(sel).getBoundingClientRect();
+        const title = box('.lead-name'), state = box('.atlas-mission-state'), tasks = box('.task-tray-hit');
+        return title.bottom <= Math.min(state.top, tasks.top) && state.right <= tasks.left &&
+          Math.abs(state.top + state.height / 2 - tasks.top - tasks.height / 2) < 2;
+      });
+      if (width < 500) {
+        const box = await group.locator('.task-tray-hit').boundingBox();
+        assert.ok(box.width >= 43.9 && box.height >= 43.9);
+        await tasks.tap();
+      } else { await tasks.focus(); await page.keyboard.press('Enter'); }
+      await page.getByRole('tab', {name:'Tasks', selected:true}).waitFor();
+      assert.deepEqual(await page.locator('#inspect .tname').allTextContents(), ['Build examples', 'Build registry', 'Run visual checks']);
+    } finally { await page.close(); }
+  }
+});
+
 test('mission focus traces the seal and reveals the planes for its agents', async () => {
   const page = await browser.newPage({viewport: {width: 1440, height: 900}, reducedMotion: 'reduce'});
   try {
@@ -255,7 +286,7 @@ test('mission focus traces the seal and reveals the planes for its agents', asyn
     await page.keyboard.press('Enter');
     await page.locator('#plan.atlas-selected').waitFor();
     const selected = page.locator('.atlas-mission-group.atlas-mission-current');
-    await selected.locator('.task-tray-well').waitFor({state: 'visible'});
+    await selected.locator('.task-disclosure').waitFor({state: 'visible'});
     const hierarchy = await selected.evaluate(group => {
       const title = group.querySelector('.lead-name'), status = group.querySelector('.atlas-mission-state');
       const pixels = text => parseFloat(getComputedStyle(text).fontSize) * text.getScreenCTM().a;
@@ -409,13 +440,13 @@ test('one top bar contains navigation and project actions at desktop and phone w
       }
       const brand = bar.getByRole('img', {name: 'Compass', exact: true});
       assert.equal(await brand.textContent(), '');
-      assert.equal(await brand.locator('svg').count(), 1);
+      assert.equal(await brand.evaluate(async img => { await img.decode(); return img.naturalWidth; }), 96);
       const scope = bar.getByRole('navigation', {name: 'Workspace scope'});
       if (await scope.isVisible()) {
         const coven = scope.locator('#atlasOverview'), project = scope.locator('#atlasProject');
         assert.deepEqual(await scope.getByRole('button').allTextContents(), ['Coven', 'Project']);
         const left = await coven.boundingBox(), right = await project.boundingBox();
-        const mark = await brand.boundingBox();
+        const mark = await bar.locator('.atlas-brand').boundingBox();
         assert.equal(left.width, right.width);
         assert.equal(left.y, mark.y);
         assert.equal(left.height, mark.height);
@@ -469,6 +500,7 @@ test('inspector actions open the brief and conversation and desktop title rows a
       }
       const a = await edit.boundingBox(), b = await ask.boundingBox();
       assert.equal(a.height, b.height);
+      assert.equal(a.y, b.y, 'the three brief actions share a row');
       assert.ok(a.height >= (width < 500 ? 44 : 36));
       await edit.click();
       await page.locator('#empty').waitFor();
@@ -586,6 +618,28 @@ test('map key topics fit desktop, tablet, phone and short landscape screens', as
       await page.close();
     }
   }
+});
+
+test('mission details and the selected task plane share the resized stage', async () => {
+  const page = await browser.newPage({viewport: {width: 1720, height: 960}, reducedMotion: 'reduce'});
+  try {
+    await page.goto(new URL('#/project/psyche-build/mission/m-2?familiar=astra', base).href);
+    let previousWidth = Infinity;
+    for (const width of [1720, 1260]) {
+      await page.setViewportSize({width, height: 960});
+      const manifest = page.locator('#notes .manifest');
+      await manifest.waitFor();
+      await page.waitForFunction(() => {
+        const stage = document.querySelector('#stage').getBoundingClientRect();
+        const cards = document.querySelector('#notes .manifest').getBoundingClientRect();
+        const group = document.querySelector('.atlas-squad[data-m="m-2"][data-fam="astra"] .squad-plane rect')?.getBoundingClientRect();
+        return group && group.width > 0 && group.left >= cards.right && group.right <= stage.right && group.top >= stage.top && group.bottom <= stage.bottom;
+      });
+      const cardWidth = (await manifest.boundingBox()).width;
+      assert.ok(cardWidth < previousWidth, 'the detail rail adapts as the stage narrows');
+      previousWidth = cardWidth;
+    }
+  } finally { await page.close(); }
 });
 
 test('familiar card connector meets the painted group and stays attached on zoom', async () => {
@@ -1058,3 +1112,79 @@ for (const [width, height] of [[1440, 900], [390, 844], [844, 390]]) {
     } finally { await page.close(); }
   });
 }
+
+for (const [width, height] of [[1440, 900], [390, 844], [844, 390]]) {
+  test(`create a mission from the browser at ${width}×${height}`, async () => {
+    const page = await browser.newPage({viewport: {width, height}, hasTouch: width < 1000, reducedMotion: 'reduce'});
+    const control = id => page.locator('#' + id);
+    const entry = control(width < 1000 ? 'atlasMobileMissions' : 'atlasMissions');
+    const add = control('atlasMissionCreate');
+    try {
+      await page.goto(new URL('#/coven', base).href);
+      await entry.click();
+      await add.click();
+      assert.ok(await control('atlasMissionProject').evaluate(el => el === document.activeElement));
+      await control('atlasMissionProject').selectOption('brand');
+      await control('atlasMissionSearch').fill('test filter');
+      await add.click();
+      await control('nmName').waitFor();
+      assert.equal(await control('emptyName').innerText(), 'brand');
+      await page.locator('#nmName:focus').waitFor();
+      assert.equal(await control('nmName').inputValue(), '');
+      assert.ok(await control('raise').isDisabled());
+      assert.ok(await control('nmBrief').isHidden());
+      await control('nmCustomize').click();
+      assert.ok(await control('nmBrief').isVisible());
+      await control('nmCustomize').click();
+      await control('emptyX').click();
+      assert.equal(await control('atlasMissionSearch').inputValue(), 'test filter');
+      assert.ok(await add.evaluate(el => el === document.activeElement));
+      await add.press('Enter');
+      await control('nmName').fill('Review the field report');
+      await control('raise').click();
+      await page.waitForURL(/project\/brand\/mission\//);
+      await control('inspect').waitFor();
+      assert.ok((await control('inspect').innerText()).includes('Review the field report'));
+      if (width < 1000) await page.locator('#inspect [data-focus="mission-back"]').click();
+      else await entry.click();
+      await control('atlasMissionSearch').fill('field report');
+      const matching = page.locator('.atlas-mission-row:visible');
+      assert.equal(await matching.count(), 1);
+      assert.equal(await matching.getAttribute('data-project'), 'brand');
+      assert.equal(await matching.locator('.atlas-mission-title').innerText(), 'Review the field report');
+      await control('atlasMissionClose').click();
+      await control('traceFile').setInputFiles({name:'recording.jsonl', mimeType:'text/plain',
+        buffer:Buffer.from(JSON.stringify({t:1700000000,type:'mission.opened',mission:'test',name:'Recording'}))});
+      await control('traceKind').filter({hasText:'loaded'}).waitFor({state:'attached'});
+      await entry.click();
+      assert.ok(await add.isDisabled());
+      assert.equal(await control('atlasMissionCreateHint').innerText(), 'Imported recordings are read-only.');
+    } finally { await page.close(); }
+  });
+}
+
+test('a request in the mission browser leads to the brief with the breached limit first', async () => {
+  const page = await browser.newPage({viewport: {width: 390, height: 844}, hasTouch: true});
+  try {
+    const events = [
+      {type: 'mission.opened', mission: 'specimens', name: 'Specimens', brief: {atMost: {tokens: 250000, usd: 3}}},
+      {type: 'council.seated', mission: 'specimens', familiar: 'cody'},
+      {type: 'mission.progress', mission: 'specimens', tokens: 247000, usd: 3.08},
+      {type: 'gate.requested', mission: 'specimens', familiar: 'cody', gate: 'N', ask: 'budget', title: 'Approve additional budget'},
+    ];
+    await page.goto(new URL('#/project/ui', base).href);
+    await page.locator('#traceFile').setInputFiles({name: 'specimens.jsonl', mimeType: 'text/plain',
+      buffer: Buffer.from(events.map((event, i) => JSON.stringify({...event, t: 1700000000 + i})).join('\n'))});
+    await page.locator('#traceKind').filter({hasText: 'loaded'}).waitFor({state: 'attached'});
+    await page.locator('#atlasMobileMissions').tap();
+    await page.locator('#atlasMissionSearch').fill('additional budget');
+    const result = page.locator('.atlas-mission-row:visible');
+    assert.equal(await result.locator('.atlas-request-preview').innerText(), 'Cody · Approve additional budget');
+    await result.tap();
+    assert.equal(await page.locator('#inspect .mission-stepper:visible').count(), 0);
+    const first = page.locator('#mission-section .brief-card').first();
+    assert.equal(await first.locator('h3').innerText(), 'Resource limits');
+    assert.match(await first.locator('.bfl').first().innerText(), /Budget.*Over limit · 103%/s);
+    assert.match(await first.locator('.bfl').nth(1).innerText(), /Tokens.*Near limit · 99%/s);
+  } finally { await page.close(); }
+});

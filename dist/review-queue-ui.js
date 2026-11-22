@@ -2,13 +2,18 @@
 window.mountReviewQueue = function ({getRows, read, confirmation, openingFor, inspectOpening, html, plural}) {
   const $ = id => document.getElementById(id);
   let queueSelection = null, queueDecision = '', queueKeys = [], queueScroll = 0, queueSignature = '', queueDetailSignature = '';
-  let displayedRequest;
+  let displayedRequest, scope;
   function closeReviewQueue() {
     queueSelection = null; queueDecision = ''; displayedRequest = null;
     $('queueDetail').replaceChildren(); $('queueList').replaceChildren(); queueKeys = [];
     $('reviewQueue').close();
-    $('needBtn').setAttribute('aria-pressed', 'false');
-    $('needBtn').focus();
+    if (scope) {
+      const origin = scope; scope = null;
+      origin.close();
+    } else {
+      $('needBtn').setAttribute('aria-pressed', 'false');
+      $('needBtn').focus();
+    }
   }
   function queueListFocus(key, index) {
     const buttons = Array.from($('queueList').querySelectorAll('button'));
@@ -19,10 +24,11 @@ window.mountReviewQueue = function ({getRows, read, confirmation, openingFor, in
     next.focus({preventScroll: true});
     if (keepScroll) {
       list.scrollTop = scroll;
-      // WebKit can scroll a native dialog's focused control after the click that reopened it.
-      requestAnimationFrame(() => {
+      // WebKit may reveal a partially visible focused row on the next painted frame.
+      const restore = () => {
         if (document.activeElement === next && $('reviewQueue').open) list.scrollTop = scroll;
-      });
+      };
+      requestAnimationFrame(() => { restore(); requestAnimationFrame(restore); });
     }
     else if (next !== $('queueFilter')) next.scrollIntoView({block: 'nearest'});
   }
@@ -36,7 +42,7 @@ window.mountReviewQueue = function ({getRows, read, confirmation, openingFor, in
     queueListFocus(key, index);
   }
   function syncReviewQueue() {
-    const rows = getRows();
+    const rows = getRows(scope);
     const detail = $('queueDetail'), list = $('queueList');
     detail.hidden = !queueSelection; list.hidden = $('queueTools').hidden = !!queueSelection;
     if (queueSelection) {
@@ -52,7 +58,7 @@ window.mountReviewQueue = function ({getRows, read, confirmation, openingFor, in
       queueDetailSignature = signature;
       const previous = detail.contains(document.activeElement) ? document.activeElement.textContent : null;
       $('queueHeading').textContent = row.title;
-      $('queueStatus').textContent = [row.project, row.mission, row.familiar].filter(Boolean).join(' · ');
+      $('queueStatus').textContent = [row.project, row.mission, row.familiar || (scope ? 'Requester not recorded' : '')].filter(Boolean).join(' · ');
       const back = html('button', 'btn', 'Back to queue'); back.type = 'button';
       back.addEventListener('click', () => returnToQueue());
       detail.replaceChildren(back);
@@ -61,19 +67,20 @@ window.mountReviewQueue = function ({getRows, read, confirmation, openingFor, in
         const inspect = html('button', 'btn', 'Inspect opening event'); inspect.type = 'button';
         inspect.addEventListener('click', () => {
           $('reviewQueue').close();
-          $('needBtn').setAttribute('aria-pressed', 'false');
+          if (!scope) $('needBtn').setAttribute('aria-pressed', 'false');
           inspectOpening(opening, () => {
             $('reviewQueue').showModal();
-            $('needBtn').setAttribute('aria-pressed', 'true');
-            const stillPending = getRows().some(candidate => candidate.key === row.key);
+            if (!scope) $('needBtn').setAttribute('aria-pressed', 'true');
+            const stillPending = getRows(scope).some(candidate => candidate.key === row.key);
             returnToQueue(stillPending ? '' : 'This request is no longer pending at this replay position.');
-          });
+          }, scope);
         });
         detail.append(inspect);
       } else {
         detail.append(html('p', '', 'The opening event is unavailable in this recording.'));
       }
-      detail.append(confirmation(row));
+      if (!scope) detail.append(confirmation(row));
+      else if (request.detail && request.detail !== row.title) detail.append(html('p', '', request.detail));
       if (previous) (Array.from(detail.querySelectorAll('button')).find(b => b.textContent === previous && !b.disabled) || back).focus();
       return;
     }
@@ -84,8 +91,8 @@ window.mountReviewQueue = function ({getRows, read, confirmation, openingFor, in
     queueSignature = signature;
     const focused = document.activeElement.dataset.key, index = Math.max(0, queueKeys.indexOf(focused)), scroll = list.scrollTop;
     queueKeys = matches.map(r => r.key);
-    $('queueHeading').textContent = 'Needs review';
-    $('queueStatus').textContent = !rows.length ? 'Inbox clear. No pending requests across the Coven.' : !matches.length ? 'No matching requests. Change or clear your filter.' : (query ? matches.length + ' of ' : '') + plural(rows.length, 'pending request');
+    $('queueHeading').textContent = scope ? scope.name : 'Needs review';
+    $('queueStatus').textContent = !rows.length ? (scope ? 'No pending requests for this mission.' : 'Inbox clear. No pending requests across the Coven.') : !matches.length ? 'No matching requests. Change or clear your filter.' : (query ? matches.length + ' of ' : '') + plural(rows.length, 'pending request');
     list.replaceChildren();
     let previousProject;
     for (const row of matches) {
@@ -93,7 +100,7 @@ window.mountReviewQueue = function ({getRows, read, confirmation, openingFor, in
       previousProject = row.project;
       const button = html('button', 'queue-row'); button.type = 'button'; button.dataset.key = row.key;
       button.setAttribute('aria-label', [row.title, row.project, row.mission, row.familiar].filter(Boolean).join(', '));
-      button.append(html('b', '', row.title), html('span', '', [row.mission, row.familiar].filter(Boolean).join(' · ')));
+      button.append(html('b', '', row.title), html('span', '', [row.mission, row.familiar || (scope ? 'Requester not recorded' : '')].filter(Boolean).join(' · ')));
       button.addEventListener('click', () => {
         queueScroll = list.scrollTop; queueSelection = row; queueDetailSignature = '';
         syncReviewQueue(); $('queueHeading').focus();
@@ -103,10 +110,18 @@ window.mountReviewQueue = function ({getRows, read, confirmation, openingFor, in
     list.scrollTop = scroll;
     if (focused) queueListFocus(focused, index);
   }
-  function open() {
+  function open(origin = null) {
+    scope = origin;
+    $('reviewQueue').querySelector('header small').textContent = scope ? scope.source + ' · Mission Inbox' : 'Coven Inbox';
     queueSelection = null; queueDecision = ''; displayedRequest = null;
     queueSignature = ''; $('queueFilter').value = ''; $('reviewQueue').showModal();
-    syncReviewQueue(); $('queueList').scrollTop = 0; $('queueFilter').focus(); $('needBtn').setAttribute('aria-pressed', 'true');
+    syncReviewQueue(); $('queueList').scrollTop = queueScroll = 0;
+    const rows = scope && getRows(scope);
+    if (rows && rows.length === 1) {
+      queueSelection = rows[0]; queueDetailSignature = '';
+      syncReviewQueue(); $('queueHeading').focus();
+    } else $('queueFilter').focus();
+    if (!scope) $('needBtn').setAttribute('aria-pressed', 'true');
   }
   $('queueFilter').addEventListener('input', syncReviewQueue);
   $('queueClose').addEventListener('click', closeReviewQueue);

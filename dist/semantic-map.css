@@ -307,8 +307,8 @@ body.atlas-enhanced #plan .agent.co .agent-task { fill: var(--hue2); }
 /* A shared capsule groups each mission’s recorded tasks at rest and during replay. */
 .mission-tasks { cursor: pointer; }
 .task-tray-hit { fill: transparent; pointer-events: all; }
-.task-tray-bg { fill: #27242d; stroke: #625a6c; stroke-width: 1; }
-.task-tray-well { fill: #211f27; }
+.task-tray-bg { fill: var(--card-raised); stroke: var(--border-strong); stroke-width: 1; }
+.task-disclosure { stroke: var(--muted-foreground); fill: none; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
 .squad-plane rect { fill: color-mix(in srgb, var(--hue) 10%, #19181e); stroke: color-mix(in srgb, var(--hue) 38%, #302d38); }
 .squad-plane :is(rect, line) { vector-effect: non-scaling-stroke; stroke-width: 1; }
 .squad-plane rect { cursor: pointer; }
@@ -318,11 +318,10 @@ body.atlas-enhanced #plan .agent.co .agent-task { fill: var(--hue2); }
 .squad-plane .task-region line { stroke: var(--hue); stroke-opacity: .55; stroke-width: 1.5; }
 .squad-plane .task-region text { fill: var(--foreground); font-family: var(--f-body); font-weight: 550; text-anchor: start; }
 .squad-plane line { stroke: var(--hue); stroke-opacity: .45; }
-body.atlas-enhanced #plan:not(.atlas-agent-detail) .squad-plane { display: none; }
-.task-cog { fill: var(--hue); }
+.task-cog { fill: var(--primary-hi); }
 .task-tray-summary path { fill: var(--muted-foreground); }
 .task-caption { fill: #e1dce9; font: 550 10px var(--f-body); font-variant-numeric: tabular-nums; }
-.task-overflow { fill: #dfdbe6; font: 500 9px var(--f-body); text-anchor: end; }
+
 .mission-tasks:is(:hover, :focus-visible) .task-tray-bg { stroke: var(--attention); stroke-width: 1.6; }
 
 .seal-reference { display: none; fill: #fff; stroke: #27242d; stroke-width: 2.5; paint-order: stroke; text-anchor: middle; font: 500 13px var(--f-body); }
@@ -355,7 +354,7 @@ body.atlas-enhanced #plan.atlas-selected :is(.atlas-mission-lines, .atlas-squad-
 /* Keep the selected seal prominent while retaining the coordinator's readings. */
 body.atlas-enhanced #plan.atlas-selected :is(.coord-track, .coord-band) { stroke-width: 2; }
 body.atlas-enhanced #plan.atlas-selected .coord-attention { stroke: #c6bdd9; }
-body.atlas-enhanced #plan .atlas-mission-group.dim:not(:hover, :focus-within) :is(.task-tray-bg, .task-tray-well) { fill: transparent; stroke: transparent; }
+body.atlas-enhanced #plan .atlas-mission-group.dim:not(:hover, :focus-within) .task-tray-bg { fill: transparent; stroke: transparent; }
 
 /* Keep the focused caption legible over branch lines at any pan position. */
 body.atlas-enhanced #plan .lead-node.sel .lead-name,
