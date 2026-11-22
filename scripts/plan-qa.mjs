@@ -229,7 +229,7 @@ test('custom Coven totals retain every Project, static route, and searchable key
   try {
     await page.goto(base);
     await page.locator('#atlasBrowse').click();
-    await page.locator('.atlas-layout-simulation > summary').click();
+    await page.locator('#atlasOpenLayout').click();
     await page.locator('#atlasCustomCount').fill('513');
     await page.locator('#atlasCustomCount').press('Enter');
     await page.waitForFunction(() => document.querySelector('#atlasSidebar').hidden &&

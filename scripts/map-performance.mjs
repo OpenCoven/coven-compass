@@ -210,7 +210,7 @@ async function scenario(size, projects, trial, soak = false) {
     report.navigation = await page.evaluate(() => performance.getEntriesByType('navigation')[0].toJSON());
     if (projects > 4) {
       await locator('#atlasBrowse').click();
-      await locator('.atlas-layout-simulation > summary').click();
+      await locator('#atlasOpenLayout').click();
       await input('populate overview', 'click', () => page.getByRole('button', {name:'Simulate a Coven with ' + projects + ' Projects'}).click(),
         {route:'#/coven', count:['.ghostfort',projects], shown:'.ghostfort'});
     }

@@ -6542,7 +6542,7 @@ function atlasSnapshot(includeMissions) {
       previewNames.push(mission.name);
       if (previewNames.length === 2) break;
     }
-    ps.push({key: k, missions: w.missions.size, agents: w.agents.size, needs: q, previewNames});
+    ps.push({key: k, layoutDemo: !!projects[k].layoutDemo, missions: w.missions.size, agents: w.agents.size, needs: q, previewNames});
     if (showMissions) w.missions.forEach(M => {
       const seal = sealOf(w, M);
       const pending = requests.filter(q => q.mission === M.id);
@@ -6617,7 +6617,7 @@ if (window.CovenMobileUI) window.CovenMobileUI.mount({
   close: {
     inspect: () => { if (cur().pick) clearPick(); else if (cur().fam) select(cur().sel, null, 'side'); else closeMissionDetails(); },
     psyche: () => setMode('closed'), empty: closeNew, projectForm: closeProjectForm,
-    atlasMissionBrowser: () => window.CovenAtlas.closeMissions(true), atlasSidebar: () => window.CovenAtlas.closeBrowse(true),
+    atlasMissionBrowser: () => window.CovenAtlas.closeMissions(true), atlasSidebar: () => window.CovenAtlas.dismissBrowse(),
     keyModal: closeKey, cpModal: closeWheel,
   },
   fallbackFocus: () => atlasFocusSelection(true),
