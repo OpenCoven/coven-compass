@@ -2298,6 +2298,7 @@ function atlasViewportFrame(selection) {
     reserve($('atlasSidebar'), 'side');
   }
   if (selection) {
+    reserve($('historyReturn'), 'bottom');
     const manifest = document.querySelector('#notes .manifest'), hud = document.querySelector(mobile ? '#notes .hud' : '#notes > .hud');
     reserve(manifest, 'side'); reserve(hud, mobile ? 'bottom' : 'top');
     const inspect = $('inspect');
@@ -3731,6 +3732,21 @@ function fitTarget(c) {
     x0 = Math.min(x0, x - r); x1 = Math.max(x1, x + r);
     y0 = Math.min(y0, y - r); y1 = Math.max(y1, y + r);
   };
+  // During gate replay frame the affected agents, including the slots they return to after resolution.
+  if ($('historyReturn')?.hidden === false) {
+    const event = c.trace[c.applied - 1];
+    const request = event?.ask && c.world.asks.get(event.ask);
+    if (request && request.mission === M.id) {
+      for (const id of request.agents) {
+        const agent = sc.agents.get(id);
+        if (agent && c.world.agents.get(id)?.mission === M.id) add(agent.q[0], agent.q[1], 24);
+      }
+      if (Number.isFinite(x0)) {
+        const target = window.CovenAtlasViewport.fit({x0, x1, y0, y1}, {width: stage.clientWidth, height: stage.clientHeight, frame: atlasViewportFrame(true), fill: .88, minZoom: ZMIN, maxZoom: 3});
+        return {zoom: target.zoom, px: target.px, py: target.py};
+      }
+    }
+  }
   add(ms.x, ms.y, 43);
   const focusedSeat = c.fam && sc.seats.get(seatId(M.id, c.fam));
   if (focusedSeat && c.focusGroup === focusedSeat.id && focusedSeat.slots) {

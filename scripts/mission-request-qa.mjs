@@ -62,11 +62,14 @@ for (const [entry, width, height] of [['map',1440,900], ['strip',1440,900], ['br
       assert.equal(payload.mission,'proof'); assert.equal(payload.type,'gate.requested');
       await activate(jump);
       assert.match(await el('#historyMapNote').innerText(),new RegExp('Event '+position+' · gate.requested'));
-      assert.match(await el('#plan .agent[aria-label^="proofreader"]').getAttribute('aria-label'),/Waiting at gate/);
+      const agent = el('#plan .agent[aria-label^="proofreader"]');
+      await agent.waitFor({state:'visible'});
+      assert.match(await agent.getAttribute('aria-label'),/Waiting at gate/);
       if (stepResolution) {
         await activate(el('#historyForwardEvent'));
         assert.match(await el('#historyMapNote').innerText(),/Event 7 · gate.resolved/);
-        assert.match(await el('#plan .agent[aria-label^="proofreader"]').getAttribute('aria-label'),/Working/);
+        await agent.waitFor({state:'visible'});
+        assert.match(await agent.getAttribute('aria-label'),/Working/);
       }
       await activate(el('#historyResume'));
       await activate(button('Back to Inbox'));

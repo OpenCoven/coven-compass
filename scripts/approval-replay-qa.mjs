@@ -83,7 +83,7 @@ for (const [width, height] of [[1440, 900], [390, 844]]) {
         await page.locator('#historyReturn').waitFor();
         assert.match(await note.innerText(), new RegExp('Event ' + position + ' '));
         assert.match(await agent.getAttribute('aria-label'), new RegExp(state));
-        assert.equal(await agent.isVisible(), true);
+        await agent.waitFor({state: 'visible', timeout: 5000});
         assert.match(page.url(), /mission\/proof/);
       }
       await activate(page, pending.getByRole('button', {name: 'Show event 5 on map'}));
