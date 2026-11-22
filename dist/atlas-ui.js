@@ -288,9 +288,9 @@
     var stage = $('stage');
     var head = node('header', 'atlas-header'); head.id = 'atlasHeader';
     var brand = node('div', 'atlas-brand');
-    brand.innerHTML = '<svg viewBox="0 0 2048 1889" aria-hidden="true"><use href="#crown" width="2048" height="1889"/></svg>';
-    brand.title = 'Compass';
-    brand.setAttribute('role', 'img'); brand.setAttribute('aria-label', 'Compass');
+    var logo = node('img');
+    logo.src = 'icons/compass.png'; logo.alt = 'Compass'; logo.width = logo.height = 28;
+    brand.append(logo); brand.title = 'Compass';
     var nav = node('nav', 'atlas-nav'); nav.setAttribute('aria-label', 'Workspace scope');
     nav.append(
       button('atlasOverview', 'Coven', function () { closeBrowse(false); closeMissions(false); api.overview(); }),

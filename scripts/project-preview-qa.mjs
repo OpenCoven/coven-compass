@@ -440,13 +440,13 @@ test('one top bar contains navigation and project actions at desktop and phone w
       }
       const brand = bar.getByRole('img', {name: 'Compass', exact: true});
       assert.equal(await brand.textContent(), '');
-      assert.equal(await brand.locator('svg').count(), 1);
+      assert.equal(await brand.evaluate(async img => { await img.decode(); return img.naturalWidth; }), 96);
       const scope = bar.getByRole('navigation', {name: 'Workspace scope'});
       if (await scope.isVisible()) {
         const coven = scope.locator('#atlasOverview'), project = scope.locator('#atlasProject');
         assert.deepEqual(await scope.getByRole('button').allTextContents(), ['Coven', 'Project']);
         const left = await coven.boundingBox(), right = await project.boundingBox();
-        const mark = await brand.boundingBox();
+        const mark = await bar.locator('.atlas-brand').boundingBox();
         assert.equal(left.width, right.width);
         assert.equal(left.y, mark.y);
         assert.equal(left.height, mark.height);
