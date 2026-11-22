@@ -34,3 +34,23 @@ test('a legacy saved familiar keeps its valid symbol, color and roles', () => {
   assert.equal(FAM.cody.role, 'Reviewer');
   assert.equal(FAM.cody.solid, undefined);
 });
+
+test('task planes reserve their staffed footprint and clear the largest familiar disc', () => {
+  const trace = [{type: 'mission.opened', mission: 'm'}];
+  const counts = [1, 4, 16, 64, 9, 2, 1, 3];
+  counts.forEach((count, i) => {
+    trace.push({type: 'council.seated', mission: 'm', familiar: String(i)});
+    for (let j = 0; j < count; j++) trace.push({type: 'agent.spawned', mission: 'm', familiar: String(i), agent: i + '/' + j});
+  });
+  const seats = [...layout(trace).seat.values()];
+  const reach = seat => Math.hypot(seat.x - seat.bx, seat.y - seat.by);
+  assert.ok(reach(seats[0]) < reach(seats[3]), 'a single agent takes less branch space than a large task group');
+  seats.forEach((seat, i) => {
+    const halfWidth = Math.min(36, Math.max(9, 8 * Math.sqrt(counts[i])));
+    for (const other of seats) {
+      const dx = Math.max(0, Math.abs(other.bx - seat.x) - halfWidth);
+      const dy = Math.max(0, Math.abs(other.by - seat.y) - .82 * halfWidth);
+      assert.ok(Math.hypot(dx, dy) >= 25 + 7.9, 'both council rows stay clear of the task surfaces');
+    }
+  });
+});
