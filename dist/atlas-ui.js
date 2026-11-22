@@ -587,7 +587,7 @@
         state.dataset.state = p.needs ? 'attention' : p.agents || p.missions ? 'active' : 'dormant';
         b.dataset.active = String(p.key === s.active);
         b.setAttribute('aria-current', p.key === s.active ? 'true' : 'false');
-        var projectLabel = p.key + ', ' + p.missions + (p.missions === 1 ? ' mission' : ' missions') + ', ' + p.agents + (p.agents === 1 ? ' agent' : ' agents') + (p.needs ? ', ' + p.needs + (p.needs === 1 ? ' pending request' : ' pending requests') : '');
+        var projectLabel = p.key + ', ' + p.missions + (p.missions === 1 ? ' mission' : ' missions') + ', ' + p.agents + (p.agents === 1 ? ' agent' : ' agents') + (p.needs ? ', ' + p.needs + (p.needs === 1 ? ' request needs you' : ' requests need you') : '');
         var names = p.previewNames || [], remaining = p.missions - names.length;
         var preview = b.querySelector('.atlas-project-preview-names');
         preview.dataset.summary = names.join(' · ') + (names.length && remaining > 0 ? ' · +' + remaining : '');
