@@ -1,0 +1,114 @@
+{
+  "baseline": "c4dc693d728562bfee6ef11491777efbd751d00f",
+  "implementation": "4608e8404ac7726c8d35f6d9f50601d771d40316",
+  "fixture": "tests/recordings/approval-replay.jsonl",
+  "fixture_sha256": "c7ec5b3360453ce09a5a05d4bd2fa9f763d09a4475c86b5ed5d62d899c1a01e0",
+  "playwright": "1.64.1",
+  "runner": "scripts/replay-bookmark-qa.mjs",
+  "before": [
+    {
+      "engine": "chromium",
+      "version": "156.0.8078.4",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "input": "keyboard",
+      "observations": [
+        {
+          "missionLink": "#/project/psyche-build/mission/proof",
+          "reopened": "#/project/psyche-build",
+          "source": "live",
+          "eventVisible": false
+        }
+      ],
+      "outgoingRequestBodies": 0
+    },
+    {
+      "engine": "webkit",
+      "version": "27.2",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "input": "touch",
+      "observations": [
+        {
+          "missionLink": "#/project/psyche-build/mission/proof",
+          "reopened": "#/project/psyche-build",
+          "source": "live",
+          "eventVisible": false
+        }
+      ],
+      "outgoingRequestBodies": 0
+    }
+  ],
+  "after": [
+    {
+      "engine": "chromium",
+      "version": "156.0.8078.4",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "input": "keyboard",
+      "observations": [
+        "Cancelled picker, same-name wrong file, and cancellation during a slow read followed by retry",
+        {
+          "position": 5,
+          "mission": "Proof review",
+          "request": "proof-1",
+          "type": "gate.requested",
+          "agent": "Waiting at gate",
+          "freshContext": true
+        },
+        {
+          "position": 7,
+          "mission": "Proof review",
+          "request": "proof-1",
+          "type": "gate.resolved",
+          "agent": "Working",
+          "freshContext": true
+        },
+        "Cross-mission event refused; explicit Cancel returned to navigation"
+      ],
+      "outgoingRequestBodies": 0
+    },
+    {
+      "engine": "webkit",
+      "version": "27.2",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "input": "touch",
+      "observations": [
+        "Cancelled picker, same-name wrong file, and cancellation during a slow read followed by retry",
+        {
+          "position": 5,
+          "mission": "Proof review",
+          "request": "proof-1",
+          "type": "gate.requested",
+          "agent": "Waiting at gate",
+          "freshContext": true
+        },
+        {
+          "position": 7,
+          "mission": "Proof review",
+          "request": "proof-1",
+          "type": "gate.resolved",
+          "agent": "Working",
+          "freshContext": true
+        },
+        "Cross-mission event refused; explicit Cancel returned to navigation"
+      ],
+      "outgoingRequestBodies": 0
+    }
+  ],
+  "images": {
+    "before-phone.png": "b01d199dc6b03ec5b969f55d06375af86b471d55ddb286785497a01ffface0c7",
+    "wrong-file-phone.png": "fee61d7da73358ff1d642714e5478577d2f6a831d7466f5429b5655e15fccb91",
+    "waiting-phone.png": "48a21dd90bf376821bd4cbee50f62b0ccb27bef284d377556ef0ee61f9e9a5b5",
+    "resolved-desktop.png": "7c90444f2a335e96cfd3c2d8842ecf587f3c1f9704f06c47f9fbf7830794545e"
+  }
+}
