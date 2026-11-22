@@ -90,7 +90,7 @@ body.atlas-enhanced .atlas-brand {
   grid-area: brand; display: grid; place-items: center; flex: none;
   inline-size: var(--atlas-header-target); block-size: var(--atlas-header-target);
 }
-body.atlas-enhanced .atlas-brand > img { display: block; width: 28px; height: 28px; mix-blend-mode: screen; }
+body.atlas-enhanced .atlas-brand > img { display: block; width: 28px; height: 28px; }
 body.atlas-enhanced .atlas-nav {
   grid-area: scope; justify-self: start; display: flex; flex: none; align-items: stretch;
   height: var(--atlas-header-target); border-radius: 8px; background: var(--background);
