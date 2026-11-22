@@ -69,9 +69,22 @@ for (const width of [1440, 390]) for (const input of ['pointer', 'keyboard']) {
       assert.equal(await row(other).count(), 1);
       if (input === 'keyboard') await tabTo(row(target));
       else await row(target).scrollIntoViewIfNeeded();
+      // A partially visible row can be activated without centering it first.
+      let hit;
+      if (input === 'pointer') {
+        hit = await row(target).evaluate(button => {
+          const list = button.parentElement, viewport = list.getBoundingClientRect();
+          list.scrollTop += button.getBoundingClientRect().top - (viewport.bottom - 18);
+          const bounds = button.getBoundingClientRect();
+          return {x: bounds.left + 12, y: bounds.top + 8, clipped: bounds.bottom > viewport.bottom};
+        });
+        assert.ok(hit.clipped);
+      }
       const offset = await list.evaluate(e => e.scrollTop);
       assert.ok(offset > 0);
-      await activate(row(target));
+      if (input === 'keyboard') await activate(row(target));
+      else if (mobile) await page.touchscreen.tap(hit.x, hit.y);
+      else await page.mouse.click(hit.x, hit.y);
       assert.ok(await el('#queueAsk').getByRole('button', {name: 'Hold', exact: true}).isDisabled());
       const investigate = button('Inspect opening event');
       assert.equal(await investigate.count(), 1, 'the pending request must offer its exact recorded opening event');

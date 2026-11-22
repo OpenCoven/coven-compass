@@ -14,7 +14,12 @@ window.mountReviewQueue = function ({getRows, read, confirmation, openingFor, in
     const buttons = Array.from($('queueList').querySelectorAll('button'));
     const next = buttons.find(b => b.dataset.key === key) || buttons[Math.min(index, buttons.length - 1)] || $('queueFilter');
     next.focus({preventScroll: true});
-    if (next !== $('queueFilter')) next.scrollIntoView({block: 'nearest'});
+    if (next !== $('queueFilter')) {
+      const row = next.getBoundingClientRect(), viewport = $('queueList').getBoundingClientRect();
+      if (next.dataset.key !== key || row.bottom <= viewport.top || row.top >= viewport.bottom) {
+        next.scrollIntoView({block: 'nearest'});
+      }
+    }
   }
   function returnToQueue(message) {
     const {key} = queueSelection, index = Math.max(0, queueKeys.indexOf(key));
