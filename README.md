@@ -4,13 +4,21 @@ An interactive Site exploration of the supplied Coven Castles v27 prototype. Thi
 
 ## Run Compass locally
 
-Serve the static site from the repository root.
+Use Git and Python 3.10 or later to clone and preview Compass. The repository checks also require Node.js 24. No package installation is needed to run the map.
 
 ```sh
+git clone https://github.com/OpenCoven/coven-compass.git
+cd coven-compass
 python3 -m http.server 8000 --bind 127.0.0.1 --directory dist
 ```
 
-Open `http://127.0.0.1:8000/`. Run `node scripts/verify-all.mjs --check` to verify the site and run its tests. Compass is distributed under the [Apache License, Version 2.0](LICENSE). [Copyright and brand notices](NOTICE) accompany the source.
+Open `http://127.0.0.1:8000/` and choose **Projects** to explore the map. Stop the server with Ctrl+C, then run `node scripts/verify-all.mjs --check` from the same directory.
+
+## Contribute a change
+
+Install the [clone-local secret hooks](SECURITY.md#before-contributing) before editing. Work on a topic branch, run `node scripts/verify-all.mjs` before committing, and include any regenerated `tests/evidence/current.json` with your changes. Run `node scripts/verify-all.mjs --check` to confirm the evidence matches the checkout. If you have read-only access, push the branch to your fork and open a pull request against `OpenCoven/coven-compass` on `main`. See the [focused checks by file](AGENTS.md#where-to-make-a-change) and the [checks required for merge](SECURITY.md#public-repository-protections).
+
+To report a security issue, use [private vulnerability reporting](SECURITY.md#report-a-vulnerability). Compass is distributed under the [Apache License, Version 2.0](LICENSE) with [copyright and brand notices](NOTICE).
 
 ## Scalable overview refinement
 
@@ -90,7 +98,7 @@ Current test and crown results are recorded in [the verification evidence](tests
 
 The source integrates layout/crown work with replay and adaptive-mobile improvements from `07919b421df5457e778e1b1c6a73512c8f27ba73`. Earlier checkpoints (the layout/crown branch, the incoming replay/adaptive-mobile branch with its Chrome audits, and the mobile/navigation baseline) are historical records with their own counts in [current state and evidence](docs/handoff/01-current-state-and-evidence.md) and [Mobile readiness](MOBILE_READINESS.md). They do not verify the current source.
 
-The [incoming replay/mobile audit record](tests/evidence/replay-mobile-layout-audits.json) retains diagnostic failures separately from successful retests, source fingerprints, and interaction notes. It covers replay, the adaptive dock, mission surfaces, focus, and draft retention for that earlier source. Historical browser JPGs remain in the repository only, including `tests/evidence/replay-mobile-320.jpg`; they are excluded from the handoff. [Mobile readiness](MOBILE_READINESS.md) preserves the detailed records without treating them as validation of this merge.
+The [incoming replay/mobile audit record](tests/evidence/replay-mobile-layout-audits.json) retains diagnostic failures separately from successful retests, source fingerprints, and interaction notes. It covers replay, the adaptive dock, mission surfaces, focus, and draft retention for that earlier source. [Mobile readiness](MOBILE_READINESS.md) preserves the detailed records without treating them as validation of this merge.
 
 Layout geometry covers selected project counts through 128: 0, 1, 2, 4, 8, 12, 24, 64, and 128. Mission-packing integration covers every integer count from 0 through 128. These source cases are not browser load or production benchmarks.
 

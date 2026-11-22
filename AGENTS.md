@@ -8,13 +8,13 @@ People reading this: Val owns the repo and merges. Nova coordinates and routes w
 
 ```bash
 node scripts/verify-all.mjs           # run before every commit; writes tests/evidence/current.json
-node scripts/verify-all.mjs --check   # what CI runs; also fails on stale generated files
+node scripts/verify-all.mjs --check   # checks the checkout and fails on stale evidence
 sh scripts/verify-checkout.sh         # same command (wrapper kept from #6)
 ```
 
 Verification checks the public site, source, Node suite, and crown. Use Node.js 24 and Python 3.10+. Preview locally with `python3 -m http.server 8000 --bind 127.0.0.1 --directory dist`.
 
-Commit any regenerated `tests/evidence/current.json`. CI runs `.github/workflows/verify.yml`.
+Commit any regenerated `tests/evidence/current.json`. GitHub Actions is disabled. The [security policy](SECURITY.md#public-repository-protections) lists the required merge check.
 
 ## Where to make a change
 
@@ -70,7 +70,7 @@ Keep `tests/fixtures/` (the pinned baseline) and the dated audits in `tests/evid
 | `tests/evidence/` | `current.json` (generated) and historical JSON audits |
 | `scripts/` | `verify-all.mjs`, `check-source.mjs`, `test-atlas-crown.mjs`, `scan-secrets.py` |
 | `docs/handoff/` | Architecture, plan, acceptance, security, decisions: the editable doc source |
-| `docs/discovery/` | Dated discovery records. Keep the pinned private source packet intact. The release contains only the reviewed public summary. |
+| `docs/discovery/` | Dated discovery records, including the original pinned packet and the reviewed summary. Preserve the original evidence. |
 | `examples/` | Inert conceptual JSON, not wire schemas |
 
 For a function-level map of `dist/index.html`, see [chapter 01 §4](docs/handoff/01-current-state-and-evidence.md#4-source-map-for-an-implementer).
