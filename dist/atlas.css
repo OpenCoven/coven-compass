@@ -1288,3 +1288,7 @@ body.atlas-enhanced[data-atlas-scope="coven"] .workspace-urgent .stop-ctl { disp
 @container left (min-width: 720px) {
   body[data-atlas-scope="coven"] .need-ctl .attn .w { display: inline; position: static; width: auto; height: auto; opacity: 1; margin-inline-end: 5px; }
 }
+
+.mission-review { display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: 8px; width: 100%; padding: 9px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--card-raised); text-align: left; }
+.mission-review .an-t { min-width: 0; overflow-wrap: anywhere; }
+.mission-review .an-go { padding-inline: 7px; }

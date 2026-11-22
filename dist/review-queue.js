@@ -3,11 +3,12 @@
   function pending(world) {
     return Array.from(world.asks.values()).filter(request => request.status === 'open');
   }
-  function rows(projects, familiarName) {
+  function rows(projects, familiarName, scope) {
     const result = [];
-    for (const project of Object.keys(projects).sort()) {
+    for (const project of (scope ? [scope.project] : Object.keys(projects).sort())) {
       const {world} = projects[project];
       for (const q of pending(world)) {
+        if (scope && q.mission !== scope.mission) continue;
         result.push({
           key: JSON.stringify([project, q.id]), project, id: q.id, title: q.title,
           mission: world.missions.get(q.mission)?.name || q.mission || '',

@@ -172,10 +172,14 @@ test('mission browsing leaves space for the selected seal and the open Inbox rev
       }
       assert.equal(await task.locator('.i-task-summary').innerText(), parts.join(' · '));
     }
-    const note = page.locator('.ask-note');
-    await note.click();
+    const review = page.locator('#inspect [data-focus="review-request"]');
+    await review.click();
+    await page.getByRole('button', {name: 'Inspect opening event'}).waitFor();
+    assert.equal(await page.locator('#queueDetail').getByRole('button', {name: 'Allow once'}).count(), 0);
+    await page.locator('#queueClose').click();
+    await page.locator('#needBtn').click();
+    await page.locator('#notif .nrow').filter({hasText: 'Source survey'}).first().click();
     await page.locator('#notif .cf').waitFor();
-    await note.waitFor({state: 'hidden'});
     assert.equal(await page.getByRole('button', {name: 'Allow once', exact: true}).isVisible(), true);
     await launcher.click();
     await page.waitForFunction(() => {
@@ -186,7 +190,7 @@ test('mission browsing leaves space for the selected seal and the open Inbox rev
     });
     await page.keyboard.press('Escape');
     await page.locator('#tabChat').click();
-    await note.waitFor({state: 'visible'});
+    await review.waitFor({state: 'visible'});
   } finally {
     await page.close();
   }
