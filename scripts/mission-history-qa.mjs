@@ -78,7 +78,7 @@ try {
   await range('start', 1);
   await range('end', 2);
   assert.match(await inspect(2), /Cody joined the council/);
-  await activate(btn('Use replay end'));
+  await activate(btn('Set end to current replay position'));
   assert.equal(await loc('#history-end').inputValue(), '9');
   assert.match(await inspect(9), /Release review → Publication review/);
   await inspect(8); await activate(btn('End here'));
@@ -116,7 +116,7 @@ try {
   const afterMap = await scroll();
   assert.ok(afterMap.every((value, i) => Math.abs(value - beforeMap[i]) < 2), 'history restores its scroll position');
   assert.deepEqual(await Promise.all(['start','end'].map(k => loc('#history-' + k).inputValue())), ['4','8']);
-  await activate(btn('Use replay start'));
+  await activate(btn('Set start to current replay position'));
   assert.equal(await loc('#history-start').inputValue(), '6');
   assert.match(await loc('#historyRows').innerText(), /Decision recorded/);
   if (keyboard) await page.keyboard.press('Escape'); else await activate(btn('Close'));

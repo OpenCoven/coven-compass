@@ -1693,8 +1693,8 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
     <section id="historyRange" hidden aria-label="Comparison range">
       <p>Includes events after the start and through the end, in recording order.</p>
       <div class="history-range">
-        <div><label for="history-start">After event</label><input id="history-start" type="number" min="0" step="1" aria-describedby="history-start-note"><small id="history-start-note"></small><button class="btn sm" id="history-start-cursor" type="button">Use replay start</button></div>
-        <div><label for="history-end">Through event</label><input id="history-end" type="number" min="0" step="1" aria-describedby="history-end-note"><small id="history-end-note"></small><button class="btn sm" id="history-end-cursor" type="button">Use replay end</button></div>
+        <div><label for="history-start">After event</label><input id="history-start" type="number" min="0" step="1" aria-describedby="history-start-note"><small id="history-start-note"></small><button class="btn sm" id="history-start-cursor" type="button" aria-label="Set start to current replay position">Use current position</button></div>
+        <div><label for="history-end">Through event</label><input id="history-end" type="number" min="0" step="1" aria-describedby="history-end-note"><small id="history-end-note"></small><button class="btn sm" id="history-end-cursor" type="button" aria-label="Set end to current replay position">Use current position</button></div>
       </div>
     </section>
     <div class="history-workspace">
