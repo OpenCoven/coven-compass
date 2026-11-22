@@ -1682,6 +1682,21 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
   </main>
 </div>
 
+<dialog id="missionHistory" aria-labelledby="historyLabel historyTitle" aria-describedby="historySource">
+  <header><div><span id="historyLabel">Mission history</span><h2 id="historyTitle" tabindex="-1"></h2><p id="historySource"></p></div><button class="btn" type="button" id="historyClose">Close</button></header>
+  <div class="history-content">
+    <div class="history-import"><label class="btn sm" for="historyFile">Load a local recording<input class="sr" type="file" id="historyFile" accept=".jsonl,.ndjson,.json,.txt"></label><p id="historyError" role="alert" hidden></p></div>
+    <p>Compare the changes after the start event through the end event. Event numbers follow recording order, including events at the same time.</p>
+    <div class="history-range">
+      <div><label for="history-start">After event</label><input id="history-start" type="number" min="0" step="1" aria-describedby="history-start-note"><small id="history-start-note"></small><button class="btn sm" id="history-start-cursor" type="button">Start at replay position</button></div>
+      <div><label for="history-end">Through event</label><input id="history-end" type="number" min="0" step="1" aria-describedby="history-end-note"><small id="history-end-note"></small><button class="btn sm" id="history-end-cursor" type="button">End at replay position</button></div>
+    </div>
+    <p id="historyCount" role="status"></p><ol id="historyRows"></ol>
+    <nav id="historyPages" aria-label="History pages" hidden><button class="btn" id="historyPrev" type="button">Previous events</button><button class="btn" id="historyNext" type="button">Next events</button></nav>
+  </div>
+</dialog>
+<div id="historyReturn" hidden><span id="historyMapNote" role="status"></span><button class="btn sm" type="button" id="historyBackEvent">Previous event</button><button class="btn sm" type="button" id="historyForwardEvent">Next event</button><button class="btn" id="historyResume" type="button">Return to History</button></div>
+
 <div class="modal" id="keyModal" hidden>
   <div class="modal-bg" id="keyBg"></div>
   <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="keyTitle">
@@ -1767,6 +1782,8 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
 <script src="atlas-presentation.js"></script>
 <script src="map-focus.js"></script>
 <script src="simulation-model.js"></script>
+<script src="mission-history.js"></script>
+<script src="mission-history-ui.js"></script>
 <script src="projection-source.js"></script>
 <script>
 (() => {
@@ -2179,8 +2196,8 @@ function makeProject(key, trace, recorded) {
   return {key, trace, recorded: !!recorded, world: newWorld(), applied: 0, layout: layoutOf(trace), sel: null, fam: null, detail: null, pick: null, ackN: 0, expanded: new Set()};
 }
 let atlasNavigationReady = false, atlasRestoringRoute = false, atlasLastRoute = '';
-function seek(c, t, quiet) {
-  const {changed, reset, fresh} = SimModel.advance(c, t);
+function seek(c, t, quiet, through) {
+  const {changed, reset, fresh} = SimModel.advance(c, t, through);
   if (window.CovenMissionNavigation) {
     const cameraBack = c.camBack, result = window.CovenMissionNavigation.normalizeSelection(c);
     if (result.missionRemoved || result.familiarRemoved || result.agentRemoved) {
@@ -2216,10 +2233,10 @@ function tStart(c) {
 const canAct = () => live && !cur().recorded;
 // One replay position for every visible Project, including the overview.
 // A recording remains at its last event when the shared clock passes its end.
-function seekTimeline(t, quiet) {
+function seekTimeline(t, quiet, through) {
   let changed = false;
   Object.values(projects).forEach(c => {
-    if (seek(c, c.recorded ? Math.min(t, tEnd(c)) : t, quiet || c !== cur())) changed = true;
+    if (seek(c, c.recorded ? Math.min(t, tEnd(c)) : t, quiet || c !== cur(), c === cur() ? through : undefined)) changed = true;
   });
   return changed;
 }
@@ -3745,9 +3762,32 @@ function placeCard() {
 // ------------------------------------------------------------ side panel + agent info
 // A mission lists its council, one row per familiar. A familiar lists every council it sits on, one row per mission.
 const insp = {sig: '', nums: null, dots: new Map(), taskSummaries: [], slot: null};
+const missionHistory = window.CovenHistoryView({
+  model: SimModel, current: cur, readSeal: (w, m) => SEAL_STATE[sealOf(w, m).state][0],
+  async importRecording(file) {
+    if (await loadTrace(file)) {
+      window.CovenAtlas.openMissionsForProject(active);
+    } else {
+      $('historyError').textContent = $('traceErr').textContent;
+      $('historyError').hidden = false;
+    }
+  },
+  showMoment(mission, t, position) {
+    jumpTo(t, position);
+    const exists = cur().world.missions.has(mission);
+    if (exists) select(mission, null, 'card', {focus: false});
+    return exists;
+  },
+  restoreInspector(mission) {
+    if (!cur().world.missions.has(mission)) return $('stage').focus();
+    select(mission, null, 'side', {focus: false});
+    $('inspect').querySelector('[data-focus="mission-history"]')?.focus();
+  },
+});
 let panelView = store.get('coven-compass-panel');
 if (!['brief', 'council', 'tasks', 'agents'].includes(panelView)) panelView = 'brief';
 function syncInspect(force) {
+  missionHistory.syncPosition();
   const c = cur(), w = c.world, box = $('inspect'), M = c.sel && c.detail === 'side' ? w.missions.get(c.sel) : null;
   if (!M || (c.fam && !M.seats.includes(c.fam))) { if (!box.hidden) { box.hidden = true; box.textContent = ''; insp.sig = ''; insp.dots = new Map(); insp.taskSummaries = []; insp.slot = null; if (window.CovenMobileUI) window.CovenMobileUI.sync(); } return; }
   const slotOf = a => c.layout.slot.get(a.id) || 0;
@@ -3979,6 +4019,7 @@ function syncInspect(force) {
       [['Allowed without asking', f.may], ['Requires approval', f.must]].forEach(([k, v]) => { const r = html('div', 'kv'); r.append(html('dt', null, k), html('dd', null, v)); dl.appendChild(r); });
       wd.append(sm, dl); box.appendChild(wd);
     }
+    addAction('mission-history', 'History', ICON.pulse, 'Compare recorded changes', () => missionHistory.open(c, M.id, M.name));
     addAction('ask-psyche', editable ? 'Ask Psyche' : 'View chat',
       '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3.5h10v7H7l-3.5 2.5v-2.5H3z" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"/></svg>',
       editable ? 'Progress and blockers' : 'Replay conversation', () => {
@@ -4231,16 +4272,17 @@ function lintEvent(text, c) {
 // an edited event rewrites history: the project is rebuilt by replaying the changed trace
 function retrace(tr) {
   const o = cur(), n = makeProject(active, tr, o.recorded); projects[active] = n;
+  missionHistory.reset();
   if (live) cursor = Date.now();
   seekTimeline(cursor, true);
   if (o.sel && n.world.missions.has(o.sel)) { n.sel = o.sel; n.fam = o.fam && n.world.missions.get(o.sel).seats.includes(o.fam) ? o.fam : null; n.detail = o.detail; n.camBack = o.camBack; }
-  n.ackN = o.ackN; n.votes = o.votes; n.noticed = o.noticed; n.sample = o.sample; n.layoutDemo = o.layoutDemo; n.dlg = o.dlg; n.sent = o.sent;
+  n.ackN = o.ackN; n.votes = o.votes; n.noticed = o.noticed; n.sample = o.sample; n.skippedEvents = o.skippedEvents; n.layoutDemo = o.layoutDemo; n.dlg = o.dlg; n.sent = o.sent;
   leadSig = needsSig = streamSig = marksSig = lcSig = wardSig = traceSig = ''; insp.sig = '';
   buildScene(); refresh(); atlasQueueFit(); atlasWriteRoute(true);
 }
 let evNote = '';
 function drawEvents() {
-  const c = cur(), box = $('traceEv'), n = c.trace.filter(e => e.t <= cursor).length, from = Math.max(0, n - 12); box.textContent = '';
+  const c = cur(), box = $('traceEv'), n = c.applied, from = Math.max(0, n - 12); box.textContent = '';
   for (let i = n - 1; i >= from; i--) box.appendChild(eventRow(c, c.trace[i]));
   $('traceEvNote').textContent = evNote || (n ? `The ${n - from} most recent${live ? '' : ' before ' + hm(cursor)}. Open one to read or change its JSON.` : 'No events before this moment.');
   $('traceEvNote').className = 'dr-note' + (evNote ? ' ok' : ''); evNote = '';
@@ -4302,7 +4344,9 @@ async function loadTrace(file) {
   if (!res.events.length) return fail('No recognized events in that file. Each line needs t and a known type.');
   err.hidden = !res.bad; if (res.bad) err.textContent = `${plural(res.bad, 'line')} skipped as unrecognized.`;
   const wasDemo = cur().layoutDemo; projects[active] = makeProject(active, res.events, true); projects[active].layoutDemo = wasDemo;
+  projects[active].skippedEvents = res.bad;
   enter(); atlasQueueFit(); atlasWriteRoute(true);
+  return true;
 }
 {
   const dz = $('traceDrop');
@@ -4323,7 +4367,7 @@ function openWard(key) {
   wardSig = ''; drawWard(); placePill(d); d.open = true;
   const r = $('wardBody').querySelector(`.dr[data-k="${key}"]`); if (r) { r.open = true; r.firstElementChild.focus(); }
 }
-function jumpTo(t) { const c = cur(); live = false; playing = false; cursor = clamp(t, tStart(c), tEnd(c)); clearPick(); seekTimeline(cursor); needsSig = ''; refresh(); }
+function jumpTo(t, through) { const c = cur(); live = false; playing = false; cursor = clamp(t, tStart(c), tEnd(c)); clearPick(); seekTimeline(cursor, false, through); needsSig = ''; refresh(); }
 function showAgent(q, id) { const c = cur(); if (c.sel !== q.mission || c.fam) select(q.mission); if (c.world.agents.has(id)) { c.pick = {id, via: 'plan'}; showPick(); } }
 function linkify(text, into) {
   String(text).split(/(https?:\/\/[^\s]+|\/[\w.\-]+(?:\/[\w.\-]+)*)/g).forEach((part, i) => {
@@ -5501,7 +5545,7 @@ $('play').addEventListener('click', () => {
 $('speed').addEventListener('click', () => { speed = SPEEDS[(SPEEDS.indexOf(speed) + 1) % SPEEDS.length]; timelineUI(); });
 $('live').addEventListener('click', goLive);
 $('traceFile').addEventListener('change', ev => { const f = ev.target.files && ev.target.files[0]; ev.target.value = ''; loadTrace(f); });
-$('traceReset').addEventListener('click', () => { const wasDemo = cur().layoutDemo; projects[active] = makeProject(active, sampleTrace(SAMPLES[active] ? active : 'ui', Date.now()), false); projects[active].layoutDemo = wasDemo; $('traceErr').hidden = true; enter(); atlasQueueFit(); atlasWriteRoute(true); });
+$('traceReset').addEventListener('click', () => { const wasDemo = cur().layoutDemo; projects[active] = makeProject(active, sampleTrace(SAMPLES[active] ? active : 'ui', Date.now()), false); projects[active].sample = true; projects[active].layoutDemo = wasDemo; $('traceErr').hidden = true; enter(); atlasQueueFit(); atlasWriteRoute(true); });
 
 // ------------------------------------------------------------ wiring
 ICON.stop = '<svg viewBox="0 0 14 14" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.3" fill="currentColor"/></svg>'; $('stopIc').innerHTML = ICON.stop;
@@ -5540,6 +5584,7 @@ function refresh() {
   }
 }
 function enter(preserveTime = false) {
+  missionHistory.reset();
   const c = cur();
   if (cz.open && cz.edit) { cz.open = false; $('projectForm').hidden = true; }
   if (!preserveTime) { playing = false; live = !c.recorded; cursor = tEnd(c); }

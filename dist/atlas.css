@@ -1186,3 +1186,42 @@ body.atlas-enhanced #mission-section .bfl > b { white-space: normal; text-align:
 @media (max-width: 1100px), (pointer: coarse) {
   body.atlas-enhanced .atlas-result-summary :is(#atlasProjectClear, #atlasMissionReset), body.atlas-enhanced .atlas-drawer-heading #atlasNewProject { min-height: 44px; }
 }
+
+#missionHistory {
+  width: min(640px, calc(100vw - 24px)); max-height: calc(100dvh - 32px); padding: 0;
+  box-sizing: border-box; border: 1px solid var(--border-strong); border-radius: 14px;
+  color: var(--foreground); background: var(--card); font: inherit; overflow: auto;
+}
+#missionHistory::backdrop { background: rgb(0 0 0 / .72); }
+#missionHistory header { position: sticky; top: 0; z-index: 1; display: flex; justify-content: space-between; align-items: start; gap: 12px; background: var(--card); border-bottom: 1px solid var(--border); padding: 16px 20px; }
+#missionHistory header span, #historyCount { color: var(--primary); }
+#missionHistory h2 { margin: 3px 0; font-size: 1.5rem; overflow-wrap: anywhere; }
+#missionHistory p { margin: 0; }
+#historySource, .history-content > p, .history-range small, .history-event-head time { color: var(--muted-foreground); }
+.history-content { padding: 16px 20px; display: grid; gap: 16px; }
+.history-range { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
+.history-range > div { display: grid; align-content: start; gap: 6px; }
+.history-range input { width: 100%; box-sizing: border-box; background: var(--well); border: 1px solid var(--border-strong); border-radius: 6px; padding: 8px; color: inherit; }
+.history-range small, #historySource { overflow-wrap: anywhere; }
+#historyRows { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+#historyRows li { padding: 12px; background: var(--card-raised); border: 1px solid var(--border); border-radius: 8px; overflow-wrap: anywhere; }
+.history-event-head, .history-actions, #historyPages { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px; }
+.history-event-head time, #historyRows code { font-size: .82em; }
+.history-change { display: grid; gap: 3px; margin: 10px 0; }
+.history-actions { justify-content: start; }
+#historyReturn { position: fixed; z-index: 45; bottom: max(76px, 12dvh); left: 50%; transform: translateX(-50%); width: max-content; max-width: 88vw; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; padding: 8px 12px; border: 1px solid var(--border-strong); background: var(--card); border-radius: 8px; }
+body.atlas-adaptive-mobile #historyReturn { bottom: calc(var(--mobile-chrome-height, 108px) + env(safe-area-inset-bottom, 0px) + 8px); }
+@media (max-width: 500px) {
+  #missionHistory header, .history-content { padding: 12px; }
+  .history-range button { white-space: normal; min-height: 42px; }
+  .history-actions button, #historyResume { min-height: 40px; }
+}
+
+.history-import label { cursor: pointer; position: relative; }
+.history-import label:focus-within { outline: 2px solid var(--focus, currentColor); outline-offset: 2px; }
+#historyError { color: var(--attention); }
+#historyMapNote { flex: 1 0 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#historyRows li p { overflow-wrap: anywhere; }
+.history-source-event { margin: 8px 0; color: var(--muted-foreground); }
+.history-source-event summary { cursor: pointer; }
+.history-source-event pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: .85em; }

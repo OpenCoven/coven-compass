@@ -81,6 +81,6 @@ test('index.html loads the model before its inline script and no longer defines 
     assert.equal(index.includes(gone), false, `${gone} moved to simulation-model.js`);
   }
   assert.match(index, /const SimModel = window\.CovenSimulationModel\.create\(\{normBrief, ART, KIND, GATE_NAME, CAP, fam\}\);/);
-  assert.match(index, /function seek\(c, t, quiet\) \{\n {2}const \{changed, reset, fresh\} = SimModel\.advance\(c, t\);/);
+  assert.match(index, /function seek\(c, t, quiet, through\) \{\n {2}const \{changed, reset, fresh\} = SimModel\.advance\(c, t, through\);/);
   assert.match(index, /function emit\(c, e\) \{\n {2}SimModel\.append\(c, e, Date\.now\(\)\);/);
 });
