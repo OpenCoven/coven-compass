@@ -39,7 +39,7 @@ The combined mobile workspace reuses the original replay and camera controls in 
 
 | File / function | Current responsibility | Integration implication |
 | --- | --- | --- |
-| `dist/simulation-model.js`: `newWorld`, `apply`, `advance`, `append`, `summarize`; `dist/index.html`: sample traces, `seek`, `emit` | The model folds local sample events with no DOM or timers; the page generates the traces and keeps selection, camera, and effects in `seek`/`emit` | Keep as fixture/demo mode; do not route real mutations through this reducer as if it were authoritative |
+| `src/simulation-model.ts`: `newWorld`, `apply`, `advance`, `append`, `summarize`; `dist/index.html`: sample traces, `seek`, `emit` | The model folds local sample events with no DOM or timers; the page generates the traces and keeps selection, camera, and effects in `seek`/`emit` | Keep as fixture/demo mode; do not route real mutations through this reducer as if it were authoritative |
 | `layoutOf`, `worldOf`, `missionXY`, `targetOf` | Stable display positions and gate locations | Map canonical IDs into stable view coordinates; coordinates must never grant capability or ownership |
 | `dist/atlas-layout.js` | Aspect-aware paired overview placement, reserved rectangles, shared corridors, inward gates, and bounded mission packing | Pure presentation geometry; do not reinterpret route topology as canonical task dependencies |
 | `dist/atlas-viewport.js` and scene fit integration | Fit projected bounds to measured safe space | Keep auto-fit and manual camera state separate from explicit scope and operational state |

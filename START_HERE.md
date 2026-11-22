@@ -12,7 +12,7 @@ See the [README](README.md) to run the map locally and [AGENTS.md](AGENTS.md) fo
 
 ## Migrating a module to TypeScript
 
-Atlas layout, crown rendering, annotation placement and viewport geometry are authored in `src/atlas-layout.ts`, `src/atlas-crown.ts`, `src/atlas-presentation.ts` and `src/atlas-viewport.ts`. The browser and Node tests consume their generated classic scripts in `dist/`. From the repository root, install the pinned development compiler once and run the following after editing a typed module.
+The simulation model, atlas layout, crown rendering, annotation placement and viewport geometry are authored in `src/simulation-model.ts`, `src/atlas-layout.ts`, `src/atlas-crown.ts`, `src/atlas-presentation.ts` and `src/atlas-viewport.ts`. The browser and Node tests consume their generated classic scripts in `dist/`. From the repository root, install the pinned development compiler once and run the following after editing a typed module.
 
 ```sh
 npm --prefix src ci
