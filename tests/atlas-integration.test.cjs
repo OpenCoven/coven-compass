@@ -102,7 +102,7 @@ function scopeFixture() {
     countOf: (world, predicate) => [...world.agents.values()].filter(predicate).length,
     sealOf: () => ({state: 'planned'}), SEAL_STATE: {planned: ['Planned']}, sealSvg: () => '<svg></svg>',
     $: () => null, sc: {hl: null, g: 1}, cam: {zoom: 1, locked: false}, camT: {zoom: 1},
-    atlasScope: 'coven', panelView: 'agents',
+    atlasScope: 'coven', missionFormation: 'ring', panelView: 'agents',
     atlasNavigationReady: true, atlasRestoringRoute: false, atlasLastRoute: null,
     window: {CovenMissionNavigation: navigation}, history, location,
   });
@@ -170,7 +170,7 @@ test('overview keeps an exact accessible mission total across preview densities'
 test('miniatures retain Project-scoped mission, council and task identities as replay changes', () => {
   const fam = k => ({name: k, hue: k === 'astra' ? '#9cc2f2' : '#e8c99a', roles: []});
   const fixture = load(['createProjectPreview', 'syncProjectPreview', 'updateVisibleProjectPreviews', 'sealOf', 'buildSeal', 'drawSeal'], {
-    window: {CovenAtlasLayout: layout}, svgEl, fam, MAX_WEDGES: 8, MIN_WEDGE: 12, WARN_AT: .85,
+    missionFormation: 'ring', window: {CovenAtlasLayout: layout}, svgEl, fam, MAX_WEDGES: 8, MIN_WEDGE: 12, WARN_AT: .85,
     pol: (r, a) => [r * Math.cos(a * Math.PI / 180), r * Math.sin(a * Math.PI / 180)],
     countOf: (w, pred) => [...w.agents.values()].filter(pred).length, openAsks: w => [...w.asks.values()],
   });

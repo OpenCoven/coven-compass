@@ -38,7 +38,7 @@ function fixture() {
     tStart: project => project.trace[0].t - 15000,
     worldOf: key => key === 'build' ? [0, 0] : [100, 100],
     clamp: (n, min, max) => Math.max(min, Math.min(max, n)),
-    select() {}, buildScene() {}, saveView() {},
+    select() {}, buildScene() {}, saveView() {}, traceRead: 0, missionHistory: {reset() {}},
     atlasWriteRoute: () => routes.push(context.active),
     seek: (project, t) => { project.world.t = t; seeks.push({key: project.key, t}); return true; },
     easeCam: () => false, stepAgents: () => false, project() {}, timelineUI() {},

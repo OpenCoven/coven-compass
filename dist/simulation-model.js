@@ -95,12 +95,12 @@ function apply(w, e) {
 }
 
 // The fold half of seek(): rebuild from the start when moving backwards, then apply every
-// event up to t. The caller handles selection, the camera, and effects.
-function advance(c, t) {
+// event up to t. An optional event count separates successive events at the same time.
+function advance(c, t, through = c.trace.length) {
   let changed = false, reset = false; const fresh = [];
-  if (t < c.world.t) { c.world = newWorld(); c.applied = 0; changed = reset = true; }
+  if (t < c.world.t || c.applied > through) { c.world = newWorld(); c.applied = 0; changed = reset = true; }
   const tr = c.trace;
-  while (c.applied < tr.length && tr[c.applied].t <= t) { const e = tr[c.applied++]; apply(c.world, e); fresh.push(e); changed = true; }
+  while (c.applied < through && c.applied < tr.length && tr[c.applied].t <= t) { const e = tr[c.applied++]; apply(c.world, e); fresh.push(e); changed = true; }
   c.world.t = t;
   return {changed, reset, fresh};
 }

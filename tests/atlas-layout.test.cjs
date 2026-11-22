@@ -7,7 +7,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const test = require('node:test');
-const { layout, missionPacking, taskPacking } = require('../dist/atlas-layout.js');
+const { layout, missionGrid, missionPacking, taskPacking } = require('../dist/atlas-layout.js');
 
 const COUNTS = [0, 1, 2, 4, 8, 12, 24, 64, 128];
 const ASPECTS = [0.4, 0.7, 1, 1.6, 2.5];
@@ -194,7 +194,7 @@ test('invalid keys and geometry fail explicitly', () => {
 test('browser global and CommonJS expose the same dependency-free API', () => {
   const context = { window: {} };
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../dist/atlas-layout.js'), 'utf8'), context);
-  assert.deepEqual(Object.keys(context.window.CovenAtlasLayout).sort(), ['layout', 'missionPacking', 'taskPacking']);
+  assert.deepEqual(Object.keys(context.window.CovenAtlasLayout).sort(), ['layout', 'missionGrid', 'missionPacking', 'taskPacking']);
   assert.equal(JSON.stringify(context.window.CovenAtlasLayout.layout(['a', 'b'])), JSON.stringify(layout(['a', 'b'])));
 });
 
@@ -259,4 +259,12 @@ test('task regions tile the whole plane in proportion to staffing and contain ev
       assert.equal(positions.size, counts[i]);
     });
   }
+});
+
+test('mission grid reserves Psyche and preserves occupied cells as missions are added', () => {
+  const full = missionGrid(128);
+  assert.equal(new Set(full.map(p => p.x + ',' + p.y)).size, full.length);
+  assert.ok(full.every(p => (p.x || p.y) && Number.isInteger(p.x) && Number.isInteger(p.y)));
+  for (const count of COUNTS) assert.deepEqual(missionGrid(count), full.slice(0, count));
+  assert.throws(() => missionGrid(-1), RangeError);
 });

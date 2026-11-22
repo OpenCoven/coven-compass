@@ -20,6 +20,18 @@ Install the [clone-local secret hooks](SECURITY.md#before-contributing) before e
 
 To report a security issue, use [private vulnerability reporting](SECURITY.md#report-a-vulnerability). Compass is distributed under the [Apache License, Version 2.0](LICENSE) with [copyright and brand notices](NOTICE).
 
+## Open Compass as a macOS app
+
+Install the Xcode command-line tools, Rust and the Tauri v2 CLI (`cargo install tauri-cli --version '^2' --locked`). Run these commands from the repository root to scan the local site and build the app with its embedded assets.
+
+```sh
+python3 scripts/scan-secrets.py site dist
+cargo tauri build --bundles app -- --locked
+open "src-tauri/target/release/bundle/macos/Coven Compass.app"
+```
+
+The desktop window opens the same local simulation as the web preview. Open a Project, then choose **Project tools (•••) → Trace → Load a recording** to inspect a local JSON Lines file. Try `tests/recordings/approval-replay.jsonl` to see the Proof review and Index review missions. The desktop content policy confines resources to the bundled site and uses system fallback fonts. For development, run `cargo tauri dev`. The build uses an ad hoc signature for local use. Developer ID signing and notarization are separate distribution steps.
+
 ## Scalable overview refinement
 
 **Implemented; combined source-level verification passed.** The current refinement uses flat Project outlines in an aspect-aware compact lattice, paired positions, and shared branch corridors that meet each project's inward-facing gate. Routes show coordination, not execution dependencies or authority. Read [the scalable layout and crown guide](docs/handoff/15-scalable-atlas-layout.md) for implementation and integration details.
@@ -51,7 +63,7 @@ The council ring summarizes agent shares with a minimum visible segment. Mission
 3. Select a near-white square on a project boundary to open its pending decisions.
 4. Open mission details for Brief, Council, Tasks, and Agents. Previous/Next explores the current Project; Back to mission leaves a familiar view; All missions restores the search and selected row.
 5. Use Seal lab to explore Planned, Active, Needs you, Stalled, Sealed, and Broken, plus target progress, working counts, and resource limits.
-6. Replay the shared live timeline, pause or scrub to a moment, and change the focused Project without restarting playback. Go live returns to the current sample state. Imported recordings keep their own extent and finish paused.
+6. Replay the shared live timeline, pause or scrub to a moment, and change the focused Project without restarting playback. Go live returns to the current sample state. Imported recordings keep their own extent and finish paused. From mission details, open **History** to compare two event positions, inspect the recorded assignment or decision, and show that moment on the map. Use Previous event and Next event on the map to step through that mission, including events recorded at the same time. Follow a request to its resolution, or see that it was still open when the recording ended. Return to History restores your interval and event.
 7. On mobile, use **Map**, **Missions**, **Activity**, and **View** in the workspace dock. Drag to pan and pinch to zoom. View reveals zoom, Fit, and Lock. Replay and Go live stay reachable while browsing the map.
 
 Mission routes include Project identity, mission, section, familiar scope, and card/detail mode. Browser Back/Forward and reload restore that state. A mission that disappears at an earlier replay position clears its selection with an explanatory status message.

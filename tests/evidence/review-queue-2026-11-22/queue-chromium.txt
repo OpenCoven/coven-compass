@@ -1,0 +1,13 @@
+✔ cross-Project decisions and return focus at 1440×900 (2347.030917ms)
+✔ cross-Project decisions and return focus at 390×844 (1626.275333ms)
+✔ cross-Project decisions and return focus at 844×390 (1637.244792ms)
+✔ playing a recording retires the exact request and returns focus to the empty queue (6214.958083ms)
+✔ dense queue agrees with the Project and mission browsers and restores a scrolled row (893.424375ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 12882.266125
