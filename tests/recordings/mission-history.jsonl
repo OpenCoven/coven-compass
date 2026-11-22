@@ -1,0 +1,9 @@
+{"t":"2026-11-18T06:20:00Z","type":"mission.opened","mission":"release","name":"Release review"}
+{"t":"2026-11-18T06:20:01Z","type":"council.seated","mission":"release","familiar":"cody"}
+{"t":"2026-11-18T06:20:02Z","type":"task.opened","mission":"release","task":"draft","name":"Draft notes","familiar":"cody"}
+{"t":"2026-11-18T06:20:03Z","type":"task.opened","mission":"release","task":"check","name":"Check sources","familiar":"cody"}
+{"t":"2026-11-18T06:20:04Z","type":"agent.spawned","mission":"release","agent":"worker-1","familiar":"cody","task":"draft"}
+{"t":"2026-11-18T06:20:05Z","type":"agent.assigned","agent":"worker-1","task":"check"}
+{"t":"2026-11-18T06:20:05Z","type":"gate.requested","mission":"release","familiar":"cody","agents":["worker-1"],"ask":"publish","title":"Approve publication","gate":"N"}
+{"t":"2026-11-18T06:20:08Z","type":"gate.resolved","ask":"publish","decision":"allowed"}
+{"t":"2026-11-18T06:20:09Z","type":"mission.renamed","mission":"release","name":"Publication review"}
