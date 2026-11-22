@@ -1363,3 +1363,32 @@ body.atlas-enhanced[data-atlas-scope="coven"] .workspace-urgent .stop-ctl { disp
 #bookmarkStatus, #historySubject { flex-basis: 100%; }
 #historySubject { overflow-wrap: anywhere; font-weight: 550; }
 #historySubject:not([hidden]) + #historyMapNote { color: var(--muted-foreground); font-size: .9em; }
+/* Mission creation keeps the outcome and lead in view while the brief stays editable. */
+#empty .hd { background: var(--card); padding-block: 9px; }
+#empty .hd-t { font-size: 1.08em; font-weight: 600; }
+#empty #emptyName { margin-inline-start: auto; }
+#empty .nm-l { color: var(--foreground); font-weight: 580; }
+#empty .nm-f:focus-within { border-color: var(--primary); box-shadow: none; }
+#empty .nm-f input:focus-visible { outline: none; }
+#empty .nm-leads { grid-template-columns: repeat(2,minmax(0,1fr)); }
+#empty .nm-lead { display: flex; flex-direction: row; gap: 7px; padding: 8px; text-align: start; min-height: 44px; background: var(--card); }
+#empty .nm-lead[aria-checked=true] { border-color: var(--hue); background: color-mix(in srgb,var(--hue) 9%,var(--card)); }
+#empty .nm-lead .avatar { flex: none; }
+#empty .nm-lead-copy { display: grid; gap: 1px; min-width: 0; overflow-wrap: anywhere; }
+#empty .nm-lead-copy b { font-weight: 550; color: var(--foreground); }
+#empty .nm-lead-copy small, #nmLimits, #nmPermissions summary { color: var(--muted-foreground); font-size: .9em; }
+#nmPermissions summary { cursor: pointer; padding-block: 5px; }
+#empty .nm-terms { padding: 8px; border-radius: 6px; background: var(--card-raised); }
+#empty .nm-terms li { grid-template-columns: 14px 4.4em 1fr; align-items: baseline; }
+#empty .nm-terms svg { align-self: center; }
+.nm-section-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+#nmPreview { display: grid; gap: 4px; padding: 10px 12px; background: var(--card-raised); border-inline-start: 2px solid var(--primary); border-radius: 5px; overflow-wrap: anywhere; }
+#nmOutput { font-weight: 550; }
+#empty .dr-v { white-space: normal; overflow-wrap: anywhere; text-overflow: clip; }
+#empty .em-act { justify-content: space-between; flex-wrap: nowrap; }
+#empty .em-act .nm-foot { flex: 1; line-height: 1.35; }
+#empty .btn.pri { color: var(--primary-foreground); background: var(--primary); }
+#empty .btn.pri:disabled { opacity: .55; }
+@media (pointer:coarse), (max-width: 500px) {
+  #empty :is(#nmCustomize, #nmPermissions summary) { min-height: 44px; align-content: center; }
+}
