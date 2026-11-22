@@ -31,3 +31,9 @@ GitHub secret scanning covers the public repository’s history. Push protection
 Changes to `main` go through a pull request. GitHub requires the branch to be up to date and the Vercel GitHub App’s `Vercel` check to pass. These protections apply to administrators. Force pushes and branch deletion are blocked.
 
 GitHub Actions is disabled for this repository. Contributors run the Node suite and hook regression tests locally. The Vercel build runs the site and secret checks described above. To inspect their exact commands, see [vercel.json](vercel.json).
+
+## Accepted dependency alerts
+
+| Alert | Package | Decision | Re-check when |
+| --- | --- | --- | --- |
+| [Dependabot #1](https://github.com/OpenCoven/coven-compass/security/dependabot/1), GHSA-wrw7-89jp-8q8g (medium) | `glib` 0.18.5 in `src-tauri/Cargo.lock`. The fix is in 0.20.0 | Dismissed as tolerable risk by Val on 2026-11-22. The dependency chain is `tauri` 2.12.7 → `wry` 0.57.3 → `webkit2gtk` 2.0.2 / `gtk` 0.18. Those are Linux-only crates, and Tauri 2 can't move to gtk-rs 0.20 yet. The bundle target is a macOS `.app` only, so `glib` isn't compiled. Compass code doesn't use `VariantStrIter`. | Before any Linux build or release, or when Tauri adopts gtk-rs 0.20. Either one reopens this decision. |
