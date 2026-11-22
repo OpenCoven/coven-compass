@@ -899,20 +899,32 @@ test('a crowded map transfers its Tasks action and keyboard focus to the caption
     // Cover the available label space using a measured toolbar, independently of the sample's geometry.
     const coverMap = () => page.addStyleTag({content: '#atlasCameraDock {position:fixed!important; inset:0!important; width:auto!important; height:auto!important; pointer-events:none}'});
     const redraw = () => page.evaluate(() => window.dispatchEvent(new Event('resize')));
-    const cover = await coverMap();
-    await redraw();
-    await caption.waitFor();
-    assert.match(await caption.innerText(), /3 tasks/);
-    assert.ok(await caption.evaluate(el => el === document.activeElement));
-    await cover.evaluate(el => el.remove());
-    await redraw();
-    await tray.waitFor();
-    assert.ok(await tray.evaluate(el => el === document.activeElement));
+    const trayName = await tray.getAttribute('aria-label');
+    const other = page.locator('#atlasBrowse');
+    for (const moveAway of [false, true, false]) {
+      await tray.focus();
+      const cover = await coverMap();
+      await redraw();
+      await caption.waitFor();
+      assert.equal(await caption.getAttribute('data-key'), JSON.stringify(['coven-cave', 'm-1']));
+      assert.match(await caption.innerText(), /3 tasks/);
+      assert.ok(await caption.evaluate(el => el === document.activeElement));
+      if (moveAway) await other.focus();
+      await cover.evaluate(el => el.remove());
+      await redraw();
+      // Resize schedules the label pass. Caption removal signals that it reconciled this mission.
+      await caption.waitFor({state: 'detached'});
+      await tray.waitFor();
+      assert.equal(await tray.getAttribute('aria-label'), trayName);
+      assert.ok(await (moveAway ? other : tray).evaluate(el => el === document.activeElement));
+      assert.equal(await page.locator('#plan [data-map-item][tabindex="0"]').count(), 1);
+    }
     await coverMap();
     await redraw();
     await caption.waitFor();
     await page.keyboard.press('Enter');
     await page.locator('#inspect [role="tab"][aria-selected="true"]').filter({hasText: 'Tasks'}).waitFor();
+    assert.match(page.url(), /#\/project\/coven-cave\/mission\/m-1(?:[?]|$)/);
   } finally { await page.close(); }
 });
 
