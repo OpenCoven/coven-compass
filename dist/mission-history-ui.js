@@ -35,14 +35,17 @@ window.CovenHistoryView = function ({model, current, readSeal, showMoment, resto
     input.addEventListener('change', () => updateRange(key, input.valueAsNumber));
     byId('history-' + key + '-cursor').onclick = () => {
       refreshEntries();
-      updateRange(key, current().applied);
+      updateRange(key, state.project.applied);
     };
   }
   function show(entry) {
     state.selected = entry.position;
     const wasModal = dialog.open;
     if (wasModal) dialog.close();
-    const exists = showMoment(state.mission, entry.time, entry.position);
+    // Opening another Project on the map clears its previous inspector. Keep this investigation through that transition.
+    const investigation = state;
+    const exists = showMoment(investigation.project, investigation.mission, entry.time, entry.position);
+    state = investigation;
     const summary = entry.changes.map(change => change.label + ' · ' + change.after).join('; ');
     byId('historyMapNote').textContent = 'Event ' + entry.position + ' · ' + entry.type + ' · ' +
       (summary || entry.details || time(entry.time)) + (exists ? '' : ' · Mission absent at this position.');
@@ -113,6 +116,10 @@ window.CovenHistoryView = function ({model, current, readSeal, showMoment, resto
       source.addEventListener('toggle', () => {
         if (source.open && !json.textContent) json.textContent = JSON.stringify(at(entry.position), null, 2);
       });
+      if (state.origin?.position === entry.position) {
+        json.textContent = JSON.stringify(at(entry.position), null, 2);
+        source.open = true;
+      }
       row.append(source, actions);
       list.append(row);
     }
@@ -126,10 +133,15 @@ window.CovenHistoryView = function ({model, current, readSeal, showMoment, resto
     state.entries = window.CovenMissionHistory.collect(model, project.trace, mission, readSeal, {allEvents: true});
     state.length = project.trace.length;
   }
-  function open(project, mission, name) {
+  function open(project, mission, name, origin = null) {
     if (!state || state.project !== project || state.mission !== mission) {
       state = {project, mission, start: 0, end: project.trace.length, page: 0, selected: null, length: -1};
     }
+    if (origin && origin !== state.origin) {
+      state.selected = origin.position;
+      state.start = 0; state.end = project.trace.length;
+    }
+    state.origin = origin;
     refreshEntries();
     if (state.selected != null) {
       state.start = Math.min(state.start, state.selected - 1);
@@ -138,25 +150,33 @@ window.CovenHistoryView = function ({model, current, readSeal, showMoment, resto
       state.page = Math.max(0, Math.floor(visible.findIndex(entry => entry.position === state.selected) / pageSize));
     }
     state.name = name;
+    byId('historyClose').textContent = origin ? 'Back to Inbox' : 'Close';
+    dialog.querySelector('.history-import').hidden = !!origin;
     byId('historyError').hidden = true;
     byId('historyTitle').textContent = name;
     byId('historySource').textContent = (project.recorded ? 'Imported recording' : project.sample ? 'Built-in sample · Local simulation' : 'Local simulation') + ' · ' + project.key + ' · ' + mission +
       (project.skippedEvents ? ' · Incomplete recording (' + project.skippedEvents + ' unrecognized). Changes in skipped records are unknown.' : '');
     back.hidden = true;
     render();
-    dialog.showModal();
-    window.CovenMobileUI?.sync();
     const target = list.querySelector('button[data-position="' + state.selected + '"]') || byId('historyTitle');
+    target.autofocus = true;
+    dialog.showModal();
+    target.autofocus = false;
+    window.CovenMobileUI?.sync();
     target.focus();
   }
   function close() {
     dialog.close();
-    restoreInspector(state.mission);
+    if (state.origin) {
+      const {resume} = state.origin;
+      reset();
+      resume();
+    } else restoreInspector(state.mission);
   }
   byId('historyClose').onclick = close;
   dialog.addEventListener('cancel', ev => { ev.preventDefault(); close(); });
   dialog.addEventListener('keydown', ev => ev.stopPropagation());
-  byId('historyResume').onclick = () => open(state.project, state.mission, state.name);
+  byId('historyResume').onclick = () => open(state.project, state.mission, state.name, state.origin);
   for (const [id, delta] of [['historyPrev', -1], ['historyNext', 1]]) {
     byId(id).onclick = () => { state.page += delta; render(); list.querySelector('button')?.focus(); };
   }

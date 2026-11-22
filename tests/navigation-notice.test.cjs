@@ -93,7 +93,7 @@ function mountAtlas() {
   });
   new vm.Script(atlasSource, {filename: 'atlas-ui.js'}).runInContext(context);
   const snapshot = {scope: 'coven', active: 'psyche-build', projects: [], familiars: [], missions: 0, highlight: null, camera: null};
-  window.CovenAtlas.mount({snapshot: () => snapshot});
+  window.CovenAtlas.mount({snapshot: () => snapshot, syncReviewEntry() {}});
   const $ = id => document.getElementById(id);
   const runTimers = () => { const due = [...timers.values()]; timers.clear(); due.forEach(t => t.fn()); return due.map(t => t.ms); };
   // Every element a screen reader would announce from on change.

@@ -14,7 +14,7 @@ const context = {window: {}};
 vm.runInNewContext(source('atlas-crown.js'), context);
 const api = context.window.CovenAtlasCrown;
 function svg(tag, attrs, parent) {
-  const node = {tag, attrs, children: [], setAttribute(key, value) { this.attrs[key] = value; }};
+  const node = {tag, attrs, children: [], setAttribute(key, value) { this.attrs[key] = String(value); }};
   parent.children.push(node);
   return node;
 }
@@ -35,7 +35,7 @@ for (const [x, y] of [[0, 0], [-400, 370], [550, -80]]) {
     api.draw(marker, {x, y, screenScale, radius});
     assert.equal(marker.badge.attrs.transform, `translate(${x} ${y}) scale(${1 / screenScale})`);
     assert.equal(marker.artwork.attrs.transform, `scale(${radius / 32})`);
-    assert.equal(marker.hit.attrs.r, Math.max(22, radius));
+    assert.equal(marker.hit.attrs.r, String(Math.max(22, radius)));
     assert.equal(marker.artwork.children.length, 6);
     combinations++;
   }

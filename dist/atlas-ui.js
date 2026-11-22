@@ -1,7 +1,7 @@
 (function () {
   'use strict';
   var api, lastSignature = '', projectNodes = new Map(), familiarNodes = new Map(), missionNodes = new Map();
-  var missionBrowserUsed = false, missionQuery = '', missionProject = '', missionState = '', missionScroll = 0, projectQuery = '';
+  var missionBrowserUsed = false, missionQuery = '', missionProject = '', missionState = '', missionScroll = 0, sheetScroll = 0, projectQuery = '';
   var $ = function (id) { return document.getElementById(id); };
   function node(tag, cls, text) {
     var el = document.createElement(tag);
@@ -17,6 +17,25 @@
   function shield(el) {
     ['pointerdown', 'pointerup', 'click', 'dblclick', 'wheel', 'touchstart', 'touchend', 'keydown'].forEach(function (type) {
       el.addEventListener(type, function (ev) { ev.stopPropagation(); });
+    });
+  }
+  function bindResultKeys(drawer, search, list, close) {
+    var searchComposing = false;
+    search.addEventListener('compositionstart', function () { searchComposing = true; });
+    search.addEventListener('compositionend', function () { searchComposing = false; });
+    drawer.addEventListener('keydown', function (ev) {
+      if (searchComposing || ev.isComposing || ev.keyCode === 229) return;
+      if (ev.key === 'Escape') { ev.preventDefault(); close(true); return; }
+      if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(ev.key)) return;
+      var rows = Array.from(list.querySelectorAll('button:not([hidden])'));
+      var at = rows.indexOf(document.activeElement);
+      if (!rows.length || (at < 0 && document.activeElement !== search)) return;
+      if (document.activeElement === search && ev.key !== 'ArrowDown') return;
+      ev.preventDefault();
+      var next = 0;
+      if (ev.key === 'End') next = rows.length - 1;
+      else if (at >= 0 && ev.key !== 'Home') next = (at + (ev.key === 'ArrowDown' ? 1 : -1) + rows.length) % rows.length;
+      rows[next].focus();
     });
   }
   function closeBrowse(restoreFocus) {
@@ -35,7 +54,8 @@
     if (window.CovenMobileUI) window.CovenMobileUI.activate('atlasSidebar');
     document.body.classList.add('atlas-browse-open');
     $('atlasBrowse').setAttribute('aria-expanded', 'true');
-    var first = drawer.querySelector('.atlas-project[data-active="true"]') || drawer.querySelector('button');
+    filterProjects();
+    var first = drawer.querySelector('.atlas-project[data-active="true"]:not([hidden])') || $('atlasProjectSearch');
     if (first) first.focus({ preventScroll: true });
   }
   // #atlasNavigationStatus is the only live region. With {visible: true} the same
@@ -88,6 +108,7 @@
     var drawer = $('atlasMissionBrowser');
     if (!drawer || drawer.hidden) return;
     missionScroll = $('atlasMissionList').scrollTop;
+    sheetScroll = drawer.scrollTop;
     drawer.hidden = true;
     setMissionModal(false);
     $('atlasMissions').setAttribute('aria-expanded', 'false');
@@ -100,7 +121,11 @@
     if (!window.CovenMobileUI) return;
     if (on) window.CovenMobileUI.activate('atlasMissionBrowser'); else window.CovenMobileUI.sync();
   }
-  function openMissions(restoreSelection, returnRow) {
+  function openMissions(restoreSelection, returnMission, filters) {
+    if (filters) {
+      missionQuery = filters.query; missionProject = filters.project; missionState = filters.state; missionScroll = filters.scroll; sheetScroll = filters.sheetScroll;
+      $('atlasMissionSearch').value = missionQuery;
+    }
     closeBrowse(false);
     var s = api.snapshot(true);
     if (!missionBrowserUsed) {
@@ -113,8 +138,25 @@
     $('atlasMissions').setAttribute('aria-expanded', 'true');
     updateMissions(s);
     $('atlasMissionList').scrollTop = missionScroll;
+    drawer.scrollTop = sheetScroll;
     var selected = restoreSelection && drawer.querySelector('.atlas-mission-row[aria-current="true"]:not([hidden])');
+    var returnRow = returnMission && missionNodes.get(JSON.stringify([returnMission.project, returnMission.id]));
     (returnRow && drawer.contains(returnRow) && !returnRow.hidden ? returnRow : selected || $('atlasMissionSearch')).focus({ preventScroll: true });
+  }
+  function currentFilters() {
+    return {query: missionQuery, project: missionProject, state: missionState, scroll: missionScroll, sheetScroll: sheetScroll};
+  }
+  function missionMatcher(filters) {
+    var words = filters.query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
+    return function (m) {
+      if (filters.project && filters.project !== m.project) return false;
+      if (filters.state === 'requests' ? !m.needs : filters.state && filters.state !== m.state) return false;
+      var searchable = [m.name, m.project, m.council, m.stateLabel].join(' ').toLocaleLowerCase();
+      return words.every(function (word) { return searchable.includes(word); });
+    };
+  }
+  function matchingMissions(items, filters) {
+    return items.filter(missionMatcher(filters));
   }
   function updateMissions(s) {
     var filter = $('atlasMissionProject'), items = s.missionItems || [];
@@ -129,14 +171,17 @@
     }
     filter.value = missionProject;
     $('atlasMissionState').value = missionState;
-    var needle = missionQuery.trim().toLocaleLowerCase(), shown = 0, present = new Set();
-    items.forEach(function (m) {
+    var matches = missionMatcher(currentFilters()), shown = 0, scoped = 0, present = new Set();
+    var list = $('atlasMissionList');
+    items.forEach(function (m, index) {
       var key = JSON.stringify([m.project, m.id]), row = missionNodes.get(key);
       present.add(key);
       if (!row) {
         row = button('', '', function () {
           closeMissions(false);
-          if (!api.openMission(m.project, m.id, 'side', row)) {
+          var filters = currentFilters();
+          var order = matchingMissions(api.snapshot('review').missionItems, filters);
+          if (!api.openMission(m.project, m.id, 'side', {filters: filters, order: order})) {
             announce('That mission is no longer available. Choose another mission.');
             openMissions(false);
           }
@@ -146,21 +191,26 @@
         var copy = node('span', 'atlas-mission-copy');
         var heading = node('span', 'atlas-mission-heading');
         heading.append(node('b', 'atlas-mission-title'), node('span', 'atlas-mission-meta'));
-        copy.append(heading, node('span', 'atlas-mission-project'), node('span', 'atlas-mission-stats'));
+        copy.append(heading, node('span', 'atlas-mission-project'), node('span', 'atlas-mission-stats'), node('span', 'atlas-pending'));
         row.append(emblem, copy);
         $('atlasMissionList').append(row); missionNodes.set(key, row);
       }
-      var match = (!missionProject || missionProject === m.project) && (!missionState || missionState === m.state) &&
-        (!needle || [m.name, m.project, m.council].join(' ').toLocaleLowerCase().includes(needle));
+      if (list.children[index] !== row) list.insertBefore(row, list.children[index] || null);
+      if (!missionProject || missionProject === m.project) scoped++;
+      var match = matches(m);
       row.hidden = !match; if (match) shown++;
       row.dataset.state = m.state;
       row.setAttribute('aria-current', String(s.active === m.project && s.missionId === m.id));
-      row.setAttribute('aria-label', m.name + ', ' + m.project + ', ' + m.stateLabel + ', ' + m.agents + ' agents' + (m.needs ? ', ' + m.needs + ' pending' : '') + '. Open mission details');
+      var requests = m.needs ? m.needs + (m.needs === 1 ? ' pending request' : ' pending requests') : '';
+      row.setAttribute('aria-label', m.name + ', ' + m.project + ', ' + m.stateLabel + ', ' + m.agents + ' agents' + (requests ? ', ' + requests : '') + '. Open mission details');
       api.setMissionName(row.querySelector('.atlas-mission-title'), m.name);
       var projectName = row.querySelector('.atlas-mission-project');
       projectName.textContent = m.project; projectName.hidden = !!missionProject;
-      row.querySelector('.atlas-mission-meta').textContent = m.stateLabel + (m.needs ? ' · ' + m.needs : '');
+      row.querySelector('.atlas-mission-meta').textContent = m.stateLabel;
       row.querySelector('.atlas-mission-stats').textContent = m.agents + (m.agents === 1 ? ' agent' : ' agents') + (m.council ? ' · ' + m.council : '');
+      var pending = row.querySelector('.atlas-pending');
+      pending.hidden = !m.needs;
+      pending.textContent = requests;
       var emblem = row.querySelector('.atlas-mission-seal');
       if (emblem.dataset.seal !== m.seal) { emblem.dataset.seal = m.seal; emblem.innerHTML = m.seal; }
     });
@@ -171,22 +221,37 @@
         if (focused && !$('atlasMissionBrowser').hidden) $('atlasMissionSearch').focus({ preventScroll: true });
       }
     });
-    var count = shown + (shown === 1 ? ' mission' : ' missions') + (missionProject ? ' in ' + missionProject : ' across all Projects');
+    var count = (missionQuery.trim() || missionState ? shown + ' of ' + scoped : scoped) + (scoped === 1 ? ' mission' : ' missions') + (missionProject ? ' in ' + missionProject : ' across all Projects');
     if ($('atlasMissionCount').textContent !== count) $('atlasMissionCount').textContent = count;
     $('atlasMissionEmpty').hidden = shown > 0;
-    $('atlasMissionEmpty').textContent = items.length ? 'No missions match these filters. Clear them to explore all missions.' : 'No missions at this replay position. Move forward in the timeline to explore them.';
+    $('atlasMissionEmpty').textContent = !items.length ? 'No missions at this replay position. Move forward on the timeline.' : !scoped ? 'This Project has no missions at this replay position. Choose another Project to continue.' : 'No matching missions. Try another search or clear the filters.';
     $('atlasMissionReset').hidden = !missionQuery && !missionProject && !missionState;
   }
   function openMissionsForProject(key) {
-    missionProject = key; missionBrowserUsed = true; missionQuery = missionState = ''; missionScroll = 0;
+    missionProject = key; missionBrowserUsed = true; missionQuery = missionState = ''; missionScroll = sheetScroll = 0;
     $('atlasMissionSearch').value = '';
     openMissions(false);
   }
   function filterProjects() {
     var needle = projectQuery.trim().toLocaleLowerCase(), count = 0;
-    projectNodes.forEach(function (button, key) { button.hidden = !!needle && !key.toLocaleLowerCase().includes(needle); if (!button.hidden) count++; });
+    projectNodes.forEach(function (row, key) {
+      var nameMatches = key.toLocaleLowerCase().includes(needle);
+      var mission = !nameMatches && api.findProjectMission(key, needle);
+      row.hidden = !nameMatches && !mission;
+      if (!row.hidden) count++;
+      var preview = row.querySelector('.atlas-project-preview-names');
+      var text = mission || preview.dataset.summary;
+      preview.hidden = !text;
+      api.setMissionName(preview, text || '');
+      if (mission) row.setAttribute('aria-label', row.title + '. Matching mission: ' + mission);
+      else row.setAttribute('aria-label', row.title);
+    });
     var status = $('atlasProjectCount');
-    if (status) status.textContent = count + (count === 1 ? ' Project' : ' Projects') + (needle ? ' found' : ' in this Coven');
+    var total = projectNodes.size;
+    var result = (needle ? count + ' of ' + total : total) + (total === 1 ? ' Project' : ' Projects');
+    if (status.textContent !== result) status.textContent = result;
+    $('atlasProjectClear').hidden = !projectQuery;
+    $('atlasProjectEmpty').hidden = !needle || count > 0;
   }
   var projectIcon = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 5v15h6v-5a3 3 0 0 1 6 0v5h6V5h-4v4h-3V5h-4v4H7V5Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>';
   function headerAction(control, label, drawing) {
@@ -231,6 +296,8 @@
     head.append(brand, nav, actions); shield(head);
 
     var aside = node('aside', 'atlas-sidebar'); aside.id = 'atlasSidebar'; aside.hidden = true;
+    // WebKit can focus a button’s ancestor on mouse-down. Keep that focus inside the open drawer.
+    aside.tabIndex = -1;
     aside.setAttribute('aria-labelledby', 'atlasProjectsTitle');
     var heading = node('div', 'atlas-drawer-heading');
     var title = node('h2', '', 'Projects'); title.id = 'atlasProjectsTitle';
@@ -238,12 +305,19 @@
     close.setAttribute('aria-label', 'Close the Project browser');
     heading.append(title, close);
     var projectSearchLabel = node('label', 'atlas-project-search', 'Find a Project'), projectSearch = node('input');
-    projectSearch.id = 'atlasProjectSearch'; projectSearch.type = 'search'; projectSearch.placeholder = 'Project name'; projectSearch.autocomplete = 'off';
+    projectSearch.id = 'atlasProjectSearch'; projectSearch.type = 'search'; projectSearch.placeholder = 'Project or mission name'; projectSearch.autocomplete = 'off';
     projectSearchLabel.append(projectSearch);
     projectSearch.addEventListener('input', function () { projectQuery = projectSearch.value; filterProjects(); });
     var projectCount = node('p', 'atlas-project-count'); projectCount.id = 'atlasProjectCount'; projectCount.setAttribute('role', 'status');
+    var projectClear = button('atlasProjectClear', 'Clear search', function () {
+      projectSearch.value = projectQuery = ''; filterProjects(); projectSearch.focus();
+    });
+    projectClear.hidden = true;
+    var projectSummary = node('div', 'atlas-result-summary'); projectSummary.append(projectCount, projectClear);
+    var projectEmpty = node('p', 'atlas-empty-result', 'No matching Projects. Try another Project or mission name.');
+    projectEmpty.id = 'atlasProjectEmpty'; projectEmpty.hidden = true;
     var projects = node('div'); projects.id = 'atlasProjects';
-    var newProject = button('atlasNewProject', '+ New Project', function () { closeBrowse(false); api.newProject(); });
+    var newProject = button('atlasNewProject', 'New Project', function () { closeBrowse(false); api.newProject(); });
     var simulation = node('details', 'atlas-layout-simulation'), simulationTitle = node('summary', '', 'Try a larger Coven');
     var presets = node('div', 'atlas-layout-presets');
     var custom = node('form', 'atlas-layout-custom'), label = node('label', '', 'Total Projects');
@@ -274,53 +348,40 @@
     simulation.append(simulationTitle, node('p', '', 'Adds sample Projects to explore the layout. Your own projects stay intact.'), presets, custom, reset, progress);
     var legend = button('atlasLegend', 'Legend', function () { closeBrowse(true); api.legend(); });
     legend.title = 'Read the shapes, colors, and mission states';
-    aside.append(heading, projectSearchLabel, projectCount, projects, newProject, simulation, legend);
-    aside.addEventListener('keydown', function (ev) {
-      if (ev.key === 'Escape') { ev.preventDefault(); closeBrowse(true); }
-    });
+    heading.insertBefore(newProject, close);
+    aside.append(heading, projectSearchLabel, projectSummary, projectEmpty, projects, simulation, legend);
+    bindResultKeys(aside, projectSearch, projects, closeBrowse);
     shield(aside);
 
     var missionBrowser = node('aside', 'atlas-mission-browser'); missionBrowser.id = 'atlasMissionBrowser'; missionBrowser.hidden = true;
+    missionBrowser.tabIndex = -1;
     missionBrowser.setAttribute('aria-labelledby', 'atlasMissionsTitle');
     var missionHeading = node('div', 'atlas-drawer-heading'), missionTitle = node('h2', '', 'Missions'); missionTitle.id = 'atlasMissionsTitle';
     var missionClose = button('atlasMissionClose', '×', function () { closeMissions(true); });
     missionClose.setAttribute('aria-label', 'Close the mission browser'); missionHeading.append(missionTitle, missionClose);
     var missionTools = node('div', 'atlas-mission-tools');
     var searchLabel = node('label', '', 'Find a mission'), search = node('input'); search.id = 'atlasMissionSearch';
-    search.type = 'search'; search.placeholder = 'Mission, Project, or familiar'; search.autocomplete = 'off';
+    search.type = 'search'; search.placeholder = 'Name, Project, familiar or state'; search.autocomplete = 'off';
     searchLabel.append(search);
-    search.addEventListener('input', function () { missionQuery = search.value; missionScroll = 0; updateMissions(api.snapshot()); $('atlasMissionList').scrollTop = 0; });
+    search.addEventListener('input', function () { missionQuery = search.value; missionScroll = sheetScroll = 0; updateMissions(api.snapshot()); $('atlasMissionList').scrollTop = 0; });
     var projectSelectLabel = node('label', '', 'Project'), projectSelect = node('select'); projectSelect.id = 'atlasMissionProject'; projectSelectLabel.append(projectSelect);
     var stateLabel = node('label', '', 'State'), stateSelect = node('select'); stateSelect.id = 'atlasMissionState'; stateLabel.append(stateSelect);
-    [['', 'All states'], ['needsYou', 'Needs you'], ['active', 'Active'], ['planned', 'Planned'], ['stalled', 'Stalled'], ['sealed', 'Sealed'], ['broken', 'Broken']].forEach(function (entry) {
+    [['', 'All states'], ['requests', 'Pending requests'], ['needsYou', 'Needs you'], ['active', 'Active'], ['planned', 'Planned'], ['stalled', 'Stalled'], ['sealed', 'Sealed'], ['broken', 'Broken']].forEach(function (entry) {
       var option = node('option', '', entry[1]); option.value = entry[0]; stateSelect.append(option);
     });
-    projectSelect.addEventListener('change', function () { missionProject = projectSelect.value; missionScroll = 0; updateMissions(api.snapshot()); $('atlasMissionList').scrollTop = 0; });
-    stateSelect.addEventListener('change', function () { missionState = stateSelect.value; missionScroll = 0; updateMissions(api.snapshot()); $('atlasMissionList').scrollTop = 0; });
+    projectSelect.addEventListener('change', function () { missionProject = projectSelect.value; missionScroll = sheetScroll = 0; updateMissions(api.snapshot()); $('atlasMissionList').scrollTop = 0; });
+    stateSelect.addEventListener('change', function () { missionState = stateSelect.value; missionScroll = sheetScroll = 0; updateMissions(api.snapshot()); $('atlasMissionList').scrollTop = 0; });
     missionTools.append(searchLabel, projectSelectLabel, stateLabel);
     var missionCount = node('p'); missionCount.id = 'atlasMissionCount'; missionCount.setAttribute('role', 'status'); missionCount.setAttribute('aria-live', 'polite');
     var missionList = node('div'); missionList.id = 'atlasMissionList'; missionList.setAttribute('role', 'group'); missionList.setAttribute('aria-label', 'Matching missions');
     var missionEmpty = node('p', 'atlas-mission-empty'); missionEmpty.id = 'atlasMissionEmpty'; missionEmpty.hidden = true;
     var missionReset = button('atlasMissionReset', 'Clear filters', function () {
-      missionQuery = missionProject = missionState = ''; search.value = ''; missionScroll = 0;
+      missionQuery = missionProject = missionState = ''; search.value = ''; missionScroll = sheetScroll = 0;
       updateMissions(api.snapshot()); $('atlasMissionList').scrollTop = 0; search.focus({ preventScroll: true });
     });
-    missionBrowser.append(missionHeading, missionTools, missionCount, missionList, missionEmpty, missionReset);
-    var searchComposing = false;
-    search.addEventListener('compositionstart', function () { searchComposing = true; });
-    search.addEventListener('compositionend', function () { searchComposing = false; });
-    missionBrowser.addEventListener('keydown', function (ev) {
-      if (searchComposing || ev.isComposing || ev.keyCode === 229) return;
-      if (ev.key === 'Escape') { ev.preventDefault(); closeMissions(true); return; }
-      if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(ev.key)) return;
-      var rows = Array.from(missionList.querySelectorAll('button:not([hidden])'));
-      var at = rows.indexOf(document.activeElement);
-      if (!rows.length || (at < 0 && document.activeElement !== search)) return;
-      if (document.activeElement === search && ev.key !== 'ArrowDown') return;
-      ev.preventDefault();
-      var next = ev.key === 'Home' ? 0 : ev.key === 'End' ? rows.length - 1 : at < 0 ? 0 : (at + (ev.key === 'ArrowDown' ? 1 : -1) + rows.length) % rows.length;
-      rows[next].focus();
-    });
+    var missionSummary = node('div', 'atlas-result-summary'); missionSummary.append(missionCount, missionReset);
+    missionBrowser.append(missionHeading, missionTools, missionSummary, missionEmpty, missionList);
+    bindResultKeys(missionBrowser, search, missionList, closeMissions);
     shield(missionBrowser);
     var navigationStatus = node('span', 'sr-only'); navigationStatus.id = 'atlasNavigationStatus';
     navigationStatus.setAttribute('role', 'status'); navigationStatus.setAttribute('aria-live', 'polite');
@@ -344,6 +405,7 @@
       ['atlasZoomOut', 'out', 'Zoom out', '<path d="M3 8h10"/>'],
       ['atlasZoomIn', 'in', 'Zoom in', '<path d="M3 8h10M8 3v10"/>'],
       ['atlasFit', 'fit', 'Fit view', '<path d="M2 6V2h4m4 0h4v4m0 4v4h-4m-4 0H2v-4"/><circle cx="8" cy="8" r="1.5"/>'],
+      ['atlasFormation', 'formation', 'Mission grid', '<rect x="2" y="2" width="4.5" height="4.5" rx="1"/><rect x="9.5" y="2" width="4.5" height="4.5" rx="1"/><rect x="2" y="9.5" width="4.5" height="4.5" rx="1"/><rect x="9.5" y="9.5" width="4.5" height="4.5" rx="1"/>'],
       ['atlasLock', 'lock', 'Lock the map', '<rect x="3" y="7" width="10" height="7" rx="1.5"/><path class="lock-closed" d="M5 7V5a3 3 0 0 1 6 0v2"/><path class="lock-open" d="M5 7V5a3 3 0 0 1 5.7-1.3"/>']
     ].forEach(function (item) {
       var control = button(item[0], '', function () { api.camera(item[1]); });
@@ -395,9 +457,13 @@
     $('atlasProject').title = 'Project view · ' + s.active;
     $('atlasProject').setAttribute('aria-label', 'Open current project, ' + s.active);
     $('atlasMissions').setAttribute('aria-label', 'Browse ' + s.missions + ' missions');
+    api.syncReviewEntry(s.scope === 'coven', s.scope === 'coven' ? s.needs : s.projects.find(p => p.key === s.active)?.needs || 0);
     if (s.scope === 'coven') $('workspaceTools').open = false;
     if (s.camera) {
-      ['atlasZoomOut', 'atlasZoomIn', 'atlasFit'].forEach(function (id) { $(id).disabled = s.camera.locked; });
+      ['atlasZoomOut', 'atlasZoomIn', 'atlasFit', 'atlasFormation'].forEach(function (id) { $(id).disabled = s.camera.locked; });
+      var formation = $('atlasFormation'), grid = s.camera.formation === 'grid';
+      formation.setAttribute('aria-pressed', String(grid));
+      formation.title = grid ? 'Switch to ring formation' : 'Switch to grid formation';
       var dock = $('atlasCameraDock'), lock = $('atlasLock');
       if (dock.dataset.locked !== String(s.camera.locked)) {
         dock.dataset.locked = String(s.camera.locked);
@@ -429,15 +495,14 @@
         b.querySelector('b').textContent = p.key;
         b.querySelector('.atlas-project-copy > span').textContent = p.missions + (p.missions === 1 ? ' mission' : ' missions') + ' · ' + p.agents + ' agents';
         var state = b.querySelector('.atlas-project-state');
-        state.textContent = p.needs ? p.needs + ' need you' : p.agents ? 'Open' : 'Dormant';
-        state.dataset.state = p.needs ? 'attention' : p.agents ? 'active' : 'dormant';
+        state.textContent = p.needs ? p.needs + (p.needs === 1 ? ' request' : ' requests') : p.agents || p.missions ? 'Open' : 'Dormant';
+        state.dataset.state = p.needs ? 'attention' : p.agents || p.missions ? 'active' : 'dormant';
         b.dataset.active = String(p.key === s.active);
         b.setAttribute('aria-current', p.key === s.active ? 'true' : 'false');
         var projectLabel = p.key + ', ' + p.missions + (p.missions === 1 ? ' mission' : ' missions') + ', ' + p.agents + ' agents' + (p.needs ? ', ' + p.needs + ' requests need you' : '');
         var names = p.previewNames || [], remaining = p.missions - names.length;
         var preview = b.querySelector('.atlas-project-preview-names');
-        preview.hidden = !names.length;
-        api.setMissionName(preview, names.join(' · ') + (names.length && remaining > 0 ? ' · +' + remaining : ''));
+        preview.dataset.summary = names.join(' · ') + (names.length && remaining > 0 ? ' · +' + remaining : '');
         if (names.length) projectLabel += '. Missions: ' + names.join(', ') + (remaining ? ', and ' + remaining + ' more' : '');
         b.setAttribute('aria-label', projectLabel); b.title = projectLabel;
       });
@@ -463,5 +528,5 @@
       familiarNodes.forEach(function (b, k) { if (!s.familiars.some(function (f) { return f.key === k; })) { b.remove(); familiarNodes.delete(k); } });
     }
   }
-  window.CovenAtlas = { mount: mount, update: update, openMissions: openMissions, openMissionsForProject: openMissionsForProject, closeMissions: closeMissions, closeBrowse: closeBrowse, announce: announce, dismissNotice: dismissNotice };
+  window.CovenAtlas = { mount: mount, update: update, matchingMissions: matchingMissions, openMissions: openMissions, openMissionsForProject: openMissionsForProject, closeMissions: closeMissions, closeBrowse: closeBrowse, announce: announce, dismissNotice: dismissNotice };
 }());
