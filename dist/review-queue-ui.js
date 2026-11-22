@@ -19,10 +19,11 @@ window.mountReviewQueue = function ({getRows, read, confirmation, openingFor, in
     next.focus({preventScroll: true});
     if (keepScroll) {
       list.scrollTop = scroll;
-      // WebKit can scroll a native dialog's focused control after the click that reopened it.
-      requestAnimationFrame(() => {
+      // WebKit may reveal a partially visible focused row on the next painted frame.
+      const restore = () => {
         if (document.activeElement === next && $('reviewQueue').open) list.scrollTop = scroll;
-      });
+      };
+      requestAnimationFrame(() => { restore(); requestAnimationFrame(restore); });
     }
     else if (next !== $('queueFilter')) next.scrollIntoView({block: 'nearest'});
   }
