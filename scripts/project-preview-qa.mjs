@@ -191,6 +191,56 @@ test('mission browsing leaves space for the selected seal and the open Inbox rev
   }
 });
 
+test('Review readiness lets the keyboard switch familiar groups and return to the mission', async () => {
+  const page = await browser.newPage({viewport: {width: 1440, height: 900}, reducedMotion: 'reduce'});
+  try {
+    await page.goto(new URL('#/project/psyche-build', base).href);
+    const mission = page.getByRole('button', {name: /^Review readiness,.*Show its agents and tasks$/});
+    const group = name => page.getByRole('button', {name: `Focus ${name} group on Review readiness`, exact: true});
+    const cody = group('Cody'), astra = group('Astra');
+    const tabStop = page.locator('#plan [data-map-item][tabindex="0"]');
+    const focused = locator => locator.evaluate(el => el === document.activeElement);
+
+    await mission.focus();
+    await page.keyboard.press('Enter');
+    const bounds = await cody.boundingBox();
+    assert.ok(bounds, 'the selected mission exposes Cody’s group');
+    await cody.click({position: {x: bounds.width / 2, y: 3}});
+    assert.ok(await focused(cody));
+    assert.equal(await cody.getAttribute('aria-pressed'), 'true');
+    assert.equal(await astra.getAttribute('aria-pressed'), 'false');
+
+    // Walk the same map items a keyboard visitor encounters, including individual agents.
+    const itemCount = await page.locator('#plan [data-map-item]').count();
+    for (let step = 0; !(await focused(astra)); step++) {
+      assert.equal(await tabStop.count(), 1);
+      assert.ok(await focused(tabStop), 'arrow navigation keeps focus on the map’s single Tab stop');
+      const name = await tabStop.getAttribute('aria-label');
+      assert.equal(await page.getByRole('button', {name, exact: true}).and(tabStop).count(), 1, 'focused map button is exposed by name');
+      assert.ok(step < itemCount, 'Astra was unreachable from ' + name);
+      await page.keyboard.press('ArrowLeft');
+    }
+    assert.equal(await tabStop.count(), 1);
+    assert.ok(await focused(tabStop));
+    await page.keyboard.press('Space');
+    assert.ok(await focused(astra));
+    assert.equal(await astra.getAttribute('aria-pressed'), 'true');
+    assert.equal(await cody.getAttribute('aria-pressed'), 'false');
+
+    await page.keyboard.press('Escape');
+    const summary = page.getByRole('heading', {name: 'Review readiness', exact: true});
+    assert.ok(await focused(summary));
+    assert.equal(await astra.getAttribute('aria-pressed'), 'false');
+    await page.keyboard.press('Escape');
+    assert.ok(await focused(mission));
+    assert.equal(await tabStop.count(), 1);
+    assert.ok(await focused(tabStop));
+    assert.equal(await astra.count(), 0, 'closed mission group leaves the accessibility tree');
+  } finally {
+    await page.close();
+  }
+});
+
 test('mission focus traces the seal and reveals the planes for its agents', async () => {
   const page = await browser.newPage({viewport: {width: 1440, height: 900}, reducedMotion: 'reduce'});
   try {
