@@ -4148,7 +4148,8 @@ function syncInspect(force) {
     });
     insp.slot = html('div', 'i-agent'); insp.slot.hidden = true;
     const activity = html('div', 'mission-activity');
-    activity.append(counts, stepper);
+    activity.appendChild(counts);
+    if (missionOrder.length > 1) activity.appendChild(stepper);
     header.append(head, activity, seg);
     box.appendChild(header);
     if (request) box.appendChild(missionRequestButton(c, M, request, pending.length, false));
@@ -4185,7 +4186,8 @@ function syncInspect(force) {
       button.type = 'button'; button.dataset.focus = id;
       button.innerHTML = icon;
       button.appendChild(html('span', '', label));
-      const hint = html('span', 'inspect-action-hint', description);
+      const hint = html('span', 'sr-only', description);
+      button.title = description;
       hint.id = id + '-hint'; button.setAttribute('aria-describedby', hint.id);
       button.addEventListener('click', run);
       item.append(button, hint); actions.appendChild(item);
@@ -4239,8 +4241,14 @@ function syncInspect(force) {
         st.floors.forEach(x => line(g, x.label, fmtN(x.k, x.have) + ' / ' + fmtN(x.k, x.need), x.have / x.need, x.met ? 'met' : ''));
         if (!st.floors.length) line(g, 'No minimums set', '');
         const limits = section('Resource limits', 'cap', M.paused === 'you' ? 'Paused by you' : M.paused ? 'Awaiting decision' : '');
+        const breached = st.worst && st.worst.frac >= 1;
+        if (breached) {
+          sec.prepend(limits);
+          limits.classList.add('brief-at-limit');
+        }
         g = group(limits);
-        st.caps.forEach(x => line(g, x.label, fmtN(x.k, x.used) + ' / ' + fmtN(x.k, x.max), x.frac, x.frac >= 1 ? 'over' : x.frac >= WARN_AT ? 'near' : ''));
+        const caps = breached ? st.caps.slice().sort((a, b) => b.frac - a.frac) : st.caps;
+        caps.forEach(x => line(g, x.label, fmtN(x.k, x.used) + ' / ' + fmtN(x.k, x.max), x.frac, x.frac >= 1 ? 'over' : x.frac >= WARN_AT ? 'near' : ''));
         if (!st.caps.length) line(g, 'No limits set', '');
         if (st.measures.length) {
           g = group(section('Performance', 'gauge'));
@@ -6461,7 +6469,10 @@ function atlasSnapshot(includeMissions) {
     ps.push({key: k, missions: w.missions.size, agents: w.agents.size, needs: q, previewNames});
     if (showMissions) w.missions.forEach(M => {
       const seal = sealOf(w, M);
-      missionItems.push({project: k, id: M.id, name: M.name, state: seal.state, stateLabel: SEAL_STATE[seal.state][0], agents: countOf(w, a => a.mission === M.id), needs: requests.filter(q => q.mission === M.id).length, council: M.seats.map(f => fam(f).name).join(', '), seal: includeMissions === 'review' ? '' : sealSvg(seal, 30)});
+      const pending = requests.filter(q => q.mission === M.id);
+      const first = pending[0];
+      const requestPreview = first?.title ? (first.fam ? fam(first.fam).name + ' · ' : '') + first.title : '';
+      missionItems.push({project: k, id: M.id, name: M.name, state: seal.state, stateLabel: SEAL_STATE[seal.state][0], agents: countOf(w, a => a.mission === M.id), needs: pending.length, requestPreview, council: M.seats.map(f => fam(f).name).join(', '), seal: includeMissions === 'review' ? '' : sealSvg(seal, 30)});
     });
     missions += w.missions.size; agents += w.agents.size; needs += q;
     w.agents.forEach(a => by.set(a.fam, (by.get(a.fam) || 0) + 1));

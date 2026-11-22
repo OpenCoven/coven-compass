@@ -152,7 +152,7 @@
     return function (m) {
       if (filters.project && filters.project !== m.project) return false;
       if (filters.state === 'requests' ? !m.needs : filters.state && filters.state !== m.state) return false;
-      var searchable = [m.name, m.project, m.council, m.stateLabel].join(' ').toLocaleLowerCase();
+      var searchable = [m.name, m.project, m.council, m.stateLabel, m.requestPreview].join(' ').toLocaleLowerCase();
       return words.every(function (word) { return searchable.includes(word); });
     };
   }
@@ -200,7 +200,7 @@
         var copy = node('span', 'atlas-mission-copy');
         var heading = node('span', 'atlas-mission-heading');
         heading.append(node('b', 'atlas-mission-title'), node('span', 'atlas-mission-meta'), node('span', 'atlas-pending'));
-        copy.append(heading, node('span', 'atlas-mission-project'), node('span', 'atlas-mission-stats'));
+        copy.append(heading, node('span', 'atlas-mission-project'), node('span', 'atlas-mission-stats'), node('span', 'atlas-request-preview'));
         row.append(emblem, copy);
         $('atlasMissionList').append(row); missionNodes.set(key, row);
       }
@@ -211,7 +211,10 @@
       row.dataset.state = m.state;
       row.setAttribute('aria-current', String(s.active === m.project && s.missionId === m.id));
       var requests = m.needs ? m.needs + (m.needs === 1 ? ' pending request' : ' pending requests') : '';
-      row.setAttribute('aria-label', m.name + ', ' + m.project + ', ' + m.stateLabel + ', ' + m.agents + ' agents' + (requests ? ', ' + requests : '') + '. Open mission details');
+      var preview = row.querySelector('.atlas-request-preview');
+      preview.textContent = m.requestPreview || '';
+      preview.hidden = !m.requestPreview;
+      row.setAttribute('aria-label', m.name + ', ' + m.project + ', ' + m.stateLabel + ', ' + m.agents + ' agents' + (requests ? ', ' + requests : '') + (m.requestPreview ? '. ' + m.requestPreview : '') + '. Open mission details');
       api.setMissionName(row.querySelector('.atlas-mission-title'), m.name);
       var projectName = row.querySelector('.atlas-mission-project');
       projectName.textContent = m.project; projectName.hidden = !!missionProject;
@@ -397,7 +400,7 @@
     var missionTools = node('div', 'atlas-mission-tools');
     var searchLabel = node('label', 'atlas-mission-search'), search = node('input');
     searchLabel.append(node('span', 'sr-only', 'Find a mission')); search.id = 'atlasMissionSearch';
-    search.type = 'search'; search.placeholder = 'Search missions'; search.title = 'Search by mission, Project, familiar or state'; search.autocomplete = 'off';
+    search.type = 'search'; search.placeholder = 'Search missions'; search.title = 'Search by mission, Project, familiar, state or request'; search.autocomplete = 'off';
     searchLabel.append(search);
     search.addEventListener('input', function () { missionQuery = search.value; missionScroll = sheetScroll = 0; updateMissions(api.snapshot()); $('atlasMissionList').scrollTop = 0; });
     var projectSelectLabel = node('label', '', 'Project'), projectSelect = node('select'); projectSelect.id = 'atlasMissionProject'; projectSelectLabel.append(projectSelect);
