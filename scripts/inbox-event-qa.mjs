@@ -113,7 +113,11 @@ for (const width of [1440, 390]) for (const input of ['pointer', 'keyboard']) {
         assert.equal(await filter.inputValue(), 'Check');
         assert.ok(await expected.evaluate(e => e === document.activeElement));
         if (!resolve) {
-          assert.equal(await list.evaluate(e => e.scrollTop), offset);
+          const settled = await list.evaluate(async e => {
+            await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+            return e.scrollTop;
+          });
+          assert.equal(settled, offset);
           await activate(expected);
         } else {
           assert.equal(await row(target).count(), 0);

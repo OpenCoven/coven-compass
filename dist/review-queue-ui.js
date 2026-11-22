@@ -13,13 +13,18 @@ window.mountReviewQueue = function ({getRows, read, confirmation, openingFor, in
   function queueListFocus(key, index) {
     const buttons = Array.from($('queueList').querySelectorAll('button'));
     const next = buttons.find(b => b.dataset.key === key) || buttons[Math.min(index, buttons.length - 1)] || $('queueFilter');
+    const list = $('queueList'), scroll = list.scrollTop;
+    const row = next.getBoundingClientRect(), viewport = list.getBoundingClientRect();
+    const keepScroll = next.dataset.key === key && row.bottom > viewport.top && row.top < viewport.bottom;
     next.focus({preventScroll: true});
-    if (next !== $('queueFilter')) {
-      const row = next.getBoundingClientRect(), viewport = $('queueList').getBoundingClientRect();
-      if (next.dataset.key !== key || row.bottom <= viewport.top || row.top >= viewport.bottom) {
-        next.scrollIntoView({block: 'nearest'});
-      }
+    if (keepScroll) {
+      list.scrollTop = scroll;
+      // WebKit can scroll a native dialog's focused control after the click that reopened it.
+      requestAnimationFrame(() => {
+        if (document.activeElement === next && $('reviewQueue').open) list.scrollTop = scroll;
+      });
     }
+    else if (next !== $('queueFilter')) next.scrollIntoView({block: 'nearest'});
   }
   function returnToQueue(message) {
     const {key} = queueSelection, index = Math.max(0, queueKeys.indexOf(key));
