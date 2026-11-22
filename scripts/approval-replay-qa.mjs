@@ -25,10 +25,11 @@ async function activate(page, target) {
 async function chooseRecording(page, name, buffer) {
   const source = page.locator('.history-import');
   if (!await source.evaluate(el => el.open)) await activate(page, source.locator('summary'));
-  await tabTo(page, page.locator('#historyLoad'));
-  const chooser = page.waitForEvent('filechooser');
-  await page.keyboard.press('Enter');
-  await (await chooser).setFiles({name, mimeType: 'text/plain', buffer});
+  const [chooser] = await Promise.all([
+    page.waitForEvent('filechooser'),
+    activate(page, page.locator('#historyLoad')),
+  ]);
+  await chooser.setFiles({name, mimeType: 'text/plain', buffer});
 }
 async function openMission(page, width, name) {
   if (!await page.locator('#atlasMissionBrowser').isVisible()) await activate(page, page.locator(width < 500 ? '#atlasMobileMissions' : '#atlasMissions'));
