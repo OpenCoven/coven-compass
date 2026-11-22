@@ -2102,10 +2102,10 @@ const SAMPLES = {
     [23, {type: 'familiar.report', m: 1, familiar: 'echo', text: 'Changelog drafted. Nothing to send tonight.'}],
   ]},
   'ui': {span: 20, repo: 'https://github.com/OpenCoven/ui', root: '~/code/ui', missions: [
-    {name: 'Specimens', at: .3, brief: BR([['website', ['html', 'zip'], ['TypeScript']]], {tests: 30}, {minutes: 45, tokens: 250000, usd: 3, agents: 14}), prog: {tokens: 120000, tests: 22}, art: {}, council: [{fam: 'cody', at: 1, n: 8, idle: 1, tasks: [['Specimens', 5], ['Registry build', 3]]}, {fam: 'charm', at: 5, n: 4, idle: 1, tasks: [['Visual checks', 4]]}]},
+    {name: 'Rebuild UI specimens', at: .3, brief: BR([['website', ['html', 'zip'], ['TypeScript']]], {tests: 30}, {minutes: 45, tokens: 250000, usd: 3, agents: 14}), prog: {tokens: 120000, tests: 22}, art: {}, council: [{fam: 'cody', at: 1, n: 8, idle: 1, tasks: [['Build examples', 5], ['Build registry', 3]]}, {fam: 'charm', at: 5, n: 4, idle: 1, tasks: [['Run visual checks', 4]]}]},
   ], script: [
     [.4, {type: 'you.said', text: 'Rebuild the component specimens and run visual checks.'}],
-    [.6, {type: 'psyche.said', text: 'One mission, Specimens. Cody builds, Charm captures the checks.'}],
+    [.6, {type: 'psyche.said', text: 'Cody is rebuilding the UI specimens. Charm will run the visual checks.'}],
     [15, {type: 'familiar.report', m: 0, familiar: 'cody', text: 'Component specimens rebuilt. Visual checks are running.'}],
   ]},
   'brand': {span: 20, repo: 'https://github.com/OpenCoven/brand', root: '~/code/brand', missions: [], script: []},
@@ -2541,9 +2541,10 @@ function syncTaskTray(s, mission, tasks) {
   }
   s.taskCount = tasks.length;
   const visible = tasks.slice(0, 3);
-  const description = plural(tasks.length, 'task') + ' on ' + mission.name + ': ' + visible.map(t => t.name).join(', ') +
+  const preview = visible.map(task => [task.name, task.leads.map(key => fam(key).name).join(' and ')].filter(Boolean).join(' · '));
+  const description = plural(tasks.length, 'task') + ' on ' + mission.name + ': ' + preview.join(', ') +
     (tasks.length > visible.length ? ', and ' + (tasks.length - visible.length) + ' more' : '');
-  const signature = JSON.stringify([description, visible.map(t => [t.id, t.fam])]);
+  const signature = description;
   if (s.tray && s.taskSignature === signature) return;
   s.taskSignature = signature;
   s.taskSummary = visible.map(task => task.name).join(' · ') + (tasks.length > visible.length ? ' · +' + (tasks.length - visible.length) : '');
@@ -2556,21 +2557,14 @@ function syncTaskTray(s, mission, tasks) {
   s.tray.textContent = '';
   s.tray.setAttribute('aria-label', description + '. Open task list');
   svgEl('title', {}, s.tray).textContent = description;
-  const extra = tasks.length - visible.length, suffix = extra ? '+' + extra : '';
-  const caption = plural(tasks.length, 'task');
-  const captionWidth = caption.length * 5.5 + 4;
-  const width = captionWidth + visible.length * 13 + 10 + suffix.length * 6;
+  const caption = plural(tasks.length, 'task'), width = 32 + caption.length * 5.7;
   s.trayWidth = width; s.compactWidth = 23 + String(tasks.length).length * 7; s.compactTray = null;
   s.trayHit = svgEl('rect', {class: 'task-tray-hit', x: -width / 2 - 2, y: -13, width: width + 4, height: 26, rx: 8}, s.tray);
-  s.trayBg = svgEl('rect', {class: 'task-tray-bg', x: -width / 2, y: -8, width, height: 16, rx: 5}, s.tray);
+  s.trayBg = svgEl('rect', {class: 'task-tray-bg', x: -width / 2, y: -9, width, height: 18, rx: 7}, s.tray);
   const contents = svgEl('g', {}, s.tray); s.trayContents = contents;
-  svgEl('rect', {class: 'task-tray-well', x: captionWidth + 4 - width / 2, y: -6, width: width - captionWidth - 6, height: 12, rx: 3.5, 'pointer-events': 'none'}, contents);
-  svgEl('text', {class: 'task-caption', x: 6 - width / 2, y: 3}, contents).textContent = caption;
-  visible.forEach((task, index) => {
-    const glyph = svgEl('path', {class: 'task-cog', d: taskCogPath, 'fill-rule': 'evenodd', transform: 'translate(' + (captionWidth + 11 + index * 13 - width / 2) + ' 0)'}, contents);
-    glyph.style.setProperty('--hue', fam(task.fam).hue);
-  });
-  if (extra) svgEl('text', {class: 'task-overflow', x: width / 2 - 5, y: 3}, contents).textContent = suffix;
+  svgEl('path', {class: 'task-cog', d: taskCogPath, 'fill-rule': 'evenodd', transform: 'translate(' + (9 - width / 2) + ' 0)'}, contents);
+  svgEl('text', {class: 'task-caption', x: 17 - width / 2, y: 3.4}, contents).textContent = caption;
+  svgEl('path', {class: 'task-disclosure', d: 'M-2 -3 L1 0 L-2 3', transform: 'translate(' + (width / 2 - 7) + ' 0)'}, contents);
   s.traySummary = svgEl('g', {class: 'task-tray-summary', 'aria-hidden': 'true'}, s.tray);
   svgEl('path', {d: taskCogPath, 'fill-rule': 'evenodd', transform: 'translate(' + (9 - s.compactWidth / 2) + ' 0)'}, s.traySummary);
   svgEl('text', {class: 'task-caption', x: 18 - s.compactWidth / 2, y: 3}, s.traySummary).textContent = tasks.length;
@@ -2667,7 +2661,7 @@ function sync() {
     const stateName = SEAL_STATE[d.state][0];
     ms.ln.classList.toggle('working', d.wedges.some(wedge => wedge.live));
     const resource = d.warn && d.tight ? d.tight.label + ' ' + Math.round(d.tight.frac * 100) + '%' : d.warn ? 'Limit reached' : '';
-    ms.stateText.textContent = stateName;
+    ms.stateText.textContent = d.state === 'active' ? 'In progress' : stateName;
     ms.resourceText.textContent = resource ? ' · ' + resource : '';
     ms.title.textContent = M2.name + ', ' + stateName;
     ms.node.setAttribute('aria-label', M2.name + ', ' + stateName + (resource ? ', ' + resource : '') + '. Show its agents and tasks');
@@ -3085,13 +3079,12 @@ function project() {
       }
     }
     const nameDepth = (s.labelDepth || 0) * captionScale;
-    const size = clamp(1 / screenScale, .75, 1.9);
+    const size = selected ? Math.max(.75, 1 / screenScale) : clamp(1 / screenScale, .75, 1.9);
     // On a shallow map, keep the central lane free for Psyche and the gate controls.
     const compactTray = screenScale < .85;
     const trayWidth = s.tray ? (compactTray ? s.compactWidth : s.trayWidth) : 0;
     if (s.tray && s.compactTray !== compactTray) {
       s.compactTray = compactTray;
-      s.trayHit.setAttribute('x', -trayWidth / 2 - 2); s.trayHit.setAttribute('width', trayWidth + 4);
       s.trayBg.setAttribute('x', -trayWidth / 2); s.trayBg.setAttribute('width', trayWidth);
       s.trayContents.style.display = compactTray ? 'none' : '';
       s.traySummary.style.display = compactTray ? '' : 'none';
@@ -3100,6 +3093,10 @@ function project() {
     s.name.setAttribute('transform', `translate(${f(column / captionScale)} 0)`);
     s.stateLabel.removeAttribute('transform');
     if (s.tray) {
+      const touchMin = narrow.matches ? 44 / (size * screenScale) : 0;
+      const hitWidth = Math.max(trayWidth + 4, touchMin), hitHeight = Math.max(26, touchMin);
+      s.trayHit.setAttribute('x', -hitWidth / 2); s.trayHit.setAttribute('width', hitWidth);
+      s.trayHit.setAttribute('y', -hitHeight / 2); s.trayHit.setAttribute('height', hitHeight);
       const stateGap = selected && side > 0 && !compactTray ? 19 * U : 0;
       let y = lateral ? q[1] + nameDepth / 2 + 13 * size + stateGap : q[1] + side * (radius * captionScale + nameDepth + 13 * size + stateGap);
       let x = q[0] + column;
@@ -3124,7 +3121,7 @@ function project() {
     const statusOffset = lateral ? nameDepth / 2 : radius * captionScale + (side > 0 ? nameDepth : 0);
     s.stateLabel.setAttribute('y', f(q[1] + statusOffset + 13 * U));
     s.g.classList.toggle('atlas-mission-current', selected);
-    s.stateLabel.style.visibility = compactTray ? 'hidden' : '';
+    s.stateLabel.style.visibility = compactTray && !selected ? 'hidden' : '';
     const a = pc, b = q, [nx, ny] = unit(-(b[1] - a[1]), b[0] - a[0]);
     seg(s.thread, a, b); seg(s.out, a, b); seg(s.inn, a, b, -nx * 2.2, -ny * 2.2);   // instructions go out on one lane, reports come back on the other
     s.sx = q[0]; s.sy = q[1];
@@ -3200,6 +3197,22 @@ function positionPackets(P, f) {
     return true;
   });
 }
+// Keep a routine mission's name and metadata together when the map has space for one caption.
+function placePairedCaption(rows, center, radius, frame, occupied) {
+  const [title, state, tasks] = rows, gap = 6;
+  const metaWidth = state.width + gap + tasks.width, metaHeight = Math.max(state.height, tasks.height);
+  const width = Math.max(title.width, metaWidth), height = title.height + 2 + metaHeight;
+  const below = title.y + title.height / 2 >= center.y;
+  const block = {x: center.x - width / 2, y: below ? center.y + radius + 6 : center.y - radius - 6 - height, width, height};
+  const fit = placeMissionCaption([block], center, radius, frame, occupied);
+  if (!fit) return null;
+  const middle = fit[0].x + width / 2, metaX = middle - metaWidth / 2, metaY = fit[0].y + title.height + 2;
+  return [
+    {...title, x: middle - title.width / 2, y: fit[0].y},
+    {...state, x: metaX, y: metaY + (metaHeight - state.height) / 2},
+    {...tasks, x: metaX + state.width + gap, y: metaY + (metaHeight - tasks.height) / 2},
+  ];
+}
 function layoutMapLabels(captions) {
   const matrix = plan.getScreenCTM();
   if (!matrix || !(matrix.a > 0)) { showMissionCaptions(captions); return; }
@@ -3250,7 +3263,9 @@ function layoutMapLabels(captions) {
       occupied.push(...rows);
       continue;
     }
-    const placed = placeMissionCaption(rows, {x, y}, s.diameter / 2, captionFrame, occupied);
+    const paired = nodes.length === 3 && !s.resourceText.textContent &&
+      placePairedCaption(rows, {x, y}, s.diameter / 2, captionFrame, occupied);
+    const placed = paired || placeMissionCaption(rows, {x, y}, s.diameter / 2, captionFrame, occupied);
     if (placed) {
       for (const [i, box] of placed.entries()) {
         const dx = box.x - rows[i].x, dy = box.y - rows[i].y;

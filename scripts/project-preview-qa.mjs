@@ -77,8 +77,8 @@ for (const [width, height] of [[1440, 900], [390, 844]]) {
         return getComputedStyle(el).whiteSpace === 'nowrap' && el.scrollLeft > 0 &&
           getComputedStyle(el).textOverflow !== 'ellipsis' && el.scrollLeft + el.clientWidth >= el.scrollWidth - 1;
       }), 'the last grapheme of an oversized word can be read without breaking it');
-      assert.equal(await unstaffed.locator('.task-cog').count(), 3);
-      assert.equal(await unstaffed.locator('.task-overflow').textContent(), '+2');
+      assert.equal(await unstaffed.locator('.task-cog').count(), 1);
+      assert.match(await unstaffed.getAttribute('aria-label'), /5 tasks.*Brief · Cody, Review · Cody, Copy · Cody, and 2 more/);
       // Start from the overview again, this time with a Project containing only unstaffed tasks.
       await page.locator(width < 500 ? '#atlasMobileMap' : '#atlasOverview').click();
       await project.locator('.preview-mission').first().waitFor();
@@ -255,7 +255,7 @@ test('mission focus traces the seal and reveals the planes for its agents', asyn
     await page.keyboard.press('Enter');
     await page.locator('#plan.atlas-selected').waitFor();
     const selected = page.locator('.atlas-mission-group.atlas-mission-current');
-    await selected.locator('.task-tray-well').waitFor({state: 'visible'});
+    await selected.locator('.task-disclosure').waitFor({state: 'visible'});
     const hierarchy = await selected.evaluate(group => {
       const title = group.querySelector('.lead-name'), status = group.querySelector('.atlas-mission-state');
       const pixels = text => parseFloat(getComputedStyle(text).fontSize) * text.getScreenCTM().a;
@@ -1041,3 +1041,30 @@ for (const [width, height] of [[1440, 900], [390, 844], [844, 390]]) {
     } finally { await page.close(); }
   });
 }
+
+test('selected mission captions pair status with an actionable task count at desktop and phone widths', async () => {
+  for (const [width, height] of [[1440,900], [390,844], [320,568]]) {
+    const page = await browser.newPage({viewport: {width, height}, reducedMotion: 'reduce', hasTouch: width < 500});
+    try {
+      await page.goto(new URL('#/project/ui/mission/m-1?detail=card', base).href);
+      const group = page.locator('.atlas-mission-group.atlas-mission-current');
+      const state = group.locator('.atlas-mission-state'), tasks = group.locator('.mission-tasks');
+      assert.equal(await state.textContent(), 'In progress');
+      assert.match(await tasks.getAttribute('aria-label'), /3 tasks on Rebuild UI specimens: Build examples · Cody, Build registry · Cody, Run visual checks · Charm/);
+      await page.waitForFunction(() => {
+        const group = document.querySelector('.atlas-mission-group.atlas-mission-current');
+        const box = sel => group.querySelector(sel).getBoundingClientRect();
+        const title = box('.lead-name'), state = box('.atlas-mission-state'), tasks = box('.task-tray-hit');
+        return title.bottom <= Math.min(state.top, tasks.top) && state.right <= tasks.left &&
+          Math.abs(state.top + state.height / 2 - tasks.top - tasks.height / 2) < 2;
+      });
+      if (width < 500) {
+        const box = await group.locator('.task-tray-hit').boundingBox();
+        assert.ok(box.width >= 43.9 && box.height >= 43.9);
+        await tasks.tap();
+      } else { await tasks.focus(); await page.keyboard.press('Enter'); }
+      await page.getByRole('tab', {name:'Tasks', selected:true}).waitFor();
+      assert.deepEqual(await page.locator('#inspect .tname').allTextContents(), ['Build examples', 'Build registry', 'Run visual checks']);
+    } finally { await page.close(); }
+  }
+});
