@@ -3778,6 +3778,51 @@ function fillHudBrief() {
   if (st.measures.length) row('gauge', 'Measured', st.measures[0].value + (st.measures.length > 1 ? ` · +${st.measures.length - 1}` : ''), '');
 }
 const hotTask = (id, on) => cur().world.agents.forEach(a => { if (a.task === id) { const s = sc.agents.get(a.id); if (s) s.el.classList.toggle('is-hot', on); } });
+// Snapshot the reviewer's event boundary and UI origin before previewing an earlier event.
+function openMissionReview(c, mission) {
+  const origin = {time: cursor, position: c.applied, live, playing, detail: c.detail, fam: c.fam,
+    review: c.missionBrowserOrigin, selection: c.selectionOrigin, group: c.focusGroup,
+    inspectorScroll: $('inspect').scrollTop, stripScroll: $('leads').scrollLeft,
+    cardScroll: $('notes').querySelector('.manifest')?.scrollTop || 0};
+  playing = false; live = false;
+  const restore = () => {
+    cursor = origin.time;
+    seekTimeline(cursor, false, origin.position);
+    select(mission.id, origin.fam, origin.detail, {history: false, focus: false, review: origin.review, group: !!origin.group});
+    c.selectionOrigin = origin.selection;
+    atlasWriteRoute(true);
+    refresh();
+  };
+  reviewQueue.open({project: c.key, mission: mission.id, name: mission.name,
+    source: c.recorded ? 'Imported recording' : 'Local simulation', restore,
+    close() {
+      live = origin.live; playing = origin.playing;
+      refresh();
+      const panel = origin.detail === 'side' ? $('inspect') : $('notes');
+      panel.querySelector('[data-focus="review-request"]')?.focus({preventScroll: true});
+      $('inspect').scrollTop = origin.inspectorScroll;
+      $('leads').scrollLeft = origin.stripScroll;
+      const card = $('notes').querySelector('.manifest');
+      if (card) card.scrollTop = origin.cardScroll;
+      kick();
+    }});
+}
+function missionRequestButton(c, mission, request, count, onMap) {
+  const member = request.fam && fam(request.fam);
+  const button = html('button', onMap ? 'plate ask-note' : 'mission-review');
+  button.type = 'button'; button.dataset.focus = 'review-request';
+  button.style.setProperty('--hue', member?.hue || 'var(--primary)');
+  const icon = html('span', 'an-i'); icon.innerHTML = ICON[kindOf(request.title)];
+  const text = html('span', 'an-t'), by = html('span');
+  by.append(html('i', null, member?.name || 'Requester not recorded'));
+  if (count > 1) by.append(' · ' + plural(count, 'pending request'));
+  text.append(html('b', null, request.title), by);
+  const label = count > 1 ? 'Review requests' : 'Review request';
+  button.append(icon, text, html('span', 'an-go', label));
+  button.setAttribute('aria-label', label + ': ' + request.title + '. ' + by.textContent);
+  button.addEventListener('click', () => openMissionReview(c, mission));
+  return button;
+}
 function drawLeadCard(force) {
   const c = cur(), w = c.world, layer = $('notes'), M = c.sel ? w.missions.get(c.sel) : null;
   if (!M) { if (lcSig) { layer.textContent = ''; notes = []; hud = null; lcSig = ''; } return; }
@@ -3830,17 +3875,8 @@ function drawLeadCard(force) {
         col.addEventListener('scroll', kick, {passive: true});
       }
     }
-    if (next) {
-      const q = next;
-      // The gate keeps every count. The selected mission gets one review preview.
-      const f = fam(q.fam), st = q.limit && M.brief ? briefState(w, M) : null, x = st ? st.caps.find(y => y.k === q.limit) : null;
-      const el = html('button', 'plate ask-note'), ic = html('span', 'an-i'), tx = html('span', 'an-t'), go = html('span', 'an-go', 'Review'), sub = html('span');
-      el.type = 'button'; el.style.setProperty('--hue', f.hue); ic.innerHTML = ICON[kindOf(q.title)]; go.insertAdjacentHTML('beforeend', CHEV);
-      sub.append(html('i', null, f.name), ` · ${cap(GATE_NAME[q.gate])} gate`);
-      if (asks.length > 1) sub.append(` · ${asks.length} pending`);
-      tx.append(html('b', null, x ? `Go past ${capText(x.k, x.max)}` : q.title), sub);
-      el.setAttribute('aria-label', `Review in the Inbox: ${q.title}, from ${f.name} at the ${GATE_NAME[q.gate]} gate`);
-      el.addEventListener('click', () => flashAsk(q.id)); el.append(ic, tx, go);
+    if (next && !side) {
+      const q = next, el = missionRequestButton(c, M, q, asks.length, true);
       const connector = svgEl('svg', {class: 'leaders atlas-request-leader', 'aria-hidden': 'true'});
       const line = svgEl('line', {}, connector);
       layer.append(connector, el);
@@ -3981,8 +4017,9 @@ function syncInspect(force) {
   const all = [...w.agents.values()].filter(a => order.has(a.seat) || (a.task && taskIds.has(a.task))).sort((a, b) => rank(a.seat) - rank(b.seat) || slotOf(a) - slotOf(b));
   const review = c.missionBrowserOrigin;
   const missionOrder = review ? review.order : [...w.missions.values()];
+  const pending = openAsks(w).filter(q => q.mission === M.id), request = primaryRequest(pending, c.noteTop);
   const editable = canAct();
-  const sig = editable + '|' + JSON.stringify(missionOrder.map(m => [m.project, m.id, m.name])) + '|' + (panelView === 'brief' ? briefSig(briefState(w, M), M) + Math.floor((w.t - M.t0) / 60000) : '') + active + M.id + '/' + (c.fam || '') + '|' + panelView + '|' + seatIds.join(',') + '|' + tasks.map(t => t.id).join(',') + '|' + all.map(a => a.id + ':' + (a.task || '')).join(',');
+  const sig = JSON.stringify([request?.id, request?.title, request?.fam, pending.length]) + editable + '|' + JSON.stringify(missionOrder.map(m => [m.project, m.id, m.name])) + '|' + (panelView === 'brief' ? briefSig(briefState(w, M), M) + Math.floor((w.t - M.t0) / 60000) : '') + active + M.id + '/' + (c.fam || '') + '|' + panelView + '|' + seatIds.join(',') + '|' + tasks.map(t => t.id).join(',') + '|' + all.map(a => a.id + ':' + (a.task || '')).join(',');
   if (force || sig !== insp.sig) {
     const identity = [active, M.id, c.fam, panelView].join('|'), sameView = box.dataset.selection === identity;
     const previousScroll = sameView ? box.scrollTop : 0;
@@ -4069,6 +4106,7 @@ function syncInspect(force) {
     activity.append(counts, stepper);
     header.append(head, activity, seg);
     box.appendChild(header);
+    if (request) box.appendChild(missionRequestButton(c, M, request, pending.length, false));
     const sec = html('section'); sec.id = 'mission-section'; sec.setAttribute('role', 'tabpanel'); sec.setAttribute('aria-labelledby', 'mission-tab-' + panelView); sec.tabIndex = 0; sec.dataset.focus = 'mission-section';
     const dotBtn = a => { const b = html('button', 'dot'), co = coLead(w, a); b.type = 'button'; b.dataset.focus = 'agent-' + a.id; b.setAttribute('aria-pressed', 'false'); b.appendChild(html('i')); if (co) b.style.setProperty('--hue2', fam(co).hue); b.addEventListener('click', () => pick(a.id, 'panel')); insp.dots.set(a.id, {dot: b, btn: b, co: !!co}); return b; };
     const group = (hue, title, list, owners = []) => {
@@ -4685,7 +4723,7 @@ function syncReviewEntry(coven, count) {
 }
 const reviewQueue = window.mountReviewQueue({
   html, plural,
-  getRows: () => window.CovenReviewQueue.rows(projects, key => fam(key).name),
+  getRows: scope => window.CovenReviewQueue.rows(projects, key => fam(key).name, scope),
   read(row) {
     const project = projects[row.project], request = project.world.asks.get(row.id);
     return {request, state: [request, requestCap(project.world, request), project.recorded, live]};
@@ -4696,10 +4734,10 @@ const reviewQueue = window.mountReviewQueue({
     if (index < 0 || index >= project.applied || project.trace[index].mission !== request.mission) return null;
     return {project, mission: request.mission, position: index + 1};
   },
-  inspectOpening({project, mission, position}, resume) {
+  inspectOpening({project, mission, position}, resume, scope) {
     const name = project.world.missions.get(mission)?.name || mission;
     missionHistory.open(project, mission, name, {position, resume() {
-      atlasOverview();
+      if (scope) scope.restore(); else atlasOverview();
       resume();
     }});
   },
