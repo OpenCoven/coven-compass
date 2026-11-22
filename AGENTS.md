@@ -7,6 +7,7 @@ People reading this: Val owns the repo and merges. Nova coordinates and routes w
 ## One command
 
 ```bash
+npm --prefix src ci                  # install the pinned verification compiler once per checkout
 node scripts/verify-all.mjs           # run before every commit; writes tests/evidence/current.json
 node scripts/verify-all.mjs --check   # what CI runs; also fails on stale generated files
 sh scripts/verify-checkout.sh         # same command (wrapper kept from #6)

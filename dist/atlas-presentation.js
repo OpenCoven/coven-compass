@@ -1,4 +1,5 @@
 "use strict";
+// @generated from src/atlas-presentation.ts
 (function (root) {
     'use strict';
     function detailVisible(previous, pixels, enter, exit) {

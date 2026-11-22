@@ -17,8 +17,7 @@ The crown renderer and annotation placement are authored in `src/atlas-crown.ts`
 ```sh
 npm --prefix src ci
 npm --prefix src run build
-npm --prefix src run check
 node scripts/verify-all.mjs --check
 ```
 
-Migrate one module with its callers. Start with pure helpers such as viewport geometry, then the simulation fold and navigation codec. Type the inputs, outputs and existing browser globals, preserve CommonJS exports used in tests, and commit the generated script beside the source change. For the inline application, extract one responsibility at a time behind a typed API and verify its browser interaction before moving the next one. Serving a checkout requires only the files in `dist/`.
+Migrate one module with its callers. Start with pure helpers such as viewport geometry, then the simulation fold and navigation codec. Place a `// @generated from src/<module>.ts` comment immediately before the first emitted statement so verification can detect orphaned scripts. Type the inputs, outputs and existing browser globals, preserve CommonJS exports used in tests, and commit the generated script beside the source change. For the inline application, extract one responsibility at a time behind a typed API and verify its browser interaction before moving the next one. Serving a checkout requires only the files in `dist/`.

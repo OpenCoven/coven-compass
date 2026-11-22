@@ -12,6 +12,7 @@ interface Window {
   };
 }
 
+// @generated from src/atlas-presentation.ts
 (function (root: Window | null) {
   'use strict';
 

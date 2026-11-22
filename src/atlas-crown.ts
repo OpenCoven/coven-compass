@@ -27,6 +27,7 @@ interface Window {
   };
 }
 
+// @generated from src/atlas-crown.ts
 (() => {
   'use strict';
   function create(parent: SVGElement, svg: CrownSvgFactory) {
