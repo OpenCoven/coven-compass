@@ -7,6 +7,7 @@ People reading this: Val owns the repo and merges. Nova coordinates and routes w
 ## One command
 
 ```bash
+npm --prefix src ci                  # install the pinned verification compiler once per checkout
 node scripts/verify-all.mjs           # run before every commit; writes tests/evidence/current.json
 node scripts/verify-all.mjs --check   # what CI runs; also fails on stale generated files
 sh scripts/verify-checkout.sh         # same command (wrapper kept from #6)
@@ -107,3 +108,5 @@ Run `scripts/project-preview-qa.mjs` using the same external Playwright installa
 ## Secret checks
 
 Install the clone-local hooks with `python3 scripts/install-secret-hooks.py` before working on branches. See [SECURITY.md](SECURITY.md) for the staged-index, full-history, production build and regression commands. Review a suspected exposure privately and report only the rule and object identifier.
+
+Edit the crown and annotation-placement modules under `src/`. Their matching scripts under `dist/` are generated. Run `npm --prefix src ci`, `npm --prefix src run build` and `npm --prefix src run check` when changing typed modules, then run the usual site verification.

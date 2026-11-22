@@ -27,6 +27,7 @@ jobs:
           python-version: '3.12'
       - name: Runtime versions
         run: node --version && python3 --version
+      - run: npm --prefix src ci
       - name: verify-all --check (site, source, tests, crown, evidence)
         run: node scripts/verify-all.mjs --check --report "$RUNNER_TEMP/verify-report.json"
       - name: Upload run report
