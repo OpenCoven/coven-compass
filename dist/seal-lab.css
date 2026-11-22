@@ -314,3 +314,23 @@ body.csl-open { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   .csl-dialog * { animation: none !important; transition: none !important; }
 }
+
+.csl-views, .csl-members { display: flex; gap: 4px; flex-wrap: wrap; }
+.csl-views { padding: 10px var(--csl-gutter) 0; }
+.csl-views button, .csl-members button { padding: 5px 11px; min-height: 34px; }
+.csl-members { margin-block: 8px; }
+.csl-dialog [aria-pressed="true"]:is(.csl-views button, .csl-members button) {
+  color: var(--csl-hue, var(--csl-accent));
+  border-color: color-mix(in srgb, currentColor 65%, var(--csl-line));
+  background: color-mix(in srgb, currentColor 10%, var(--csl-raised));
+}
+.csl-dialog [hidden] { display: none; }
+.csl-face-base { fill: color-mix(in srgb, var(--hue) 12%, #17171c); }
+.csl-face-glyph { color: var(--hue); }
+@media (pointer: coarse) { .csl-views button, .csl-members button { min-height: 44px; } }
+@media (max-width: 600px) {
+  .csl-dialog[data-view="familiar"] .csl-preview { display: grid; grid-template-columns: minmax(100px, .8fr) minmax(0, 1fr); gap: 12px; align-items: center; }
+  .csl-dialog[data-view="familiar"] .csl-specimen { padding: 5px; }
+  .csl-dialog[data-view="familiar"] .csl-scene { height: 100px; }
+  .csl-dialog[data-view="familiar"] .csl-anatomy { grid-column: 1 / -1; }
+}

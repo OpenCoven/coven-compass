@@ -116,7 +116,7 @@ function fixture(trace = []) {
   });
   const constants = source.slice(source.indexOf('const TARGET_ROLES ='), source.indexOf('function sealOf('));
   context.SimModel = loadSimulationModel({ normBrief: () => null, fam: context.fam });
-  const names = ['seek', 'sync', 'syncTaskPlane', 'syncTaskTray', 'sealOf', 'buildSeal', 'drawSeal',
+  const names = ['seek', 'sync', 'syncTaskPlane', 'syncTaskTray', 'sealOf', 'buildSeal', 'drawSeal', 'buildFamiliarRings', 'drawFamiliarRings',
     'atlasProjectGhost'];
   const mapSizes = source.slice(source.indexOf('const FAMILIAR_RADIUS'), source.indexOf('const S = 280'));
   new vm.Script(`${mapSizes}\n${constants}\n${names.map(extract).join('\n')}`, {

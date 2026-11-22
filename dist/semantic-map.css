@@ -375,3 +375,13 @@ body.atlas-enhanced #plan .atlas-project-decision .gate-l.on {
 body.atlas-enhanced #plan .caption-in-list :is(.mission-face .lead-name, .mission-tasks, .atlas-mission-state) { display: none; }
 body.atlas-enhanced #plan .caption-in-list .seal-reference { display: inline; }
 .mission-caption small { color: var(--muted-foreground); grid-column: 2; font-size: .85em; }
+
+.familiar-rings { fill: none; pointer-events: none; }
+.familiar-rings .fam-track { stroke: var(--hue); stroke-opacity: .19; stroke-width: 1.7; }
+.familiar-rings .fam-progress { stroke: var(--hue); stroke-width: 2; }
+.familiar-rings .fam-state { stroke: var(--hue); stroke-width: 1.15; }
+.familiar-rings [data-state="Idle"] { stroke-dasharray: 1 3; }
+.familiar-rings [data-state="Unassigned"] { stroke-opacity: .38; stroke-dasharray: 5 5; }
+.familiar-rings [data-state="Blocked"] { stroke: var(--warn, #f2836b); stroke-dasharray: 4 2; stroke-width: 1.65; }
+.familiar-rings [data-state="Needs you"] { stroke: var(--attention, #f6f4ff); stroke-dasharray: 5 2 1 2; stroke-width: 1.65; }
+body.atlas-enhanced #plan .seat:not(:focus-visible) .familiar-disc { stroke-opacity: .25; }
