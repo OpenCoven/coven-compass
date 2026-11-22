@@ -268,3 +268,12 @@ test('mission grid reserves Psyche and preserves occupied cells as missions are 
   for (const count of COUNTS) assert.deepEqual(missionGrid(count), full.slice(0, count));
   assert.throws(() => missionGrid(-1), RangeError);
 });
+
+test('node and route gates can be updated independently for mixed Project keys', () => {
+  const world = layout([1, '1']);
+  assert.deepEqual(world.routes.map(route => route.key), [1, '1']);
+  for (const [index, node] of world.nodes.entries()) {
+    assert.deepEqual(node.gate, world.routes[index].gate);
+    assert.notEqual(node.gate, world.routes[index].gate);
+  }
+});
