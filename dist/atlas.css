@@ -90,7 +90,7 @@ body.atlas-enhanced .atlas-brand {
   grid-area: brand; display: grid; place-items: center; flex: none;
   inline-size: var(--atlas-header-target); block-size: var(--atlas-header-target);
 }
-body.atlas-enhanced .atlas-brand > svg { width: 22px; height: auto; color: var(--primary); fill: currentColor; }
+body.atlas-enhanced .atlas-brand > img { display: block; width: 28px; height: 28px; mix-blend-mode: screen; }
 body.atlas-enhanced .atlas-nav {
   grid-area: scope; justify-self: start; display: flex; flex: none; align-items: stretch;
   height: var(--atlas-header-target); border-radius: 8px; background: var(--background);
@@ -597,7 +597,7 @@ body.atlas-enhanced.atlas-adaptive-mobile #atlasMissions { display: none; }
 }
 @container atlas-stage (max-width: 360px) {
   body.atlas-enhanced.atlas-adaptive-mobile .atlas-header { gap: 6px; padding-inline: 6px 5px; }
-  body.atlas-enhanced.atlas-adaptive-mobile .atlas-brand > svg { width: 21px; height: 21px; }
+  body.atlas-enhanced.atlas-adaptive-mobile .atlas-brand > img { width: 26px; height: 26px; }
   body.atlas-enhanced.atlas-adaptive-mobile #atlasBrowse { width: var(--atlas-header-target); padding: 0; }
   body.atlas-enhanced.atlas-adaptive-mobile #atlasBrowse > span { display: none; }
 }
