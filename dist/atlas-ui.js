@@ -231,6 +231,8 @@
     head.append(brand, nav, actions); shield(head);
 
     var aside = node('aside', 'atlas-sidebar'); aside.id = 'atlasSidebar'; aside.hidden = true;
+    // WebKit can focus a button’s ancestor on mouse-down. Keep that focus inside the open drawer.
+    aside.tabIndex = -1;
     aside.setAttribute('aria-labelledby', 'atlasProjectsTitle');
     var heading = node('div', 'atlas-drawer-heading');
     var title = node('h2', '', 'Projects'); title.id = 'atlasProjectsTitle';
