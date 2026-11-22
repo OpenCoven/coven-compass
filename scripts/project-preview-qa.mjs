@@ -751,6 +751,7 @@ test('a narrow overview return fits the settled stage without rebuilding for the
     await page.waitForFunction(() => document.body.dataset.atlasScope === 'coven');
     await page.evaluate(async () => { for (let i = 0; i < 6; i++) await new Promise(requestAnimationFrame); });
     const overviewHeight = await page.locator('#stage').evaluate(el => el.clientHeight);
+    const initialTile = await tile.boundingBox();
     await tile.tap();
     await page.locator('.mission-tasks').first().waitFor();
     await page.waitForFunction(height => document.body.dataset.atlasScope === 'project' && document.getElementById('stage').clientHeight < height, overviewHeight);
@@ -771,6 +772,10 @@ test('a narrow overview return fits the settled stage without rebuilding for the
       return {height: document.getElementById('stage').clientHeight, builds: window.overviewBuilds};
     });
     assert.ok(after.height > before, 'stage height should expand from ' + before + ' to the overview, observed ' + after.height);
+    const returnedTile = await tile.boundingBox();
+    for (const coordinate of ['x', 'y', 'width', 'height']) {
+      assert.ok(Math.abs(returnedTile[coordinate] - initialTile[coordinate]) < 1, 'overview tile should return to its settled ' + coordinate);
+    }
     assert.ok(after.builds <= 1, 'overview rebuilt ' + after.builds + ' times during one scope change');
   } finally { await page.close(); }
 });
