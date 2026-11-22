@@ -2777,32 +2777,32 @@ function setMissionName(el, name) {
   });
   return el;
 }
-function prepareMissionLabel(s, name, scale) {
+function prepareMissionLabel(s, name, scale, maxWidth = 112) {
   const pixels = 10.5 * fsz;
   const units = Math.ceil(10 * Math.max(13 / 3, pixels / Math.max(scale, .01))) / 10;
-  if (s.labelName === name && s.labelUnits === units && s.labelFit) return null;
+  if (s.labelName === name && s.labelUnits === units && s.labelWidth === maxWidth && s.labelFit) return null;
   s.name.style.fontSize = units + 'px';
   s.name.textContent = '';
   const first = svgEl('tspan', {x: 0}, s.name);
   const text = name.trim().replace(/\s+/gu, ' ');
   first.textContent = text;
-  return {s, name, text, units, first};
+  return {s, name, text, units, first, maxWidth};
 }
-function measureMissionLabel({s, name, text, units, first}) {
+function measureMissionLabel({s, name, text, units, first, maxWidth}) {
   // Measure one shaped SVG run. Word and line offsets use the same UTF-16
   // units as getSubStringLength; whitespace is normalized before indexing.
   const width = first.getComputedTextLength();
   const addressable = first.getNumberOfChars() === text.length;
   const fits = (line, start) => {
-    if (addressable) return first.getSubStringLength(start, line.length) <= 112;
+    if (addressable) return first.getSubStringLength(start, line.length) <= maxWidth;
     // Some characters can be discarded by SVG layout. Measure that line directly.
     first.textContent = line;
-    return first.getComputedTextLength() <= 112;
+    return first.getComputedTextLength() <= maxWidth;
   };
-  const lines = width > 112 ? missionNameLines(text, fits) : text ? [text] : [];
+  const lines = width > maxWidth ? missionNameLines(text, fits) : text ? [text] : [];
   const leading = units * 1.13;
   let start = 0;
-  s.needsCaption = lines.length * leading > 49 || (width > 112 && lines.some(line => {
+  s.needsCaption = lines.length * leading > 49 || (width > maxWidth && lines.some(line => {
     const ok = fits(line, start);
     start += line.length + 1;
     return !ok;
@@ -2811,6 +2811,7 @@ function measureMissionLabel({s, name, text, units, first}) {
   // Hidden SVG text can report zero until its scope is visible.
   s.labelName = !name || width > 0 ? name : null;
   s.labelUnits = units;
+  s.labelWidth = maxWidth;
   s.labelSide = null;
 }
 function drawMissionLabel(s, reference, side) {
@@ -2829,8 +2830,8 @@ function drawMissionLabel(s, reference, side) {
   });
   s.reference = reference; s.labelSide = side;
 }
-function labelMission(s, name, scale, reference, side = 1) {
-  const run = prepareMissionLabel(s, name, scale);
+function labelMission(s, name, scale, reference, side = 1, maxWidth = 112) {
+  const run = prepareMissionLabel(s, name, scale, maxWidth);
   if (run) measureMissionLabel(run);
   drawMissionLabel(s, reference, side);
 }
@@ -2992,7 +2993,12 @@ function project() {
     const captionScale = s.readable ? faceScale : reveal;
     const lateral = lowWideMap && s.readable && Math.abs(q[1]) * screenScale < s.diameter / 2 + 45 && Math.abs(q[0]) > radius;
     if (mission) {
-      labelMission(s, mission.name, screenScale * captionScale, missionNumber, lateral ? 0 : side);
+      // Wrap inward-facing text before its centered line can reach the crown.
+      const hub = hubRadius / screenScale;
+      const nearCrown = Math.abs(q[1] - pc[1]) <= hub + (radius + 55) * captionScale;
+      const clearance = 2 * (Math.abs(q[0] - pc[0]) - hub) / captionScale;
+      const maxWidth = nearCrown && s.readable && !lateral ? clamp(Math.floor(clearance - 2), 1, 112) : 112;
+      labelMission(s, mission.name, screenScale * captionScale, missionNumber, lateral ? 0 : side, maxWidth);
       if (s.needsCaption || !s.readable) {
         s.referenceMark.textContent = String(missionNumber);
         captions.push([active, s.id, mission.name, missionNumber]);

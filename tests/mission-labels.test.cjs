@@ -74,6 +74,10 @@ test('seal labels use one-third design size, a screen-pixel floor and a caption 
   assert.ok(s.name.lines[0].y - s.labelUnits > 43, 'caption clears the lower rim');
   ctx.labelMission(s, 'Source survey', 3, 2, -1);
   assert.ok(s.name.lines[0].y + s.labelUnits / 2 < -43, 'changing sides clears the upper rim');
+  ctx.labelMission(s, 'Source survey', 3, 2, -1, 24);
+  assert.ok(s.name.lines.length > 1 || s.needsCaption, 'narrow crown clearance reflows the previously cached label');
+  ctx.labelMission(s, 'Source survey', 3, 2, -1);
+  assert.equal(s.name.lines[0].textContent, 'Source survey', 'the normal label returns when clearance increases');
   ctx.labelMission(s, 'x'.repeat(90), .85, 2);
   assert.ok(s.labelUnits * .85 >= 10.5);
   assert.equal(s.needsCaption, true);
