@@ -4,7 +4,7 @@
 <meta name="theme-color" content="#09090b">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif&display=swap">
 <style>
-/* Layout: the project fills the screen; Psyche floats bottom right as a chat window and can dock as a resizable side panel.
+/* Layout: the project fills the screen; Psyche opens from the right rail into a resizable side panel.
    Surfaces stack in three steps (background, card, raised). Detail stays folded until asked for. */
 :root{
   --background:#09090B;
@@ -259,13 +259,9 @@ h1,h2,h3,p,dl,dd{margin:0}
 .grip::after{content:"";position:absolute;left:3px;top:50%;width:3px;height:36px;margin-top:-18px;border-radius:2px;background:var(--border-strong);transition:background-color .15s}
 .grip:hover::after,.grip:focus-visible::after,.grip.on::after{background:var(--primary)}
 .app:not(.docked) .grip{display:none}
-.launcher{position:fixed;z-index:20;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));width:54px;height:54px;padding:0;
-  background:linear-gradient(180deg,var(--card-raised),var(--card));border-color:var(--border-strong);box-shadow:var(--shadow-pop);color:var(--primary)}
-.launcher svg{width:30px;height:30px}
 .badge{min-width:20px;height:20px;padding:0 6px;border-radius:var(--radius);display:grid;place-items:center;font-size:calc(12px * var(--fs,1) * var(--fsl,1));font-weight:600;font-variant-numeric:tabular-nums;
   background:var(--attention);color:var(--primary-foreground)}
 .badge.zero{background:var(--card-raised);color:var(--subtle);box-shadow:inset 0 0 0 1px var(--border)}
-.launcher .badge{position:absolute;top:-7px;right:-7px;box-shadow:0 2px 6px rgba(0,0,0,.6)}
 .p-h{display:flex;align-items:flex-start;gap:8px;padding:16px 14px 14px 20px;border-bottom:1px solid var(--border-strong);background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,0));position:relative;z-index:3}
 .p-h .ttl{flex:1;min-width:0}
 .p-h h1{font-family:var(--f-display);font-weight:400;font-size:calc(30px * var(--fs,1) * var(--fsl,1));line-height:1;letter-spacing:-.3px}
@@ -1488,7 +1484,6 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
 .huborb{fill:var(--primary);stroke:none;filter:none;transition:fill .15s}
 .hubhit{fill:transparent}
 .p-mark{color:var(--primary)}
-.launcher svg{color:var(--primary)}
 
 /* ================= the mission seal ================= */
 :root{--warn:#F2836B}
@@ -1633,6 +1628,9 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
             <div class="lcard glass" id="lcard" role="group" aria-label="Selection" hidden></div>
             <div class="pop glass" id="pop" role="group" aria-label="Agent" hidden></div>
           </div>
+          <button class="psyche-launcher" type="button" id="launcher" aria-label="Open Psyche" aria-controls="psyche" aria-expanded="false" title="Open Psyche" hidden>
+            <svg viewBox="-16 -16 32 32" aria-hidden="true"><use href="#crown" x="-14" y="-13" width="28" height="26" fill="currentColor"/></svg><span>Psyche</span>
+          </button>
           <aside class="inspect" id="inspect" aria-label="Familiar details" hidden></aside>
         </div>
         <div id="missionCaptions" class="mission-captions" role="group" aria-label="Mission names on the map" hidden></div>
@@ -1647,7 +1645,7 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
       <div class="leads" id="leads" aria-label="Missions"></div>
     </section>
 
-    <aside class="psyche card" id="psyche" aria-label="Psyche, the channel">
+    <aside class="psyche card" id="psyche" aria-label="Psyche, the channel" hidden>
       <div class="grip" id="grip" role="separator" aria-orientation="vertical" aria-label="Resize Psyche. Arrow keys change its size." tabindex="0"></div>
       <div class="grip-t" id="gripT" aria-hidden="true"></div>
       <div class="grip-c" id="gripC" aria-hidden="true"></div>
@@ -1655,7 +1653,8 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
         <span class="p-mark"><svg viewBox="-16 -16 32 32" aria-hidden="true"><use href="#crown" x="-11.4" y="-10.9" width="22.8" height="21" fill="currentColor"/></svg></span>
         <div class="ttl"><h1>Psyche</h1><p id="psub"></p></div>
         <button class="btn icon ghost" type="button" id="dockBtn"></button>
-        <button class="btn icon ghost" type="button" id="minBtn" aria-label="Minimize Psyche"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 5l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button class="btn ghost psyche-minimize" type="button" id="minBtn" title="Minimize to corner" aria-label="Minimize to corner"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 11.5h10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span>Minimize</span></button>
+        <button class="btn icon ghost" type="button" id="railBtn" title="Collapse to rail" aria-label="Collapse to rail"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m5 4 4 4-4 4m7-9v10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       </div>
       <div class="p-tabs" role="tablist" aria-label="Psyche panel">
         <button class="p-tab" type="button" role="tab" id="tabChat" aria-controls="stream" aria-selected="true">Conversation</button>
@@ -1713,12 +1712,12 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
         <h3>Map symbols</h3>
         <div class="key-entries"><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 20 20" aria-hidden="true"><path class="kl" d="M5 3h10l2 2v10l-2 2H5l-2-2V5Z"/><text x="10" y="13" text-anchor="middle" fill="currentColor" font-size="9">3</text></svg></span><div><b>Project</b><p>Open the outline to explore a project. Its number counts the missions inside.</p></div></div>
 <div class="kz-r"><span class="kz-m"><svg viewBox="-9 -9 18 18" aria-hidden="true" style="color:var(--primary)"><circle r="8" fill="none" stroke="currentColor" stroke-opacity=".45"/><circle r="6.5" fill="none" stroke="currentColor" stroke-dasharray="26 15"/><use href="#crown" x="-5.4" y="-5.1" width="10.8" height="10.2" fill="currentColor"/></svg></span><div><b>Psyche</b><p>Open the crown to chat. The inner band tracks working agents. The outer band tracks missions waiting for you.</p></div></div>
-<div class="kz-r"><span class="kz-m" id="kzSealMark"></span><div><b>Mission</b><p>Select a seal to see its team. Open the cogs beside it for the task list.</p></div></div>
+<div class="kz-r"><span class="kz-m" id="kzSealMark"></span><div><b>Mission</b><p>Select a seal to see its team. The cog button shows the task count and opens the list.</p></div></div>
 <div class="kz-r"><span class="kz-m"><svg viewBox="0 0 18 18" aria-hidden="true"><rect x="3" y="3" width="12" height="12" rx="1" fill="none" stroke="var(--attention)"/><path d="M9 6v6" stroke="var(--attention)"/></svg></span><div><b>Decision</b><p>Open the numbered gate to review requests waiting for you.</p></div></div></div>
       </section>
       <section class="key-panel" role="tabpanel" id="key-panel-teams" aria-labelledby="key-tab-teams" tabindex="0" hidden>
         <h3>Familiars and agents</h3>
-        <div class="key-entries"><div id="kzFams" class="kz-fams"></div><div class="kz-r"><span class="kz-m" id="kzDots"></span><div><b>Familiar color</b><p>Each familiar keeps its color across the map. Select its tinted group to center its agents. Each task’s area shows its share of the group’s agents.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="-1.2 -1.2 2.4 2.4" aria-hidden="true"><circle r=".96" fill="var(--fam-astra)"/><rect x="-.28" y="-.28" width=".56" height=".56" fill="var(--card)"/></svg></span><div><b>Agent and assignment</b><p>Each dot is an agent. A square center marks a task assignment. Working agents are filled. Idle agents are hollow.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 14 14" aria-hidden="true"><circle class="kc on" cx="7" cy="7" r="4.5"/><circle cx="7" cy="7" r="2" fill="var(--fam-cody)"/></svg></span><div><b>Shared task</b><p>A second hub color identifies a co-leading familiar. A dashed spot reserves a waiting agent’s place.</p></div></div></div>
+        <div class="key-entries"><div id="kzFams" class="kz-fams"></div><div class="kz-r"><span class="kz-m" id="kzDots"></span><div><b>Familiar color</b><p>Each familiar keeps its color across the map. Select its tinted group to center its agents. Area shows each task’s share of the agents. When its name will not fit, × and a number show its agent count.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="-1.2 -1.2 2.4 2.4" aria-hidden="true"><circle r=".96" fill="var(--fam-astra)"/><rect x="-.28" y="-.28" width=".56" height=".56" fill="var(--card)"/></svg></span><div><b>Agent and assignment</b><p>Each dot is an agent. A square center marks a task assignment. Working agents are filled. Idle agents are hollow.</p></div></div><div class="kz-r"><span class="kz-m"><svg viewBox="0 0 14 14" aria-hidden="true"><circle class="kc on" cx="7" cy="7" r="4.5"/><circle cx="7" cy="7" r="2" fill="var(--fam-cody)"/></svg></span><div><b>Shared task</b><p>A second hub color identifies a co-leading familiar. A dashed spot reserves a waiting agent’s place.</p></div></div></div>
       </section>
       <section class="key-panel" role="tabpanel" id="key-panel-seals" aria-labelledby="key-tab-seals" tabindex="0" hidden>
         <h3>Mission seals</h3>
@@ -1767,9 +1766,6 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
     <footer class="cp-foot"><span id="cpFoot"></span><button class="btn" type="button" id="cpNo">Cancel</button><button class="btn pri" type="button" id="cpYes">Use this color</button></footer>
   </section>
 </div>
-<button class="btn launcher" type="button" id="launcher" aria-label="Open Psyche" hidden>
-  <svg viewBox="-16 -16 32 32" aria-hidden="true"><use href="#crown" x="-11.4" y="-10.9" width="22.8" height="21" fill="currentColor"/></svg>
-</button>
 
 <script src="mission-navigation.js"></script>
 <script src="mobile-interactions.js"></script>
@@ -1801,7 +1797,7 @@ if (requestedSource !== null && requestedSource.trim().toLowerCase() !== 'simula
   }
   return;
 }
-const {detailVisible, primaryRequest, placeAnnotation} = window.CovenAtlasPresentation;
+const {detailVisible, primaryRequest, placeAnnotation, placeMissionCaption} = window.CovenAtlasPresentation;
 const NS = 'http://www.w3.org/2000/svg', RAD = Math.PI / 180;
 const FAMILIAR_RADIUS = 19, MAX_FAMILIAR_RADIUS = 25;
 const taskPlaneWidth = count => Math.min(72, Math.max(18, 16 * Math.sqrt(count)));
@@ -2423,10 +2419,11 @@ function buildScene() {
   });
   const detail = sc.detail = svgEl('g', {class: 'atlas-project-detail'}, plan);
   sc.gateL = Object.keys(COMPASS).map(l => {
-    const k = nearestGate(sc.n, COMPASS[l]), [x, y] = pol(cur().layout.lead, gateAng(sc.n, k)), t = svgEl('text', {class: 'gate-l'}, detail);
-    t.textContent = l;
+    const k = nearestGate(sc.n, COMPASS[l]), [x, y] = pol(cur().layout.lead, gateAng(sc.n, k));
     const mark = svgEl('g', {class: 'atlas-decision atlas-project-decision'}, detail), hit = svgEl('rect', {class: 'atlas-map-hit'}, mark), box = svgEl('rect', {x: -10, y: -10, width: 20, height: 20, rx: 2}, mark), count = svgEl('text', {y: 4}, mark);
-    const rec = {t, x, y, k, mark, box, hit, count, asks: []};
+    const t = svgEl('text', {class: 'gate-l', 'aria-hidden': 'true'}, mark);
+    t.textContent = l;
+    const rec = {t, direction: l, x, y, k, mark, box, hit, count, asks: []};
     const review = () => { if (rec.asks.length === 1) flashAsk(rec.asks[0].id); else setNeeds(true, true); };
     atlasFocusable(mark, 'Review pending decisions at the ' + GATE_NAME[l] + ' gate', review);
     mark.addEventListener('click', ev => { ev.stopPropagation(); review(); });
@@ -2474,7 +2471,7 @@ function syncTaskPlane(seat, groups) {
       const inset = Math.min(2, r.width * .07);
       const label = svgEl('text', {x: inset, y: r.labelHeight * .8, 'font-size': 10}, tile);
       label.textContent = group.name;
-      seat.captions.push({label, width: r.width - 2 * inset, height: r.labelHeight});
+      seat.captions.push({label, name: group.name, count: '×' + counts[i], width: r.width - 2 * inset, height: r.labelHeight});
     }
     group.members.forEach((id, index) => seat.cells.set(id, r.cells[index]));
   });
@@ -2518,10 +2515,11 @@ const taskCogPath = (() => {
 })();
 function syncTaskTray(s, mission, tasks) {
   if (!tasks.length) {
-    s.taskSummary = '';
+    s.taskCount = 0; s.taskSummary = '';
     if (s.tray) { if (s.tray.contains(document.activeElement)) s.node.focus(); s.tray.remove(); s.tray = null; }
     return;
   }
+  s.taskCount = tasks.length;
   const visible = tasks.slice(0, 3);
   const description = plural(tasks.length, 'task') + ' on ' + mission.name + ': ' + visible.map(t => t.name).join(', ') +
     (tasks.length > visible.length ? ', and ' + (tasks.length - visible.length) + ' more' : '');
@@ -2539,20 +2537,23 @@ function syncTaskTray(s, mission, tasks) {
   s.tray.setAttribute('aria-label', description + '. Open task list');
   svgEl('title', {}, s.tray).textContent = description;
   const extra = tasks.length - visible.length, suffix = extra ? '+' + extra : '';
-  const caption = tasks.length === 1 ? 'Task' : 'Tasks';
+  const caption = plural(tasks.length, 'task');
   const captionWidth = caption.length * 5.5 + 4;
   const width = captionWidth + visible.length * 13 + 10 + suffix.length * 6;
-  s.trayWidth = width; s.captionWidth = captionWidth; s.compactTray = null;
+  s.trayWidth = width; s.compactWidth = 23 + String(tasks.length).length * 7; s.compactTray = null;
   s.trayHit = svgEl('rect', {class: 'task-tray-hit', x: -width / 2 - 2, y: -13, width: width + 4, height: 26, rx: 8}, s.tray);
   s.trayBg = svgEl('rect', {class: 'task-tray-bg', x: -width / 2, y: -8, width, height: 16, rx: 5}, s.tray);
   const contents = svgEl('g', {}, s.tray); s.trayContents = contents;
   svgEl('rect', {class: 'task-tray-well', x: captionWidth + 4 - width / 2, y: -6, width: width - captionWidth - 6, height: 12, rx: 3.5, 'pointer-events': 'none'}, contents);
-  s.trayCaption = svgEl('text', {class: 'task-caption', x: 6 - width / 2, y: 3}, s.tray); s.trayCaption.textContent = caption;
+  svgEl('text', {class: 'task-caption', x: 6 - width / 2, y: 3}, contents).textContent = caption;
   visible.forEach((task, index) => {
     const glyph = svgEl('path', {class: 'task-cog', d: taskCogPath, 'fill-rule': 'evenodd', transform: 'translate(' + (captionWidth + 11 + index * 13 - width / 2) + ' 0)'}, contents);
     glyph.style.setProperty('--hue', fam(task.fam).hue);
   });
   if (extra) svgEl('text', {class: 'task-overflow', x: width / 2 - 5, y: 3}, contents).textContent = suffix;
+  s.traySummary = svgEl('g', {class: 'task-tray-summary', 'aria-hidden': 'true'}, s.tray);
+  svgEl('path', {d: taskCogPath, 'fill-rule': 'evenodd', transform: 'translate(' + (9 - s.compactWidth / 2) + ' 0)'}, s.traySummary);
+  svgEl('text', {class: 'task-caption', x: 18 - s.compactWidth / 2, y: 3}, s.traySummary).textContent = tasks.length;
 }
 function sync() {
   if (sc.layoutSignature !== atlasWorldLayout().signature) { buildScene(); if (atlasAutoFit) atlasQueueFit(); }
@@ -2587,6 +2588,8 @@ function sync() {
       s.name = svgEl('text', {class: 'lead-name', 'aria-hidden': 'true'}, s.face);
       s.referenceMark = svgEl('text', {class: 'seal-reference', 'aria-hidden': 'true', y: 4}, s.face);
       s.stateLabel = svgEl('text', {class: 'atlas-mission-state', 'aria-hidden': 'true'}, s.g);
+      s.stateText = svgEl('tspan', {}, s.stateLabel);
+      s.resourceText = svgEl('tspan', {class: 'mission-resource'}, s.stateLabel);
       sc.missions.set(id, s);
     }
     syncTaskTray(sc.missions.get(M.id), M, missionTasks.get(M.id) || []);
@@ -2637,9 +2640,11 @@ function sync() {
     const council = d.wedges.map(x => x.k).join('+');
     const stateName = SEAL_STATE[d.state][0];
     ms.ln.classList.toggle('working', d.wedges.some(wedge => wedge.live));
-    if (ms.stateLabel) ms.stateLabel.textContent = stateName + (d.warn ? ' · Limit' : '');
+    const resource = d.warn && d.tight ? d.tight.label + ' ' + Math.round(d.tight.frac * 100) + '%' : d.warn ? 'Limit reached' : '';
+    ms.stateText.textContent = stateName;
+    ms.resourceText.textContent = resource ? ' · ' + resource : '';
     ms.title.textContent = M2.name + ', ' + stateName;
-    ms.node.setAttribute('aria-label', M2.name + ', ' + stateName + (d.warn ? ', resource limit warning' : '') + '. Show its agents and tasks');
+    ms.node.setAttribute('aria-label', M2.name + ', ' + stateName + (resource ? ', ' + resource : '') + '. Show its agents and tasks');
     if (council !== se.council) { se.council = council; buildSeal(se, d); }
     drawSeal(se, d);
     ms.thread.classList.toggle('ask', d.state === 'needsYou');
@@ -2776,7 +2781,7 @@ function applySel() {
     g.mark.style.display = g.asks.length && !gatesShown.has(g.k) ? '' : 'none';
     gatesShown.add(g.k);
     g.count.textContent = String(g.asks.length);
-    g.mark.setAttribute('aria-label', plural(g.asks.length, 'pending decision') + ' at the ' + GATE_NAME[g.t.textContent] + ' gate. Review in the simulated Inbox');
+    g.mark.setAttribute('aria-label', plural(g.asks.length, 'pending decision') + ' at the ' + GATE_NAME[g.direction] + ' gate. Review in the simulated Inbox');
   });
 }
 
@@ -2805,7 +2810,7 @@ function setMissionName(el, name) {
   return el;
 }
 function prepareMissionLabel(s, name, scale, maxWidth = 112) {
-  const pixels = 10.5 * fsz;
+  const pixels = (s.emphasized ? 15 : 10.5) * fsz;
   const units = Math.ceil(10 * Math.max(13 / 3, pixels / Math.max(scale, .01))) / 10;
   if (s.labelName === name && s.labelUnits === units && s.labelWidth === maxWidth && s.labelFit) return null;
   s.name.style.fontSize = units + 'px';
@@ -2847,7 +2852,7 @@ function drawMissionLabel(s, reference, side) {
   const display = s.needsCaption && reference ? [String(reference)] : lines;
   while (first.nextSibling) first.nextSibling.remove();
   const height = leading * display.length;
-  const gap = units * .5;
+  const gap = units * .5 + (s.emphasized ? 5 : 0);
   s.labelDepth = gap + height;
   const center = side * (43 + gap + height / 2);
   display.forEach((line, i) => {
@@ -2869,24 +2874,41 @@ function showMissionCaptions(entries) {
   const signature = JSON.stringify(entries);
   if (signature === list.dataset.signature) return;
   list.dataset.signature = signature;
+  const focusedRow = list.contains(document.activeElement) ? document.activeElement : null;
   list.hidden = !entries.length;
   const nodes = new Map(Array.from(list.children, child => [child.dataset.key, child]));
   let anchor = list.firstElementChild;
-  for (const [project, id, name, reference] of entries) {
+  for (const [project, id, name, reference, fallback] of entries) {
     const key = JSON.stringify([project, id]);
     let row = nodes.get(key);
     if (!row) {
       row = html('button', 'mission-caption'); row.type = 'button'; row.dataset.key = key;
       row.append(html('b'), html('span'));
-      row.addEventListener('click', () => atlasOpenMission(project, id, 'side'));
+      row.addEventListener('click', () => {
+        if (row.dataset.tasks === 'true') panelView = 'tasks';
+        atlasOpenMission(project, id, 'side');
+      });
     }
     row.firstElementChild.textContent = String(reference);
-    setMissionName(row.lastElementChild, name);
+    setMissionName(row.children[1], name);
+    row.dataset.tasks = String(!!fallback?.tasks);
+    let note = row.querySelector('small');
+    if (fallback) {
+      if (!note) { note = html('small'); row.appendChild(note); }
+      note.textContent = [fallback.state, fallback.tasks && plural(fallback.tasks, 'task')].filter(Boolean).join(' · ');
+    } else if (note) note.remove();
     nodes.delete(key);
     if (row !== anchor) list.insertBefore(row, anchor);
     anchor = row.nextElementSibling;
   }
-  for (const row of nodes.values()) row.remove();
+  for (const row of nodes.values()) {
+    row.remove();
+    if (row === focusedRow && atlasScope === 'project') {
+      const [project, id] = JSON.parse(row.dataset.key);
+      const mission = active === project && sc.missions.get(id);
+      if (mission) (row.dataset.tasks === 'true' && mission.tray || mission.node).focus({preventScroll: true});
+    }
+  }
 }
 function project() {
   const P = (x, y) => [x, y];
@@ -2974,7 +2996,11 @@ function project() {
   }
   cv.scale = null;
   sc.gateL.forEach(g => {
-    const q = P(g.x, g.y); g.t.setAttribute('x', f(q[0])); g.t.setAttribute('y', f(q[1] - 17 * U));
+    const q = P(g.x, g.y);
+    const label = cur().sel && screenScale >= 1.15 && g.mark.style.display !== 'none' ? 'Review · ' + g.direction : g.direction;
+    if (g.t.textContent !== label) g.t.textContent = label;
+    g.t.setAttribute('x', 0); g.t.setAttribute('y', f(-17 * U));
+    g.t.style.visibility = '';
     const badgeSize = clamp(20 * Math.max(.8, U) * screenScale, 20, 28) / screenScale;
     g.mark.setAttribute('transform', `translate(${f(q[0])},${f(q[1])})`);
     g.sx = q[0]; g.sy = q[1];
@@ -3009,6 +3035,7 @@ function project() {
     s.seal.g.style.opacity = sc.hl && mission && !mission.seats.includes(sc.hl) ? '.76' : '1';
     s.node.setAttribute('transform', `translate(${f(q[0])},${f(q[1])})`);
     const selected = cur().sel === s.id;
+    s.emphasized = selected && screenScale >= 1;
     s.hit.setAttribute('r', f(minHit / 2));
     s.face.style.setProperty('--mission-size', faceScale);
     s.diameter = diameter * faceScale;
@@ -3016,7 +3043,7 @@ function project() {
     s.g.classList.toggle('atlas-compact-seal', !s.readable);
     const reveal = Math.max(faceScale, 34 / (radius * screenScale));
     s.face.style.setProperty('--mission-reveal', reveal);
-    const side = s.y > 0 ? -1 : 1;
+    const side = s.emphasized || s.y <= 0 ? 1 : -1;
     const captionScale = s.readable ? faceScale : reveal;
     const lateral = lowWideMap && s.readable && Math.abs(q[1]) * screenScale < s.diameter / 2 + 45 && Math.abs(q[0]) > radius;
     if (mission) {
@@ -3035,19 +3062,20 @@ function project() {
     const size = clamp(1 / screenScale, .75, 1.9);
     // On a shallow map, keep the central lane free for Psyche and the gate controls.
     const compactTray = screenScale < .85;
-    const trayWidth = s.tray ? s.trayWidth - (compactTray ? s.captionWidth : 0) : 0;
+    const trayWidth = s.tray ? (compactTray ? s.compactWidth : s.trayWidth) : 0;
     if (s.tray && s.compactTray !== compactTray) {
       s.compactTray = compactTray;
       s.trayHit.setAttribute('x', -trayWidth / 2 - 2); s.trayHit.setAttribute('width', trayWidth + 4);
       s.trayBg.setAttribute('x', -trayWidth / 2); s.trayBg.setAttribute('width', trayWidth);
-      s.trayContents.setAttribute('transform', 'translate(' + (compactTray ? -s.captionWidth / 2 : 0) + ' 0)');
-      s.trayCaption.style.display = compactTray ? 'none' : '';
+      s.trayContents.style.display = compactTray ? 'none' : '';
+      s.traySummary.style.display = compactTray ? '' : 'none';
     }
     const column = lateral ? Math.sign(s.x) * (radius * captionScale + 42 / screenScale + Math.max(56 * captionScale, trayWidth * size / 2)) : 0;
     s.name.setAttribute('transform', `translate(${f(column / captionScale)} 0)`);
+    s.stateLabel.removeAttribute('transform');
     if (s.tray) {
-      const stateGap = selected && side > 0 ? 15 * U : 0;
-      let y = lateral ? q[1] + nameDepth / 2 + 13 * size : q[1] + side * (radius * captionScale + nameDepth + 13 * size + stateGap);
+      const stateGap = selected && side > 0 && !compactTray ? 19 * U : 0;
+      let y = lateral ? q[1] + nameDepth / 2 + 13 * size + stateGap : q[1] + side * (radius * captionScale + nameDepth + 13 * size + stateGap);
       let x = q[0] + column;
       // Keep the decision's painted square and the tray's larger click surface apart.
       if (compactTray && !lateral) {
@@ -3064,12 +3092,13 @@ function project() {
           if (Math.abs(x - gate.x) < gap) x = gate.x + (Math.sign(x - gate.x) || 1) * gap;
         }
       }
-      s.trayBox = {x, y, width: trayWidth * size, height: 16 * size};
       s.tray.setAttribute('transform', `translate(${f(x)} ${f(y)}) scale(${size})`);
     }
-    s.stateLabel.setAttribute('x', f(q[0]));
-    s.stateLabel.setAttribute('y', f(q[1] + radius * captionScale + (!lateral && side > 0 ? nameDepth : 0) + 12 * U));
+    s.stateLabel.setAttribute('x', f(q[0] + column));
+    const statusOffset = lateral ? nameDepth / 2 : radius * captionScale + (side > 0 ? nameDepth : 0);
+    s.stateLabel.setAttribute('y', f(q[1] + statusOffset + 13 * U));
     s.g.classList.toggle('atlas-mission-current', selected);
+    s.stateLabel.style.visibility = compactTray ? 'hidden' : '';
     const a = pc, b = q, [nx, ny] = unit(-(b[1] - a[1]), b[0] - a[0]);
     seg(s.thread, a, b); seg(s.out, a, b); seg(s.inn, a, b, -nx * 2.2, -ny * 2.2);   // instructions go out on one lane, reports come back on the other
     s.sx = q[0]; s.sy = q[1];
@@ -3094,9 +3123,20 @@ function project() {
     if (showAgents && cc.sel === s.m && s.captionScale !== screenScale) {
       s.captionScale = screenScale;
       for (const caption of s.captions) {
-        // Measure the full name once, then fit it to its tile as the camera zooms.
-        if (!caption.emWidth) caption.emWidth = caption.label.getComputedTextLength() / 10;
-        const size = Math.min(13 / screenScale, caption.height * .68, caption.width / caption.emWidth);
+        // Cache both shaped runs at the same font size; zoom only changes which one fits.
+        if (!caption.nameWidth) {
+          caption.label.style.fontSize = '10px';
+          caption.label.textContent = caption.count;
+          caption.countWidth = caption.label.getComputedTextLength() / 10;
+          caption.label.textContent = caption.name;
+          caption.nameWidth = caption.label.getComputedTextLength() / 10;
+        }
+        const maxSize = Math.min(12 / screenScale, caption.height * .8);
+        const fullSize = Math.min(maxSize, caption.width / caption.nameWidth);
+        const showName = fullSize * screenScale >= 9;
+        const size = showName ? fullSize : Math.min(maxSize, caption.width / caption.countWidth);
+        const text = showName ? caption.name : caption.count;
+        if (caption.label.textContent !== text) caption.label.textContent = text;
         caption.label.style.fontSize = size + 'px';
         caption.label.style.visibility = size * screenScale >= 9 ? 'visible' : 'hidden';
       }
@@ -3115,7 +3155,7 @@ function project() {
   });
   sc.colinks.forEach(r => { const A2 = sc.seats.get(r.a), B2 = sc.seats.get(r.b); if (!A2 || !B2) return; const pa = P(A2.bx, A2.by), pb = P(B2.bx, B2.by); seg(r.l1, pa, pb); seg(r.l2, pa, pb); });
 
-  showMissionCaptions(captions); layoutMapLabels();
+  layoutMapLabels(captions);
   placePop(); placeCard();
 }
 function positionPackets(P, f) {
@@ -3133,26 +3173,81 @@ function positionPackets(P, f) {
     return true;
   });
 }
-function layoutMapLabels() {
+function layoutMapLabels(captions) {
   const matrix = plan.getScreenCTM();
-  if (!matrix || !(matrix.a > 0)) return;
+  if (!matrix || !(matrix.a > 0)) { showMissionCaptions(captions); return; }
   const stageRect = stage.getBoundingClientRect(), scale = matrix.a;
   const stageX = matrix.e - stageRect.left, stageY = matrix.f - stageRect.top;
   const X = value => stageX + value * scale, Y = value => stageY + value * scale;
   const c = cur(), occupied = [];
-  const frame = atlasViewportFrame(true);
+  const frame = atlasViewportFrame(Boolean(c.sel));
   const reserve = (x, y, width, height, gate) => occupied.push({x: x - width / 2, y: y - height / 2, width, height, gate});
+  const screenBox = (el, pad = 0) => {
+    const r = el.getBoundingClientRect();
+    return {x: r.left - stageRect.left - pad, y: r.top - stageRect.top - pad, width: r.width + 2 * pad, height: r.height + 2 * pad};
+  };
+  reserve(X(sc.psy.sx), Y(sc.psy.sy), 2 * sc.psy.radius + 4, 2 * sc.psy.radius + 4);
+  sc.gateL.forEach(g => { if (g.mark.style.display !== 'none') occupied.push({...screenBox(g.box, 2), gate: g}); });
+  sc.seats.forEach(s => {
+    occupied.push(screenBox(s.disc, 2));
+    if (sc.agentDetail && s.slots && c.sel === s.m) occupied.push(screenBox(s.floor, 2));
+  });
   sc.missions.forEach(s => {
     const diameter = Math.max(s.diameter, s.id === c.sel && !s.readable ? 68 : 0);
-    reserve(X(s.sx), Y(s.sy), diameter, diameter);
-    if (s.readable || c.sel === s.id || s.node.matches(':hover, :focus-visible')) {
-      const box = s.name.getBoundingClientRect();
-      if (box.width) reserve(box.left - stageRect.left + box.width / 2, box.top - stageRect.top + box.height / 2, box.width + 4, box.height + 2);
-    }
-    if (s.tray && s.trayBox) reserve(X(s.trayBox.x), Y(s.trayBox.y), s.trayBox.width * scale, s.trayBox.height * scale);
+    reserve(X(s.sx), Y(s.sy), diameter + 4, diameter + 4);
   });
-  reserve(X(sc.psy.sx), Y(sc.psy.sy), 2 * sc.psy.radius, 2 * sc.psy.radius);
-  sc.gateL.forEach(g => { if (g.mark.style.display !== 'none') reserve(X(g.sx), Y(g.sy), 30, 30, g); });
+  if (c.sel) for (const a of sc.agents.values()) {
+    if (a.state === 'gate' && a.el.style.display !== 'none') reserve(X(a.sx), Y(a.sy), 18, 18);
+  }
+  // Rails can occupy one corner of a short screen. Reserve their rectangles, not whole rows.
+  const captionFrame = {x: 4, y: 4, width: stageRect.width - 8, height: stageRect.height - 8};
+  for (const el of document.querySelectorAll('#launcher, #atlasFamiliars, #atlasCameraDock, #atlasHeader, #atlasSidebar, #atlasMissionBrowser, #notes .manifest, #notes > .hud, #inspect')) {
+    if (el.hidden || (el.id === 'inspect' && document.body.classList.contains('atlas-mobile-overlay'))) continue;
+    const box = screenBox(el);
+    if (box.width && box.height) occupied.push(box);
+  }
+  // Selected content gets first choice. Keep every source transform when its preferred position fits.
+  const missions = [...sc.missions.values()].sort((a, b) => Number(b.id === c.sel) - Number(a.id === c.sel));
+  let focusCaption;
+  for (const s of missions) {
+    s.g.classList.remove('caption-in-list');
+    const x = X(s.sx), y = Y(s.sy);
+    const nodes = [];
+    if (s.readable || s.id === c.sel || s.node.matches(':hover, :focus-visible')) nodes.push(s.name);
+    if (s.id === c.sel && !s.stateLabel.style.visibility) nodes.push(s.stateLabel);
+    if (s.tray) nodes.push(s.trayHit);
+    if (!nodes.length) continue;
+    const rows = nodes.map(node => screenBox(node, 1));
+    // Do not pull an offscreen mission's controls back into the map when panning.
+    if (x < 0 || y < 0 || x > stageRect.width || y > stageRect.height) {
+      occupied.push(...rows);
+      continue;
+    }
+    const placed = placeMissionCaption(rows, {x, y}, s.diameter / 2, captionFrame, occupied);
+    if (placed) {
+      for (const [i, box] of placed.entries()) {
+        const dx = box.x - rows[i].x, dy = box.y - rows[i].y;
+        if (!dx && !dy) continue;
+        const el = nodes[i] === s.trayHit ? s.tray : nodes[i];
+        const parentScale = el.parentNode.getScreenCTM().a;
+        el.setAttribute('transform', `translate(${dx / parentScale} ${dy / parentScale}) ${el.getAttribute('transform') || ''}`);
+      }
+      occupied.push(...placed);
+    } else {
+      const number = s.reference;
+      s.referenceMark.textContent = String(number);
+      let entry = captions.find(row => row[1] === s.id);
+      if (!entry) {
+        entry = [active, s.id, c.world.missions.get(s.id).name, number];
+        captions.push(entry);
+      }
+      entry[4] = {tasks: s.taskCount || 0, state: s.id === c.sel ? s.stateLabel.textContent : ''};
+      if (s.tray && s.tray.contains(document.activeElement)) focusCaption = JSON.stringify([active, s.id]);
+      s.g.classList.add('caption-in-list');
+    }
+  }
+  showMissionCaptions(captions);
+  if (focusCaption) Array.from($('missionCaptions').children).find(el => el.dataset.key === focusCaption)?.focus({preventScroll: true});
   sc.seats.forEach(s => {
     if (c.sel !== s.m) return;
     const text = s.label.getBoundingClientRect();
@@ -3166,6 +3261,21 @@ function layoutMapLabels() {
     s.label.setAttribute('y', (pos.y + 3 + ascent - stageY) / scale);
     occupied.push({x: pos.x, y: pos.y, width, height});
   });
+  if (c.sel && scale >= 1.15) {
+    for (const gate of sc.gateL) {
+      if (gate.mark.style.display === 'none') continue;
+      const anchor = {x: X(gate.sx), y: Y(gate.sy)};
+      const text = gate.t.getBBox();
+      const size = {width: text.width * scale + 6, height: text.height * scale + 4};
+      const pos = placeAnnotation(anchor, size, frame, occupied, 18, false);
+      // A caption belongs next to its gate even when part of the map is offscreen.
+      if (!pos || Math.hypot(anchor.x - pos.end.x, anchor.y - pos.end.y) > 24) { gate.t.style.visibility = 'hidden'; continue; }
+      const ascent = Number(gate.t.getAttribute('y')) - text.y;
+      gate.t.setAttribute('x', (pos.x + size.width / 2 - anchor.x) / scale);
+      gate.t.setAttribute('y', (pos.y + 2 - anchor.y) / scale + ascent);
+      occupied.push({...pos, gate});
+    }
+  }
   sc.labelBoxes = occupied;
 }
 function placePop() {
@@ -4168,7 +4278,7 @@ document.addEventListener('keydown', ev => {
   if (needsOpen && cur().expanded.size) { cur().expanded.clear(); return drawNeeds(); }
   if (needsOpen && psy.mode !== 'closed' && !cur().pick && !open) return setNeeds(false, true);
   if ((railTab === 'fams' || railTab === 'project') && psy.mode !== 'closed' && !cur().pick && !open && !cz.open) return setTab('chat', true, true);
-  if (ev.target === $('say') && psy.mode === 'float') return setMode('closed', true);
+  if (psy.mode !== 'closed' && $('psyche').contains(ev.target) && !open && !cz.open && $('empty').hidden) return setMode('closed', true);
   if (cz.open && !open) return closeProjectForm();
   if (!$('empty').hidden && !open && !cur().pick) return closeNew();
   if (cur().pick) clearPick(); else if (open) { open.open = false; open.firstElementChild.focus(); } else if (cur().sel && cur().fam) select(cur().sel, null, cur().detail); else if (cur().sel && cur().detail === 'side') closeMissionDetails(); else if (cur().sel) select(null); else if (psy.mode === 'float') setMode('closed', true);
@@ -5471,33 +5581,53 @@ function converse(c, text) {
 setLead('echo');
 
 // ------------------------------------------------------------ Psyche window: bubble, floating chat (resizable), docked panel (resizable)
-const psy = {mode: 'closed', w: 400, fw: 400, fh: 640};
-const savePsy = () => store.set('coven-compass-psyche', {mode: psy.mode, w: psy.w, fw: psy.fw, fh: psy.fh});
+const psy = {mode: 'closed', openMode: 'dock', launcher: 'rail', w: 400, fw: 400, fh: 640};
+const savePsy = () => store.set('coven-compass-psyche', {...psy});
 function setMode(mode, focus) {
-  if (mode === 'dock' && narrow.matches) mode = 'float';
   psy.mode = mode;
   if (mode === 'closed' && railTab !== 'chat') { railTab = 'chat'; needsOpen = false; cur().expanded.clear(); needsSig = ''; drawNeeds(); drawSummary(); }
   const dock = $('dockBtn');
-  $('app').classList.toggle('docked', mode === 'dock');
+  $('app').classList.toggle('docked', mode === 'dock' && !narrow.matches);
+  $('launcher').dataset.placement = psy.launcher;
+  $('launcher').setAttribute('aria-expanded', String(mode !== 'closed'));
   $('psyche').hidden = mode === 'closed'; $('launcher').hidden = mode !== 'closed';
   if (window.CovenMobileUI) window.CovenMobileUI.sync();
   dock.innerHTML = mode === 'dock' ? ICON.float : ICON.dock;
   dock.setAttribute('aria-label', mode === 'dock' ? 'Float Psyche as a chat window' : 'Dock Psyche as a side panel');
+  dock.title = dock.getAttribute('aria-label');
   savePsy();
-  if (focus) (mode === 'closed' ? $('launcher') : $('minBtn')).focus();
+  if (focus) {
+    const target = mode === 'closed' ? $('launcher') : $('railBtn');
+    if (!target.closest('[inert]')) target.focus({preventScroll: true});
+  }
   if (mode !== 'closed') { streamSig = ''; drawStream(); }
   kick();
 }
-function openPsyche() { if (psy.mode === 'closed') setMode('float'); }
+function openPsyche() { if (psy.mode === 'closed') setMode(psy.openMode); }
 function setDockW(w) { psy.w = clamp(Math.round(w), 320, Math.max(320, Math.min(720, innerWidth * .6))); $('app').style.setProperty('--psyche-w', psy.w + 'px'); kick(); }
 function setFloat(w, h) {
   psy.fw = clamp(Math.round(w), 320, Math.max(320, innerWidth - 32)); psy.fh = clamp(Math.round(h), 360, Math.max(360, innerHeight - 48));
   $('app').style.setProperty('--psy-fw', psy.fw + 'px'); $('app').style.setProperty('--psy-fh', psy.fh + 'px');
 }
-$('launcher').addEventListener('click', () => { setMode('float', true); $('say').focus(); });
-$('minBtn').addEventListener('click', () => setMode('closed', true));
-$('dockBtn').addEventListener('click', () => { setMode(psy.mode === 'dock' ? 'float' : 'dock'); $('dockBtn').focus(); });
-narrow.addEventListener('change', () => { if (narrow.matches && psy.mode === 'dock') setMode('float'); });
+$('launcher').addEventListener('click', () => {
+  openPsyche();
+  const target = narrow.matches || $('say').disabled ? $(TAB_ID[railTab]) : $('say');
+  target.focus({preventScroll: true});
+});
+function closePsyche(placement) {
+  psy.launcher = placement;
+  setMode('closed', true);
+}
+$('railBtn').addEventListener('click', () => closePsyche('rail'));
+$('minBtn').addEventListener('click', () => closePsyche('corner'));
+$('dockBtn').addEventListener('click', () => {
+  psy.openMode = psy.mode === 'dock' ? 'float' : 'dock';
+  setMode(psy.openMode);
+  $('dockBtn').focus();
+});
+narrow.addEventListener('change', () => {
+  $('app').classList.toggle('docked', psy.mode === 'dock' && !narrow.matches);
+});
 [['grip', 'w'], ['gripT', 'h'], ['gripC', 'wh']].forEach(([id, axis]) => {
   const el = $(id); let g = null;
   el.addEventListener('pointerdown', ev => { const p = $('psyche'); g = {x: ev.clientX, y: ev.clientY, w: psy.mode === 'dock' ? psy.w : p.offsetWidth, h: p.offsetHeight}; el.classList.add('on'); try { el.setPointerCapture(ev.pointerId); } catch (e) {} ev.preventDefault(); });
@@ -5602,6 +5732,8 @@ function enter(preserveTime = false) {
 }
 {
   const p = store.get('coven-compass-psyche') || {};
+  psy.openMode = p.openMode === 'float' || (!p.openMode && p.mode === 'float') ? 'float' : 'dock';
+  psy.launcher = p.launcher === 'corner' ? 'corner' : 'rail';
   restoreView(store.get('coven-compass-view'));
   setDockW(isFinite(p.w) ? p.w : psy.w);
   setFloat(isFinite(p.fw) ? p.fw : psy.fw, isFinite(p.fh) ? p.fh : psy.fh);
@@ -6037,7 +6169,7 @@ if (window.CovenMobileUI) window.CovenMobileUI.mount({
   openActivity: () => { openPsyche(); setTab('chat', false); },
   close: {
     inspect: () => { if (cur().pick) clearPick(); else if (cur().fam) select(cur().sel, null, 'side'); else closeMissionDetails(); },
-    psyche: () => setMode('closed', true), empty: closeNew, projectForm: closeProjectForm,
+    psyche: () => setMode('closed'), empty: closeNew, projectForm: closeProjectForm,
     atlasMissionBrowser: () => window.CovenAtlas.closeMissions(true), atlasSidebar: () => window.CovenAtlas.closeBrowse(true),
     keyModal: closeKey, cpModal: closeWheel,
   },
