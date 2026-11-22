@@ -212,9 +212,10 @@ These cases still need full physical acceptance. They are the next acceptance ga
 | Real IME and dictation | Japanese/Chinese composition, candidate arrows, Escape, hardware Return, and dictation do not prematurely submit, dismiss, or move focus. |
 | Multi-touch | Two-finger pinch plus translation, adding/removing fingers, pointer cancellation, interruption, and pinch at zoom limits remain stable. Single-finger page/sheet scrolling is distinct from map manipulation. |
 | Safari navigation gestures | Edge Back/Forward and reload restore the intended route without an obscuring drawer or abandoned focus. |
-| VoiceOver | Rotor order, selected tabs, live announcements, nested sheets, form labels/errors, agent reveal, and focus return are usable without sight. |
 | Text and accessibility settings | Larger Text/page zoom, Reduce Motion, and Increase Contrast preserve reading, hit targets, and task completion at short heights. |
 | Sustained use | Exercise repeated gestures, long conversation history, mission switches, and background/foreground recovery; record frame pacing, memory, thermal behavior, and battery impact. No device performance claim has been made from the current checks. |
+
+**Deferred VoiceOver follow-up.** Val approved proceeding with merges, deployment and #39 qualification independently of a new VoiceOver run. When device time is available, record rotor order, selected tabs, announcements, nested sheets, form labels and errors, agent reveal, and spoken focus return against the revision tested. Earlier speech observations apply to their recorded release.
 
 The dated physical Safari sessions above establish only the device interactions recorded for their respective releases. Historical browser captures and source-fixture success must not substitute for that evidence.
 
