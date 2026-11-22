@@ -61,7 +61,12 @@ body.atlas-enhanced .plan-head .ctl:has(> #traceBox):focus-within,
 body.atlas-enhanced .plan-head .ctl:has(> #lock):hover,
 body.atlas-enhanced .plan-head .ctl:has(> #lock):focus-within { opacity: 1; }
 body.atlas-enhanced .timeline { padding: 8px 12px; background: #131316; }
-body.atlas-enhanced .leads { gap: 9px; scroll-snap-type: x proximity; padding: 2px 2px 4px; }
+body.atlas-enhanced .app .leads { gap: 8px; scroll-snap-type: x proximity; padding: 2px 2px 4px; }
+body.atlas-enhanced .timeline { --replay-fill: color-mix(in srgb, var(--primary) 65%, var(--card)); }
+body.atlas-enhanced .scrub input::-webkit-slider-runnable-track { background: linear-gradient(90deg, var(--replay-fill) var(--p,100%), var(--border-strong) var(--p,100%)); }
+body.atlas-enhanced .scrub input::-moz-range-progress { background: var(--replay-fill); }
+body.atlas-enhanced .timeline .clock { color: var(--foreground); font-variant-numeric: tabular-nums; }
+body.atlas-enhanced .timeline #speed { color: var(--muted-foreground); border-inline-start: 1px solid var(--border); border-radius: 0; }
 body.atlas-enhanced .lead-card { min-height: 82px; padding: 11px 13px; scroll-snap-align: start; background: #151518; }
 body.atlas-enhanced .lead-card[aria-pressed="true"] { border-color: var(--primary); background: #1b1922; box-shadow: inset 0 0 0 1px rgba(179, 170, 235, .08); }
 body.atlas-enhanced .lead-card .who { font-size: 13px; }
@@ -844,16 +849,29 @@ body.atlas-enhanced .atlas-project-preview-names {
   white-space: normal;
 }
 
-body.atlas-enhanced .lead-card .council { min-width: 0; max-width: 100%; align-items: center; }
-body.atlas-enhanced .lead-card .council .avatar { flex-shrink: 0; }
+/* Keep identity, task previews and council allocation in the same order across the strip. */
+body.atlas-enhanced .lead-card { justify-content: flex-start; gap: 5px; }
+body.atlas-enhanced .lead-card .lc-top { display: grid; grid-template-columns: auto minmax(0,1fr) auto; gap: 7px; }
+body.atlas-enhanced .lead-card .lc-seal { margin: 0; }
+body.atlas-enhanced .lead-card .who { font-size: calc(14px * var(--fs,1)); font-weight: 600; text-align: start; }
+body.atlas-enhanced .lead-card .n { font-size: calc(11px * var(--fs,1)); white-space: nowrap; }
 body.atlas-enhanced .lc-task-names {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: #bcb6c6;
-  font-size: 11px;
-  margin-inline-start: 3px;
+  display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: calc(12px * var(--fs,1)); color: var(--muted-foreground);
 }
+body.atlas-enhanced .lc-task-names:empty { display: none; }
+body.atlas-enhanced .lc-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 10px; margin-top: auto; padding-top: 3px; }
+body.atlas-enhanced .lc-state { color: var(--muted-foreground); display: inline-flex; align-items: center; gap: 5px; font-size: calc(11px * var(--fs,1)); font-weight: 550; }
+body.atlas-enhanced .lc-state::before { content: ''; width: 5px; height: 5px; border: 1px solid currentColor; border-radius: 50%; }
+body.atlas-enhanced .lead-card[data-state="active"] .lc-state { color: var(--primary); }
+body.atlas-enhanced .lead-card[data-state="needsYou"] .lc-state { color: var(--attention); }
+body.atlas-enhanced .lead-card[data-state="needsYou"] .lc-state::before { background: currentColor; }
+body.atlas-enhanced .lead-card:is([data-state="stalled"],[data-state="broken"]) .lc-state { color: var(--warn); }
+body.atlas-enhanced .lead-card[data-state="sealed"] .lc-state { color: var(--ok, #a7cdb9); }
+body.atlas-enhanced .lead-card .council { position: static; min-width: 0; align-items: center; gap: 3px; flex-wrap: wrap; }
+body.atlas-enhanced .lead-card .council .avatar { width: 16px; height: 16px; flex-shrink: 0; }
+body.atlas-enhanced .lead-card .bar { width: 42px; max-width: none; height: 3px; margin-inline-start: 3px; gap: 1px; background: var(--border); }
+body.atlas-enhanced .lead-card .bar:empty { display: none; }
 @media (max-height: 500px) {
   body.atlas-enhanced .lead-card .lc-task-names { display: none; }
 }

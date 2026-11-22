@@ -3676,8 +3676,11 @@ function syncLeads() {
       b.type = 'button'; b.dataset.mission = M.id;
       top.append(html('span', 'lc-seal'), html('span', 'who', M.name), html('span', 'n'));
       M.seats.forEach(k => { council.insertAdjacentHTML('beforeend', avatar(k)); const sg = html('b'); sg.style.setProperty('--hue', fam(k).hue); sg.dataset.seat = seatId(M.id, k); bar.appendChild(sg); });
-      council.appendChild(html('span', 'lc-task-names'));
-      b.append(top, council, bar);
+      const footer = html('span', 'lc-footer');
+      bar.title = 'Share of assigned agents by familiar';
+      council.appendChild(bar);
+      footer.append(html('span', 'lc-state'), council);
+      b.append(top, html('span', 'lc-task-names'), footer);
       b.addEventListener('click', () => select(M.id));
       box.appendChild(b);
     });
@@ -3687,12 +3690,25 @@ function syncLeads() {
     const preview = b.querySelector('.lc-task-names'), names = sc.missions.get(id)?.taskSummary || '';
     if (preview.textContent !== names) { preview.textContent = names; preview.title = names; }
     setMissionName(b.querySelector('.who'), M.name);
-    { const sl = b.querySelector('.lc-seal'), d = sealOf(w, M); if (sl && sl.dataset.sig !== d.sig) { sl.dataset.sig = d.sig; sl.innerHTML = sealSvg(d, 22); sl.title = sealLabel(d); } }
+    const d = sealOf(w, M), sl = b.querySelector('.lc-seal');
+    if (sl.dataset.sig !== d.sig) {
+      sl.dataset.sig = d.sig;
+      sl.innerHTML = sealSvg(d, 22);
+      sl.title = sealLabel(d);
+    }
+    b.dataset.state = d.state;
+    const stateName = SEAL_STATE[d.state][0], state = b.querySelector('.lc-state');
+    if (state.textContent !== stateName) state.textContent = stateName;
     const tot = countOf(w, a => a.mission === id), wk = countOf(w, a => a.mission === id && a.state === 'work'), g = countOf(w, a => a.mission === id && a.state === 'gate');
     b.setAttribute('aria-pressed', String(c.sel === id));
-    b.setAttribute('aria-label', `${M.name}. Council: ${M.seats.map(k => fam(k).name).join(', ')}. ${plural(tot, 'agent')}, ${wk} working` + (g ? `, ${g} at gate` : ''));
-    const n = b.querySelector('.n'); n.textContent = ''; if (g) n.appendChild(html('i')); n.append(String(tot));
-    b.querySelectorAll('.bar b').forEach(sg => sg.style.flexGrow = countOf(w, a => a.seat === sg.dataset.seat) || .001);
+    b.setAttribute('aria-label', `${M.name}. ${stateName}. Council: ${M.seats.map(k => fam(k).name).join(', ')}. ${plural(tot, 'agent')}, ${wk} working` + (g ? `, ${g} at gate` : ''));
+    const n = b.querySelector('.n'), totalLabel = plural(tot, 'agent');
+    if (n.textContent !== totalLabel) n.textContent = totalLabel;
+    b.querySelectorAll('.bar b').forEach(sg => {
+      const assigned = countOf(w, a => a.seat === sg.dataset.seat);
+      sg.hidden = assigned === 0;
+      sg.style.flexGrow = assigned;
+    });
   });
 }
 // selecting a mission (or one familiar's seat on it) opens a card above it; the card can expand into the side panel
