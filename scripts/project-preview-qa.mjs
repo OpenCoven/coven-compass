@@ -153,7 +153,8 @@ test('mission browsing leaves space for the selected seal and the open Inbox rev
     const row = drawer.getByRole('button', {name: /^Source survey, psyche-build,/});
     await launcher.click();
     assert.equal(await row.locator('.atlas-mission-project').isVisible(), false);
-    assert.match(await row.locator('.atlas-mission-meta').innerText(), /Needs you · 1/);
+    assert.equal(await row.locator('.atlas-mission-meta').innerText(), 'Needs you');
+    assert.equal(await row.locator('.atlas-pending').innerText(), '1 pending request');
     await page.locator('#atlasMissionProject').selectOption('');
     assert.equal(await row.locator('.atlas-mission-project').innerText(), 'psyche-build');
     await row.click();
@@ -769,6 +770,68 @@ for (const [width, height] of [[1440, 900], [390, 844]]) {
       await other.press('Enter');
       await missions.first().waitFor();
       assert.deepEqual(await positions(), ['translate(0.0,-320.0)', 'translate(0.0,320.0)']);
+    } finally { await page.close(); }
+  });
+}
+
+for (const [width, height] of [[1440, 900], [390, 844], [844, 390]]) {
+  test(`review drawers at ${width}×${height}`, async () => {
+    const mobile = width < 1100;
+    const page = await browser.newPage({viewport: {width, height}, reducedMotion: 'reduce', hasTouch: mobile});
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    try {
+      await page.goto(new URL('#/project/psyche-build', base).href);
+      await page.locator('#atlasBrowse').click();
+      const search = page.locator('#atlasProjectSearch');
+      const results = page.locator('#atlasProjects button:visible');
+      await search.fill('config refactor'); // Outside the default two-mission preview.
+      assert.equal(await results.count(), 1);
+      assert.equal(await results.locator('.atlas-project-preview-names').innerText(), 'Config refactor');
+      assert.match(await results.getAttribute('aria-label'), /Matching mission: Config refactor/);
+      assert.equal(await page.locator('#atlasProjectCount').innerText(), '1 of 4 Projects');
+      await search.press('ArrowDown');
+      assert.ok(await results.evaluate(row => row === document.activeElement));
+      await search.fill('unmatched name');
+      assert.ok(await page.locator('#atlasProjectEmpty').isVisible());
+      await page.locator('#atlasProjectClear').click();
+      assert.ok(await search.evaluate(input => input === document.activeElement));
+      assert.equal(await results.count(), 4);
+      await search.press('ArrowDown');
+      await page.keyboard.press('End');
+      assert.ok(await results.last().evaluate(row => row === document.activeElement));
+      await page.keyboard.press('Home');
+      assert.ok(await results.first().evaluate(row => row === document.activeElement));
+      await page.locator('#atlasNewProject').click();
+      await page.locator('#projectForm').waitFor();
+      await page.locator('#czX').click();
+
+      await page.locator(mobile ? '#atlasMobileMissions' : '#atlasMissions').click();
+      const missionSearch = page.locator('#atlasMissionSearch');
+      const missions = page.locator('#atlasMissionList button:visible');
+      await missionSearch.fill('unmatched name');
+      assert.match(await page.locator('#atlasMissionEmpty').innerText(), /No matching missions/);
+      await missionSearch.fill('cody readiness');
+      assert.equal(await missions.count(), 1);
+      assert.match(await missions.getAttribute('aria-label'), /Review readiness.*2 pending requests/);
+      assert.equal(await page.locator('#atlasMissionCount').innerText(), '1 of 4 missions in psyche-build');
+      const reset = page.locator('#atlasMissionReset');
+      const action = await reset.boundingBox(), result = await missions.boundingBox();
+      assert.ok(action.y + action.height <= result.y);
+      if (mobile) assert.ok(action.height >= 44);
+      await reset.click();
+      assert.ok(await missionSearch.evaluate(input => input === document.activeElement));
+      await page.locator('#atlasMissionProject').selectOption('brand');
+      assert.match(await page.locator('#atlasMissionEmpty').innerText(), /Project has no missions/);
+      await page.locator('#atlasMissionProject').selectOption('psyche-build');
+      await page.locator('#atlasMissionState').selectOption('requests');
+      assert.equal(await missions.count(), 2);
+      assert.equal(await missions.locator('.atlas-pending:visible').count(), 2);
+      await missions.first().click();
+      await page.locator('#inspect .target-met').first().waitFor();
+      assert.match(await page.locator('#inspect .limit-state').first().innerText(), /Near limit · 96%/);
+      assert.ok(await page.getByRole('group', {name: 'Mission 1 of 4', exact: true}).isVisible());
+      assert.deepEqual(errors, []);
     } finally { await page.close(); }
   });
 }
