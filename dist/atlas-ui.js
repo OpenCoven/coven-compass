@@ -395,6 +395,7 @@
     $('atlasProject').title = 'Project view · ' + s.active;
     $('atlasProject').setAttribute('aria-label', 'Open current project, ' + s.active);
     $('atlasMissions').setAttribute('aria-label', 'Browse ' + s.missions + ' missions');
+    api.syncReviewEntry(s.scope === 'coven', s.scope === 'coven' ? s.needs : s.projects.find(p => p.key === s.active)?.needs || 0);
     if (s.scope === 'coven') $('workspaceTools').open = false;
     if (s.camera) {
       ['atlasZoomOut', 'atlasZoomIn', 'atlasFit'].forEach(function (id) { $(id).disabled = s.camera.locked; });

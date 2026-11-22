@@ -24,6 +24,7 @@ The table comes from #6. Run its focused check while you work, then `verify-all`
 | --- | --- | --- |
 | Project form and mission inspector | `dist/index.html` | `node --test tests/mission-interactions.test.cjs`, then exercise the form in a desktop and a narrow browser |
 | Routes and mission browser | `dist/mission-navigation.js`, `dist/atlas-ui.js`, and their bindings in `dist/index.html` | `node --test tests/navigation.test.cjs tests/navigation-notice.test.cjs tests/mission-interactions.test.cjs` |
+| Coven Needs review queue and shared Psyche confirmation | `dist/review-queue.js`, `dist/review-queue-ui.js`, `requestConfirmation` in `dist/index.html` | `node --test tests/review-queue.test.cjs`. Run `scripts/review-queue-qa.mjs` from the external Playwright install with the preview URL. |
 | Map and camera | `dist/atlas-layout.js`, `dist/atlas-viewport.js` | `node --test tests/atlas-layout.test.cjs tests/atlas-viewport.test.cjs` |
 | Mobile controls and focus | `dist/mobile-ui.js`, `dist/mobile-interactions.js`, `dist/atlas.css` | `node --test tests/mobile-*.test.cjs` |
 | Map keyboard focus (one Tab stop, arrow keys inside) | `dist/map-focus.js`, `atlasFocusable` in `dist/index.html` | `node --test tests/map-focus.test.cjs`, then Tab through the map in a browser |
