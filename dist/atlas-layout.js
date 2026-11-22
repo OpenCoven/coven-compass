@@ -60,6 +60,12 @@
     };
   }
 
+  // Unit grid cells in opposite pairs. The center belongs to Psyche.
+  function missionGrid(count) {
+    if (!Number.isSafeInteger(count) || count < 0) throw new RangeError('count must be a non-negative safe integer');
+    return pairedCells(count, {nodeWidth: 1, nodeHeight: 1, gap: 0, aspect: 1}, .5, .5);
+  }
+
   function coordinate(cell, first, step) {
     return cell === 0 ? 0 : Math.sign(cell) * (first + (Math.abs(cell) - 1) * step);
   }
@@ -303,5 +309,5 @@
     return regions;
   }
 
-  return Object.freeze({ layout, missionPacking, taskPacking });
+  return Object.freeze({ layout, missionGrid, missionPacking, taskPacking });
 });
