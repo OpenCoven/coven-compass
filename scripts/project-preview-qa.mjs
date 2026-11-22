@@ -224,8 +224,16 @@ test('mission focus traces the seal and reveals the planes for its agents', asyn
     const bounds = await floor.boundingBox();
     await floor.click({position: {x: bounds.width / 2, y: 3}});
     await page.locator('.squad-plane rect[aria-pressed="true"]').waitFor();
-    const otherName = await page.locator('.atlas-squad.dim .squad-plane:visible rect').first().getAttribute('aria-label');
-    const other = page.getByRole('button', {name: otherName, exact: true});
+    // Moving past an unselected mission's task tray must skip its hidden group floors.
+    const reviewTray = page.getByRole('button', {name: /tasks on Review readiness:.*Open task list/});
+    await reviewTray.focus();
+    await page.keyboard.press('ArrowRight');
+    assert.equal(await page.evaluate(() => {
+      const active = document.activeElement;
+      return active?.hasAttribute('data-map-item') && !active.closest('.mission-tasks') &&
+        active.matches('[tabindex="0"]') && !active.closest('.squad-plane');
+    }), true);
+    const other = page.getByRole('button', {name: 'Focus Charm group on Source survey', exact: true});
     await other.focus();
     await other.press('Space');
     assert.equal(await other.getAttribute('aria-pressed'), 'true');
