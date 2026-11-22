@@ -239,6 +239,7 @@ body.atlas-enhanced .atlas-mission-heading { display: flex; flex-wrap: wrap; ali
 body.atlas-enhanced .atlas-mission-meta { padding: 2px 6px; border: 1px solid var(--border); border-radius: 4px; color: var(--muted-foreground); font-size: 10px; line-height: 1.35; }
 body.atlas-enhanced .atlas-mission-stats, body.atlas-enhanced .atlas-mission-project { color: var(--muted-foreground); font-size: 11px; line-height: 1.45; }
 body.atlas-enhanced .atlas-mission-heading .atlas-pending { margin-left: auto; padding: 2px 6px; border-radius: 4px; background: #312a3b; color: var(--primary-hi); font-size: 11px; }
+body.atlas-enhanced .atlas-request-preview { padding-top: 4px; border-top: 1px solid var(--border); color: var(--primary-hi); font-size: 12px; line-height: 1.45; overflow-wrap: anywhere; }
 body.atlas-enhanced .atlas-mission-heading [hidden] { display: none; }
 body.atlas-enhanced .atlas-mission-row[data-state="needsYou"] .atlas-mission-meta { border-color: #675b80; background: #332c3e; color: #e9dff9; }
 body.atlas-enhanced #atlasMissionReset { align-self: flex-start; flex: none; min-height: 34px; padding: 5px 8px; border: 1px solid transparent; border-radius: 5px; color: #c7bee4; font-size: 11px; }
@@ -1110,8 +1111,8 @@ body.atlas-enhanced .plan #workspaceBar, body.atlas-enhanced .psyche .p-h {
 }
 body.atlas-enhanced .inspect { scroll-padding-bottom: 82px; }
 .inspect-actions {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(112px, 100%), 1fr));
-  gap: 8px; margin-top: auto; padding-top: 10px; border-top: 1px solid var(--border);
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(calc(94px * var(--fs, 1)), 100%), 1fr));
+  gap: 6px; margin-top: auto; padding-top: 10px; border-top: 1px solid var(--border);
   background: var(--card);
 }
 .inspect-action-item { display: grid; gap: 4px; min-width: 0; text-align: center; }
@@ -1125,7 +1126,11 @@ body.atlas-enhanced .inspect [data-focus="edit-brief"] { background: #332b42; co
 .inspect-action svg { flex: none; width: 15px; height: 15px; color: var(--primary); }
 body.atlas-enhanced .inspect .inspect-action:hover { background: #36303e; border-color: var(--primary); }
 body.atlas-enhanced .inspect .inspect-action:active { background: #28232f; }
-.inspect-action-hint { font-size: calc(11px * var(--fs, 1)); line-height: 1.4; color: var(--muted-foreground); }
+body.atlas-enhanced .inspect .inspect-action { padding-inline: 5px; gap: 4px; }
+#mission-section .brief-at-limit { border-inline-start: 3px solid var(--warn); }
+.brief-at-limit .brief-heading svg, .brief-at-limit .bfl.over .limit-state { color: var(--warn); }
+#mission-section .brief-card .bfl.near .meter i { background: var(--primary); }
+#mission-section .brief-card .bfl.near .limit-state { color: var(--primary-hi); }
 body.atlas-enhanced .inspect .agent-review { background: var(--attention); color: var(--background); }
 @media (min-height: 550px) {
   .inspect-actions { position: sticky; bottom: -16px; z-index: 2; margin-inline: -2px; padding: 9px 2px 5px; }

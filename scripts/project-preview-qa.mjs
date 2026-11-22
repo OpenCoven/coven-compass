@@ -469,6 +469,7 @@ test('inspector actions open the brief and conversation and desktop title rows a
       }
       const a = await edit.boundingBox(), b = await ask.boundingBox();
       assert.equal(a.height, b.height);
+      assert.equal(a.y, b.y, 'the three brief actions share a row');
       assert.ok(a.height >= (width < 500 ? 44 : 36));
       await edit.click();
       await page.locator('#empty').waitFor();
@@ -1083,3 +1084,29 @@ for (const [width, height] of [[1440, 900], [390, 844], [844, 390]]) {
     } finally { await page.close(); }
   });
 }
+
+test('a request in the mission browser leads to the brief with the breached limit first', async () => {
+  const page = await browser.newPage({viewport: {width: 390, height: 844}, hasTouch: true});
+  try {
+    const events = [
+      {type: 'mission.opened', mission: 'specimens', name: 'Specimens', brief: {atMost: {tokens: 250000, usd: 3}}},
+      {type: 'council.seated', mission: 'specimens', familiar: 'cody'},
+      {type: 'mission.progress', mission: 'specimens', tokens: 247000, usd: 3.08},
+      {type: 'gate.requested', mission: 'specimens', familiar: 'cody', gate: 'N', ask: 'budget', title: 'Approve additional budget'},
+    ];
+    await page.goto(new URL('#/project/ui', base).href);
+    await page.locator('#traceFile').setInputFiles({name: 'specimens.jsonl', mimeType: 'text/plain',
+      buffer: Buffer.from(events.map((event, i) => JSON.stringify({...event, t: 1700000000 + i})).join('\n'))});
+    await page.locator('#traceKind').filter({hasText: 'loaded'}).waitFor({state: 'attached'});
+    await page.locator('#atlasMobileMissions').tap();
+    await page.locator('#atlasMissionSearch').fill('additional budget');
+    const result = page.locator('.atlas-mission-row:visible');
+    assert.equal(await result.locator('.atlas-request-preview').innerText(), 'Cody · Approve additional budget');
+    await result.tap();
+    assert.equal(await page.locator('#inspect .mission-stepper:visible').count(), 0);
+    const first = page.locator('#mission-section .brief-card').first();
+    assert.equal(await first.locator('h3').innerText(), 'Resource limits');
+    assert.match(await first.locator('.bfl').first().innerText(), /Budget.*Over limit · 103%/s);
+    assert.match(await first.locator('.bfl').nth(1).innerText(), /Tokens.*Near limit · 99%/s);
+  } finally { await page.close(); }
+});
