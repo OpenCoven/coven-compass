@@ -880,7 +880,7 @@ for (const [width, height] of [[1440, 900], [390, 844], [844, 390]]) {
       await missions.first().click();
       await page.locator('#inspect .target-met').first().waitFor();
       assert.match(await page.locator('#inspect .limit-state').first().innerText(), /Near limit · 96%/);
-      assert.ok(await page.getByRole('group', {name: 'Mission 1 of 4', exact: true}).isVisible());
+      assert.ok(await page.getByRole('group', {name: 'Mission 1 of 2', exact: true}).isVisible());
       assert.deepEqual(errors, []);
     } finally { await page.close(); }
   });

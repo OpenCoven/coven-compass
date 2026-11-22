@@ -3499,7 +3499,8 @@ function select(m, k, mode, options) {
   const c = cur(), was = c.sel, priorMode = c.detail, priorFam = c.fam, origin = document.activeElement, priorAutoFit = atlasAutoFit;
   const mission = m && c.world.missions.get(m);
   if (m && !mission) return false;
-  if (m !== was || mode === 'card') c.missionBrowserOrigin = null;
+  if (options.review) c.missionBrowserOrigin = options.review;
+  else if (!m || m !== was || mode === 'card') c.missionBrowserOrigin = null;
   if (m && atlasScope === 'coven') { atlasScope = 'project'; atlasFitScene(false); }
   if (m) atlasAutoFit = true;
   if (k && (!mission || !mission.seats.includes(k))) k = null;
@@ -3757,9 +3758,10 @@ function syncInspect(force) {
   const tasks = [...w.tasks.values()].filter(t => c.fam ? t.leads.some(k => order.has(seatId(t.mission, k))) : t.mission === M.id).sort((a, b) => rank(seatId(a.mission, a.fam)) - rank(seatId(b.mission, b.fam)));
   const taskIds = new Set(tasks.map(t => t.id));      // a familiar's scope includes the agents of tasks it shares, wherever they sit
   const all = [...w.agents.values()].filter(a => order.has(a.seat) || (a.task && taskIds.has(a.task))).sort((a, b) => rank(a.seat) - rank(b.seat) || slotOf(a) - slotOf(b));
-  const missionOrder = [...w.missions.values()];
+  const review = c.missionBrowserOrigin;
+  const missionOrder = review ? review.order : [...w.missions.values()];
   const editable = canAct();
-  const sig = editable + '|' + missionOrder.map(m => m.id).join(',') + '|' + (panelView === 'brief' ? briefSig(briefState(w, M), M) + Math.floor((w.t - M.t0) / 60000) : '') + active + M.id + '/' + (c.fam || '') + '|' + panelView + '|' + seatIds.join(',') + '|' + tasks.map(t => t.id).join(',') + '|' + all.map(a => a.id + ':' + (a.task || '')).join(',');
+  const sig = editable + '|' + JSON.stringify(missionOrder.map(m => [m.project, m.id, m.name])) + '|' + (panelView === 'brief' ? briefSig(briefState(w, M), M) + Math.floor((w.t - M.t0) / 60000) : '') + active + M.id + '/' + (c.fam || '') + '|' + panelView + '|' + seatIds.join(',') + '|' + tasks.map(t => t.id).join(',') + '|' + all.map(a => a.id + ':' + (a.task || '')).join(',');
   if (force || sig !== insp.sig) {
     const identity = [active, M.id, c.fam, panelView].join('|'), sameView = box.dataset.selection === identity;
     const previousScroll = sameView ? box.scrollTop : 0;
@@ -3796,7 +3798,7 @@ function syncInspect(force) {
     const close = xBtn('Close details', closeMissionDetails); close.dataset.focus = 'close-details';
     close.title = 'Close details';
     head.append(back, path, toCard, close);
-    const position = missionOrder.findIndex(m => m.id === M.id);
+    const position = missionOrder.findIndex(m => m.id === M.id && (!review || m.project === active));
     const stepper = html('div', 'mission-stepper');
     const previous = html('button', 'btn sm', '‹'), next = html('button', 'btn sm', '›');
     previous.type = next.type = 'button'; previous.disabled = position <= 0; next.disabled = position >= missionOrder.length - 1;
@@ -3806,11 +3808,17 @@ function syncInspect(force) {
     if (!next.disabled) next.setAttribute('aria-description', missionOrder[position + 1].name);
     previous.title = previous.disabled ? 'Previous mission' : 'Previous mission · ' + missionOrder[position - 1].name;
     next.title = next.disabled ? 'Next mission' : 'Next mission · ' + missionOrder[position + 1].name;
-    previous.addEventListener('click', () => select(missionOrder[position - 1].id, null, 'side'));
-    next.addEventListener('click', () => select(missionOrder[position + 1].id, null, 'side'));
+    const stepTo = target => {
+      if (review) atlasOpenMission(target.project, target.id, 'side', review);
+      else select(target.id, null, 'side');
+    };
+    previous.addEventListener('click', () => stepTo(missionOrder[position - 1]));
+    next.addEventListener('click', () => stepTo(missionOrder[position + 1]));
     const positionLabel = html('span', '', (position + 1) + ' / ' + missionOrder.length);
     stepper.setAttribute('role', 'group');
-    stepper.setAttribute('aria-label', 'Mission ' + (position + 1) + ' of ' + missionOrder.length);
+    const reviewPosition = 'Mission ' + (position + 1) + ' of ' + missionOrder.length;
+    stepper.setAttribute('aria-label', reviewPosition);
+    if (review) title.setAttribute('aria-description', role + '. ' + reviewPosition);
     positionLabel.setAttribute('aria-hidden', 'true');
     stepper.append(previous, positionLabel, next);
     const counts = html('dl', 'i-counts'); insp.nums = {};
@@ -5513,6 +5521,17 @@ $('stopYes').addEventListener('click', () => { const c = cur(); $('stopPop').hid
 $('stopPop').addEventListener('click', ev => ev.stopPropagation());
 function refresh() {
   const focused = document.activeElement;
+  const c = cur(), review = c.missionBrowserOrigin;
+  if (review) {
+    const before = review.order.findIndex(m => m.project === active && m.id === review.mission);
+    review.order = window.CovenAtlas.matchingMissions(atlasSnapshot('review').missionItems, review.filters);
+    if (!review.order.some(m => m.project === active && m.id === c.sel)) {
+      const nearest = review.order[Math.min(Math.max(0, before), review.order.length - 1)];
+      c.navigationNotice = null;
+      returnToMissionList(review, nearest);
+      window.CovenAtlas.announce(nearest ? 'The reviewed mission no longer matches. Returned to the matching missions.' : 'No matching missions at this replay position.', {visible: true});
+    }
+  }
   sync(); drawProject(); drawSummary(); drawCrumb(); drawStop(); syncLeads(); drawNeeds(); drawStream(); syncInspect(); drawLeadCard(); drawComposer(); drawWard(); timelineUI(); if (cur().pick) showPick(); kick(); if (window.CovenAtlas) window.CovenAtlas.update();
   if (atlasNavigationReady && cur().navigationNotice) {
     if (window.CovenAtlas) window.CovenAtlas.announce(cur().navigationNotice);
@@ -5801,19 +5820,29 @@ function atlasOpenProject(k) {
 function closeMissionDetails() {
   const c = cur(), origin = c.missionBrowserOrigin;
   if (!origin) return select(c.sel, c.fam, 'card');
+  returnToMissionList(origin, {project: active, id: c.sel});
+}
+function returnToMissionList(origin, mission) {
   select(null, null, null, {history: false, focus: false});
   if (origin.scope === 'coven') atlasOverview();
   else atlasOpenProject(origin.project);
-  window.CovenAtlas.openMissions(false, origin.row);
+  window.CovenAtlas.openMissions(false, mission, origin.filters);
 }
-function atlasOpenMission(k, id, mode, row) {
+function atlasOpenMission(k, id, mode, review) {
   if (!projects[k] || !projects[k].world.missions.has(id)) return false;
   const restoring = atlasRestoringRoute, locked = cam.locked; atlasRestoringRoute = true;
   if (locked) setLock(false);
-  const origin = row && {row, project: active, scope: atlasScope};
+  if (review && !review.scope) { review.project = active; review.scope = atlasScope; }
+  if (review) review.mission = id;
   if (k !== active || atlasScope === 'coven') atlasOpenProject(k);
-  const opened = select(id, null, mode || (narrow.matches ? 'side' : 'card'));
-  if (opened) { cur().missionBrowserOrigin = origin; atlasFitScene(false); }
+  const opened = select(id, null, mode || (narrow.matches ? 'side' : 'card'), {review});
+  if (opened) {
+    atlasFitScene(false);
+    if (review) {
+      const position = review.order.findIndex(m => m.project === k && m.id === id);
+      window.CovenAtlas.announce('Mission ' + (position + 1) + ' of ' + review.order.length + '. ' + cur().world.missions.get(id).name);
+    }
+  }
   if (locked) setLock(true);
   atlasRestoringRoute = restoring; atlasWriteRoute();
   return opened;
@@ -5972,7 +6001,7 @@ function atlasSnapshot(includeMissions) {
     ps.push({key: k, missions: w.missions.size, agents: w.agents.size, needs: q, previewNames});
     if (showMissions) w.missions.forEach(M => {
       const seal = sealOf(w, M);
-      missionItems.push({project: k, id: M.id, name: M.name, state: seal.state, stateLabel: SEAL_STATE[seal.state][0], agents: countOf(w, a => a.mission === M.id), needs: requests.filter(q => q.mission === M.id).length, council: M.seats.map(f => fam(f).name).join(', '), seal: sealSvg(seal, 30)});
+      missionItems.push({project: k, id: M.id, name: M.name, state: seal.state, stateLabel: SEAL_STATE[seal.state][0], agents: countOf(w, a => a.mission === M.id), needs: requests.filter(q => q.mission === M.id).length, council: M.seats.map(f => fam(f).name).join(', '), seal: includeMissions === 'review' ? '' : sealSvg(seal, 30)});
     });
     missions += w.missions.size; agents += w.agents.size; needs += q;
     w.agents.forEach(a => by.set(a.fam, (by.get(a.fam) || 0) + 1));
