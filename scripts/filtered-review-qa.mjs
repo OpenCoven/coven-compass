@@ -23,10 +23,10 @@ const recording = [
   event(90, 'mission.closed', 'first'),
 ].join('\n');
 
-async function tabTo(page, target) {
+async function tabTo(page, target, key = 'Tab') {
   for (let i = 0; i < 120; i++) {
     if (await target.evaluate(el => el === document.activeElement)) return;
-    await page.keyboard.press('Tab');
+    await page.keyboard.press(key);
   }
   assert.fail('Tab could not reach ' + await target.getAttribute('aria-label'));
 }
@@ -57,16 +57,25 @@ for (const width of [1440, 390]) for (const formation of ['ring', 'grid']) for (
       await activate(page.locator(mobile ? '#atlasMobileMap' : '#atlasOverview'));
       await activate(page.locator('#atlasBrowse'));
       const projectSearch = page.locator('#atlasProjectSearch');
-      await projectSearch.fill('Launch gamma');
-      await projectSearch.press('ArrowDown');
+      if (input === 'keyboard') {
+        await tabTo(page, projectSearch, 'Shift+Tab');
+        await page.keyboard.type('Launch gamma');
+        await page.keyboard.press('ArrowDown');
+      } else await projectSearch.fill('Launch gamma');
       await activate(page.locator('#atlasProjects button:visible'));
       await activate(page.locator(mobile ? '#atlasMobileMissions' : '#atlasMissions'));
       const query = page.locator('#atlasMissionSearch'), filter = page.locator('#atlasMissionState');
-      await query.fill('Launch');
-      await filter.selectOption('requests');
+      if (input === 'keyboard') {
+        await tabTo(page, query);
+        await page.keyboard.type('Launch');
+        await tabTo(page, filter);
+        await page.keyboard.type('Pending');
+      } else {
+        await query.fill('Launch');
+        await filter.selectOption('requests');
+      }
       const rows = page.locator('#atlasMissionList button:visible');
       assert.deepEqual(await rows.evaluateAll(items => items.map(row => row.dataset.mission)), ['first', 'third']);
-      await query.press('ArrowDown');
       const scroll = await page.locator('#atlasMissionList').evaluate(el => el.scrollTop);
       await activate(rows.first());
       const title = page.locator('#missionDetailTitle'), next = page.getByRole('button', {name: 'Next mission'});
