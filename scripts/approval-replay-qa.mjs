@@ -23,10 +23,13 @@ async function activate(page, target) {
   await page.keyboard.press('Enter');
 }
 async function chooseRecording(page, name, buffer) {
-  await tabTo(page, page.locator('#historyFile'));
-  const chooser = page.waitForEvent('filechooser');
-  await page.keyboard.press('Enter');
-  await (await chooser).setFiles({name, mimeType: 'text/plain', buffer});
+  const source = page.locator('.history-import');
+  if (!await source.evaluate(el => el.open)) await activate(page, source.locator('summary'));
+  const [chooser] = await Promise.all([
+    page.waitForEvent('filechooser'),
+    activate(page, page.locator('#historyLoad')),
+  ]);
+  await chooser.setFiles({name, mimeType: 'text/plain', buffer});
 }
 async function openMission(page, width, name) {
   if (!await page.locator('#atlasMissionBrowser').isVisible()) await activate(page, page.locator(width < 500 ? '#atlasMobileMissions' : '#atlasMissions'));
@@ -53,7 +56,8 @@ for (const [width, height] of [[1440, 900], [390, 844]]) {
       await activate(page, page.getByRole('button', {name: 'History', exact: true}));
       await history.waitFor();
       assert.match(await page.locator('#historySource').innerText(), /Built-in sample/);
-      await activate(page, history.getByRole('button', {name: /Show event .* on map/}).first());
+      await activate(page, history.locator('.history-event').first());
+      await activate(page, history.getByRole('button', {name: /Show event .* on map/}));
       await page.locator('#historyReturn').waitFor();
       await activate(page, page.locator('#historyResume'));
 
@@ -63,19 +67,20 @@ for (const [width, height] of [[1440, 900], [390, 844]]) {
       await activate(page, page.getByRole('button', {name: 'History', exact: true}));
       assert.match(await page.locator('#historySource').innerText(), /Imported recording/);
       const rows = page.locator('#historyRows li');
-      const before = await rows.allInnerTexts();
       const positions = await rows.locator('button[data-position]').evaluateAll(buttons => buttons.map(b => Number(b.dataset.position)));
       assert.deepEqual(positions, [1, 3, 4, 5, 7, 8], 'only events belonging to Proof review');
-      const pending = rows.filter({hasText: 'proof-1'}).filter({hasText: 'gate.requested'});
-      const resolved = rows.filter({hasText: 'proof-1'}).filter({hasText: 'gate.resolved'});
-      const open = rows.filter({hasText: 'proof-2'});
-      assert.match(await open.innerText(), /Open at end of recording/);
-      assert.equal(await open.getByRole('button', {name: /Show resolution/}).count(), 0);
+      const detail = page.locator('#historyDetail');
+      const select = n => activate(page, rows.locator('[data-position="' + n + '"]'));
+      await select(8);
+      assert.match(await detail.innerText(), /proof-2/);
+      assert.match(await detail.innerText(), /Open at end of recording/);
+      assert.equal(await detail.getByRole('button', {name: /View resolution/}).count(), 0);
+      const snapshot = await rows.allInnerTexts();
 
       await chooseRecording(page, 'invalid.jsonl', Buffer.from('invalid recording'));
       await page.locator('#historyError').waitFor();
       assert.match(await page.locator('#historyError').innerText(), /No recognized events/);
-      assert.deepEqual(await rows.allInnerTexts(), before, 'rejection preserves the recording and selection');
+      assert.deepEqual(await rows.allInnerTexts(), snapshot, 'rejection preserves the recording and selection');
 
       const note = page.locator('#historyMapNote');
       const agent = page.locator('#plan .agent[aria-label^="proofreader"]');
@@ -86,20 +91,23 @@ for (const [width, height] of [[1440, 900], [390, 844]]) {
         await agent.waitFor({state: 'visible', timeout: 5000});
         assert.match(page.url(), /mission\/proof/);
       }
-      await activate(page, pending.getByRole('button', {name: 'Show event 5 on map'}));
+      await select(5);
+      assert.match(await detail.innerText(), /proof-1/);
+      await activate(page, detail.getByRole('button', {name: 'Show event 5 on map'}));
       await checkMap(5, 'Waiting at gate');
       await activate(page, page.locator('#historyForwardEvent'));
       await checkMap(7, 'Working');
       await activate(page, page.locator('#historyBackEvent'));
       await checkMap(5, 'Waiting at gate');
       await activate(page, page.locator('#historyResume'));
-      await activate(page, pending.getByRole('button', {name: /Show resolution/}));
+      await activate(page, detail.getByRole('button', {name: /View resolution/}));
       await checkMap(7, 'Working');
       await activate(page, page.locator('#historyResume'));
-      await activate(page, resolved.getByRole('button', {name: /Show request/}));
+      await activate(page, detail.getByRole('button', {name: /View request/}));
       await checkMap(5, 'Waiting at gate');
       await activate(page, page.locator('#historyResume'));
-      await activate(page, open.getByRole('button', {name: 'Show event 8 on map'}));
+      await select(8);
+      await activate(page, detail.getByRole('button', {name: 'Show event 8 on map'}));
       await checkMap(8, 'Waiting at gate');
       assert.equal(await page.locator('#historyForwardEvent').isDisabled(), true);
       assert.deepEqual(uploads, [], 'recording bytes stayed in the browser');
