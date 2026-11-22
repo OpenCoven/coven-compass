@@ -1059,6 +1059,12 @@ for (const [width, height] of [[1440, 900], [390, 844], [844, 390]]) {
       await control('nmName').waitFor();
       assert.equal(await control('emptyName').innerText(), 'brand');
       await page.locator('#nmName:focus').waitFor();
+      assert.equal(await control('nmName').inputValue(), '');
+      assert.ok(await control('raise').isDisabled());
+      assert.ok(await control('nmBrief').isHidden());
+      await control('nmCustomize').click();
+      assert.ok(await control('nmBrief').isVisible());
+      await control('nmCustomize').click();
       await control('emptyX').click();
       assert.equal(await control('atlasMissionSearch').inputValue(), 'test filter');
       assert.ok(await add.evaluate(el => el === document.activeElement));
@@ -1066,6 +1072,8 @@ for (const [width, height] of [[1440, 900], [390, 844], [844, 390]]) {
       await control('nmName').fill('Review the field report');
       await control('raise').click();
       await page.waitForURL(/project\/brand\/mission\//);
+      await control('inspect').waitFor();
+      assert.ok((await control('inspect').innerText()).includes('Review the field report'));
       if (width < 1000) await page.locator('#inspect [data-focus="mission-back"]').click();
       else await entry.click();
       await control('atlasMissionSearch').fill('field report');

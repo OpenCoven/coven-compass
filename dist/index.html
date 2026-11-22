@@ -1612,17 +1612,17 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
               <div class="hd"><h2 class="hd-t" id="nmTitle" tabindex="-1">New mission</h2><span class="hd-m" id="emptyName"></span><span class="hd-s off" id="emptyState">Dormant</span><button class="btn x" type="button" id="emptyX" aria-label="Close" hidden>×</button></div>
               <div class="mobile-form-body">
               <div class="nm-sec">
-                <label class="nm-l" for="nmName">What should get done?</label>
-                <div class="field nm-f"><input id="nmName" type="text" maxlength="60" enterkeyhint="go"></div>
+                <label class="nm-l" for="nmName">Mission name</label>
+                <div class="field nm-f"><input id="nmName" type="text" maxlength="60" required placeholder="e.g. Draft the release brief" enterkeyhint="done"></div>
               </div>
               <div class="nm-sec" id="nmLeadSec">
-                <span class="nm-l" id="nmLeadL">Who leads</span>
+                <span class="nm-l" id="nmLeadL">Mission lead</span>
                 <div class="nm-leads" id="nmLeads" role="radiogroup" aria-labelledby="nmLeadL"></div>
-                <ul class="nm-terms" id="nmTerms" aria-live="polite"></ul>
+                <details id="nmPermissions"><summary>Lead permissions</summary><ul class="nm-terms" id="nmTerms"></ul></details>
               </div>
-              <div class="nm-sec"><span class="nm-l">Brief</span><div class="nm-rows" id="nmBrief"></div></div>
+              <div class="nm-sec nm-settings"><div class="nm-section-head"><span class="nm-l">Mission brief</span><button class="btn sm" id="nmCustomize" type="button" aria-controls="nmBrief" aria-expanded="false">Customize</button></div><div id="nmPreview"><b id="nmOutput"></b><span id="nmLimits"></span></div><div class="nm-rows" id="nmBrief" hidden></div></div>
               </div>
-              <div class="em-act"><span class="nm-foot" id="nmFoot"></span><button class="btn pri" id="raise" type="submit">Open mission</button></div>
+              <div class="em-act"><span class="nm-foot" id="nmFoot"></span><button class="btn pri" id="raise" type="submit">Create mission</button></div>
             </form>
             <div class="plates" id="notes"></div>
             <div class="lcard glass" id="lcard" role="group" aria-label="Selection" hidden></div>
@@ -4719,7 +4719,7 @@ const famsOpen = new Set(), famSec = {}; let famTry = '';
 const saveFams = () => { const o = {}; Object.keys(FAM_DEF).forEach(k => { o[k] = {roles: FAM[k].roles, sym: FAM[k].sym, color: FAM[k].color}; }); store.set('coven-compass-fams', o); };
 function famChanged(focusId) {                       // a familiar's mark is drawn in many places, so everything that shows one is redrawn
   saveFams(); Object.keys(FAM_DEF).forEach(k => { FAM[k].role = FAM[k].roles.join(', '); document.documentElement.style.setProperty('--fam-' + k, FAM[k].color); });
-  $('nmLeads').querySelectorAll('.nm-lead').forEach(b => { const k = b.dataset.k; b.innerHTML = avatar(k); b.append(FAM[k].name); });
+  $('nmLeads').querySelectorAll('.nm-lead').forEach(b => { const k = b.dataset.k; labelMissionLead(b, k); });
   setLead(nm.lead); rebuild(); drawFams(focusId); drawRoute();
 }
 function drawFams(focusId) {
@@ -5104,7 +5104,7 @@ const tplLabel = () => { const t = tplOf(nm.tpl); return t ? t.name + (nm.tplEdi
 // the brief is set with intent: four rows that say what they hold and open to change it
 function drawBriefForm(focusId) {
   const box = $('nmBrief'), b = nm.brief; box.textContent = '';
-  const again = (id, fn) => () => { fn(); nm.briefTouched = true; if (id.indexOf('tp-')) nm.tplEdited = true; closeBrief(nm.brief); drawBriefForm(id); drawNew(); };
+  const again = (id, fn) => () => { fn(); nm.briefTouched = true; if (!id.startsWith('tp-')) nm.tplEdited = true; closeBrief(nm.brief); drawBriefForm(id); drawNew(); };
   const tog = (id, label, on, fn) => { const x = html('button', 'tg', label); x.type = 'button'; x.dataset.id = id; x.setAttribute('aria-pressed', String(on)); x.addEventListener('click', again(id, fn)); return x; };
   const tgs = (label, items) => { const r = html('div', 'tgs'); if (label) r.appendChild(html('span', null, label)); items.forEach(x => r.appendChild(x)); return r; };
   const step = (id, label, k, v, by, min, set) => {
@@ -5143,20 +5143,22 @@ function drawBriefForm(focusId) {
     dBody.push(tgs(KIND[a.kind][0] + ' as', KIND[a.kind][1].map(f => tog(`f-${a.kind}-${f}`, f.toUpperCase(), a.formats.includes(f), () => flip(a.formats, f)))));
     if (KIND[a.kind][2]) dBody.push(tgs('in', LANGS.map(l => tog(`l-${a.kind}-${l}`, l, a.langs.includes(l), () => flip(a.langs, l)))));
   });
-  row('deliver', 'doc', 'ok', 'Deliver', b.deliver.map(artText).join('; '), dBody);
+  row('deliver', 'doc', 'ok', 'Deliverables', b.deliver.map(artText).join('; '), dBody);
   const fl = Object.keys(b.atLeast).map(k => floorText(k, b.atLeast[k]));
-  row('floor', 'floor', '', 'At least', fl.length ? fl.join(', ') : 'Nothing required', Object.keys(FLOOR).map(k => { const by = floorBy(b, k), min = by ? REQUIRES[by.kind].atLeast[k] : 0, r = step('fl-' + k, FLOOR[k][0] + (by ? ' · required' : ''), k, b.atLeast[k] || 0, FLOOR[k][1], min, v => { if (v) b.atLeast[k] = v; else delete b.atLeast[k]; }); if (by) r.title = `Required: ${REQUIRES[by.kind].why}`; return r; }));
-  row('cap', 'cap', 'q', 'At most', Object.keys(b.atMost).map(k => capText(k, b.atMost[k])).join(' · '), Object.keys(CAP).map(k => step('cp-' + k, CAP[k][0], k, b.atMost[k], CAP[k][1], CAP[k][2], v => { b.atMost[k] = v; })));
-  row('measure', 'gauge', '', 'Measured by', b.measure.length ? b.measure.map(k => MEASURE[k].toLowerCase()).join(', ') : 'Nothing', [tgs('', Object.keys(MEASURE).map(k => tog('m-' + k, MEASURE[k], b.measure.includes(k), () => flip(b.measure, k))))]);
+  row('floor', 'floor', '', 'Minimum targets', fl.length ? fl.join(', ') : 'Nothing required', Object.keys(FLOOR).map(k => { const by = floorBy(b, k), min = by ? REQUIRES[by.kind].atLeast[k] : 0, r = step('fl-' + k, FLOOR[k][0] + (by ? ' · required' : ''), k, b.atLeast[k] || 0, FLOOR[k][1], min, v => { if (v) b.atLeast[k] = v; else delete b.atLeast[k]; }); if (by) r.title = `Required: ${REQUIRES[by.kind].why}`; return r; }));
+  row('cap', 'cap', 'q', 'Resource limits', Object.keys(b.atMost).map(k => capText(k, b.atMost[k])).join(' · '), Object.keys(CAP).map(k => step('cp-' + k, CAP[k][0], k, b.atMost[k], CAP[k][1], CAP[k][2], v => { b.atMost[k] = v; })));
+  row('measure', 'gauge', '', 'Success measures', b.measure.length ? b.measure.map(k => MEASURE[k].toLowerCase()).join(', ') : 'Nothing', [tgs('', Object.keys(MEASURE).map(k => tog('m-' + k, MEASURE[k], b.measure.includes(k), () => flip(b.measure, k))))]);
+  $('nmOutput').textContent = b.deliver.map(artText).join(' · ') || 'No deliverables set';
+  $('nmLimits').textContent = [tplLabel() || 'Custom brief', ...['minutes', 'usd'].filter(key => b.atMost[key]).map(key => capText(key, b.atMost[key]))].join(' · ');
   if (focusId) { const el = box.querySelector(`[data-id="${focusId}"]`); if (el && !el.disabled) el.focus(); }
 }
 function setLead(k, focus) {
   nm.lead = k;
   $('nmLeads').querySelectorAll('.nm-lead').forEach(b => { const on = b.dataset.k === k; b.setAttribute('aria-checked', String(on)); b.tabIndex = on ? 0 : -1; if (on && focus) b.focus(); });
-  if (!nm.touched && !nm.edit) $('nmName').value = NM_IDEA[k] || '';
+  $('nmName').placeholder = 'e.g. ' + (NM_IDEA[k] || 'Prepare a release brief');
   if (!nm.briefTouched && !nm.edit) { nm.tpl = tplFor(k).id; nm.tplEdited = false; nm.brief = tplBrief(nm.tpl); }
   const f = fam(k), box = $('nmTerms'); box.textContent = ''; box.style.setProperty('--hue', f.hue);
-  [['', `<svg viewBox="-10 -10 20 20" aria-hidden="true">${sigil(k)}</svg>`, f.roles && f.roles.length > 1 ? 'Roles' : 'Role', (f.roles || [f.role]).join(', ')], ['ok', ICON.check, 'Allowed without asking', f.may], ['q', ICON.gate, 'Requires approval', f.must]].forEach(([cls, icon, key, val]) => {
+  [['ok', ICON.check, 'Can do', f.may], ['q', ICON.gate, 'Ask first', f.must]].forEach(([cls, icon, key, val]) => {
     const li = html('li', cls); li.innerHTML = icon; li.append(html('span', null, key), val); box.appendChild(li); });
   drawBriefForm(); drawNew();
 }
@@ -5176,11 +5178,12 @@ function drawNew() {
   if (prompt) { prompt.hidden = atlasScope === 'coven' || !bare || show || cz.open; $('emptyNew').disabled = !ok; $('emptyNew').title = ok ? 'Open a new mission' : 'Go live to open a mission'; }
   stage.classList.toggle('composing', show || cz.open);
   if (!show) return;
-  $('nmLeadL').textContent = nm.match && nm.match.k === nm.lead && !nm.leadTouched ? `Who leads · matched as ${nm.match.role}, on “${nm.match.words[0]}”` : 'Who leads';
-  $('nmTitle').textContent = EM ? 'Edit brief' : 'New mission'; $('raise').textContent = EM ? 'Save brief' : 'Open mission'; $('nmLeadSec').hidden = !!EM;
-  setMissionName($('emptyName'), EM ? EM.name : active); $('emptyState').textContent = EM ? '' : n ? `${n} open` : 'Dormant'; $('emptyState').className = 'hd-s ' + (n ? 'on' : 'off'); $('emptyState').hidden = !!EM;
+  $('nmLeadL').textContent = nm.match && nm.match.k === nm.lead && !nm.leadTouched ? `Mission lead · suggested for “${nm.match.words[0]}”` : 'Mission lead';
+  $('nmTitle').textContent = EM ? 'Edit brief' : 'New mission'; $('raise').textContent = EM ? 'Save brief' : 'Create mission'; $('nmLeadSec').hidden = !!EM;
+  setMissionName($('emptyName'), EM ? EM.name : active); $('emptyState').hidden = true;
   $('emptyX').hidden = false;
-  $('nmFoot').textContent = !canAct() ? 'Replaying. Go live first.' : EM ? 'Psyche tells the council.' : `Starts with 6 of up to ${nm.brief.atMost.agents} agents.`;
+  $('nmFoot').textContent = !ok ? (c.recorded ? 'Imported recording · read-only' : 'Go live to make changes.') : EM ? 'Applies to this mission.' : $('nmName').value.trim() ? 'Local simulation · 6 starting agents' : 'Enter a mission name to continue.';
+  $('empty').setAttribute('aria-label', EM ? 'Edit brief' : 'New mission');
   $('raise').disabled = !ok || !$('nmName').value.trim(); $('nmName').disabled = !ok || !!EM;
 }
 function openNew(editId, onCancel) {
@@ -5188,9 +5191,12 @@ function openNew(editId, onCancel) {
   nm.fromInspector = false;
   const c = cur(), M = editId ? c.world.missions.get(editId) : null;
   if (!M && c.sel) select(null); if (atlasScope === 'coven') setView();
+  if (M && !nm.edit) nm.draftName = $('nmName').value;
   nm.edit = M ? M.id : null; nm.open = M ? 'deliver' : null;
   if (M) { nm.brief = M.brief ? JSON.parse(JSON.stringify(M.brief)) : (NM_BRIEF[M.seats[0]] || NM_BRIEF.echo)(); if (!nm.brief.deliver.length) nm.brief.deliver.push({kind: 'report', formats: ['md'], langs: []}); Object.keys(CAP).forEach(k => { if (!nm.brief.atMost[k]) nm.brief.atMost[k] = (NM_BRIEF.echo().atMost)[k]; }); nm.briefTouched = true; $('nmName').value = M.name;
     const t0 = M.tpl ? allTpl().find(t => M.tpl.indexOf(t.name) === 0) : null; nm.tpl = t0 ? t0.id : null; nm.tplEdited = !!t0 && M.tpl !== t0.name; }
+  $('nmPermissions').open = false;
+  setBriefExpanded(!!M);
   c.composing = true; drawBriefForm(); drawNew();
   if (window.CovenMobileUI) window.CovenMobileUI.activate('empty');
   if (M) $('nmTitle').focus({preventScroll: true});
@@ -5200,7 +5206,7 @@ function closeNew() {
   const c = cur(), returnToBrief = nm.edit && nm.fromInspector;
   nm.fromInspector = false; c.composing = false; c.emptyDismissed = true;
   nm.touched = false; nm.leadTouched = false; nm.match = null; if (!nm.edit && nm.briefTouched) { nm.briefTouched = false; }
-  if (nm.edit) { nm.edit = null; nm.briefTouched = false; nm.open = null; setLead(nm.lead); }
+  if (nm.edit) { $('nmName').value = nm.draftName || ''; nm.edit = null; nm.briefTouched = false; nm.open = null; setLead(nm.lead); }
   drawNew(); if (window.CovenMobileUI) window.CovenMobileUI.sync();
   if (nm.onCancel) {
     const restore = nm.onCancel; nm.onCancel = null;
@@ -5209,13 +5215,27 @@ function closeNew() {
   const trigger = (returnToBrief && $('inspect').querySelector('[data-focus="edit-brief"]')) || $('emptyNew');
   if (trigger && !trigger.closest('[hidden],[inert]') && !trigger.disabled) trigger.focus({preventScroll: true});
 }
+function setBriefExpanded(expanded) {
+  $('nmBrief').hidden = !expanded;
+  $('nmPreview').hidden = expanded;
+  $('nmCustomize').setAttribute('aria-expanded', String(expanded));
+  $('nmCustomize').textContent = expanded ? 'Show summary' : 'Customize';
+}
+$('nmCustomize').onclick = () => setBriefExpanded($('nmBrief').hidden);
+function labelMissionLead(button, k) {
+  const f = fam(k);
+  button.innerHTML = avatar(k);
+  const text = html('span', 'nm-lead-copy');
+  text.append(html('b', '', f.name), html('small', '', (f.roles || [f.role]).join(', ')));
+  button.appendChild(text);
+}
 Object.keys(FAM).forEach(k => {
   const b = html('button', 'nm-lead'); b.type = 'button'; b.dataset.k = k; b.setAttribute('role', 'radio'); b.style.setProperty('--hue', FAM[k].hue);
-  b.innerHTML = avatar(k); b.append(FAM[k].name); b.addEventListener('click', () => { nm.leadTouched = true; setLead(k); }); $('nmLeads').appendChild(b);
+  labelMissionLead(b, k); b.addEventListener('click', () => { nm.leadTouched = true; setLead(k); }); $('nmLeads').appendChild(b);
 });
 $('nmLeads').addEventListener('keydown', ev => {
   const ks = Object.keys(FAM), d = ev.key === 'ArrowRight' || ev.key === 'ArrowDown' ? 1 : ev.key === 'ArrowLeft' || ev.key === 'ArrowUp' ? -1 : 0;
-  if (d) { ev.preventDefault(); setLead(ks[(ks.indexOf(nm.lead) + d + ks.length) % ks.length], true); }
+  if (d) { ev.preventDefault(); nm.leadTouched = true; nm.match = null; setLead(ks[(ks.indexOf(nm.lead) + d + ks.length) % ks.length], true); }
 });
 $('nmName').addEventListener('input', () => { nm.touched = true;
   if (composingText.has($('nmName'))) return;
@@ -5230,22 +5250,23 @@ $('empty').addEventListener('submit', ev => {
   const c = cur(), w = c.world, name = $('nmName').value.trim().slice(0, 60), k = nm.lead, f = fam(k), brief = normBrief(nm.brief);
   if (nm.edit) {                                    // a changed brief is said to Psyche, who tells the council
     const M = w.missions.get(nm.edit); if (!M || !canAct()) return;
-    c.composing = false; nm.edit = null; nm.briefTouched = false; nm.open = null;
+    c.composing = false; $('nmName').value = nm.draftName || ''; nm.edit = null; nm.briefTouched = false; nm.open = null;
     emit(c, {type: 'you.said', text: `Change the brief for ${M.name}.`, mission: M.id});
     const tname = tplLabel();
     setTimeout(() => { rebrief(c, M, brief, tname);
       emit(c, {type: 'psyche.said', text: `${M.name} has a new brief. ${briefSentence(brief)}`}); if (cur() === c) { panelView = 'brief'; select(M.id, null, 'side'); } }, 450);
     return setLead(k);
   }
-  if (!name || !canAct()) return;
+  if (!name || !canAct() || $('empty').hidden) return;
   nm.onCancel = null;
   c.composing = false; nm.touched = false; nm.briefTouched = false; nm.open = null;
   emit(c, {type: 'you.said', text: `Open a mission: ${name}. ${f.name} leads. ${tplLabel() ? tplLabel() + ' brief. ' : ''}${briefSentence(brief)}`});
-  { const tname = tplLabel(); setTimeout(() => openMission(c, name, k, brief, tname), 450); }
-  setLead(k);
+  const mission = openMission(c, name, k, brief, tplLabel(), false);
+  $('nmName').value = ''; nm.leadTouched = false; nm.match = null;
+  setLead(k); panelView = 'brief'; select(mission, null, 'side');
 });
 // opening a mission is the same act from the form or from a conversation: Psyche confirms, seats the lead, spawns the first agents
-function openMission(c, name, k, brief, template) {
+function openMission(c, name, k, brief, template, autoSelect = true) {
   const f = fam(k), mission = 'm-' + (topNum(c, 'mission.opened', 'mission') + 1), task = 'k-' + (topNum(c, 'task.opened', 'task') + 1), a0 = topNum(c, 'agent.spawned', 'agent');
   emit(c, {type: 'psyche.said', text: `Opening ${name} with ${f.name} on its council. I will hold it to that brief and tell you if a limit is reached.`});
   emit(c, template ? {type: 'mission.opened', mission, name, brief, template} : {type: 'mission.opened', mission, name, brief});
@@ -5253,7 +5274,8 @@ function openMission(c, name, k, brief, template) {
   emit(c, {type: 'task.opened', task, mission, familiar: k, name});
   for (let i = 1; i <= 6; i++) setTimeout(() => emit(c, {type: 'agent.spawned', agent: 'a-' + String(a0 + i).padStart(3, '0'), mission, familiar: k, task, doing: act(k)}), 160 * i);
   setTimeout(() => emit(c, {type: 'familiar.report', mission, familiar: k, text: `${name} is open with 6 agents inside the ward. Waiting for direction.`}), 1500);
-  setTimeout(() => { if (cur() === c && !c.sel && c.world.missions.has(mission)) select(mission); }, 1750);
+  if (autoSelect) setTimeout(() => { if (cur() === c && !c.sel && c.world.missions.has(mission)) select(mission); }, 1750);
+  return mission;
 }
 // a changed brief: a raised limit lets a mission stopped at that limit carry on, and answers its request
 function rebrief(c, M, brief, template) {
