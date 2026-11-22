@@ -1185,12 +1185,12 @@ body.atlas-enhanced #mission-section .bfl > b { white-space: normal; text-align:
   body.atlas-enhanced .atlas-result-summary :is(#atlasProjectClear, #atlasMissionReset), body.atlas-enhanced .atlas-drawer-heading #atlasNewProject { min-height: 44px; }
 }
 
-#missionHistory {
+#recordingPrompt, #missionHistory {
   width: min(640px, calc(100vw - 24px)); max-height: calc(100dvh - 32px); padding: 0;
   box-sizing: border-box; border: 1px solid var(--border-strong); border-radius: 14px;
   color: var(--foreground); background: var(--card); font: inherit; overflow: auto;
 }
-#missionHistory::backdrop { background: rgb(0 0 0 / .72); }
+#recordingPrompt::backdrop, #missionHistory::backdrop { background: rgb(0 0 0 / .72); }
 #missionHistory header { position: sticky; top: 0; z-index: 1; display: flex; justify-content: space-between; align-items: start; gap: 12px; background: var(--card); border-bottom: 1px solid var(--border); padding: 16px 20px; }
 #missionHistory header span, #historyCount { color: var(--primary); }
 #missionHistory h2 { margin: 3px 0; font-size: 1.5rem; overflow-wrap: anywhere; }
@@ -1274,3 +1274,13 @@ body.atlas-enhanced[data-atlas-scope="coven"] .workspace-urgent .stop-ctl { disp
 .mission-review { display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: 8px; width: 100%; padding: 9px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--card-raised); text-align: left; }
 .mission-review .an-t { min-width: 0; overflow-wrap: anywhere; }
 .mission-review .an-go { padding-inline: 7px; }
+
+#recordingPrompt { width: min(25rem, calc(100vw - 24px)); padding: 20px; }
+#recordingPrompt > span, #bookmarkStatus { color: var(--primary); font-size: .85em; }
+#recordingPrompt h2 { margin: 4px 0 8px; }
+#recordingPrompt p { color: var(--muted-foreground); line-height: 1.5; }
+#recordingPrompt #recordingPromptError { margin-top: 10px; color: var(--attention); }
+#recordingPrompt .history-actions { margin-top: 16px; justify-content: flex-end; gap: 8px; }
+#bookmarkStatus, #historySubject { flex-basis: 100%; }
+#historySubject { overflow-wrap: anywhere; font-weight: 550; }
+#historySubject:not([hidden]) + #historyMapNote { color: var(--muted-foreground); font-size: .9em; }

@@ -50,6 +50,11 @@
       if (!raw) return route('coven');
       if (raw.indexOf('#') >= 0) return null;
       if (raw.charAt(0) !== '/') return null;
+      if (raw.startsWith('/recording/')) {
+        var match = /^\/recording\/([a-f0-9]{64})\/mission\/([1-9]\d*)\/event\/([1-9]\d*)$/.exec(raw);
+        if (!match || !Number.isSafeInteger(Number(match[2])) || !Number.isSafeInteger(Number(match[3]))) return null;
+        return {scope: 'recording', digest: match[1], missionPosition: Number(match[2]), position: Number(match[3])};
+      }
       var question = raw.indexOf('?');
       var path = question < 0 ? raw : raw.slice(0, question);
       var query = question < 0 ? '' : raw.slice(question + 1);
@@ -73,6 +78,10 @@
   function format(value) {
     try {
       if (!value || value.scope === 'coven') return '#/coven';
+      if (value.scope === 'recording') {
+        var recordingHash = '#/recording/' + value.digest + '/mission/' + value.missionPosition + '/event/' + value.position;
+        return parse(recordingHash)?.scope === 'recording' ? recordingHash : '#/coven';
+      }
       if ((value.scope !== 'project' && value.scope !== 'mission') || !identifier(value.project)) return '#/coven';
       var hash = '#/project/' + encodeURIComponent(value.project);
       if (value.scope === 'project') return hash;

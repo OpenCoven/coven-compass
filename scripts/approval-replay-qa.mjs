@@ -113,11 +113,11 @@ test('a slower file read cannot replace the newer recording', async () => {
   try {
     // Hold the older native File read until the second import has reached the mission drawer.
     await page.addInitScript(() => {
-      const read = File.prototype.text;
-      File.prototype.text = async function () {
-        const text = await read.call(this);
+      const read = File.prototype.arrayBuffer;
+      File.prototype.arrayBuffer = async function () {
+        const bytes = await read.call(this);
         if (this.name === 'older.jsonl') await new Promise(resolve => { window.finishOlderRead = resolve; });
-        return text;
+        return bytes;
       };
     });
     await page.goto(base);
