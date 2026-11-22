@@ -1239,12 +1239,9 @@ body.atlas-adaptive-mobile #historyReturn { bottom: calc(var(--mobile-chrome-hei
 .psyche-launcher:focus-visible { outline: 2px solid var(--primary); outline-offset: -3px; }
 .psyche-launcher[data-placement="corner"] { top: auto; bottom: 64px; min-height: 36px; width: 36px; padding: 0; }
 .psyche-launcher[data-placement="corner"] span { display: none; }
-.psyche .psyche-minimize { gap: 4px; padding-inline: 6px; font-size: 11px; }
-.psyche-minimize svg { width: 14px; height: 14px; }
-@container psy (max-width: 360px) { .psyche-minimize span { display: none; } }
 @media (pointer: coarse) {
   .psyche-launcher, .psyche-launcher[data-placement="corner"] { min-width: 44px; min-height: 44px; }
-  .psyche .psyche-minimize { min-width: 44px; }
+  .psyche .p-h .btn.icon { min-width: 44px; min-height: 44px; }
 }
 body.atlas-enhanced[data-atlas-scope="coven"] .plan-head .workspace-urgent { display: flex; }
 body.atlas-enhanced[data-atlas-scope="coven"] .workspace-urgent .stop-ctl { display: none; }

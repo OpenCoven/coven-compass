@@ -170,7 +170,7 @@ test('overview keeps an exact accessible mission total across preview densities'
 
 test('miniatures retain Project-scoped mission, council and task identities as replay changes', () => {
   const fam = k => ({name: k, hue: k === 'astra' ? '#9cc2f2' : '#e8c99a', roles: []});
-  const fixture = load(['createProjectPreview', 'syncProjectPreview', 'updateVisibleProjectPreviews', 'sealOf', 'buildSeal', 'drawSeal'], {
+  const fixture = load(['createProjectPreview', 'syncProjectPreview', 'updateVisibleProjectPreviews', 'sealOf', 'buildSeal', 'drawSeal', 'buildFamiliarRings', 'drawFamiliarRings'], {
     missionFormation: 'ring', window: {CovenAtlasLayout: layout}, svgEl, fam, sigil: key => `<path data-symbol="${key}"/>`, MAX_WEDGES: 8, MIN_WEDGE: 12, WARN_AT: .85,
     pol: (r, a) => [r * Math.cos(a * Math.PI / 180), r * Math.sin(a * Math.PI / 180)],
     countOf: (w, pred) => [...w.agents.values()].filter(pred).length, openAsks: w => [...w.asks.values()],

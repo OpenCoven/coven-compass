@@ -359,6 +359,23 @@ for (const vp of VIEWPORTS) {
         const after = await progress.getAttribute('stroke-dasharray');
         check(mode, vp.name, 'Seal lab extends a familiar’s progress arc', parseFloat(after) > parseFloat(before),
           `${before} to ${after}`);
+        await page.getByRole('button', {name: 'Familiar rings', exact: true}).click();
+        const face = page.locator('.csl-face');
+        await page.getByRole('button', {name: 'Charm', exact: true}).last().click();
+        const arc = face.locator('.fam-progress');
+        const charmBefore = await arc.getAttribute('stroke-dasharray');
+        await page.locator('#cslProgress3').press('ArrowRight');
+        check(mode, vp.name, 'Charm preview updates its ring from the visible member controls',
+          parseFloat(await arc.getAttribute('stroke-dasharray')) > parseFloat(charmBefore) && await page.locator('.csl-familiar:visible').count() === 1,
+          await face.getAttribute('aria-label'));
+        await page.locator('.csl-state-btn[data-state="needsYou"]').click();
+        check(mode, vp.name, 'the familiar requesting review shows a distinct rim and accessible state',
+          await face.locator('.fam-state').getAttribute('data-state') === 'Needs you' && /Echo.*Needs you/.test(await face.getAttribute('aria-label')),
+          await face.getAttribute('aria-label'));
+        await page.locator('.csl-state-btn[data-state="broken"]').click();
+        check(mode, vp.name, 'a stopped familiar uses the blocked rim',
+          await face.locator('.fam-state').getAttribute('data-state') === 'Blocked', await face.getAttribute('aria-label'));
+        await page.getByRole('button', {name: 'Mission seal', exact: true}).click();
         if (!query) await shot(page, `${tag}-seal-lab`);
         await page.keyboard.press('Escape');
         await page.waitForTimeout(300);
