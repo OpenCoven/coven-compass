@@ -170,7 +170,7 @@ function routeHarness(hash, projects = {'psyche-build': {}}) {
       },
     },
     location, history: {replaceState: (state, title, next) => { location.hash = next; }, pushState: (state, title, next) => { location.hash = next; }},
-    projects, cam: {locked: false}, setLock() {}, active: 'psyche-build', atlasScope: 'coven', panelView: 'brief', store: {set() {}},
+    recordingPrompt: {open: false}, projects, cam: {locked: false}, setLock() {}, active: 'psyche-build', atlasScope: 'coven', panelView: 'brief', store: {set() {}},
     atlasNavigationReady: false, atlasRestoringRoute: false, atlasLastRoute: '',
     cur: () => ({sel: null, fam: null, detail: null, world}),
     go() {}, select() {},

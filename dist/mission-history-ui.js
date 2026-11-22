@@ -1,5 +1,5 @@
 // The inspector owns the entry point. Playback remains in charge of map selection and time.
-window.CovenHistoryView = function ({model, current, readSeal, showMoment, restoreInspector, importRecording}) {
+window.CovenHistoryView = function ({model, current, readSeal, showMoment, restoreInspector, importRecording, bookmark}) {
   const byId = id => document.getElementById(id);
   const dialog = byId('missionHistory'), back = byId('historyReturn'), list = byId('historyRows');
   const at = pos => state.project.trace[pos - 1];
@@ -49,12 +49,47 @@ window.CovenHistoryView = function ({model, current, readSeal, showMoment, resto
     const summary = entry.changes.map(change => change.label + ' · ' + change.after).join('; ');
     byId('historyMapNote').textContent = 'Event ' + entry.position + ' · ' + entry.type + ' · ' +
       (summary || entry.details || time(entry.time)) + (exists ? '' : ' · Mission absent at this position.');
+    const subject = byId('historySubject');
+    const missionName = state.project.world.missions.get(state.mission)?.name || state.name || state.mission;
+    const request = state.project.world.asks.get(at(entry.position).ask);
+    subject.textContent = [missionName, request?.title].filter(Boolean).join(' · ');
+    subject.hidden = !state.project.recorded;
     const index = state.entries.indexOf(entry);
     const previous = byId('historyBackEvent'), next = byId('historyForwardEvent');
     previous.disabled = index === 0;
     next.disabled = index === state.entries.length - 1;
     back.hidden = false;
+    byId('historyBookmark').hidden = !state.project.recordingDigest;
+    byId('bookmarkStatus').hidden = true;
     if (wasModal || document.activeElement === document.body) byId('historyResume').focus();
+  }
+  async function bookmarkMoment(position, status) {
+    if (!state?.project.recordingDigest || !position) return;
+    const {project, mission} = state;
+    const missionPosition = project.trace.findIndex(event => event.type === 'mission.opened' && event.mission === mission) + 1;
+    if (!missionPosition) return;
+    const url = bookmark({scope: 'recording', digest: project.recordingDigest, missionPosition, position});
+    status.hidden = false;
+    status.textContent = 'Save the address in your browser bookmarks to return to this event.';
+    try {
+      await navigator.clipboard.writeText(url);
+      if (location.href === url && status.isConnected) status.textContent = 'Moment link copied. Reopen it with the same recording.';
+    } catch { /* The address bar remains usable when clipboard access is unavailable. */ }
+  }
+  byId('historyBookmark').onclick = () => bookmarkMoment(state?.selected, byId('bookmarkStatus'));
+  function findBookmark(project, route) {
+    const opener = project.trace[route.missionPosition - 1];
+    if (opener?.type !== 'mission.opened' || !opener.mission || route.position > project.trace.length) return null;
+    const entries = window.CovenMissionHistory.collect(model, project.trace, opener.mission, readSeal, {allEvents: true});
+    const entry = entries.find(item => item.position === route.position);
+    return entry && {mission: opener.mission, entries, entry};
+  }
+  function resumeBookmark(project, {mission, entries, entry}) {
+    state = {project, mission, entries, length: project.trace.length, start: 0, end: project.trace.length,
+      page: 0, selected: entry.position, bookmarkPosition: entry.position};
+    show(entry);
+    state.name = project.world.missions.get(mission)?.name || mission;
+    byId('historyResume').focus();
   }
   for (const [id, delta] of [['historyBackEvent', -1], ['historyForwardEvent', 1]]) {
     byId(id).onclick = () => {
@@ -113,10 +148,16 @@ window.CovenHistoryView = function ({model, current, readSeal, showMoment, resto
       const source = element('details', null, 'history-source-event');
       const json = element('pre');
       source.append(element('summary', 'Recorded event'), json);
+      if (state.project.recordingDigest) {
+        const status = element('p');
+        status.hidden = true;
+        status.setAttribute('role', 'status');
+        source.append(button('Bookmark moment', () => bookmarkMoment(entry.position, status)), status);
+      }
       source.addEventListener('toggle', () => {
         if (source.open && !json.textContent) json.textContent = JSON.stringify(at(entry.position), null, 2);
       });
-      if (state.origin?.position === entry.position) {
+      if (state.origin?.position === entry.position || state.bookmarkPosition === entry.position) {
         json.textContent = JSON.stringify(at(entry.position), null, 2);
         source.open = true;
       }
@@ -191,5 +232,5 @@ window.CovenHistoryView = function ({model, current, readSeal, showMoment, resto
     if (project !== state.project || project.applied !== state.selected || project.world.t !== at(state.selected).t ||
         project.sel !== (project.world.missions.has(state.mission) ? state.mission : null)) back.hidden = true;
   }
-  return {open, reset, syncPosition};
+  return {open, reset, syncPosition, findBookmark, resumeBookmark};
 };

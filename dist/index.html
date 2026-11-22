@@ -1694,7 +1694,14 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
     <nav id="historyPages" aria-label="History pages" hidden><button class="btn" id="historyPrev" type="button">Previous events</button><button class="btn" id="historyNext" type="button">Next events</button></nav>
   </div>
 </dialog>
-<div id="historyReturn" hidden><span id="historyMapNote" role="status"></span><button class="btn sm" type="button" id="historyBackEvent">Previous event</button><button class="btn sm" type="button" id="historyForwardEvent">Next event</button><button class="btn" id="historyResume" type="button">Return to History</button></div>
+<div id="historyReturn" hidden><strong id="historySubject" hidden></strong><span id="historyMapNote" role="status"></span><button class="btn sm" type="button" id="historyBackEvent">Previous event</button><button class="btn sm" type="button" id="historyForwardEvent">Next event</button><button class="btn" id="historyResume" type="button">Return to History</button><button class="btn sm" id="historyBookmark" type="button" hidden>Bookmark moment</button><small id="bookmarkStatus" role="status" hidden></small></div>
+<dialog id="recordingPrompt" aria-labelledby="recordingPromptTitle" aria-describedby="recordingPromptHelp">
+  <span>Local recording</span><h2 id="recordingPromptTitle">Resume review</h2>
+  <p id="recordingPromptHelp">Choose the original recording to return to this event. The file stays on this device.</p>
+  <p id="recordingPromptError" role="alert" hidden></p>
+  <div class="history-actions"><button class="btn" id="leaveRecording" type="button">Cancel</button><button class="btn pri" id="chooseRecording" type="button" autofocus>Choose recording</button></div>
+  <input id="bookmarkFile" type="file" accept=".jsonl,.ndjson,.json,.txt" hidden>
+</dialog>
 <dialog id="reviewQueue" aria-labelledby="queueHeading">
   <header><div><small>Coven Inbox</small><h2 id="queueHeading" tabindex="-1">Needs review</h2></div><button type="button" id="queueClose" class="btn x" aria-label="Close queue">×</button></header>
   <div id="queueTools"><label for="queueFilter">Filter requests</label><input type="search" id="queueFilter" placeholder="Project, mission, familiar or request"></div>
@@ -4027,6 +4034,12 @@ const missionHistory = window.CovenHistoryView({
     if (exists) select(mission, null, 'card', {focus: false});
     return exists;
   },
+  bookmark(route) {
+    const hash = window.CovenMissionNavigation.format(route);
+    if (location.hash !== hash) history.pushState({covenNavigation: true}, '', hash);
+    atlasLastRoute = hash;
+    return location.href;
+  },
   restoreInspector(mission) {
     if (!cur().world.missions.has(mission)) return $('stage').focus();
     select(mission, null, 'side', {focus: false});
@@ -4588,22 +4601,43 @@ $('traceCopy').addEventListener('click', () => {
   try { navigator.clipboard.writeText(TRACE_EXAMPLE).then(done, fallback); } catch (e) { fallback(); }
 });
 let traceRead = 0;
-async function loadTrace(file, feedback = $('traceErr')) {
+async function loadTrace(file, feedback = $('traceErr'), bookmark = null) {
   if (!file) return;
   const target = cur(), request = ++traceRead;
   const isCurrent = () => request === traceRead && cur() === target;
   const fail = message => { feedback.textContent = message; feedback.hidden = false; };
   if (file.size > 5e6) return fail('That file is over 5 MB. Trim the trace and try again.');
-  let text;
-  try { text = await file.text(); }
+  let text, digest;
+  try {
+    const bytes = await file.arrayBuffer();
+    text = new TextDecoder().decode(bytes);
+    if (crypto.subtle) {
+      const fingerprint = await crypto.subtle.digest('SHA-256', bytes);
+      digest = Array.from(new Uint8Array(fingerprint), byte => byte.toString(16).padStart(2, '0')).join('');
+    }
+  }
   catch { if (isCurrent()) fail('That file could not be read.'); return; }
   if (!isCurrent()) return;
+  if (bookmark && !digest) return fail('Open Compass on localhost or HTTPS to verify this recording.');
+  if (bookmark && digest !== bookmark.digest) return fail('This recording differs from the bookmarked file. Choose the original, even if it has been renamed.');
   const res = parseTrace(text);
   if (!res.events.length) return fail('No recognized events in that file. Each line needs t and a known type.');
+  const key = bookmark ? nextRecordingKey() : active;
+  const project = makeProject(key, res.events, true);
+  project.recordingDigest = digest;
+  project.skippedEvents = res.bad;
+  if (bookmark) {
+    // Validate against a private candidate before replacing any visible state.
+    const moment = missionHistory.findBookmark(project, bookmark);
+    if (!moment) return fail('This event does not belong to the bookmarked mission. Check the original link.');
+    projects[key] = project;
+    resumeRecording(project, moment);
+    return true;
+  }
   const err = $('traceErr');
   err.hidden = !res.bad; if (res.bad) err.textContent = `${plural(res.bad, 'line')} skipped as unrecognized.`;
-  const wasDemo = cur().layoutDemo; projects[active] = makeProject(active, res.events, true); projects[active].layoutDemo = wasDemo;
-  projects[active].skippedEvents = res.bad;
+  project.layoutDemo = target.layoutDemo;
+  projects[key] = project;
   enter(); atlasQueueFit(); atlasWriteRoute(true);
   return true;
 }
@@ -6351,6 +6385,13 @@ function atlasRestoreRoute(initial) {
     if (window.CovenAtlas.dismissNotice) window.CovenAtlas.dismissNotice();
   }
   const route = window.CovenMissionNavigation.parse(location.hash); let notice = '';
+  if (route?.scope === 'recording') {
+    atlasLastRoute = location.hash;
+    atlasNavigationReady = true;
+    openRecordingBookmark(route);
+    return;
+  }
+  if (recordingPrompt.open) closeRecordingPrompt();
   const locked = cam.locked; if (locked) setLock(false);
   atlasRestoringRoute = true;
   try {
@@ -6407,6 +6448,54 @@ function atlasSnapshot(includeMissions) {
   const c = cur(), M = c.sel && c.world.missions.get(c.sel), scope = atlasScope === 'coven' ? 'coven' : M ? 'mission' : 'project';
   return {active, scope, projects: ps, familiars: [...fs.values()], missions, missionItems, agents, needs, highlight: sc.hl || null, mission: M ? M.name : null, missionId: M ? M.id : null, detail: c.detail, view: panelView, camera: {locked: cam.locked, formation: missionFormation}};
 }
+// A bookmark identifies local bytes and two exact events. Its fragment never contains trace fields.
+const recordingPrompt = $('recordingPrompt');
+let pendingBookmark = null;
+function nextRecordingKey() {
+  const base = 'Local recording';
+  let key = base;
+  for (let n = 2; Object.hasOwn(projects, key); n++) key = base + ' (' + n + ')';
+  return key;
+}
+function closeRecordingPrompt() {
+  pendingBookmark = null;
+  traceRead++;
+  if (recordingPrompt.open) recordingPrompt.close();
+}
+function resumeRecording(project, moment) {
+  closeRecordingPrompt();
+  atlasRestoringRoute = true;
+  try {
+    atlasOpenProject(project.key);
+    missionHistory.resumeBookmark(project, moment);
+  } finally { atlasRestoringRoute = false; }
+  atlasLastRoute = location.hash;
+}
+function openRecordingBookmark(route) {
+  closeRecordingPrompt();
+  const loaded = Object.values(projects).find(project => project.recordingDigest === route.digest);
+  const moment = loaded && missionHistory.findBookmark(loaded, route);
+  if (moment) return resumeRecording(loaded, moment);
+  pendingBookmark = route;
+  $('recordingPromptTitle').textContent = 'Resume event ' + route.position;
+  $('recordingPromptError').hidden = !loaded;
+  if (loaded) $('recordingPromptError').textContent = 'This event does not belong to the bookmarked mission. Check the original link.';
+  recordingPrompt.showModal();
+  $('chooseRecording').focus();
+}
+$('chooseRecording').onclick = () => $('bookmarkFile').click();
+$('bookmarkFile').onchange = event => {
+  const file = event.target.files[0];
+  event.target.value = '';
+  if (file && pendingBookmark) loadTrace(file, $('recordingPromptError'), pendingBookmark);
+};
+$('leaveRecording').onclick = () => {
+  closeRecordingPrompt();
+  atlasWriteRoute(true);
+  atlasFocusSelection(false);
+};
+recordingPrompt.oncancel = event => { event.preventDefault(); $('leaveRecording').click(); };
+recordingPrompt.addEventListener('keydown', event => event.stopPropagation());
 if (window.CovenProjection) window.CovenProjection.register(window.CovenProjection.createSimulationSource({worlds: () => Object.keys(projects).map(k => [k, projects[k].world]), summarize: SimModel.summarize}));
 if (window.CovenAtlas) {
   window.CovenAtlas.mount({setMissionName, findProjectMission, syncReviewEntry, snapshot: atlasSnapshot, overview: atlasOverview, openProject: atlasOpenProject, openMission: atlasOpenMission, setProjectCount: atlasSetProjectCount, newProject: () => openProjectForm(), camera: atlasCamera, highlight: covHl, legend: () => $('keyBtn').click()});
