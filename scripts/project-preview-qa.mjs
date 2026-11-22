@@ -428,7 +428,9 @@ test('inspector actions open the brief and conversation and desktop title rows a
       assert.ok(await page.evaluate(() => document.activeElement.matches('#comp button:focus-visible') &&
         getComputedStyle(document.activeElement).outlineStyle !== 'none'));
       if (width > 1100) {
-        await page.locator('#dockBtn').click();
+        assert.ok(await page.locator('#app.docked').count(), 'Ask Psyche opens the dock by default');
+        await page.getByRole('button', {name: 'Float Psyche as a chat window'}).click();
+        await page.getByRole('button', {name: 'Dock Psyche as a side panel'}).click();
         const bar = await page.locator('#workspaceBar').boundingBox();
         const title = await page.locator('.psyche .p-h').boundingBox();
         assert.equal(bar.height, title.height);
@@ -701,5 +703,75 @@ test('a narrow overview return fits the settled stage without rebuilding for the
     });
     assert.ok(after.height > before, 'stage height should expand from ' + before + ' to the overview, observed ' + after.height);
     assert.ok(after.builds <= 1, 'overview rebuilt ' + after.builds + ' times during one scope change');
+  } finally { await page.close(); }
+});
+
+test('Psyche remembers rail and corner choices separately from the open panel', async () => {
+  for (const [width, height] of [[1440, 900], [390, 844], [844, 390]]) {
+    const mobile = width < 1100;
+    const page = await browser.newPage({viewport: {width, height}, hasTouch: mobile, reducedMotion: 'reduce'});
+    try {
+      await page.goto(base);
+      const launcher = page.getByRole('button', {name: 'Open Psyche', exact: true});
+      const panel = page.locator('#psyche');
+      await launcher.waitFor();
+      const edge = await page.locator('.plan-body').boundingBox(), rail = await launcher.boundingBox();
+      assert.equal(await launcher.getAttribute('data-placement'), 'rail');
+      assert.ok(Math.abs(edge.x + edge.width - rail.x - rail.width) < 1, 'tab meets the right edge');
+      assert.ok(await panel.isHidden());
+      if (mobile) assert.ok(rail.width >= 44 && rail.height >= 44);
+      await launcher.focus(); await page.keyboard.press('Enter');
+      assert.equal(await page.locator('#app.docked').count(), mobile ? 0 : 1);
+      await page.locator('#say').fill('Keep this draft');
+      await page.getByRole('button', {name: 'Minimize to corner'}).click();
+      const corner = await launcher.boundingBox();
+      assert.ok(corner.y > rail.y && corner.height < rail.height);
+      assert.equal(await launcher.getAttribute('data-placement'), 'corner');
+      assert.ok(await launcher.evaluate(el => el === document.activeElement));
+      await launcher.click();
+      assert.equal(await page.locator('#say').inputValue(), 'Keep this draft');
+      await page.keyboard.press('Escape');
+      assert.ok(await panel.isHidden());
+      await page.reload();
+      await launcher.waitFor();
+      assert.equal(await launcher.getAttribute('data-placement'), 'corner');
+      await launcher.click();
+      await page.getByRole('button', {name: 'Collapse to rail'}).click();
+      await page.reload(); await launcher.waitFor();
+      assert.equal(await launcher.getAttribute('data-placement'), 'rail');
+      if (mobile) {
+        const activity = page.locator('#atlasMobileActivity');
+        await activity.focus(); await page.keyboard.press('Enter');
+        await page.keyboard.press('Escape');
+        assert.ok(await activity.evaluate(el => el === document.activeElement), 'Escape returns to the opening control');
+      } else {
+        await launcher.click();
+        await page.getByRole('button', {name: 'Float Psyche as a chat window'}).click();
+        await page.getByRole('button', {name: 'Collapse to rail'}).click();
+        await page.reload(); await launcher.click();
+        assert.equal(await page.locator('#app.docked').count(), 0, 'floating preference survives closure');
+        await page.getByRole('button', {name: 'Dock Psyche as a side panel'}).click();
+        await page.setViewportSize({width: 390, height: 844});
+        await page.locator('#app:not(.docked)').waitFor();
+        await page.setViewportSize({width, height});
+        await page.locator('#app.docked').waitFor();
+      }
+    } finally { await page.close(); }
+  }
+});
+
+test('older Psyche settings keep a saved floating panel and its size', async () => {
+  const page = await browser.newPage({viewport: {width: 1440, height: 900}});
+  try {
+    await page.addInitScript(() => localStorage.setItem('coven-compass-psyche', JSON.stringify({mode: 'float', w: 460, fw: 430, fh: 580})));
+    await page.goto(base);
+    const panel = page.locator('#psyche');
+    await panel.waitFor();
+    assert.equal(await page.locator('#app.docked').count(), 0);
+    await page.waitForFunction(() => Math.round(document.getElementById('psyche').getBoundingClientRect().width) === 430);
+    await page.getByRole('button', {name: 'Collapse to rail'}).click();
+    await page.locator('#launcher').click();
+    assert.equal(await page.locator('#app.docked').count(), 0);
+    await page.waitForFunction(() => Math.round(document.getElementById('psyche').getBoundingClientRect().width) === 430);
   } finally { await page.close(); }
 });

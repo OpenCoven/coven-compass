@@ -482,7 +482,6 @@ body.atlas-enhanced :focus-visible { outline: 2px solid #c7bff4; outline-offset:
   body.atlas-enhanced .grip,
   body.atlas-enhanced .grip-t,
   body.atlas-enhanced .grip-c { display: none; }
-  body.atlas-enhanced .launcher { right: max(12px, env(safe-area-inset-right, 0px)); bottom: calc(var(--keyboard-inset, 0px) + max(12px, env(safe-area-inset-bottom, 0px))); width: 52px; height: 52px; border-radius: 12px; }
   body.atlas-enhanced .btn,
   body.atlas-enhanced .arow,
   body.atlas-enhanced .p-tab { min-height: 44px; }
@@ -615,8 +614,7 @@ body.atlas-enhanced.atlas-adaptive-mobile .stage.composing {
 body.atlas-enhanced.atlas-adaptive-mobile .leads { display: none; }
 body.atlas-enhanced.atlas-adaptive-mobile #footBtn,
 body.atlas-enhanced.atlas-adaptive-mobile #footHide,
-body.atlas-enhanced.atlas-adaptive-mobile .live-ctl,
-body.atlas-enhanced.atlas-adaptive-mobile .launcher { display: none; }
+body.atlas-enhanced.atlas-adaptive-mobile .live-ctl { display: none; }
 body.atlas-enhanced.atlas-adaptive-mobile .atlas-mobile-chrome {
   display: flex;
   flex-direction: column;
@@ -1205,3 +1203,26 @@ body.atlas-adaptive-mobile #historyReturn { bottom: calc(var(--mobile-chrome-hei
 .history-source-event { margin: 8px 0; color: var(--muted-foreground); }
 .history-source-event summary { cursor: pointer; }
 .history-source-event pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: .85em; }
+
+/* The closed channel is attached to the map edge. The compact crown clears the map footer. */
+.psyche-launcher {
+  position: absolute; z-index: 7; inset: clamp(8px, 3%, 24px) 0 auto auto;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  width: 32px; min-height: 86px; padding: 9px 0; cursor: pointer;
+  border: 1px solid var(--border-strong); border-right: 0; border-radius: 9px 0 0 9px;
+  background: var(--card); color: var(--muted-foreground);
+}
+.psyche-launcher[hidden] { display: none; }
+.psyche-launcher svg { width: 19px; height: 19px; color: var(--primary); }
+.psyche-launcher span { writing-mode: vertical-rl; font-size: .72rem; font-weight: 550; }
+.psyche-launcher:hover, .psyche-launcher:focus-visible { color: var(--foreground); background: var(--card-raised); }
+.psyche-launcher:focus-visible { outline: 2px solid var(--primary); outline-offset: -3px; }
+.psyche-launcher[data-placement="corner"] { top: auto; bottom: 64px; min-height: 36px; width: 36px; padding: 0; }
+.psyche-launcher[data-placement="corner"] span { display: none; }
+.psyche .psyche-minimize { gap: 4px; padding-inline: 6px; font-size: 11px; }
+.psyche-minimize svg { width: 14px; height: 14px; }
+@container psy (max-width: 360px) { .psyche-minimize span { display: none; } }
+@media (pointer: coarse) {
+  .psyche-launcher, .psyche-launcher[data-placement="corner"] { min-width: 44px; min-height: 44px; }
+  .psyche .psyche-minimize { min-width: 44px; }
+}
