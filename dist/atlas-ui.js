@@ -344,6 +344,7 @@
       ['atlasZoomOut', 'out', 'Zoom out', '<path d="M3 8h10"/>'],
       ['atlasZoomIn', 'in', 'Zoom in', '<path d="M3 8h10M8 3v10"/>'],
       ['atlasFit', 'fit', 'Fit view', '<path d="M2 6V2h4m4 0h4v4m0 4v4h-4m-4 0H2v-4"/><circle cx="8" cy="8" r="1.5"/>'],
+      ['atlasFormation', 'formation', 'Mission grid', '<rect x="2" y="2" width="4.5" height="4.5" rx="1"/><rect x="9.5" y="2" width="4.5" height="4.5" rx="1"/><rect x="2" y="9.5" width="4.5" height="4.5" rx="1"/><rect x="9.5" y="9.5" width="4.5" height="4.5" rx="1"/>'],
       ['atlasLock', 'lock', 'Lock the map', '<rect x="3" y="7" width="10" height="7" rx="1.5"/><path class="lock-closed" d="M5 7V5a3 3 0 0 1 6 0v2"/><path class="lock-open" d="M5 7V5a3 3 0 0 1 5.7-1.3"/>']
     ].forEach(function (item) {
       var control = button(item[0], '', function () { api.camera(item[1]); });
@@ -397,7 +398,10 @@
     $('atlasMissions').setAttribute('aria-label', 'Browse ' + s.missions + ' missions');
     if (s.scope === 'coven') $('workspaceTools').open = false;
     if (s.camera) {
-      ['atlasZoomOut', 'atlasZoomIn', 'atlasFit'].forEach(function (id) { $(id).disabled = s.camera.locked; });
+      ['atlasZoomOut', 'atlasZoomIn', 'atlasFit', 'atlasFormation'].forEach(function (id) { $(id).disabled = s.camera.locked; });
+      var formation = $('atlasFormation'), grid = s.camera.formation === 'grid';
+      formation.setAttribute('aria-pressed', String(grid));
+      formation.title = grid ? 'Switch to ring formation' : 'Switch to grid formation';
       var dock = $('atlasCameraDock'), lock = $('atlasLock');
       if (dock.dataset.locked !== String(s.camera.locked)) {
         dock.dataset.locked = String(s.camera.locked);

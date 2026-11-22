@@ -469,7 +469,7 @@ test('camera icons share the familiar key row on the workspace surface', async (
         assert.ok(await control.getAttribute('title'));
       }
       assert.equal(await dock.getByRole('combobox').count(), 0);
-      assert.equal(await dock.getByRole('button').count(), 4);
+      assert.equal(await dock.getByRole('button').count(), 5);
       const lock = dock.getByRole('button', {name: 'Lock the map'});
       await lock.click();
       assert.equal(await dock.getByRole('button').count(), 1);
@@ -703,3 +703,72 @@ test('a narrow overview return fits the settled stage without rebuilding for the
     assert.ok(after.builds <= 1, 'overview rebuilt ' + after.builds + ' times during one scope change');
   } finally { await page.close(); }
 });
+
+for (const [width, height] of [[1440, 900], [390, 844]]) {
+  test(`mission formation on Project and Coven maps at ${width}×${height}`, async () => {
+    const page = await browser.newPage({viewport: {width, height}, reducedMotion: 'reduce', hasTouch: width < 500});
+    try {
+      const grid = page.getByRole('button', {name: 'Mission grid'});
+      const showControls = async () => {
+        if (!(await grid.isVisible())) await page.locator('#atlasMobileView').click();
+      };
+      await page.goto(new URL('#/project/psyche-build', base).href);
+      await showControls();
+      const missions = page.locator('.atlas-project-detail .lead-node');
+      const positions = async (marks = missions) => {
+        await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+        return marks.evaluateAll(nodes => nodes.map(n => n.getAttribute('transform')));
+      };
+      await missions.first().waitFor();
+      const ring = await positions();
+      await grid.focus();
+      await grid.press('Space');
+      assert.equal(await grid.getAttribute('aria-pressed'), 'true');
+      assert.notDeepEqual(await positions(), ring);
+      assert.equal(await missions.count(), ring.length);
+      const layout = await positions();
+      await page.locator('#scrub').fill('0');
+      await page.locator('#scrub').fill('1000');
+      await missions.first().waitFor();
+      assert.deepEqual(await positions(), layout);
+      await page.reload();
+      await showControls();
+      assert.equal(await grid.getAttribute('aria-pressed'), 'true');
+      assert.deepEqual(await positions(), layout);
+      if (width > 500) {
+        await page.goto(new URL('#/project/psyche-build/mission/m-3?view=tasks&detail=side', base).href);
+        const title = page.locator('#missionDetailTitle');
+        const name = await title.innerText(), route = page.url();
+        await grid.click();
+        assert.equal(await title.innerText(), name);
+        assert.equal(await page.locator('#mission-tab-tasks').getAttribute('aria-selected'), 'true');
+        assert.equal(page.url(), route);
+        assert.deepEqual(await positions(), ring);
+        const seal = await page.locator('.lead-node.sel .se-face').boundingBox();
+        const inspector = await page.locator('#inspect').boundingBox();
+        assert.ok(seal.x >= inspector.x + inspector.width && seal.x + seal.width <= width);
+        await grid.click();
+      }
+      await page.locator(width < 500 ? '#atlasMobileMap' : '#atlasOverview').click();
+      await showControls();
+      const project = page.locator('.ghostfort[aria-label^="psyche-build,"]');
+      const preview = project.locator('.preview-mission');
+      await preview.first().waitFor();
+      const gridPreview = await positions(preview);
+      await grid.click();
+      assert.notDeepEqual(await positions(preview), gridPreview);
+      await project.focus();
+      await project.press('Enter');
+      await missions.first().waitFor();
+      assert.deepEqual(await positions(), ring);
+      await page.locator(width < 500 ? '#atlasMobileMap' : '#atlasOverview').click();
+      await showControls();
+      await grid.click();
+      const other = page.locator('.ghostfort[aria-label^="coven-cave,"]');
+      await other.focus();
+      await other.press('Enter');
+      await missions.first().waitFor();
+      assert.deepEqual(await positions(), ['translate(0.0,-320.0)', 'translate(0.0,320.0)']);
+    } finally { await page.close(); }
+  });
+}

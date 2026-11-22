@@ -2142,22 +2142,30 @@ function parseTrace(text) {
 // The fold over the trace lives in simulation-model.js. These names keep their meaning here.
 const SimModel = window.CovenSimulationModel.create({normBrief, ART, KIND, GATE_NAME, CAP, fam});
 const {newWorld, seatId, ROUTE, routeLabel, apply} = SimModel;
+const formationKey = 'coven-compass-mission-formation';
+let missionFormation = store.get(formationKey) === 'grid' ? 'grid' : 'ring';
 // positions come from the whole trace, so a mission, a seat and an agent keep their place for the length of a replay
-function layoutOf(trace) {
-  const L = {ang: new Map(), seat: new Map(), slot: new Map(), size: new Map()}, per = new Map(), order = [];
+function layoutOf(trace, formation = 'ring') {
+  const L = {formation, positions: new Map(), ang: new Map(), seat: new Map(), slot: new Map(), size: new Map()}, per = new Map(), order = [];
   trace.forEach(e => { if (e.type === 'mission.opened' && e.mission && !per.has(e.mission)) { per.set(e.mission, 0); order.push(e.mission); } });
-  L.n = fortN(order.length); L.g = fortG(L.n); L.a = fortA(L.n); L.lead = LEAD_R * L.g;
+  L.n = fortN(order.length); L.g = fortG(L.n); L.a = fortA(L.n); L.lead = formation === 'grid' ? LEAD_R : LEAD_R * L.g;
   // Use the full trace so entering or leaving replay never moves a familiar's badge.
   const councils = new Map(order.map(id => [id, new Set()]));
   for (const event of trace) if (event.type === 'council.seated' && event.familiar) councils.get(event.mission)?.add(event.familiar);
-  order.forEach((m, i) => L.ang.set(m, cornerAngle(L.n, i - 1)));
+  const grid = formation === 'grid' ? window.CovenAtlasLayout.missionGrid(order.length) : null;
+  order.forEach((m, i) => {
+    const angle = cornerAngle(L.n, i - 1);
+    L.ang.set(m, angle); // Canonical bearing used by simulation events in either formation.
+    L.positions.set(m, grid ? [grid[i].x * 320, grid[i].y * 320] : pol(L.lead, angle));
+  });
   trace.forEach(e => {
     if (e.type === 'council.seated' && e.familiar && L.ang.has(e.mission) && !L.seat.has(seatId(e.mission, e.familiar))) {
       const i = per.get(e.mission), id = seatId(e.mission, e.familiar); per.set(e.mission, i + 1);
-      const angle = L.ang.get(e.mission), count = councils.get(e.mission).size;
+      const [mx, my] = L.positions.get(e.mission);
+      const angle = grid ? Math.atan2(my, mx) / RAD : L.ang.get(e.mission), count = councils.get(e.mission).size;
       const row = Math.floor(i / 4), seats = Math.min(4, count - row * 4);
       const spread = seats === 1 ? 0 : (i % 4 / (seats - 1) - .5) * Math.min(115, (seats - 1) * 72);
-      const direction = angle + spread, [mx, my] = pol(L.lead, angle);
+      const direction = angle + spread;
       const [dx, dy] = pol(94 + row * 64, direction), bx = mx + dx, by = my + dy;
       const [ax, ay] = pol(45, direction);
       L.seat.set(id, {x: bx + ax, y: by + ay, bx, by, rot: direction}); L.size.set(id, 0);
@@ -2217,7 +2225,7 @@ function seekTimeline(t, quiet) {
 }
 function emit(c, e) {
   SimModel.append(c, e, Date.now());
-  if (STRUCT.has(e.type)) { const n0 = c.layout.n; c.layout = layoutOf(c.trace); if (c.layout.n !== n0 && c === cur()) { buildScene(); if (atlasAutoFit) atlasQueueFit(); } }
+  if (STRUCT.has(e.type)) { const n0 = c.layout.n; c.layout = layoutOf(c.trace, missionFormation); if (c.layout.n !== n0 && c === cur()) { buildScene(); if (atlasAutoFit) atlasQueueFit(); } }
   if (live) { cursor = e.t; seekTimeline(cursor); refresh(); }
 }
 
@@ -2344,6 +2352,8 @@ function coordinationMarker(parent) {
   return window.CovenAtlasCrown.create(parent, svgEl);
 }
 function buildScene() {
+  const current = cur();
+  if (current.layout.formation !== missionFormation) current.layout = layoutOf(current.trace, missionFormation);
   plan.textContent = '';
   const highlight = sc && sc.hl;
   sc = {missions: new Map(), seats: new Map(), agents: new Map(), colinks: new Map(), hl: highlight || null};
@@ -2415,7 +2425,7 @@ function buildScene() {
   atlasFocusable(pg, 'Psyche, coordination for ' + active + '. Open simulated conversation', () => openPsyche());
   pg.addEventListener('click', ev => { ev.stopPropagation(); openPsyche(); });
 }
-const missionXY = (c, m) => pol(c.layout.lead, c.layout.ang.get(m) || 0);
+const missionXY = (c, m) => c.layout.positions.get(m) || [0, 0];
 function syncTaskPlane(seat, groups) {
   const signature = JSON.stringify(groups);
   if (signature === seat.taskLayoutSignature) return;
@@ -5612,10 +5622,10 @@ function createProjectPreview(gh) {
   return {group, graph, links, nodes, more, moreLabel, empty, emptyMark, missions: new Map()};
 }
 
-function syncProjectPreview(preview, project, compact = false) {
+function syncProjectPreview(preview, project, compact = false, formation = 'ring') {
   const w = project.world;
-  if (preview.world === w && preview.applied === project.applied && preview.time === w.t && preview.compact === compact) return;
-  preview.world = w; preview.applied = project.applied; preview.time = w.t; preview.compact = compact;
+  if (preview.world === w && preview.applied === project.applied && preview.time === w.t && preview.compact === compact && preview.formation === formation) return;
+  preview.world = w; preview.applied = project.applied; preview.time = w.t; preview.compact = compact; preview.formation = formation;
   const pack = window.CovenAtlasLayout.missionPacking(w.missions.size, {radius: 160, sealRadius: 65});
   const shown = new Map();
   for (const mission of w.missions.values()) {
@@ -5634,9 +5644,12 @@ function syncProjectPreview(preview, project, compact = false) {
   const distributed = pack.hidden > 0 || project.layout.n > 8;
   const bearing = (id, i) => distributed ? -90 + i * 360 / slots : project.layout.ang.get(id) ?? -90;
   const reach = slots > 4 ? 174 : 142;
-  const radius = Math.min(pack.sealRadius, (274 - reach) / 2.26, 148 * Math.sin(Math.PI / Math.max(2, slots)) * .68);
+  const grid = formation === 'grid' ? window.CovenAtlasLayout.missionGrid(slots) : null;
+  const step = grid ? reach / Math.max(...grid.map(cell => Math.hypot(cell.x, cell.y))) : 0;
+  const position = (id, index) => grid ? [step * grid[index].x, step * grid[index].y] : pol(reach, bearing(id, index));
+  const radius = Math.min(grid ? step / 3.8 : Infinity, pack.sealRadius, (274 - reach) / 2.26, 148 * Math.sin(Math.PI / Math.max(2, slots)) * .68);
   preview.sealRadius = compact ? radius : radius * 41.5 / 43;
-  const first = shown.keys().next().value, [fx, fy] = pol(reach, bearing(first, 0));
+  const first = shown.keys().next().value, [fx, fy] = position(first, 0);
   // A single mission and its hub share the middle of the preview.
   preview.graph.setAttribute('transform', slots === 1 ? `translate(${-.68 * fx} ${-.68 * fy})` : 'translate(0 0)');
 
@@ -5649,7 +5662,7 @@ function syncProjectPreview(preview, project, compact = false) {
   }
   let index = 0;
   for (const [id, mission] of shown) {
-    const angle = bearing(id, index++), [x, y] = pol(reach, angle);
+    const [x, y] = position(id, index++), angle = Math.atan2(y, x) * 180 / Math.PI;
     let item = preview.missions.get(id);
     if (!item) {
       const node = svgEl('g', {class: 'preview-mission', 'data-preview-mission': id}, preview.nodes);
@@ -5708,7 +5721,7 @@ function syncProjectPreview(preview, project, compact = false) {
   }
   preview.more.style.display = pack.more ? '' : 'none';
   if (pack.more) {
-    const [x, y] = pol(reach, bearing(null, pack.visible));
+    const [x, y] = position(null, pack.visible);
     preview.more.setAttribute('transform', `translate(${x} ${y})`);
     const label = '+' + pack.hidden;
     preview.moreLabel.textContent = label;
@@ -5726,7 +5739,7 @@ function updateVisibleProjectPreviews(ghosts, camera, scale, width, height, prev
       continue;
     }
     if (!gh.preview) gh.preview = createProjectPreview(gh);
-    syncProjectPreview(gh.preview, projects[gh.k], 560 * scale < 40);
+    syncProjectPreview(gh.preview, projects[gh.k], 560 * scale < 40, missionFormation);
     if (560 * scale >= 320) {
       for (const [id, item] of gh.preview.missions) {
         labels.push({project: gh.k, id, item});
@@ -5849,6 +5862,25 @@ function atlasOverview() {
 function atlasCamera(action) {
   if (action === 'lock') { setLock(!cam.locked); if (window.CovenAtlas) window.CovenAtlas.update(); return; }
   if (cam.locked) return;
+  if (action === 'formation') {
+    missionFormation = missionFormation === 'ring' ? 'grid' : 'ring';
+    store.set(formationKey, missionFormation);
+    const c = cur();
+    c.camBack = null; // Deselecting should fit the new formation.
+    c.layout = layoutOf(c.trace, missionFormation);
+    // Reposition existing marks so focus, hit targets and the open inspector survive.
+    for (const mission of sc.missions.values()) [mission.x, mission.y] = missionXY(c, mission.id);
+    for (const [id, seat] of sc.seats) {
+      Object.assign(seat, c.layout.seat.get(id));
+      seat.taskLayoutSignature = null;
+    }
+    sc.cov.scale = null;
+    refresh();
+    for (const agent of sc.agents.values()) agent.p = agent.q.slice();
+    atlasFitScene(false);
+    window.CovenAtlas.announce(missionFormation === 'grid' ? 'Missions arranged in a grid.' : 'Missions arranged in a ring.');
+    return;
+  }
   if (action === 'in' || action === 'out') zoomBy(action === 'in' ? 1.3 : 1 / 1.3);
   else if (action === 'fit') atlasFitScene(true);
   else return;
@@ -5932,7 +5964,7 @@ function atlasSnapshot(includeMissions) {
     by.forEach((n, f) => { if (!fs.has(f)) fs.set(f, {key: f, name: fam(f).name, color: fam(f).hue, avatar: avatar(f), projects: 0, agents: 0}); const item = fs.get(f); item.projects++; item.agents += n; });
   });
   const c = cur(), M = c.sel && c.world.missions.get(c.sel), scope = atlasScope === 'coven' ? 'coven' : M ? 'mission' : 'project';
-  return {active, scope, projects: ps, familiars: [...fs.values()], missions, missionItems, agents, needs, highlight: sc.hl || null, mission: M ? M.name : null, missionId: M ? M.id : null, detail: c.detail, view: panelView, camera: {locked: cam.locked}};
+  return {active, scope, projects: ps, familiars: [...fs.values()], missions, missionItems, agents, needs, highlight: sc.hl || null, mission: M ? M.name : null, missionId: M ? M.id : null, detail: c.detail, view: panelView, camera: {locked: cam.locked, formation: missionFormation}};
 }
 if (window.CovenProjection) window.CovenProjection.register(window.CovenProjection.createSimulationSource({worlds: () => Object.keys(projects).map(k => [k, projects[k].world]), summarize: SimModel.summarize}));
 if (window.CovenAtlas) {

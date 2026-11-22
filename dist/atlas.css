@@ -1063,7 +1063,8 @@ body.atlas-enhanced .plan-head .atlas-actions :is(button,a):is(:hover,[aria-expa
   background: var(--card); border: 1px solid var(--border-strong); border-radius: 8px;
 }
 body.atlas-enhanced[data-atlas-scope="coven"] .plan-head :is(.workspace-tools,.workspace-urgent) { display: none; }
-body.atlas-enhanced #atlasCameraDock[data-locked="true"] :is(#atlasZoomOut,#atlasZoomIn,#atlasFit) { display: none; }
+body.atlas-enhanced #atlasCameraDock[data-locked="true"] :is(#atlasZoomOut,#atlasZoomIn,#atlasFit,#atlasFormation) { display: none; }
+body.atlas-enhanced #atlasCameraDock #atlasFormation[aria-pressed="true"] { background: var(--primary-soft); color: var(--primary-hi); }
 body.atlas-enhanced #atlasCameraDock { align-items: center; gap: 2px; }
 body.atlas-enhanced #atlasCameraDock #atlasLock { gap: 5px; }
 #atlasLock svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.35; stroke-linecap: round; }
