@@ -12,6 +12,18 @@ python3 -m http.server 8000 --bind 127.0.0.1 --directory dist
 
 Open `http://127.0.0.1:8000/`. Run `node scripts/verify-all.mjs --check` to verify the site and run its tests. Compass is distributed under the [Apache License, Version 2.0](LICENSE). [Copyright and brand notices](NOTICE) accompany the source.
 
+## Open Compass as a macOS app
+
+Install the Xcode command-line tools, Rust and the Tauri v2 CLI (`cargo install tauri-cli --version '^2' --locked`). Run these commands from the repository root to scan the local site and build the app with its embedded assets.
+
+```sh
+python3 scripts/scan-secrets.py site dist
+cargo tauri build --bundles app -- --locked
+open "src-tauri/target/release/bundle/macos/Coven Compass.app"
+```
+
+The desktop window opens the same local simulation as the web preview. Open a Project, then choose **Project tools (•••) → Trace → Load a recording** to inspect a local JSON Lines file. Try `tests/recordings/approval-replay.jsonl` to see the Proof review and Index review missions. The desktop content policy confines resources to the bundled site and uses system fallback fonts. For development, run `cargo tauri dev`. The build uses an ad hoc signature for local use. Developer ID signing and notarization are separate distribution steps.
+
 ## Scalable overview refinement
 
 **Implemented; combined source-level verification passed.** The current refinement uses flat Project outlines in an aspect-aware compact lattice, paired positions, and shared branch corridors that meet each project's inward-facing gate. Routes show coordination, not execution dependencies or authority. Read [the scalable layout and crown guide](docs/handoff/15-scalable-atlas-layout.md) for implementation and integration details.
