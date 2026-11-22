@@ -318,7 +318,6 @@ body.atlas-enhanced #plan .agent.co .agent-task { fill: var(--hue2); }
 .squad-plane .task-region line { stroke: var(--hue); stroke-opacity: .55; stroke-width: 1.5; }
 .squad-plane .task-region text { fill: var(--foreground); font-family: var(--f-body); font-weight: 550; text-anchor: start; }
 .squad-plane line { stroke: var(--hue); stroke-opacity: .45; }
-body.atlas-enhanced #plan:not(.atlas-agent-detail) .squad-plane { display: none; }
 .task-cog { fill: var(--primary-hi); }
 .task-tray-summary path { fill: var(--muted-foreground); }
 .task-caption { fill: #e1dce9; font: 550 10px var(--f-body); font-variant-numeric: tabular-nums; }

@@ -1,13 +1,14 @@
-// Run beside external Playwright. Pass the served URL, engine, desktop|keyboard|touch, recording and screenshot directory.
+// Run beside external Playwright. Pass the served URL, engine, desktop|keyboard|touch|landscape, recording and screenshot directory.
 import assert from 'node:assert/strict';
 import {join} from 'node:path';
 import {chromium, webkit} from 'playwright';
 
 const [url, engine, mode, recording, shots] = process.argv.slice(2);
 const browser = await ({chromium, webkit}[engine]).launch();
-const touch = mode === 'touch', keyboard = mode === 'keyboard';
+const touch = mode === 'touch' || mode === 'landscape', keyboard = mode === 'keyboard';
 try {
-  const page = await browser.newPage({viewport: touch ? {width: 390, height: 844} : {width: 1440, height: 900}, hasTouch: touch, reducedMotion: 'reduce'});
+  const viewport = mode === 'landscape' ? {width: 844, height: 390} : touch ? {width: 390, height: 844} : {width: 1440, height: 900};
+  const page = await browser.newPage({viewport, hasTouch: touch, reducedMotion: 'reduce'});
   page.setDefaultTimeout(5000);
   const errors = [];
   page.on('pageerror', e => errors.push(e.message));
@@ -17,7 +18,7 @@ try {
   async function tabTo(target) {
     for (let i = 0; i < 160; i++) {
       if (await target.count() && await focused(target)) return;
-      await page.keyboard.press('Tab');
+      await page.keyboard.press(engine === 'webkit' ? 'Alt+Tab' : 'Tab');
     }
     throw Error('Tab could not reach ' + target);
   }
@@ -41,7 +42,7 @@ try {
     assert.equal(await loc('#historyDetail').evaluate(el => el.parentElement.tagName === 'LI'), width < 860);
     await activate(btn('Close'));
   }
-  await page.setViewportSize(touch ? {width: 390, height: 844} : {width: 1440, height: 900});
+  await page.setViewportSize(viewport);
   await page.goto(new URL('#/project/psyche-build', url).href);
   await page.reload();
   for (const id of ['workspaceTools', 'traceBox', 'traceLoad']) await activate(loc('#' + id + ' > summary'));
@@ -49,6 +50,10 @@ try {
   await chooser.setFiles(recording);
   const tray = loc('.atlas-mission-group[data-m="release"] .mission-tasks');
   await tray.waitFor();
+  await activate(loc(touch ? '#atlasMobileMissions' : '#atlasMissions'));
+  assert.ok(await loc('#atlasMissionCreate').isDisabled());
+  assert.match(await loc('#atlasMissionCreateHint').innerText(), /read-only/);
+  if (keyboard) await page.keyboard.press('Escape'); else await activate(loc('#atlasMissionClose'));
   if (keyboard) {
     const mapStop = loc('#plan [data-map-item][tabindex="0"]');
     await tabTo(mapStop);
@@ -89,6 +94,14 @@ try {
   assert.match(await inspect(8), /Waiting for decision → Allowed/);
   assert.match(await inspect(7), /Active → Needs you/);
   assert.match(await inspect(8), /Needs you → Active/);
+  await inspect(7);
+  const pending = btn('Show event 7 on map');
+  await activate(pending);
+  await loc('#historyReturn').waitFor();
+  assert.match(await loc('#historyMapNote').innerText(), /Event 7 .*gate.requested/);
+  assert.match(await loc('#plan .lead-node.sel').getAttribute('aria-label'), /Release review, Needs you/);
+  await activate(btn('Return to History'));
+  assert.ok(await focused(pending));
   await inspect(6);
   const disclosure = detail.locator('summary');
   await activate(disclosure);

@@ -2799,6 +2799,7 @@ function covHl(k) { sc.hl = k; if (cur().fam) select(cur().sel, null, cur().deta
 function applySel() {
   const c = cur(), w = c.world;
   plan.classList.toggle('atlas-selected', !!c.sel);
+  plan.classList.toggle('atlas-group-selected', !!c.focusGroup);
   plan.querySelectorAll('[data-m]').forEach(e => {
     const m = e.getAttribute('data-m'), k = e.getAttribute('data-fam');
     const identity = sc.hl || c.fam, lit = (!c.sel || m === c.sel) && (!identity || (k ? k === identity : (w.missions.get(m) || {seats: []}).seats.includes(identity)));
@@ -3053,10 +3054,10 @@ function project() {
     g.count.style.fontSize = f(badgeSize * .54) + 'px';
   });
 
-  const showAgents = detailVisible(sc.agentDetail, 11.78 * screenScale, 11, 9);
+  const showAgents = !!cur().focusGroup || detailVisible(sc.agentDetail, 11.78 * screenScale, 11, 9);
   if (showAgents !== sc.agentDetail) {
     sc.agentDetail = showAgents;
-    const focusedAgent = document.activeElement?.closest?.('#plan .agent, #plan .squad-plane');
+    const focusedAgent = document.activeElement?.closest?.('#plan .agent');
     plan.classList.toggle('atlas-agent-detail', showAgents);
     if (!showAgents && focusedAgent) sc.missions.get(cur().sel)?.node.focus({preventScroll: true});
   }
@@ -3166,7 +3167,7 @@ function project() {
     s.hit.setAttribute('r', f(clamp(minHit / 2, badgeRadius + 2, 34)));
     s.badge.setAttribute('transform', `translate(${f(badge[0])} ${f(badge[1])})`);
     s.bsx = badge[0]; s.bsy = badge[1]; s.cx = s.x; s.cy = s.y; s.ry = s.R;
-    if (showAgents && cc.sel === s.m && s.captionScale !== screenScale) {
+    if (cc.sel === s.m && s.captionScale !== screenScale) {
       s.captionScale = screenScale;
       for (const caption of s.captions) {
         // Cache both shaped runs at the same font size; zoom only changes which one fits.
@@ -3252,7 +3253,7 @@ function layoutMapLabels(captions) {
   sc.gateL.forEach(g => { if (g.mark.style.display !== 'none') occupied.push({...screenBox(g.box, 2), gate: g}); });
   sc.seats.forEach(s => {
     occupied.push(screenBox(s.disc, 2));
-    if (sc.agentDetail && s.slots && c.sel === s.m) occupied.push(screenBox(s.floor, 2));
+    if (s.slots && c.sel === s.m) occupied.push(screenBox(s.floor, 2));
   });
   sc.missions.forEach(s => {
     const diameter = Math.max(s.diameter, s.id === c.sel && !s.readable ? 68 : 0);
@@ -3902,7 +3903,7 @@ function drawLeadCard(force) {
   if (!M) { if (lcSig) { layer.textContent = ''; notes = []; hud = null; lcSig = ''; } return; }
   const asks = openAsks(w).filter(q => q.mission === M.id), tasks = [...w.tasks.values()].filter(t => t.mission === M.id), side = c.detail === 'side', wide = stage.clientWidth >= 700 && !side;
   const next = primaryRequest(asks, c.noteTop);
-  const sig = [active, M.id, c.fam || '', side, wide, M.seats.join('+'), next?.id, asks.length, tasks.map(t => t.id).join(',')].join('|');
+  const sig = [active, M.id, c.fam || '', side, wide, c.focusGroup, M.seats.join('+'), next?.id, asks.length, tasks.map(t => t.id).join(',')].join('|');
   if (force || sig !== lcSig) {
     lcSig = sig; layer.textContent = ''; notes = []; hud = null;
     const col = wide ? html('div', 'manifest') : layer, leaders = wide ? svgEl('svg', {class: 'leaders', 'aria-hidden': 'true'}) : null;
@@ -3918,7 +3919,9 @@ function drawLeadCard(force) {
       ask.addEventListener('click', () => { openPsyche(); $('say').focus(); });
       const bf = html('button', 'hud-brief'); bf.type = 'button'; bf.setAttribute('aria-label', 'Open the brief');
       bf.addEventListener('click', () => { panelView = 'brief'; store.set('coven-compass-panel', panelView); select(c.sel, c.fam, 'side'); });
-      act.append(more, ask); h.append(top, stats, bar, bf, act); col.appendChild(h); hud = {nums, bar, bf, m: M.id, bsig: null};
+      const groupSummary = html('span', 'hud-group-summary');
+      if (c.focusGroup) ttl.appendChild(groupSummary);
+      act.append(more, ask); h.append(top, stats, bar, bf, act); col.appendChild(h); hud = {nums, bar, bf, groupSummary, m: M.id, bsig: null};
       const cyOf = k => { const q = sc.seats.get(seatId(M.id, k)); return q && q.cy != null ? q.cy : 0; };
       M.seats.slice().sort((x, y) => cyOf(x) - cyOf(y)).forEach(k => {
         const id = seatId(M.id, k), f = fam(k), el = html('div', 'plate seat' + (c.fam === k ? ' on' : '')), head = html('button', 'plate-h'), ct = html('span', 'ct'), list = html('div', 'plate-tasks'), rec = {kind: 'seat', id, el, ct, tasks: []};
@@ -3959,6 +3962,10 @@ function drawLeadCard(force) {
   }
   const mine = [...w.agents.values()].filter(a => a.mission === M.id);
   if (hud) {
+    if (c.focusGroup) {
+      const summary = fam(c.fam).name + ' · ' + plural(tasks.filter(t => t.leads.includes(c.fam)).length, 'task') + ' · ' + plural(mine.filter(a => a.seat === c.focusGroup).length, 'agent');
+      if (hud.groupSummary.textContent !== summary) hud.groupSummary.textContent = summary;
+    }
     ['work', 'idle', 'gate'].forEach(st => hud.nums[st].textContent = mine.filter(a => a.state === st).length); fillHudBrief();
     hud.bar.querySelectorAll('b').forEach(sg => sg.style.flexGrow = mine.filter(a => a.seat === sg.dataset.seat).length || .001);
   }

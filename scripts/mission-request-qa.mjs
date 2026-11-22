@@ -58,7 +58,7 @@ for (const [entry, width, height] of [['map',1440,900], ['strip',1440,900], ['br
       const jump = button('Show event ' + position + ' on map');
       await jump.waitFor();
       assert.ok(await jump.evaluate(e=>e===document.activeElement));
-      const payload=JSON.parse(await page.locator('#historyRows li').filter({has:jump}).locator('details[open] pre').innerText());
+      const payload=JSON.parse(await page.locator('#historyDetail').locator('details[open] pre').innerText());
       assert.equal(payload.mission,'proof'); assert.equal(payload.type,'gate.requested');
       await activate(jump);
       assert.match(await el('#historyMapNote').innerText(),new RegExp('Event '+position+' · gate.requested'));
@@ -122,7 +122,8 @@ for (const [entry, width, height] of [['map',1440,900], ['strip',1440,900], ['br
       }
       // Capture a replay cursor immediately before the same-timestamp resolution.
       await page.goto(new URL('#/project/psyche-build/mission/proof?view=brief&detail=side',url).href);
-      await activate(button('History')); await activate(button('Show event 5 on map'));
+      await activate(button('History')); await activate(el('#historyRows [data-position="5"]'));
+      await activate(button('Show event 5 on map'));
       const atFive = page.url();
       await activate(review);
       assert.equal(await el('#queueHeading').innerText(),'Approve proof');
@@ -167,7 +168,7 @@ for (const [width,height] of (baseline ? [] : [[1440,900],[390,844],[844,390]]))
     await last.click();
     await page.getByRole('button',{name:'Inspect opening event'}).click();
     const event=page.getByRole('button',{name:'Show event 36 on map'});
-    const record=JSON.parse(await page.locator('#historyRows li').filter({has:event}).locator('details[open] pre').innerText());
+    const record=JSON.parse(await page.locator('#historyDetail').locator('details[open] pre').innerText());
     assert.equal(record.ask,'item-27');
     await event.click(); await page.locator('#historyResume').click();
     await page.getByRole('button',{name:'Back to Inbox'}).click();

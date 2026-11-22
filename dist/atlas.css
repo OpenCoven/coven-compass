@@ -1417,3 +1417,20 @@ body.atlas-enhanced[data-atlas-scope="coven"] .workspace-urgent .stop-ctl { disp
 @media (pointer:coarse), (max-width: 500px) {
   #empty :is(#nmCustomize, #nmPermissions summary) { min-height: 44px; align-content: center; }
 }
+
+.hud-group-summary { color: var(--muted-foreground); font-size: .85em; order: -1; }
+body.atlas-enhanced.atlas-adaptive-mobile[data-mobile-overlay="psyche"]:has(#plan.atlas-group-selected) {
+  --group-chat-height: min(46dvh, 26rem);
+}
+body.atlas-adaptive-mobile[data-mobile-overlay="psyche"]:has(#plan.atlas-group-selected) #psyche {
+  height: var(--group-chat-height); min-height: 0; box-shadow: none;
+}
+body.atlas-adaptive-mobile[data-mobile-overlay="psyche"]:has(#plan.atlas-group-selected) #stage {
+  height: min(var(--mobile-stage-height), calc(var(--app-height, 100dvh) - var(--group-chat-height) - 84px));
+}
+body.atlas-adaptive-mobile[data-mobile-layout="landscape"][data-mobile-overlay="psyche"]:has(#plan.atlas-group-selected) #psyche {
+  inset-inline: auto 10px; transform: none; width: 46vw; height: calc(var(--app-height, 100dvh) - 20px);
+}
+body.atlas-adaptive-mobile[data-mobile-layout="landscape"][data-mobile-overlay="psyche"]:has(#plan.atlas-group-selected) #stage {
+  width: min(100%, calc(54vw - 24px)); height: var(--mobile-stage-height);
+}

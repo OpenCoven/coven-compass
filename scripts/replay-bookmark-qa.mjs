@@ -73,6 +73,8 @@ try {
   if (!phone) await page.keyboard.press('ArrowDown');
   await activate(el('.atlas-mission-row').filter({hasText:'Proof review'}));
   await activate(button('History'));
+  const trigger = el('#historyRows [data-position="5"]');
+  if (await trigger.count()) await activate(trigger);
   await activate(button('Show event 5 on map'));
   if (mode === '--baseline') {
     const old = page.url();
@@ -136,7 +138,8 @@ try {
       await activate(el('#historyResume'));
       assert.equal(await el('#historyTitle').innerText(),'Proof review');
       const jump = button('Show event ' + position + ' on map');
-      const row = el('#historyRows li').filter({has:jump});
+      await jump.waitFor();
+      const row = el('#historyDetail');
       const payload = JSON.parse(await row.locator('details[open] pre').innerText());
       await activate(row.getByRole('button',{name:'Bookmark moment',exact:true}));
       assert.equal(page.url(),url);
