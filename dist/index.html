@@ -3781,7 +3781,8 @@ const missionHistory = window.CovenHistoryView({
       $('historyError').hidden = false;
     }
   },
-  showMoment(mission, t, position) {
+  showMoment(project, mission, t, position) {
+    if (cur() !== project || atlasScope === 'coven') atlasOpenProject(project.key);
     jumpTo(t, position);
     const exists = cur().world.missions.has(mission);
     if (exists) select(mission, null, 'card', {focus: false});
@@ -4509,6 +4510,19 @@ const reviewQueue = window.mountReviewQueue({
   read(row) {
     const project = projects[row.project], request = project.world.asks.get(row.id);
     return {request, state: [request, requestCap(project.world, request), project.recorded, live]};
+  },
+  openingFor(row, request) {
+    const project = projects[row.project];
+    const index = project.trace.findIndex(event => event.type === 'gate.requested' && event.ask === request.id);
+    if (index < 0 || index >= project.applied || project.trace[index].mission !== request.mission) return null;
+    return {project, mission: request.mission, position: index + 1};
+  },
+  inspectOpening({project, mission, position}, resume) {
+    const name = project.world.missions.get(mission)?.name || mission;
+    missionHistory.open(project, mission, name, {position, resume() {
+      atlasOverview();
+      resume();
+    }});
   },
   confirmation(row) {
     const project = projects[row.project];

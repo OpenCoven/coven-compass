@@ -1,5 +1,5 @@
 // The native dialog keeps the filtered list and its scroll position across a Psyche decision.
-window.mountReviewQueue = function ({getRows, read, confirmation, html, plural}) {
+window.mountReviewQueue = function ({getRows, read, confirmation, openingFor, inspectOpening, html, plural}) {
   const $ = id => document.getElementById(id);
   let queueSelection = null, queueDecision = '', queueKeys = [], queueScroll = 0, queueSignature = '', queueDetailSignature = '';
   let displayedRequest;
@@ -45,7 +45,25 @@ window.mountReviewQueue = function ({getRows, read, confirmation, html, plural})
       $('queueStatus').textContent = [row.project, row.mission, row.familiar].filter(Boolean).join(' · ');
       const back = html('button', 'btn', 'Back to queue'); back.type = 'button';
       back.addEventListener('click', () => returnToQueue());
-      detail.replaceChildren(back, confirmation(row));
+      detail.replaceChildren(back);
+      const opening = openingFor(row, request);
+      if (opening) {
+        const inspect = html('button', 'btn', 'Inspect opening event'); inspect.type = 'button';
+        inspect.addEventListener('click', () => {
+          $('reviewQueue').close();
+          $('needBtn').setAttribute('aria-pressed', 'false');
+          inspectOpening(opening, () => {
+            $('reviewQueue').showModal();
+            $('needBtn').setAttribute('aria-pressed', 'true');
+            const stillPending = getRows().some(candidate => candidate.key === row.key);
+            returnToQueue(stillPending ? '' : 'This request is no longer pending at this replay position.');
+          });
+        });
+        detail.append(inspect);
+      } else {
+        detail.append(html('p', '', 'The opening event is unavailable in this recording.'));
+      }
+      detail.append(confirmation(row));
       if (previous) (Array.from(detail.querySelectorAll('button')).find(b => b.textContent === previous && !b.disabled) || back).focus();
       return;
     }
@@ -76,6 +94,7 @@ window.mountReviewQueue = function ({getRows, read, confirmation, html, plural})
     if (focused) queueListFocus(focused, index);
   }
   function open() {
+    queueSelection = null; queueDecision = ''; displayedRequest = null;
     queueSignature = ''; $('queueFilter').value = ''; $('reviewQueue').showModal();
     syncReviewQueue(); $('queueList').scrollTop = 0; $('queueFilter').focus(); $('needBtn').setAttribute('aria-pressed', 'true');
   }
