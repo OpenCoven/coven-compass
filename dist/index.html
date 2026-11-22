@@ -1797,7 +1797,7 @@ if (requestedSource !== null && requestedSource.trim().toLowerCase() !== 'simula
   }
   return;
 }
-const {detailVisible, primaryRequest, placeAnnotation} = window.CovenAtlasPresentation;
+const {detailVisible, primaryRequest, placeAnnotation, placeMissionCaption} = window.CovenAtlasPresentation;
 const NS = 'http://www.w3.org/2000/svg', RAD = Math.PI / 180;
 const FAMILIAR_RADIUS = 19, MAX_FAMILIAR_RADIUS = 25;
 const taskPlaneWidth = count => Math.min(72, Math.max(18, 16 * Math.sqrt(count)));
@@ -2515,10 +2515,11 @@ const taskCogPath = (() => {
 })();
 function syncTaskTray(s, mission, tasks) {
   if (!tasks.length) {
-    s.taskSummary = '';
+    s.taskCount = 0; s.taskSummary = '';
     if (s.tray) { if (s.tray.contains(document.activeElement)) s.node.focus(); s.tray.remove(); s.tray = null; }
     return;
   }
+  s.taskCount = tasks.length;
   const visible = tasks.slice(0, 3);
   const description = plural(tasks.length, 'task') + ' on ' + mission.name + ': ' + visible.map(t => t.name).join(', ') +
     (tasks.length > visible.length ? ', and ' + (tasks.length - visible.length) + ' more' : '');
@@ -2873,24 +2874,41 @@ function showMissionCaptions(entries) {
   const signature = JSON.stringify(entries);
   if (signature === list.dataset.signature) return;
   list.dataset.signature = signature;
+  const focusedRow = list.contains(document.activeElement) ? document.activeElement : null;
   list.hidden = !entries.length;
   const nodes = new Map(Array.from(list.children, child => [child.dataset.key, child]));
   let anchor = list.firstElementChild;
-  for (const [project, id, name, reference] of entries) {
+  for (const [project, id, name, reference, fallback] of entries) {
     const key = JSON.stringify([project, id]);
     let row = nodes.get(key);
     if (!row) {
       row = html('button', 'mission-caption'); row.type = 'button'; row.dataset.key = key;
       row.append(html('b'), html('span'));
-      row.addEventListener('click', () => atlasOpenMission(project, id, 'side'));
+      row.addEventListener('click', () => {
+        if (row.dataset.tasks === 'true') panelView = 'tasks';
+        atlasOpenMission(project, id, 'side');
+      });
     }
     row.firstElementChild.textContent = String(reference);
-    setMissionName(row.lastElementChild, name);
+    setMissionName(row.children[1], name);
+    row.dataset.tasks = String(!!fallback?.tasks);
+    let note = row.querySelector('small');
+    if (fallback) {
+      if (!note) { note = html('small'); row.appendChild(note); }
+      note.textContent = [fallback.state, fallback.tasks && plural(fallback.tasks, 'task')].filter(Boolean).join(' · ');
+    } else if (note) note.remove();
     nodes.delete(key);
     if (row !== anchor) list.insertBefore(row, anchor);
     anchor = row.nextElementSibling;
   }
-  for (const row of nodes.values()) row.remove();
+  for (const row of nodes.values()) {
+    row.remove();
+    if (row === focusedRow && atlasScope === 'project') {
+      const [project, id] = JSON.parse(row.dataset.key);
+      const mission = active === project && sc.missions.get(id);
+      if (mission) (row.dataset.tasks === 'true' && mission.tray || mission.node).focus({preventScroll: true});
+    }
+  }
 }
 function project() {
   const P = (x, y) => [x, y];
@@ -3054,6 +3072,7 @@ function project() {
     }
     const column = lateral ? Math.sign(s.x) * (radius * captionScale + 42 / screenScale + Math.max(56 * captionScale, trayWidth * size / 2)) : 0;
     s.name.setAttribute('transform', `translate(${f(column / captionScale)} 0)`);
+    s.stateLabel.removeAttribute('transform');
     if (s.tray) {
       const stateGap = selected && side > 0 && !compactTray ? 19 * U : 0;
       let y = lateral ? q[1] + nameDepth / 2 + 13 * size + stateGap : q[1] + side * (radius * captionScale + nameDepth + 13 * size + stateGap);
@@ -3073,7 +3092,6 @@ function project() {
           if (Math.abs(x - gate.x) < gap) x = gate.x + (Math.sign(x - gate.x) || 1) * gap;
         }
       }
-      s.trayBox = {x, y, width: trayWidth * size, height: 16 * size};
       s.tray.setAttribute('transform', `translate(${f(x)} ${f(y)}) scale(${size})`);
     }
     s.stateLabel.setAttribute('x', f(q[0] + column));
@@ -3137,7 +3155,7 @@ function project() {
   });
   sc.colinks.forEach(r => { const A2 = sc.seats.get(r.a), B2 = sc.seats.get(r.b); if (!A2 || !B2) return; const pa = P(A2.bx, A2.by), pb = P(B2.bx, B2.by); seg(r.l1, pa, pb); seg(r.l2, pa, pb); });
 
-  showMissionCaptions(captions); layoutMapLabels();
+  layoutMapLabels(captions);
   placePop(); placeCard();
 }
 function positionPackets(P, f) {
@@ -3155,30 +3173,81 @@ function positionPackets(P, f) {
     return true;
   });
 }
-function layoutMapLabels() {
+function layoutMapLabels(captions) {
   const matrix = plan.getScreenCTM();
-  if (!matrix || !(matrix.a > 0)) return;
+  if (!matrix || !(matrix.a > 0)) { showMissionCaptions(captions); return; }
   const stageRect = stage.getBoundingClientRect(), scale = matrix.a;
   const stageX = matrix.e - stageRect.left, stageY = matrix.f - stageRect.top;
   const X = value => stageX + value * scale, Y = value => stageY + value * scale;
   const c = cur(), occupied = [];
-  const frame = atlasViewportFrame(true);
+  const frame = atlasViewportFrame(Boolean(c.sel));
   const reserve = (x, y, width, height, gate) => occupied.push({x: x - width / 2, y: y - height / 2, width, height, gate});
+  const screenBox = (el, pad = 0) => {
+    const r = el.getBoundingClientRect();
+    return {x: r.left - stageRect.left - pad, y: r.top - stageRect.top - pad, width: r.width + 2 * pad, height: r.height + 2 * pad};
+  };
+  reserve(X(sc.psy.sx), Y(sc.psy.sy), 2 * sc.psy.radius + 4, 2 * sc.psy.radius + 4);
+  sc.gateL.forEach(g => { if (g.mark.style.display !== 'none') occupied.push({...screenBox(g.box, 2), gate: g}); });
+  sc.seats.forEach(s => {
+    occupied.push(screenBox(s.disc, 2));
+    if (sc.agentDetail && s.slots && c.sel === s.m) occupied.push(screenBox(s.floor, 2));
+  });
   sc.missions.forEach(s => {
     const diameter = Math.max(s.diameter, s.id === c.sel && !s.readable ? 68 : 0);
-    reserve(X(s.sx), Y(s.sy), diameter, diameter);
-    if (s.readable || c.sel === s.id || s.node.matches(':hover, :focus-visible')) {
-      const box = s.name.getBoundingClientRect();
-      if (box.width) reserve(box.left - stageRect.left + box.width / 2, box.top - stageRect.top + box.height / 2, box.width + 4, box.height + 2);
-    }
-    if (s.id === c.sel && !s.stateLabel.style.visibility) {
-      const box = s.stateLabel.getBoundingClientRect();
-      if (box.width) reserve(box.left - stageRect.left + box.width / 2, box.top - stageRect.top + box.height / 2, box.width + 4, box.height + 2);
-    }
-    if (s.tray && s.trayBox) reserve(X(s.trayBox.x), Y(s.trayBox.y), s.trayBox.width * scale, s.trayBox.height * scale);
+    reserve(X(s.sx), Y(s.sy), diameter + 4, diameter + 4);
   });
-  reserve(X(sc.psy.sx), Y(sc.psy.sy), 2 * sc.psy.radius, 2 * sc.psy.radius);
-  sc.gateL.forEach(g => { if (g.mark.style.display !== 'none') reserve(X(g.sx), Y(g.sy), 30, 30, g); });
+  if (c.sel) for (const a of sc.agents.values()) {
+    if (a.state === 'gate' && a.el.style.display !== 'none') reserve(X(a.sx), Y(a.sy), 18, 18);
+  }
+  // Rails can occupy one corner of a short screen. Reserve their rectangles, not whole rows.
+  const captionFrame = {x: 4, y: 4, width: stageRect.width - 8, height: stageRect.height - 8};
+  for (const el of document.querySelectorAll('#launcher, #atlasFamiliars, #atlasCameraDock, #atlasHeader, #atlasSidebar, #atlasMissionBrowser, #notes .manifest, #notes > .hud, #inspect')) {
+    if (el.hidden || (el.id === 'inspect' && document.body.classList.contains('atlas-mobile-overlay'))) continue;
+    const box = screenBox(el);
+    if (box.width && box.height) occupied.push(box);
+  }
+  // Selected content gets first choice. Keep every source transform when its preferred position fits.
+  const missions = [...sc.missions.values()].sort((a, b) => Number(b.id === c.sel) - Number(a.id === c.sel));
+  let focusCaption;
+  for (const s of missions) {
+    s.g.classList.remove('caption-in-list');
+    const x = X(s.sx), y = Y(s.sy);
+    const nodes = [];
+    if (s.readable || s.id === c.sel || s.node.matches(':hover, :focus-visible')) nodes.push(s.name);
+    if (s.id === c.sel && !s.stateLabel.style.visibility) nodes.push(s.stateLabel);
+    if (s.tray) nodes.push(s.trayHit);
+    if (!nodes.length) continue;
+    const rows = nodes.map(node => screenBox(node, 1));
+    // Do not pull an offscreen mission's controls back into the map when panning.
+    if (x < 0 || y < 0 || x > stageRect.width || y > stageRect.height) {
+      occupied.push(...rows);
+      continue;
+    }
+    const placed = placeMissionCaption(rows, {x, y}, s.diameter / 2, captionFrame, occupied);
+    if (placed) {
+      for (const [i, box] of placed.entries()) {
+        const dx = box.x - rows[i].x, dy = box.y - rows[i].y;
+        if (!dx && !dy) continue;
+        const el = nodes[i] === s.trayHit ? s.tray : nodes[i];
+        const parentScale = el.parentNode.getScreenCTM().a;
+        el.setAttribute('transform', `translate(${dx / parentScale} ${dy / parentScale}) ${el.getAttribute('transform') || ''}`);
+      }
+      occupied.push(...placed);
+    } else {
+      const number = s.reference;
+      s.referenceMark.textContent = String(number);
+      let entry = captions.find(row => row[1] === s.id);
+      if (!entry) {
+        entry = [active, s.id, c.world.missions.get(s.id).name, number];
+        captions.push(entry);
+      }
+      entry[4] = {tasks: s.taskCount || 0, state: s.id === c.sel ? s.stateLabel.textContent : ''};
+      if (s.tray && s.tray.contains(document.activeElement)) focusCaption = JSON.stringify([active, s.id]);
+      s.g.classList.add('caption-in-list');
+    }
+  }
+  showMissionCaptions(captions);
+  if (focusCaption) Array.from($('missionCaptions').children).find(el => el.dataset.key === focusCaption)?.focus({preventScroll: true});
   sc.seats.forEach(s => {
     if (c.sel !== s.m) return;
     const text = s.label.getBoundingClientRect();
@@ -3193,9 +3262,6 @@ function layoutMapLabels() {
     occupied.push({x: pos.x, y: pos.y, width, height});
   });
   if (c.sel && scale >= 1.15) {
-    for (const a of sc.agents.values()) {
-      if (a.state === 'gate' && a.el.style.display !== 'none') reserve(X(a.sx), Y(a.sy), 16, 16);
-    }
     for (const gate of sc.gateL) {
       if (gate.mark.style.display === 'none') continue;
       const anchor = {x: X(gate.sx), y: Y(gate.sy)};

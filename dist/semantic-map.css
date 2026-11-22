@@ -371,3 +371,7 @@ body.atlas-enhanced #plan .atlas-project-decision .gate-l.on {
   font-family: var(--f-body); font-weight: 550; paint-order: stroke;
   stroke: var(--card); stroke-width: 3px; vector-effect: non-scaling-stroke;
 }
+
+body.atlas-enhanced #plan .caption-in-list :is(.mission-face .lead-name, .mission-tasks, .atlas-mission-state) { display: none; }
+body.atlas-enhanced #plan .caption-in-list .seal-reference { display: inline; }
+.mission-caption small { color: var(--muted-foreground); grid-column: 2; font-size: .85em; }
