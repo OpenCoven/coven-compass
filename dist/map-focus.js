@@ -26,7 +26,15 @@ const NEXT = {ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1};
 function eligible(el) {
   if (!el || !el.isConnected) return false;
   if (el.closest && el.closest('[aria-hidden="true"]')) return false;
-  return !el.getClientRects || el.getClientRects().length > 0;
+  if (el.getClientRects && !el.getClientRects().length) return false;
+  // Chromium can report nonempty geometry for a rect inside a display:none SVG group.
+  if (el.ownerSVGElement) {
+    if (getComputedStyle(el).visibility !== 'visible') return false;
+    for (let node = el; node && node.ownerSVGElement; node = node.parentElement) {
+      if (getComputedStyle(node).display === 'none') return false;
+    }
+  }
+  return true;
 }
 
 function create(container, options) {
