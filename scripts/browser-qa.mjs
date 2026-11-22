@@ -110,7 +110,10 @@ async function keyboardJourney(vp) {
   async function observe(selector, role, name) {
     const target = page.locator(selector);
     const named = page.getByRole(role, { name });
-    const indicator = await target.evaluate(el => {
+    // Resolve the element and measure it in one browser task. Replay can replace an inspector heading between protocol calls.
+    const indicator = await page.evaluate(selector => {
+      const el = document.querySelector(selector);
+      if (!el) throw new Error('Keyboard target is missing: ' + selector);
       const style = getComputedStyle(el), rect = el.getBoundingClientRect();
       const name = el.getAttribute('aria-label') || el.labels?.[0]?.innerText || el.innerText;
       return { element: el.id || el.className, name: name.trim(), focused: el === document.activeElement,
@@ -118,7 +121,7 @@ async function keyboardJourney(vp) {
           rect.right > 0 && rect.left < innerWidth && style.outlineStyle !== 'none' &&
           parseFloat(style.outlineWidth) > 0 && style.outlineColor !== 'rgba(0, 0, 0, 0)',
         outline: style.outline, route: location.hash };
-    });
+    }, selector);
     const pass = indicator.focused && indicator.visible && await named.and(target).count() === 1;
     check(mode, vp.name, step, pass, JSON.stringify({...indicator, keys}));
     if (!pass) throw new Error('Expected visible keyboard focus and accessible name at ' + selector);

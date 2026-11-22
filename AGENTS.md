@@ -7,6 +7,7 @@ People reading this: Val owns the repo and merges. Nova coordinates and routes w
 ## One command
 
 ```bash
+npm --prefix src ci                  # install the pinned verification compiler once per checkout
 node scripts/verify-all.mjs           # run before every commit; writes tests/evidence/current.json
 node scripts/verify-all.mjs --check   # what CI runs; also fails on stale generated files
 sh scripts/verify-checkout.sh         # same command (wrapper kept from #6)
@@ -24,6 +25,7 @@ The table comes from #6. Run its focused check while you work, then `verify-all`
 | --- | --- | --- |
 | Project form and mission inspector | `dist/index.html` | `node --test tests/mission-interactions.test.cjs`, then exercise the form in a desktop and a narrow browser |
 | Routes and mission browser | `dist/mission-navigation.js`, `dist/atlas-ui.js`, and their bindings in `dist/index.html` | `node --test tests/navigation.test.cjs tests/navigation-notice.test.cjs tests/mission-interactions.test.cjs` |
+| Coven Needs review queue and shared Psyche confirmation | `dist/review-queue.js`, `dist/review-queue-ui.js`, `requestConfirmation` in `dist/index.html` | `node --test tests/review-queue.test.cjs`. Run `scripts/review-queue-qa.mjs` and `scripts/inbox-event-qa.mjs` from the external Playwright install with the preview URL and engine (`chromium` or `webkit`). |
 | Map and camera | `dist/atlas-layout.js`, `dist/atlas-viewport.js` | `node --test tests/atlas-layout.test.cjs tests/atlas-viewport.test.cjs` |
 | Mobile controls and focus | `dist/mobile-ui.js`, `dist/mobile-interactions.js`, `dist/atlas.css` | `node --test tests/mobile-*.test.cjs` |
 | Map keyboard focus (one Tab stop, arrow keys inside) | `dist/map-focus.js`, `atlasFocusable` in `dist/index.html` | `node --test tests/map-focus.test.cjs`, then Tab through the map in a browser |
@@ -106,3 +108,5 @@ Run `scripts/project-preview-qa.mjs` using the same external Playwright installa
 ## Secret checks
 
 Install the clone-local hooks with `python3 scripts/install-secret-hooks.py` before working on branches. See [SECURITY.md](SECURITY.md) for the staged-index, full-history, production build and regression commands. Review a suspected exposure privately and report only the rule and object identifier.
+
+Edit the crown and annotation-placement modules under `src/`. Their matching scripts under `dist/` are generated. Run `npm --prefix src ci`, `npm --prefix src run build` and `npm --prefix src run check` when changing typed modules, then run the usual site verification.

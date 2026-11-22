@@ -10,8 +10,8 @@
     'mission.briefed', 'mission.progress', 'artifact.state', 'council.seated', 'agent.spawned',
     'agent.retired', 'agent.state', 'gate.requested', 'gate.resolved', 'project.stopped', 'project.resumed']);
 
-  function collect(model, trace, mission, readSeal) {
-    const world = model.newWorld(), entries = [];
+  function collect(model, trace, mission, readSeal, {allEvents = false} = {}) {
+    const world = model.newWorld(), entries = [], requests = new Map();
     for (const [index, event] of trace.entries()) {
       // Read both sides at the event time. Elapsed time alone has no causal event.
       world.t = event.t;
@@ -74,6 +74,13 @@
         if (['gate.requested', 'gate.resolved'].includes(event.type) && event.ask) watchAsk(event.ask);
       }
 
+      // Indirect events often carry only a task, agent, request or round ID.
+      const request = world.asks.get(event.ask);
+      const related = event.mission === mission || world.agents.get(event.agent)?.mission === mission ||
+        world.tasks.get(event.task)?.mission === mission || request?.mission === mission ||
+        world.rounds.get(event.round)?.targets.some(target => target.mission === mission) ||
+        (Array.isArray(event.targets) && event.targets.some(target => target?.mission === mission));
+      const priorStatus = request?.status;
       let unknown = null;
       if (event.type === 'agent.assigned' && (affectsSeal || world.tasks.get(event.task)?.mission === mission)) {
         if (!world.agents.has(event.agent)) unknown = 'Assignment unknown. This recording has no agent record for ' + (event.agent || 'this assignment') + '.';
@@ -87,8 +94,27 @@
         const after = field.read();
         if (field.before !== after) changes.push({label: field.label, before: field.before, after});
       }
-      if (changes.length || unknown) entries.push({position: index + 1, time: event.t, type: event.type, changes, unknown});
+      if (!changes.length && !unknown && !(allEvents && related)) continue;
+      const entry = {position: index + 1, time: event.t, type: event.type, changes, unknown};
+      entries.push(entry);
+      if (!allEvents) continue;
+      if (!changes.length) {
+        // Show the recorded payload for events outside the comparison's watched fields.
+        entry.details = Object.entries(event).filter(([key]) => !['t', 'ts', 'time', 'timestamp', 'type', 'mission'].includes(key))
+          .map(([key, value]) => key + ': ' + (typeof value === 'string' ? value : JSON.stringify(value))).join(' · ');
+      }
+      const ask = world.asks.get(event.ask);
+      if (event.type === 'gate.requested' && !priorStatus && ask?.mission === mission) {
+        requests.set(event.ask, entry);
+      } else if (event.type === 'gate.resolved' && priorStatus === 'open' && ask?.status !== 'open') {
+        const opened = requests.get(event.ask);
+        if (opened) {
+          entry.relatedPosition = opened.position;
+          opened.relatedPosition = entry.position;
+        }
+      }
     }
+    for (const [id, opened] of requests) opened.finalStatus = world.asks.get(id).status;
     return entries;
   }
 

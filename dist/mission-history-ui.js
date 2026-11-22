@@ -1,5 +1,5 @@
 // The inspector owns the entry point. Playback remains in charge of map selection and time.
-window.CovenHistoryView = function ({model, current, readSeal, showMoment, restoreInspector}) {
+window.CovenHistoryView = function ({model, current, readSeal, showMoment, restoreInspector, importRecording}) {
   const byId = id => document.getElementById(id);
   const dialog = byId('missionHistory'), back = byId('historyReturn'), list = byId('historyRows');
   const at = pos => state.project.trace[pos - 1];
@@ -35,20 +35,39 @@ window.CovenHistoryView = function ({model, current, readSeal, showMoment, resto
     input.addEventListener('change', () => updateRange(key, input.valueAsNumber));
     byId('history-' + key + '-cursor').onclick = () => {
       refreshEntries();
-      updateRange(key, current().applied);
+      updateRange(key, state.project.applied);
     };
   }
   function show(entry) {
     state.selected = entry.position;
-    dialog.close();
-    const exists = showMoment(state.mission, entry.time);
-    const trace = state.project.trace;
-    const shared = trace[entry.position]?.t === entry.time || trace[entry.position - 2]?.t === entry.time;
-    byId('historyMapNote').textContent = 'Event ' + entry.position + ' · ' + time(entry.time) +
-      (shared ? ' · Map includes all events at this time.' : '') + (exists ? '' : ' · Mission absent at this position.');
+    const wasModal = dialog.open;
+    if (wasModal) dialog.close();
+    // Opening another Project on the map clears its previous inspector. Keep this investigation through that transition.
+    const investigation = state;
+    const exists = showMoment(investigation.project, investigation.mission, entry.time, entry.position);
+    state = investigation;
+    const summary = entry.changes.map(change => change.label + ' · ' + change.after).join('; ');
+    byId('historyMapNote').textContent = 'Event ' + entry.position + ' · ' + entry.type + ' · ' +
+      (summary || entry.details || time(entry.time)) + (exists ? '' : ' · Mission absent at this position.');
+    const index = state.entries.indexOf(entry);
+    const previous = byId('historyBackEvent'), next = byId('historyForwardEvent');
+    previous.disabled = index === 0;
+    next.disabled = index === state.entries.length - 1;
     back.hidden = false;
-    byId('historyResume').focus();
+    if (wasModal || document.activeElement === document.body) byId('historyResume').focus();
   }
+  for (const [id, delta] of [['historyBackEvent', -1], ['historyForwardEvent', 1]]) {
+    byId(id).onclick = () => {
+      const index = state.entries.findIndex(entry => entry.position === state.selected);
+      const next = state.entries[index + delta];
+      if (next) show(next);
+    };
+  }
+  byId('historyFile').onchange = async event => {
+    const file = event.target.files[0];
+    event.target.value = '';
+    if (file) await importRecording(file);
+  };
   function render() {
     for (const key of ['start', 'end']) {
       const input = byId('history-' + key);
@@ -59,8 +78,8 @@ window.CovenHistoryView = function ({model, current, readSeal, showMoment, resto
     const entries = window.CovenMissionHistory.between(state.entries, state.start, state.end);
     const offset = state.page * pageSize;
     byId('historyCount').textContent = state.end < state.start ? 'End must be at or after start.' :
-      entries.length ? (offset + 1) + '–' + Math.min(offset + pageSize, entries.length) + ' of ' + entries.length + ' relevant recorded events' :
-      'No recorded changes to this mission in the interval.';
+      entries.length ? (offset + 1) + '–' + Math.min(offset + pageSize, entries.length) + ' of ' + entries.length + ' mission events' :
+      'No recorded events for this mission in the interval.';
     list.replaceChildren();
     for (const entry of entries.slice(offset, offset + pageSize)) {
       const row = element('li');
@@ -73,18 +92,34 @@ window.CovenHistoryView = function ({model, current, readSeal, showMoment, resto
         change.append(element('strong', label), element('span', before + ' → ' + after));
         row.append(change);
       }
+      if (entry.details) row.append(element('p', entry.details));
+      if (entry.finalStatus === 'open') {
+        const status = state.project.skippedEvents ? 'Open after the last recognized event' :
+          state.project.recorded ? 'Open at end of recording' : 'Open at latest event';
+        row.append(element('strong', status));
+      }
+      if (entry.finalStatus === 'held' && !entry.relatedPosition) row.append(element('p', 'Held when the mission closed'));
       const jump = button('Show on map', () => show(entry));
       jump.dataset.position = entry.position;
       jump.setAttribute('aria-label', 'Show event ' + entry.position + ' on map');
       const actions = element('div', null, 'history-actions');
       actions.append(jump, button('Start here', () => { updateRange('start', entry.position); byId('history-start').focus(); }),
         button('End here', () => { updateRange('end', entry.position); byId('history-end').focus(); }));
+      if (entry.relatedPosition) {
+        const position = entry.relatedPosition;
+        const label = entry.type === 'gate.requested' ? 'Show resolution' : 'Show request';
+        actions.append(button(label + ' · event ' + position, () => show(state.entries.find(item => item.position === position))));
+      }
       const source = element('details', null, 'history-source-event');
       const json = element('pre');
       source.append(element('summary', 'Recorded event'), json);
       source.addEventListener('toggle', () => {
         if (source.open && !json.textContent) json.textContent = JSON.stringify(at(entry.position), null, 2);
       });
+      if (state.origin?.position === entry.position) {
+        json.textContent = JSON.stringify(at(entry.position), null, 2);
+        source.open = true;
+      }
       row.append(source, actions);
       list.append(row);
     }
@@ -95,33 +130,53 @@ window.CovenHistoryView = function ({model, current, readSeal, showMoment, resto
   function refreshEntries() {
     const {project, mission} = state;
     if (state.length === project.trace.length) return;
-    state.entries = window.CovenMissionHistory.collect(model, project.trace, mission, readSeal);
+    state.entries = window.CovenMissionHistory.collect(model, project.trace, mission, readSeal, {allEvents: true});
     state.length = project.trace.length;
   }
-  function open(project, mission, name) {
+  function open(project, mission, name, origin = null) {
     if (!state || state.project !== project || state.mission !== mission) {
       state = {project, mission, start: 0, end: project.trace.length, page: 0, selected: null, length: -1};
     }
+    if (origin && origin !== state.origin) {
+      state.selected = origin.position;
+      state.start = 0; state.end = project.trace.length;
+    }
+    state.origin = origin;
     refreshEntries();
+    if (state.selected != null) {
+      state.start = Math.min(state.start, state.selected - 1);
+      state.end = Math.max(state.end, state.selected);
+      const visible = window.CovenMissionHistory.between(state.entries, state.start, state.end);
+      state.page = Math.max(0, Math.floor(visible.findIndex(entry => entry.position === state.selected) / pageSize));
+    }
     state.name = name;
+    byId('historyClose').textContent = origin ? 'Back to Inbox' : 'Close';
+    dialog.querySelector('.history-import').hidden = !!origin;
+    byId('historyError').hidden = true;
     byId('historyTitle').textContent = name;
-    byId('historySource').textContent = (project.recorded ? 'Imported recording' : 'Local simulation') + ' · ' + project.key + ' · ' + mission +
+    byId('historySource').textContent = (project.recorded ? 'Imported recording' : project.sample ? 'Built-in sample · Local simulation' : 'Local simulation') + ' · ' + project.key + ' · ' + mission +
       (project.skippedEvents ? ' · Incomplete recording (' + project.skippedEvents + ' unrecognized). Changes in skipped records are unknown.' : '');
     back.hidden = true;
     render();
-    dialog.showModal();
-    window.CovenMobileUI?.sync();
     const target = list.querySelector('button[data-position="' + state.selected + '"]') || byId('historyTitle');
+    target.autofocus = true;
+    dialog.showModal();
+    target.autofocus = false;
+    window.CovenMobileUI?.sync();
     target.focus();
   }
   function close() {
     dialog.close();
-    restoreInspector(state.mission);
+    if (state.origin) {
+      const {resume} = state.origin;
+      reset();
+      resume();
+    } else restoreInspector(state.mission);
   }
   byId('historyClose').onclick = close;
   dialog.addEventListener('cancel', ev => { ev.preventDefault(); close(); });
   dialog.addEventListener('keydown', ev => ev.stopPropagation());
-  byId('historyResume').onclick = () => open(state.project, state.mission, state.name);
+  byId('historyResume').onclick = () => open(state.project, state.mission, state.name, state.origin);
   for (const [id, delta] of [['historyPrev', -1], ['historyNext', 1]]) {
     byId(id).onclick = () => { state.page += delta; render(); list.querySelector('button')?.focus(); };
   }
@@ -130,5 +185,11 @@ window.CovenHistoryView = function ({model, current, readSeal, showMoment, resto
     back.hidden = true;
     state = null;
   }
-  return {open, reset};
+  function syncPosition() {
+    if (back.hidden || !state) return;
+    const project = current();
+    if (project !== state.project || project.applied !== state.selected || project.world.t !== at(state.selected).t ||
+        project.sel !== (project.world.missions.has(state.mission) ? state.mission : null)) back.hidden = true;
+  }
+  return {open, reset, syncPosition};
 };

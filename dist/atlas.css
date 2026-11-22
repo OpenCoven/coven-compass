@@ -1063,7 +1063,8 @@ body.atlas-enhanced .plan-head .atlas-actions :is(button,a):is(:hover,[aria-expa
   background: var(--card); border: 1px solid var(--border-strong); border-radius: 8px;
 }
 body.atlas-enhanced[data-atlas-scope="coven"] .plan-head :is(.workspace-tools,.workspace-urgent) { display: none; }
-body.atlas-enhanced #atlasCameraDock[data-locked="true"] :is(#atlasZoomOut,#atlasZoomIn,#atlasFit) { display: none; }
+body.atlas-enhanced #atlasCameraDock[data-locked="true"] :is(#atlasZoomOut,#atlasZoomIn,#atlasFit,#atlasFormation) { display: none; }
+body.atlas-enhanced #atlasCameraDock #atlasFormation[aria-pressed="true"] { background: var(--primary-soft); color: var(--primary-hi); }
 body.atlas-enhanced #atlasCameraDock { align-items: center; gap: 2px; }
 body.atlas-enhanced #atlasCameraDock #atlasLock { gap: 5px; }
 #atlasLock svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.35; stroke-linecap: round; }
@@ -1167,6 +1168,25 @@ body.atlas-enhanced.atlas-adaptive-mobile #atlasCameraDock button {
   body.atlas-enhanced.atlas-adaptive-mobile .atlas-map-footer:has(#atlasCameraDock:not([hidden])) .atlas-familiar-name { display: none; }
 }
 
+/* Keep collection actions next to their results at every sheet size. */
+body.atlas-enhanced .atlas-result-summary { display: flex; flex: none; align-items: center; justify-content: space-between; flex-wrap: wrap; column-gap: 8px; min-height: 32px; }
+body.atlas-enhanced .atlas-result-summary :is(#atlasProjectClear, #atlasMissionReset) { min-height: 32px; padding: 4px 8px; color: var(--primary-hi); border-color: var(--border); background: var(--card); font-size: 11px; }
+body.atlas-enhanced .atlas-result-summary [hidden], body.atlas-enhanced .atlas-pending[hidden] { display: none; }
+body.atlas-enhanced .atlas-empty-result, body.atlas-enhanced #atlasMissionEmpty { margin: 0 3px; padding: 14px; border: 1px dashed var(--border-strong); border-radius: 7px; color: var(--muted-foreground); font-size: 12px; line-height: 1.5; }
+body.atlas-enhanced .atlas-drawer-heading #atlasNewProject { flex: none; width: auto; min-height: 32px; margin: 0 0 0 auto; color: var(--primary-hi); }
+body.atlas-enhanced .atlas-project-copy b { white-space: normal; overflow-wrap: anywhere; text-overflow: clip; font-size: 13px; }
+body.atlas-enhanced .atlas-project-copy > span { color: var(--muted-foreground); font-size: 11px; }
+body.atlas-enhanced .atlas-project-state[data-state="attention"], body.atlas-enhanced .atlas-pending { color: var(--primary-hi); font-size: 11px; font-variant-numeric: tabular-nums; }
+body.atlas-enhanced .atlas-mission-row:is([data-state="broken"], [data-state="stalled"]) .atlas-mission-meta { border-style: dashed; color: var(--foreground); }
+body.atlas-enhanced .atlas-mission-row[data-state="broken"] .atlas-mission-meta { border-color: var(--warn); }
+body.atlas-enhanced .atlas-mission-row[data-state="sealed"] .atlas-mission-meta { border-style: double; border-width: 3px; }
+.brief-card .target-met, .brief-card .limit-state { display: inline-block; margin-inline-start: 5px; font-size: 10px; font-weight: 600; }
+.brief-card .target-met { color: var(--primary-hi); }
+body.atlas-enhanced #mission-section .bfl > b { white-space: normal; text-align: end; overflow-wrap: anywhere; }
+@media (max-width: 1100px), (pointer: coarse) {
+  body.atlas-enhanced .atlas-result-summary :is(#atlasProjectClear, #atlasMissionReset), body.atlas-enhanced .atlas-drawer-heading #atlasNewProject { min-height: 44px; }
+}
+
 #missionHistory {
   width: min(640px, calc(100vw - 24px)); max-height: calc(100dvh - 32px); padding: 0;
   box-sizing: border-box; border: 1px solid var(--border-strong); border-radius: 14px;
@@ -1197,6 +1217,38 @@ body.atlas-adaptive-mobile #historyReturn { bottom: calc(var(--mobile-chrome-hei
   .history-actions button, #historyResume { min-height: 40px; }
 }
 
+.history-import label { cursor: pointer; position: relative; }
+.history-import label:focus-within { outline: 2px solid var(--focus, currentColor); outline-offset: 2px; }
+#historyError { color: var(--attention); }
+#historyMapNote { flex: 1 0 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#historyRows li p { overflow-wrap: anywhere; }
 .history-source-event { margin: 8px 0; color: var(--muted-foreground); }
 .history-source-event summary { cursor: pointer; }
 .history-source-event pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: .85em; }
+body.atlas-enhanced[data-atlas-scope="coven"] .plan-head .workspace-urgent { display: flex; }
+body.atlas-enhanced[data-atlas-scope="coven"] .workspace-urgent .stop-ctl { display: none; }
+#reviewQueue { box-sizing: border-box; width: min(28rem, calc(100vw - 20px)); max-height: calc(100dvh - 24px); margin: auto; padding: 16px; border: 1px solid var(--border-strong); border-radius: 12px; color: var(--foreground); background: var(--card); }
+#reviewQueue[open] { display: flex; flex-direction: column; gap: 10px; }
+#reviewQueue::backdrop { background: rgb(8 8 12 / 72%); }
+#reviewQueue header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+#reviewQueue h2 { font-size: 18px; line-height: 1.3; overflow-wrap: anywhere; margin: 3px 0 0; }
+#reviewQueue small, #queueTools label, #queueStatus, .queue-row span { color: var(--muted-foreground); font-size: 12px; }
+#queueTools label { display: block; margin-bottom: 4px; }
+#queueFilter { width: 100%; padding: 8px; background: var(--well); border: 1px solid var(--border); border-radius: 6px; color: var(--foreground); }
+#queueStatus { margin: 0; overflow-wrap: anywhere; }
+#queueList, #queueDetail { min-height: 0; overflow: auto; overscroll-behavior: contain; }
+#queueList h3 { font-size: 12px; color: var(--primary-hi); margin: 12px 0 4px; }
+.queue-row { display: grid; gap: 2px; text-align: start; width: 100%; min-height: 44px; padding: 8px; border-radius: 4px; overflow-wrap: anywhere; }
+.queue-row b { font-weight: 550; }
+.queue-row:hover, .queue-row:focus-visible { background: var(--card-raised); }
+#queueDetail .cf { position: static; margin-top: 10px; border: 0; background: var(--well); box-shadow: none; }
+#queueDetail .cf-l, #queueDetail .cf-r { padding-inline: 12px; }
+#reviewQueue :focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }
+@media (max-width: 600px) {
+  #queueFilter { min-height: 44px; font-size: 16px; }
+  #reviewQueue .btn { min-height: 44px; }
+  body[data-atlas-scope="coven"] #needTxt .w { display: none; }
+}
+@container left (min-width: 720px) {
+  body[data-atlas-scope="coven"] .need-ctl .attn .w { display: inline; position: static; width: auto; height: auto; opacity: 1; margin-inline-end: 5px; }
+}
