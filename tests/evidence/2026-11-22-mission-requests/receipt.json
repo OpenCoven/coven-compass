@@ -1,0 +1,72 @@
+{
+  "source": "Local browser simulation, using tests/recordings/approval-replay.jsonl",
+  "before": "64ad9db9de920a92820df612b03a4604df24adff",
+  "after": "c82b7aa26b675077ecfc2bd5db053e88837708d2",
+  "playwright": "1.64.1",
+  "browsers": {
+    "chromium": "156.0.8078.4",
+    "webkit": "27.2"
+  },
+  "first_observations": {
+    "desktop": "Review on the Proof review map card opens both Proof and Index requests without an opening-event action.",
+    "phone": "The inspector shows an at-gate count without naming Release proof or Cody.",
+    "history_map": "At event 5 the proofreader had the right accessible name but its map symbol was hidden at portrait fit zoom. The candidate frames the affected agents and waits for visible map rendering."
+  },
+  "image_sha256": {
+    "before-phone.png": "fffc16284cea3525dfe6ede7d8fe79db67a2ca090e61c0b6370bd481199de840",
+    "before-desktop.png": "a251c20fa906c729592fe6dada508af44619d14606eb3258aed2eab347311152",
+    "after-phone.png": "e4da31e1e5a92557538a090d0c34854768609318ebfb95e01948a482e4d0d9bb",
+    "after-desktop.png": "aa4e280458522e2e414ee35bd02d90a01674c8b9618ae25388eb8e8f1d488677"
+  },
+  "journeys": {
+    "before": {
+      "chromium": [
+        "chromium map 1440x900 pointer",
+        "chromium strip 1440x900 pointer",
+        "chromium browser 390x844 pointer",
+        "chromium browser 844x390 pointer"
+      ],
+      "webkit": [
+        "webkit map 1440x900 pointer",
+        "webkit strip 1440x900 pointer",
+        "webkit browser 390x844 pointer",
+        "webkit browser 844x390 pointer"
+      ]
+    },
+    "after": {
+      "chromium": [
+        "chromium map 1440x900 pointer",
+        "chromium map 1440x900 keyboard",
+        "chromium strip 1440x900 pointer",
+        "chromium strip 1440x900 keyboard",
+        "chromium browser 390x844 pointer",
+        "chromium browser 390x844 keyboard",
+        "chromium browser 844x390 pointer",
+        "chromium browser 844x390 keyboard",
+        "chromium multiple pending requests at 1440",
+        "chromium multiple pending requests at 390",
+        "chromium multiple pending requests at 844"
+      ],
+      "webkit": [
+        "webkit map 1440x900 pointer",
+        "webkit map 1440x900 keyboard",
+        "webkit strip 1440x900 pointer",
+        "webkit strip 1440x900 keyboard",
+        "webkit browser 390x844 pointer",
+        "webkit browser 390x844 keyboard",
+        "webkit browser 844x390 pointer",
+        "webkit browser 844x390 keyboard",
+        "webkit multiple pending requests at 1440",
+        "webkit multiple pending requests at 390",
+        "webkit multiple pending requests at 844"
+      ]
+    }
+  },
+  "same_timestamp": {
+    "request": 5,
+    "other_mission": 6,
+    "resolution": 7,
+    "return_to": 5
+  },
+  "reproduction": "Run scripts/mission-request-qa.mjs beside Playwright. Pass the served URL, the approval-replay.jsonl path, chromium or webkit, and a screenshot directory. Append --baseline when serving the before revision."
+}

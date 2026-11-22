@@ -27,3 +27,13 @@ test('empty and unattributed requests follow the replayed worlds', () => {
   p.world = project('Review', 'allowed').world;
   assert.deepEqual(rows({p}, String), []);
 });
+
+test('mission review scopes by Project and opaque mission ID even when display names match', () => {
+  const alpha = project('Proof');
+  alpha.world.missions.set('other', {name: 'Proof'});
+  alpha.world.asks.set('other-ask', {id: 'other-ask', mission: 'other', title: 'Send report', status: 'open'});
+  const projects = {alpha, beta: project('Proof')}, scope = {project: 'alpha', mission: 'm/1'};
+  assert.deepEqual(rows(projects, String, scope).map(r => [r.project, r.id]), [['alpha', 'q/1']]);
+  alpha.world.asks.get('q/1').status = 'held';
+  assert.deepEqual(rows(projects, String, scope), []);
+});

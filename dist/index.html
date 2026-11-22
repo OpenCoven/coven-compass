@@ -1,5 +1,8 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#09090b;color:#edecf2}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
 <title>Coven Compass</title>
+<link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48" href="favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
 <meta name="description" content="Explore a living Coven: connected Projects, persistent familiars, quantitative mission seals, and bounded simulated work.">
 <meta name="theme-color" content="#09090b">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif&display=swap">
@@ -1612,17 +1615,17 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
               <div class="hd"><h2 class="hd-t" id="nmTitle" tabindex="-1">New mission</h2><span class="hd-m" id="emptyName"></span><span class="hd-s off" id="emptyState">Dormant</span><button class="btn x" type="button" id="emptyX" aria-label="Close" hidden>×</button></div>
               <div class="mobile-form-body">
               <div class="nm-sec">
-                <label class="nm-l" for="nmName">What should get done?</label>
-                <div class="field nm-f"><input id="nmName" type="text" maxlength="60" enterkeyhint="go"></div>
+                <label class="nm-l" for="nmName">Mission name</label>
+                <div class="field nm-f"><input id="nmName" type="text" maxlength="60" required placeholder="e.g. Draft the release brief" enterkeyhint="done"></div>
               </div>
               <div class="nm-sec" id="nmLeadSec">
-                <span class="nm-l" id="nmLeadL">Who leads</span>
+                <span class="nm-l" id="nmLeadL">Mission lead</span>
                 <div class="nm-leads" id="nmLeads" role="radiogroup" aria-labelledby="nmLeadL"></div>
-                <ul class="nm-terms" id="nmTerms" aria-live="polite"></ul>
+                <details id="nmPermissions"><summary>Lead permissions</summary><ul class="nm-terms" id="nmTerms"></ul></details>
               </div>
-              <div class="nm-sec"><span class="nm-l">Brief</span><div class="nm-rows" id="nmBrief"></div></div>
+              <div class="nm-sec nm-settings"><div class="nm-section-head"><span class="nm-l">Mission brief</span><button class="btn sm" id="nmCustomize" type="button" aria-controls="nmBrief" aria-expanded="false">Customize</button></div><div id="nmPreview"><b id="nmOutput"></b><span id="nmLimits"></span></div><div class="nm-rows" id="nmBrief" hidden></div></div>
               </div>
-              <div class="em-act"><span class="nm-foot" id="nmFoot"></span><button class="btn pri" id="raise" type="submit">Open mission</button></div>
+              <div class="em-act"><span class="nm-foot" id="nmFoot"></span><button class="btn pri" id="raise" type="submit">Create mission</button></div>
             </form>
             <div class="plates" id="notes"></div>
             <div class="lcard glass" id="lcard" role="group" aria-label="Selection" hidden></div>
@@ -1682,19 +1685,37 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
 </div>
 
 <dialog id="missionHistory" aria-labelledby="historyLabel historyTitle" aria-describedby="historySource">
-  <header><div><span id="historyLabel">Mission history</span><h2 id="historyTitle" tabindex="-1"></h2><p id="historySource"></p></div><button class="btn" type="button" id="historyClose">Close</button></header>
+  <header class="history-heading">
+    <div><span id="historyLabel">Mission history</span><h2 id="historyTitle" tabindex="-1"></h2></div>
+    <button class="btn" type="button" id="historyClose">Close</button>
+  </header>
   <div class="history-content">
-    <div class="history-import"><label class="btn sm" for="historyFile">Load a local recording<input class="sr" type="file" id="historyFile" accept=".jsonl,.ndjson,.json,.txt"></label><p id="historyError" role="alert" hidden></p></div>
-    <p>Compare the changes after the start event through the end event. Event numbers follow recording order, including events at the same time.</p>
-    <div class="history-range">
-      <div><label for="history-start">After event</label><input id="history-start" type="number" min="0" step="1" aria-describedby="history-start-note"><small id="history-start-note"></small><button class="btn sm" id="history-start-cursor" type="button">Start at replay position</button></div>
-      <div><label for="history-end">Through event</label><input id="history-end" type="number" min="0" step="1" aria-describedby="history-end-note"><small id="history-end-note"></small><button class="btn sm" id="history-end-cursor" type="button">End at replay position</button></div>
+    <div class="history-context"><p id="historySource"></p><details class="history-import"><summary>Source</summary><button class="btn" type="button" id="historyLoad">Load recording</button><input hidden type="file" id="historyFile" accept=".jsonl,.ndjson,.json,.txt"></details></div>
+    <p id="historyWarning" hidden></p><p id="historyError" role="alert" hidden></p>
+    <div class="history-toolbar"><p id="historyCount" role="status"></p><button class="btn" id="historyRangeToggle" aria-expanded="false" aria-controls="historyRange">Edit range</button></div>
+    <section id="historyRange" hidden aria-label="Comparison range">
+      <p>Includes events after the start and through the end, in recording order.</p>
+      <div class="history-range">
+        <div><label for="history-start">After event</label><input id="history-start" type="number" min="0" step="1" aria-describedby="history-start-note"><small id="history-start-note"></small><button class="btn sm" id="history-start-cursor" type="button" aria-label="Set start to current replay position">Use current position</button></div>
+        <div><label for="history-end">Through event</label><input id="history-end" type="number" min="0" step="1" aria-describedby="history-end-note"><small id="history-end-note"></small><button class="btn sm" id="history-end-cursor" type="button" aria-label="Set end to current replay position">Use current position</button></div>
+      </div>
+    </section>
+    <div class="history-workspace">
+      <div class="history-feed"><ol id="historyRows" aria-label="Mission events"></ol>
+        <nav id="historyPages" aria-label="History pages" hidden><button class="btn" id="historyPrev" type="button">Previous events</button><button class="btn" id="historyNext" type="button">Next events</button></nav>
+      </div>
+      <section id="historyDetail" aria-labelledby="historyEventTitle" hidden></section>
     </div>
-    <p id="historyCount" role="status"></p><ol id="historyRows"></ol>
-    <nav id="historyPages" aria-label="History pages" hidden><button class="btn" id="historyPrev" type="button">Previous events</button><button class="btn" id="historyNext" type="button">Next events</button></nav>
   </div>
 </dialog>
-<div id="historyReturn" hidden><span id="historyMapNote" role="status"></span><button class="btn sm" type="button" id="historyBackEvent">Previous event</button><button class="btn sm" type="button" id="historyForwardEvent">Next event</button><button class="btn" id="historyResume" type="button">Return to History</button></div>
+<div id="historyReturn" hidden><strong id="historySubject" hidden></strong><span id="historyMapNote" role="status"></span><button class="btn sm" type="button" id="historyBackEvent">Previous event</button><button class="btn sm" type="button" id="historyForwardEvent">Next event</button><button class="btn" id="historyResume" type="button">Return to History</button><button class="btn sm" id="historyBookmark" type="button" hidden>Bookmark moment</button><small id="bookmarkStatus" role="status" hidden></small></div>
+<dialog id="recordingPrompt" aria-labelledby="recordingPromptTitle" aria-describedby="recordingPromptHelp">
+  <span>Local recording</span><h2 id="recordingPromptTitle">Resume review</h2>
+  <p id="recordingPromptHelp">Choose the original recording to return to this event. The file stays on this device.</p>
+  <p id="recordingPromptError" role="alert" hidden></p>
+  <div class="history-actions"><button class="btn" id="leaveRecording" type="button">Cancel</button><button class="btn pri" id="chooseRecording" type="button" autofocus>Choose recording</button></div>
+  <input id="bookmarkFile" type="file" accept=".jsonl,.ndjson,.json,.txt" hidden>
+</dialog>
 <dialog id="reviewQueue" aria-labelledby="queueHeading">
   <header><div><small>Coven Inbox</small><h2 id="queueHeading" tabindex="-1">Needs review</h2></div><button type="button" id="queueClose" class="btn x" aria-label="Close queue">×</button></header>
   <div id="queueTools"><label for="queueFilter">Filter requests</label><input type="search" id="queueFilter" placeholder="Project, mission, familiar or request"></div>
@@ -2102,10 +2123,10 @@ const SAMPLES = {
     [23, {type: 'familiar.report', m: 1, familiar: 'echo', text: 'Changelog drafted. Nothing to send tonight.'}],
   ]},
   'ui': {span: 20, repo: 'https://github.com/OpenCoven/ui', root: '~/code/ui', missions: [
-    {name: 'Specimens', at: .3, brief: BR([['website', ['html', 'zip'], ['TypeScript']]], {tests: 30}, {minutes: 45, tokens: 250000, usd: 3, agents: 14}), prog: {tokens: 120000, tests: 22}, art: {}, council: [{fam: 'cody', at: 1, n: 8, idle: 1, tasks: [['Specimens', 5], ['Registry build', 3]]}, {fam: 'charm', at: 5, n: 4, idle: 1, tasks: [['Visual checks', 4]]}]},
+    {name: 'Rebuild UI specimens', at: .3, brief: BR([['website', ['html', 'zip'], ['TypeScript']]], {tests: 30}, {minutes: 45, tokens: 250000, usd: 3, agents: 14}), prog: {tokens: 120000, tests: 22}, art: {}, council: [{fam: 'cody', at: 1, n: 8, idle: 1, tasks: [['Build examples', 5], ['Build registry', 3]]}, {fam: 'charm', at: 5, n: 4, idle: 1, tasks: [['Run visual checks', 4]]}]},
   ], script: [
     [.4, {type: 'you.said', text: 'Rebuild the component specimens and run visual checks.'}],
-    [.6, {type: 'psyche.said', text: 'One mission, Specimens. Cody builds, Charm captures the checks.'}],
+    [.6, {type: 'psyche.said', text: 'Cody is rebuilding the UI specimens. Charm will run the visual checks.'}],
     [15, {type: 'familiar.report', m: 0, familiar: 'cody', text: 'Component specimens rebuilt. Visual checks are running.'}],
   ]},
   'brand': {span: 20, repo: 'https://github.com/OpenCoven/brand', root: '~/code/brand', missions: [], script: []},
@@ -2298,6 +2319,7 @@ function atlasViewportFrame(selection) {
     reserve($('atlasSidebar'), 'side');
   }
   if (selection) {
+    reserve($('historyReturn'), 'bottom');
     const manifest = document.querySelector('#notes .manifest'), hud = document.querySelector(mobile ? '#notes .hud' : '#notes > .hud');
     reserve(manifest, 'side'); reserve(hud, mobile ? 'bottom' : 'top');
     const inspect = $('inspect');
@@ -2541,9 +2563,10 @@ function syncTaskTray(s, mission, tasks) {
   }
   s.taskCount = tasks.length;
   const visible = tasks.slice(0, 3);
-  const description = plural(tasks.length, 'task') + ' on ' + mission.name + ': ' + visible.map(t => t.name).join(', ') +
+  const preview = visible.map(task => [task.name, task.leads.map(key => fam(key).name).join(' and ')].filter(Boolean).join(' · '));
+  const description = plural(tasks.length, 'task') + ' on ' + mission.name + ': ' + preview.join(', ') +
     (tasks.length > visible.length ? ', and ' + (tasks.length - visible.length) + ' more' : '');
-  const signature = JSON.stringify([description, visible.map(t => [t.id, t.fam])]);
+  const signature = description;
   if (s.tray && s.taskSignature === signature) return;
   s.taskSignature = signature;
   s.taskSummary = visible.map(task => task.name).join(' · ') + (tasks.length > visible.length ? ' · +' + (tasks.length - visible.length) : '');
@@ -2556,21 +2579,14 @@ function syncTaskTray(s, mission, tasks) {
   s.tray.textContent = '';
   s.tray.setAttribute('aria-label', description + '. Open task list');
   svgEl('title', {}, s.tray).textContent = description;
-  const extra = tasks.length - visible.length, suffix = extra ? '+' + extra : '';
-  const caption = plural(tasks.length, 'task');
-  const captionWidth = caption.length * 5.5 + 4;
-  const width = captionWidth + visible.length * 13 + 10 + suffix.length * 6;
+  const caption = plural(tasks.length, 'task'), width = 32 + caption.length * 5.7;
   s.trayWidth = width; s.compactWidth = 23 + String(tasks.length).length * 7; s.compactTray = null;
   s.trayHit = svgEl('rect', {class: 'task-tray-hit', x: -width / 2 - 2, y: -13, width: width + 4, height: 26, rx: 8}, s.tray);
-  s.trayBg = svgEl('rect', {class: 'task-tray-bg', x: -width / 2, y: -8, width, height: 16, rx: 5}, s.tray);
+  s.trayBg = svgEl('rect', {class: 'task-tray-bg', x: -width / 2, y: -9, width, height: 18, rx: 7}, s.tray);
   const contents = svgEl('g', {}, s.tray); s.trayContents = contents;
-  svgEl('rect', {class: 'task-tray-well', x: captionWidth + 4 - width / 2, y: -6, width: width - captionWidth - 6, height: 12, rx: 3.5, 'pointer-events': 'none'}, contents);
-  svgEl('text', {class: 'task-caption', x: 6 - width / 2, y: 3}, contents).textContent = caption;
-  visible.forEach((task, index) => {
-    const glyph = svgEl('path', {class: 'task-cog', d: taskCogPath, 'fill-rule': 'evenodd', transform: 'translate(' + (captionWidth + 11 + index * 13 - width / 2) + ' 0)'}, contents);
-    glyph.style.setProperty('--hue', fam(task.fam).hue);
-  });
-  if (extra) svgEl('text', {class: 'task-overflow', x: width / 2 - 5, y: 3}, contents).textContent = suffix;
+  svgEl('path', {class: 'task-cog', d: taskCogPath, 'fill-rule': 'evenodd', transform: 'translate(' + (9 - width / 2) + ' 0)'}, contents);
+  svgEl('text', {class: 'task-caption', x: 17 - width / 2, y: 3.4}, contents).textContent = caption;
+  svgEl('path', {class: 'task-disclosure', d: 'M-2 -3 L1 0 L-2 3', transform: 'translate(' + (width / 2 - 7) + ' 0)'}, contents);
   s.traySummary = svgEl('g', {class: 'task-tray-summary', 'aria-hidden': 'true'}, s.tray);
   svgEl('path', {d: taskCogPath, 'fill-rule': 'evenodd', transform: 'translate(' + (9 - s.compactWidth / 2) + ' 0)'}, s.traySummary);
   svgEl('text', {class: 'task-caption', x: 18 - s.compactWidth / 2, y: 3}, s.traySummary).textContent = tasks.length;
@@ -2667,7 +2683,7 @@ function sync() {
     const stateName = SEAL_STATE[d.state][0];
     ms.ln.classList.toggle('working', d.wedges.some(wedge => wedge.live));
     const resource = d.warn && d.tight ? d.tight.label + ' ' + Math.round(d.tight.frac * 100) + '%' : d.warn ? 'Limit reached' : '';
-    ms.stateText.textContent = stateName;
+    ms.stateText.textContent = d.state === 'active' ? 'In progress' : stateName;
     ms.resourceText.textContent = resource ? ' · ' + resource : '';
     ms.title.textContent = M2.name + ', ' + stateName;
     ms.node.setAttribute('aria-label', M2.name + ', ' + stateName + (resource ? ', ' + resource : '') + '. Show its agents and tasks');
@@ -2783,6 +2799,7 @@ function covHl(k) { sc.hl = k; if (cur().fam) select(cur().sel, null, cur().deta
 function applySel() {
   const c = cur(), w = c.world;
   plan.classList.toggle('atlas-selected', !!c.sel);
+  plan.classList.toggle('atlas-group-selected', !!c.focusGroup);
   plan.querySelectorAll('[data-m]').forEach(e => {
     const m = e.getAttribute('data-m'), k = e.getAttribute('data-fam');
     const identity = sc.hl || c.fam, lit = (!c.sel || m === c.sel) && (!identity || (k ? k === identity : (w.missions.get(m) || {seats: []}).seats.includes(identity)));
@@ -3037,10 +3054,10 @@ function project() {
     g.count.style.fontSize = f(badgeSize * .54) + 'px';
   });
 
-  const showAgents = detailVisible(sc.agentDetail, 11.78 * screenScale, 11, 9);
+  const showAgents = !!cur().focusGroup || detailVisible(sc.agentDetail, 11.78 * screenScale, 11, 9);
   if (showAgents !== sc.agentDetail) {
     sc.agentDetail = showAgents;
-    const focusedAgent = document.activeElement?.closest?.('#plan .agent, #plan .squad-plane');
+    const focusedAgent = document.activeElement?.closest?.('#plan .agent');
     plan.classList.toggle('atlas-agent-detail', showAgents);
     if (!showAgents && focusedAgent) sc.missions.get(cur().sel)?.node.focus({preventScroll: true});
   }
@@ -3085,13 +3102,12 @@ function project() {
       }
     }
     const nameDepth = (s.labelDepth || 0) * captionScale;
-    const size = clamp(1 / screenScale, .75, 1.9);
+    const size = selected ? Math.max(.75, 1 / screenScale) : clamp(1 / screenScale, .75, 1.9);
     // On a shallow map, keep the central lane free for Psyche and the gate controls.
     const compactTray = screenScale < .85;
     const trayWidth = s.tray ? (compactTray ? s.compactWidth : s.trayWidth) : 0;
     if (s.tray && s.compactTray !== compactTray) {
       s.compactTray = compactTray;
-      s.trayHit.setAttribute('x', -trayWidth / 2 - 2); s.trayHit.setAttribute('width', trayWidth + 4);
       s.trayBg.setAttribute('x', -trayWidth / 2); s.trayBg.setAttribute('width', trayWidth);
       s.trayContents.style.display = compactTray ? 'none' : '';
       s.traySummary.style.display = compactTray ? '' : 'none';
@@ -3100,6 +3116,10 @@ function project() {
     s.name.setAttribute('transform', `translate(${f(column / captionScale)} 0)`);
     s.stateLabel.removeAttribute('transform');
     if (s.tray) {
+      const touchMin = narrow.matches ? 44 / (size * screenScale) : 0;
+      const hitWidth = Math.max(trayWidth + 4, touchMin), hitHeight = Math.max(26, touchMin);
+      s.trayHit.setAttribute('x', -hitWidth / 2); s.trayHit.setAttribute('width', hitWidth);
+      s.trayHit.setAttribute('y', -hitHeight / 2); s.trayHit.setAttribute('height', hitHeight);
       const stateGap = selected && side > 0 && !compactTray ? 19 * U : 0;
       let y = lateral ? q[1] + nameDepth / 2 + 13 * size + stateGap : q[1] + side * (radius * captionScale + nameDepth + 13 * size + stateGap);
       let x = q[0] + column;
@@ -3124,7 +3144,7 @@ function project() {
     const statusOffset = lateral ? nameDepth / 2 : radius * captionScale + (side > 0 ? nameDepth : 0);
     s.stateLabel.setAttribute('y', f(q[1] + statusOffset + 13 * U));
     s.g.classList.toggle('atlas-mission-current', selected);
-    s.stateLabel.style.visibility = compactTray ? 'hidden' : '';
+    s.stateLabel.style.visibility = compactTray && !selected ? 'hidden' : '';
     const a = pc, b = q, [nx, ny] = unit(-(b[1] - a[1]), b[0] - a[0]);
     seg(s.thread, a, b); seg(s.out, a, b); seg(s.inn, a, b, -nx * 2.2, -ny * 2.2);   // instructions go out on one lane, reports come back on the other
     s.sx = q[0]; s.sy = q[1];
@@ -3143,11 +3163,11 @@ function project() {
     s.label.style.visibility = '';
     s.disc.setAttribute('r', f(badgeRadius));
     s.rings.g.setAttribute('transform', 'scale(' + (badgeRadius / 20) + ')');
-    s.glyph.setAttribute('transform', 'scale(' + f(badgeRadius / 15) + ')');
+    s.glyph.setAttribute('transform', 'scale(' + f(badgeRadius / 12.5) + ')');
     s.hit.setAttribute('r', f(clamp(minHit / 2, badgeRadius + 2, 34)));
     s.badge.setAttribute('transform', `translate(${f(badge[0])} ${f(badge[1])})`);
     s.bsx = badge[0]; s.bsy = badge[1]; s.cx = s.x; s.cy = s.y; s.ry = s.R;
-    if (showAgents && cc.sel === s.m && s.captionScale !== screenScale) {
+    if (cc.sel === s.m && s.captionScale !== screenScale) {
       s.captionScale = screenScale;
       for (const caption of s.captions) {
         // Cache both shaped runs at the same font size; zoom only changes which one fits.
@@ -3200,6 +3220,22 @@ function positionPackets(P, f) {
     return true;
   });
 }
+// Keep a routine mission's name and metadata together when the map has space for one caption.
+function placePairedCaption(rows, center, radius, frame, occupied) {
+  const [title, state, tasks] = rows, gap = 6;
+  const metaWidth = state.width + gap + tasks.width, metaHeight = Math.max(state.height, tasks.height);
+  const width = Math.max(title.width, metaWidth), height = title.height + 2 + metaHeight;
+  const below = title.y + title.height / 2 >= center.y;
+  const block = {x: center.x - width / 2, y: below ? center.y + radius + 6 : center.y - radius - 6 - height, width, height};
+  const fit = placeMissionCaption([block], center, radius, frame, occupied);
+  if (!fit) return null;
+  const middle = fit[0].x + width / 2, metaX = middle - metaWidth / 2, metaY = fit[0].y + title.height + 2;
+  return [
+    {...title, x: middle - title.width / 2, y: fit[0].y},
+    {...state, x: metaX, y: metaY + (metaHeight - state.height) / 2},
+    {...tasks, x: metaX + state.width + gap, y: metaY + (metaHeight - tasks.height) / 2},
+  ];
+}
 function layoutMapLabels(captions) {
   const matrix = plan.getScreenCTM();
   if (!matrix || !(matrix.a > 0)) { showMissionCaptions(captions); return; }
@@ -3217,7 +3253,7 @@ function layoutMapLabels(captions) {
   sc.gateL.forEach(g => { if (g.mark.style.display !== 'none') occupied.push({...screenBox(g.box, 2), gate: g}); });
   sc.seats.forEach(s => {
     occupied.push(screenBox(s.disc, 2));
-    if (sc.agentDetail && s.slots && c.sel === s.m) occupied.push(screenBox(s.floor, 2));
+    if (s.slots && c.sel === s.m) occupied.push(screenBox(s.floor, 2));
   });
   sc.missions.forEach(s => {
     const diameter = Math.max(s.diameter, s.id === c.sel && !s.readable ? 68 : 0);
@@ -3250,7 +3286,9 @@ function layoutMapLabels(captions) {
       occupied.push(...rows);
       continue;
     }
-    const placed = placeMissionCaption(rows, {x, y}, s.diameter / 2, captionFrame, occupied);
+    const paired = nodes.length === 3 && !s.resourceText.textContent &&
+      placePairedCaption(rows, {x, y}, s.diameter / 2, captionFrame, occupied);
+    const placed = paired || placeMissionCaption(rows, {x, y}, s.diameter / 2, captionFrame, occupied);
     if (placed) {
       for (const [i, box] of placed.entries()) {
         const dx = box.x - rows[i].x, dy = box.y - rows[i].y;
@@ -3676,8 +3714,11 @@ function syncLeads() {
       b.type = 'button'; b.dataset.mission = M.id;
       top.append(html('span', 'lc-seal'), html('span', 'who', M.name), html('span', 'n'));
       M.seats.forEach(k => { council.insertAdjacentHTML('beforeend', avatar(k)); const sg = html('b'); sg.style.setProperty('--hue', fam(k).hue); sg.dataset.seat = seatId(M.id, k); bar.appendChild(sg); });
-      council.appendChild(html('span', 'lc-task-names'));
-      b.append(top, council, bar);
+      const footer = html('span', 'lc-footer');
+      bar.title = 'Share of assigned agents by familiar';
+      council.appendChild(bar);
+      footer.append(html('span', 'lc-state'), council);
+      b.append(top, html('span', 'lc-task-names'), footer);
       b.addEventListener('click', () => select(M.id));
       box.appendChild(b);
     });
@@ -3687,12 +3728,25 @@ function syncLeads() {
     const preview = b.querySelector('.lc-task-names'), names = sc.missions.get(id)?.taskSummary || '';
     if (preview.textContent !== names) { preview.textContent = names; preview.title = names; }
     setMissionName(b.querySelector('.who'), M.name);
-    { const sl = b.querySelector('.lc-seal'), d = sealOf(w, M); if (sl && sl.dataset.sig !== d.sig) { sl.dataset.sig = d.sig; sl.innerHTML = sealSvg(d, 22); sl.title = sealLabel(d); } }
+    const d = sealOf(w, M), sl = b.querySelector('.lc-seal');
+    if (sl.dataset.sig !== d.sig) {
+      sl.dataset.sig = d.sig;
+      sl.innerHTML = sealSvg(d, 22);
+      sl.title = sealLabel(d);
+    }
+    b.dataset.state = d.state;
+    const stateName = SEAL_STATE[d.state][0], state = b.querySelector('.lc-state');
+    if (state.textContent !== stateName) state.textContent = stateName;
     const tot = countOf(w, a => a.mission === id), wk = countOf(w, a => a.mission === id && a.state === 'work'), g = countOf(w, a => a.mission === id && a.state === 'gate');
     b.setAttribute('aria-pressed', String(c.sel === id));
-    b.setAttribute('aria-label', `${M.name}. Council: ${M.seats.map(k => fam(k).name).join(', ')}. ${plural(tot, 'agent')}, ${wk} working` + (g ? `, ${g} at gate` : ''));
-    const n = b.querySelector('.n'); n.textContent = ''; if (g) n.appendChild(html('i')); n.append(String(tot));
-    b.querySelectorAll('.bar b').forEach(sg => sg.style.flexGrow = countOf(w, a => a.seat === sg.dataset.seat) || .001);
+    b.setAttribute('aria-label', `${M.name}. ${stateName}. Council: ${M.seats.map(k => fam(k).name).join(', ')}. ${plural(tot, 'agent')}, ${wk} working` + (g ? `, ${g} at gate` : ''));
+    const n = b.querySelector('.n'), totalLabel = plural(tot, 'agent');
+    if (n.textContent !== totalLabel) n.textContent = totalLabel;
+    b.querySelectorAll('.bar b').forEach(sg => {
+      const assigned = countOf(w, a => a.seat === sg.dataset.seat);
+      sg.hidden = assigned === 0;
+      sg.style.flexGrow = assigned;
+    });
   });
 }
 // selecting a mission (or one familiar's seat on it) opens a card above it; the card can expand into the side panel
@@ -3731,6 +3785,21 @@ function fitTarget(c) {
     x0 = Math.min(x0, x - r); x1 = Math.max(x1, x + r);
     y0 = Math.min(y0, y - r); y1 = Math.max(y1, y + r);
   };
+  // During gate replay frame the affected agents, including the slots they return to after resolution.
+  if ($('historyReturn')?.hidden === false) {
+    const event = c.trace[c.applied - 1];
+    const request = event?.ask && c.world.asks.get(event.ask);
+    if (request && request.mission === M.id) {
+      for (const id of request.agents) {
+        const agent = sc.agents.get(id);
+        if (agent && c.world.agents.get(id)?.mission === M.id) add(agent.q[0], agent.q[1], 24);
+      }
+      if (Number.isFinite(x0)) {
+        const target = window.CovenAtlasViewport.fit({x0, x1, y0, y1}, {width: stage.clientWidth, height: stage.clientHeight, frame: atlasViewportFrame(true), fill: .88, minZoom: ZMIN, maxZoom: 3});
+        return {zoom: target.zoom, px: target.px, py: target.py};
+      }
+    }
+  }
   add(ms.x, ms.y, 43);
   const focusedSeat = c.fam && sc.seats.get(seatId(M.id, c.fam));
   if (focusedSeat && c.focusGroup === focusedSeat.id && focusedSeat.slots) {
@@ -3748,9 +3817,15 @@ function fitTarget(c) {
     const agent = sc.agents.get(a.id); if (agent) add(agent.q[0], agent.q[1], 14);
   });
   const x = focusedSeat ? focusedSeat.bx : ms.x, y = focusedSeat ? focusedSeat.by : ms.y;
-  const halfWidth = Math.max(x - x0, x1 - x) + 16, halfHeight = Math.max(y - y0, y1 - y) + 28;
-  const target = window.CovenAtlasViewport.fit({x0: x - halfWidth, y0: y - halfHeight, x1: x + halfWidth, y1: y + halfHeight}, {width: stage.clientWidth, height: stage.clientHeight, frame: atlasViewportFrame(true), fill: .88, minZoom: ZMIN, maxZoom: 2.3});
-  return {zoom: target.zoom, px: clamp(target.px, -PAN, PAN), py: clamp(target.py, -PAN, PAN)};
+  const frame = atlasViewportFrame(true);
+  const bounds = {x0: x0 - 16, x1: x1 + 16, y0: y0 - 28, y1: y1 + 28};
+  const target = window.CovenAtlasViewport.fit(bounds, {width: stage.clientWidth, height: stage.clientHeight, frame, fill: .92, minZoom: ZMIN, maxZoom: 2.3});
+  // Use spare room to center the selection, stopping where a task plane would leave the frame.
+  const slackX = Math.max(0, (frame.width / target.scale - (bounds.x1 - bounds.x0)) / 2);
+  const slackY = Math.max(0, (frame.height / target.scale - (bounds.y1 - bounds.y0)) / 2);
+  const offsetX = clamp(x - (x0 + x1) / 2, -slackX, slackX);
+  const offsetY = clamp(y - (y0 + y1) / 2, -slackY, slackY);
+  return {zoom: target.zoom, px: clamp(target.px + offsetX, -PAN, PAN), py: clamp(target.py + offsetY, -PAN, PAN)};
 }
 // A selected mission is written into the space it occupies: a title plate for the mission, a plate beside each council
 // seat listing that familiar's tasks, and a tag on anything of its waiting at a gate.
@@ -3778,12 +3853,57 @@ function fillHudBrief() {
   if (st.measures.length) row('gauge', 'Measured', st.measures[0].value + (st.measures.length > 1 ? ` · +${st.measures.length - 1}` : ''), '');
 }
 const hotTask = (id, on) => cur().world.agents.forEach(a => { if (a.task === id) { const s = sc.agents.get(a.id); if (s) s.el.classList.toggle('is-hot', on); } });
+// Snapshot the reviewer's event boundary and UI origin before previewing an earlier event.
+function openMissionReview(c, mission) {
+  const origin = {time: cursor, position: c.applied, live, playing, detail: c.detail, fam: c.fam,
+    review: c.missionBrowserOrigin, selection: c.selectionOrigin, group: c.focusGroup,
+    inspectorScroll: $('inspect').scrollTop, stripScroll: $('leads').scrollLeft,
+    cardScroll: $('notes').querySelector('.manifest')?.scrollTop || 0};
+  playing = false; live = false;
+  const restore = () => {
+    cursor = origin.time;
+    seekTimeline(cursor, false, origin.position);
+    select(mission.id, origin.fam, origin.detail, {history: false, focus: false, review: origin.review, group: !!origin.group});
+    c.selectionOrigin = origin.selection;
+    atlasWriteRoute(true);
+    refresh();
+  };
+  reviewQueue.open({project: c.key, mission: mission.id, name: mission.name,
+    source: c.recorded ? 'Imported recording' : 'Local simulation', restore,
+    close() {
+      live = origin.live; playing = origin.playing;
+      refresh();
+      const panel = origin.detail === 'side' ? $('inspect') : $('notes');
+      panel.querySelector('[data-focus="review-request"]')?.focus({preventScroll: true});
+      $('inspect').scrollTop = origin.inspectorScroll;
+      $('leads').scrollLeft = origin.stripScroll;
+      const card = $('notes').querySelector('.manifest');
+      if (card) card.scrollTop = origin.cardScroll;
+      kick();
+    }});
+}
+function missionRequestButton(c, mission, request, count, onMap) {
+  const member = request.fam && fam(request.fam);
+  const button = html('button', onMap ? 'plate ask-note' : 'mission-review');
+  button.type = 'button'; button.dataset.focus = 'review-request';
+  button.style.setProperty('--hue', member?.hue || 'var(--primary)');
+  const icon = html('span', 'an-i'); icon.innerHTML = ICON[kindOf(request.title)];
+  const text = html('span', 'an-t'), by = html('span');
+  by.append(html('i', null, member?.name || 'Requester not recorded'));
+  if (count > 1) by.append(' · ' + plural(count, 'pending request'));
+  text.append(html('b', null, request.title), by);
+  const label = count > 1 ? 'Review requests' : 'Review request';
+  button.append(icon, text, html('span', 'an-go', label));
+  button.setAttribute('aria-label', label + ': ' + request.title + '. ' + by.textContent);
+  button.addEventListener('click', () => openMissionReview(c, mission));
+  return button;
+}
 function drawLeadCard(force) {
   const c = cur(), w = c.world, layer = $('notes'), M = c.sel ? w.missions.get(c.sel) : null;
   if (!M) { if (lcSig) { layer.textContent = ''; notes = []; hud = null; lcSig = ''; } return; }
   const asks = openAsks(w).filter(q => q.mission === M.id), tasks = [...w.tasks.values()].filter(t => t.mission === M.id), side = c.detail === 'side', wide = stage.clientWidth >= 700 && !side;
   const next = primaryRequest(asks, c.noteTop);
-  const sig = [active, M.id, c.fam || '', side, wide, M.seats.join('+'), next?.id, asks.length, tasks.map(t => t.id).join(',')].join('|');
+  const sig = [active, M.id, c.fam || '', side, wide, c.focusGroup, M.seats.join('+'), next?.id, asks.length, tasks.map(t => t.id).join(',')].join('|');
   if (force || sig !== lcSig) {
     lcSig = sig; layer.textContent = ''; notes = []; hud = null;
     const col = wide ? html('div', 'manifest') : layer, leaders = wide ? svgEl('svg', {class: 'leaders', 'aria-hidden': 'true'}) : null;
@@ -3799,7 +3919,9 @@ function drawLeadCard(force) {
       ask.addEventListener('click', () => { openPsyche(); $('say').focus(); });
       const bf = html('button', 'hud-brief'); bf.type = 'button'; bf.setAttribute('aria-label', 'Open the brief');
       bf.addEventListener('click', () => { panelView = 'brief'; store.set('coven-compass-panel', panelView); select(c.sel, c.fam, 'side'); });
-      act.append(more, ask); h.append(top, stats, bar, bf, act); col.appendChild(h); hud = {nums, bar, bf, m: M.id, bsig: null};
+      const groupSummary = html('span', 'hud-group-summary');
+      if (c.focusGroup) ttl.appendChild(groupSummary);
+      act.append(more, ask); h.append(top, stats, bar, bf, act); col.appendChild(h); hud = {nums, bar, bf, groupSummary, m: M.id, bsig: null};
       const cyOf = k => { const q = sc.seats.get(seatId(M.id, k)); return q && q.cy != null ? q.cy : 0; };
       M.seats.slice().sort((x, y) => cyOf(x) - cyOf(y)).forEach(k => {
         const id = seatId(M.id, k), f = fam(k), el = html('div', 'plate seat' + (c.fam === k ? ' on' : '')), head = html('button', 'plate-h'), ct = html('span', 'ct'), list = html('div', 'plate-tasks'), rec = {kind: 'seat', id, el, ct, tasks: []};
@@ -3830,17 +3952,8 @@ function drawLeadCard(force) {
         col.addEventListener('scroll', kick, {passive: true});
       }
     }
-    if (next) {
-      const q = next;
-      // The gate keeps every count. The selected mission gets one review preview.
-      const f = fam(q.fam), st = q.limit && M.brief ? briefState(w, M) : null, x = st ? st.caps.find(y => y.k === q.limit) : null;
-      const el = html('button', 'plate ask-note'), ic = html('span', 'an-i'), tx = html('span', 'an-t'), go = html('span', 'an-go', 'Review'), sub = html('span');
-      el.type = 'button'; el.style.setProperty('--hue', f.hue); ic.innerHTML = ICON[kindOf(q.title)]; go.insertAdjacentHTML('beforeend', CHEV);
-      sub.append(html('i', null, f.name), ` · ${cap(GATE_NAME[q.gate])} gate`);
-      if (asks.length > 1) sub.append(` · ${asks.length} pending`);
-      tx.append(html('b', null, x ? `Go past ${capText(x.k, x.max)}` : q.title), sub);
-      el.setAttribute('aria-label', `Review in the Inbox: ${q.title}, from ${f.name} at the ${GATE_NAME[q.gate]} gate`);
-      el.addEventListener('click', () => flashAsk(q.id)); el.append(ic, tx, go);
+    if (next && !side) {
+      const q = next, el = missionRequestButton(c, M, q, asks.length, true);
       const connector = svgEl('svg', {class: 'leaders atlas-request-leader', 'aria-hidden': 'true'});
       const line = svgEl('line', {}, connector);
       layer.append(connector, el);
@@ -3849,6 +3962,10 @@ function drawLeadCard(force) {
   }
   const mine = [...w.agents.values()].filter(a => a.mission === M.id);
   if (hud) {
+    if (c.focusGroup) {
+      const summary = fam(c.fam).name + ' · ' + plural(tasks.filter(t => t.leads.includes(c.fam)).length, 'task') + ' · ' + plural(mine.filter(a => a.seat === c.focusGroup).length, 'agent');
+      if (hud.groupSummary.textContent !== summary) hud.groupSummary.textContent = summary;
+    }
     ['work', 'idle', 'gate'].forEach(st => hud.nums[st].textContent = mine.filter(a => a.state === st).length); fillHudBrief();
     hud.bar.querySelectorAll('b').forEach(sg => sg.style.flexGrow = mine.filter(a => a.seat === sg.dataset.seat).length || .001);
   }
@@ -3948,7 +4065,14 @@ function placeCard() {
 // A mission lists its council, one row per familiar. A familiar lists every council it sits on, one row per mission.
 const insp = {sig: '', nums: null, dots: new Map(), taskSummaries: [], slot: null};
 const missionHistory = window.CovenHistoryView({
-  model: SimModel, current: cur, readSeal: (w, m) => SEAL_STATE[sealOf(w, m).state][0],
+  model: SimModel, current: cur, familiar: fam,
+  eventIcon(group, familiar) {
+    if ((group === 'council' || group === 'familiar') && familiar) return avatar(familiar);
+    if (group === 'task') return '<svg viewBox="-6 -6 12 12" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="' + taskCogPath + '"/></svg>';
+    if (group === 'mission') return '<svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor"/><path d="M10 4a6 6 0 1 1-5.2 9L10 10Z" fill="currentColor"/></svg>';
+    return ({gate: ICON.ward, project: ICON.folder, agent: ICON.gate, artifact: ICON.file, psyche: ICON.speak, you: ICON.speak})[group] || ICON.pulse;
+  },
+  readSeal: (w, m) => SEAL_STATE[sealOf(w, m).state][0],
   async importRecording(file) {
     if (await loadTrace(file, $('historyError'))) window.CovenAtlas.openMissionsForProject(active);
   },
@@ -3956,8 +4080,19 @@ const missionHistory = window.CovenHistoryView({
     if (cur() !== project || atlasScope === 'coven') atlasOpenProject(project.key);
     jumpTo(t, position);
     const exists = cur().world.missions.has(mission);
-    if (exists) select(mission, null, 'card', {focus: false});
+    if (exists) {
+      const event = project.trace[position - 1];
+      const request = project.world.asks.get(event?.ask);
+      const focusGroup = window.matchMedia('(max-width: 500px)').matches && request?.agents.length && request.fam;
+      select(mission, focusGroup || null, 'card', {focus: false, group: !!focusGroup});
+    }
     return exists;
+  },
+  bookmark(route) {
+    const hash = window.CovenMissionNavigation.format(route);
+    if (location.hash !== hash) history.pushState({covenNavigation: true}, '', hash);
+    atlasLastRoute = hash;
+    return location.href;
   },
   restoreInspector(mission) {
     if (!cur().world.missions.has(mission)) return $('stage').focus();
@@ -3981,8 +4116,9 @@ function syncInspect(force) {
   const all = [...w.agents.values()].filter(a => order.has(a.seat) || (a.task && taskIds.has(a.task))).sort((a, b) => rank(a.seat) - rank(b.seat) || slotOf(a) - slotOf(b));
   const review = c.missionBrowserOrigin;
   const missionOrder = review ? review.order : [...w.missions.values()];
+  const pending = openAsks(w).filter(q => q.mission === M.id), request = primaryRequest(pending, c.noteTop);
   const editable = canAct();
-  const sig = editable + '|' + JSON.stringify(missionOrder.map(m => [m.project, m.id, m.name])) + '|' + (panelView === 'brief' ? briefSig(briefState(w, M), M) + Math.floor((w.t - M.t0) / 60000) : '') + active + M.id + '/' + (c.fam || '') + '|' + panelView + '|' + seatIds.join(',') + '|' + tasks.map(t => t.id).join(',') + '|' + all.map(a => a.id + ':' + (a.task || '')).join(',');
+  const sig = JSON.stringify([request?.id, request?.title, request?.fam, pending.length]) + editable + '|' + JSON.stringify(missionOrder.map(m => [m.project, m.id, m.name])) + '|' + (panelView === 'brief' ? briefSig(briefState(w, M), M) + Math.floor((w.t - M.t0) / 60000) : '') + active + M.id + '/' + (c.fam || '') + '|' + panelView + '|' + seatIds.join(',') + '|' + tasks.map(t => t.id).join(',') + '|' + all.map(a => a.id + ':' + (a.task || '')).join(',');
   if (force || sig !== insp.sig) {
     const identity = [active, M.id, c.fam, panelView].join('|'), sameView = box.dataset.selection === identity;
     const previousScroll = sameView ? box.scrollTop : 0;
@@ -4066,9 +4202,11 @@ function syncInspect(force) {
     });
     insp.slot = html('div', 'i-agent'); insp.slot.hidden = true;
     const activity = html('div', 'mission-activity');
-    activity.append(counts, stepper);
+    activity.appendChild(counts);
+    if (missionOrder.length > 1) activity.appendChild(stepper);
     header.append(head, activity, seg);
     box.appendChild(header);
+    if (request) box.appendChild(missionRequestButton(c, M, request, pending.length, false));
     const sec = html('section'); sec.id = 'mission-section'; sec.setAttribute('role', 'tabpanel'); sec.setAttribute('aria-labelledby', 'mission-tab-' + panelView); sec.tabIndex = 0; sec.dataset.focus = 'mission-section';
     const dotBtn = a => { const b = html('button', 'dot'), co = coLead(w, a); b.type = 'button'; b.dataset.focus = 'agent-' + a.id; b.setAttribute('aria-pressed', 'false'); b.appendChild(html('i')); if (co) b.style.setProperty('--hue2', fam(co).hue); b.addEventListener('click', () => pick(a.id, 'panel')); insp.dots.set(a.id, {dot: b, btn: b, co: !!co}); return b; };
     const group = (hue, title, list, owners = []) => {
@@ -4102,7 +4240,8 @@ function syncInspect(force) {
       button.type = 'button'; button.dataset.focus = id;
       button.innerHTML = icon;
       button.appendChild(html('span', '', label));
-      const hint = html('span', 'inspect-action-hint', description);
+      const hint = html('span', 'sr-only', description);
+      button.title = description;
       hint.id = id + '-hint'; button.setAttribute('aria-describedby', hint.id);
       button.addEventListener('click', run);
       item.append(button, hint); actions.appendChild(item);
@@ -4156,8 +4295,14 @@ function syncInspect(force) {
         st.floors.forEach(x => line(g, x.label, fmtN(x.k, x.have) + ' / ' + fmtN(x.k, x.need), x.have / x.need, x.met ? 'met' : ''));
         if (!st.floors.length) line(g, 'No minimums set', '');
         const limits = section('Resource limits', 'cap', M.paused === 'you' ? 'Paused by you' : M.paused ? 'Awaiting decision' : '');
+        const breached = st.worst && st.worst.frac >= 1;
+        if (breached) {
+          sec.prepend(limits);
+          limits.classList.add('brief-at-limit');
+        }
         g = group(limits);
-        st.caps.forEach(x => line(g, x.label, fmtN(x.k, x.used) + ' / ' + fmtN(x.k, x.max), x.frac, x.frac >= 1 ? 'over' : x.frac >= WARN_AT ? 'near' : ''));
+        const caps = breached ? st.caps.slice().sort((a, b) => b.frac - a.frac) : st.caps;
+        caps.forEach(x => line(g, x.label, fmtN(x.k, x.used) + ' / ' + fmtN(x.k, x.max), x.frac, x.frac >= 1 ? 'over' : x.frac >= WARN_AT ? 'near' : ''));
         if (!st.caps.length) line(g, 'No limits set', '');
         if (st.measures.length) {
           g = group(section('Performance', 'gauge'));
@@ -4518,22 +4663,43 @@ $('traceCopy').addEventListener('click', () => {
   try { navigator.clipboard.writeText(TRACE_EXAMPLE).then(done, fallback); } catch (e) { fallback(); }
 });
 let traceRead = 0;
-async function loadTrace(file, feedback = $('traceErr')) {
+async function loadTrace(file, feedback = $('traceErr'), bookmark = null) {
   if (!file) return;
   const target = cur(), request = ++traceRead;
   const isCurrent = () => request === traceRead && cur() === target;
   const fail = message => { feedback.textContent = message; feedback.hidden = false; };
   if (file.size > 5e6) return fail('That file is over 5 MB. Trim the trace and try again.');
-  let text;
-  try { text = await file.text(); }
+  let text, digest;
+  try {
+    const bytes = await file.arrayBuffer();
+    text = new TextDecoder().decode(bytes);
+    if (crypto.subtle) {
+      const fingerprint = await crypto.subtle.digest('SHA-256', bytes);
+      digest = Array.from(new Uint8Array(fingerprint), byte => byte.toString(16).padStart(2, '0')).join('');
+    }
+  }
   catch { if (isCurrent()) fail('That file could not be read.'); return; }
   if (!isCurrent()) return;
+  if (bookmark && !digest) return fail('Open Compass on localhost or HTTPS to verify this recording.');
+  if (bookmark && digest !== bookmark.digest) return fail('This recording differs from the bookmarked file. Choose the original, even if it has been renamed.');
   const res = parseTrace(text);
   if (!res.events.length) return fail('No recognized events in that file. Each line needs t and a known type.');
+  const key = bookmark ? nextRecordingKey() : active;
+  const project = makeProject(key, res.events, true);
+  project.recordingDigest = digest;
+  project.skippedEvents = res.bad;
+  if (bookmark) {
+    // Validate against a private candidate before replacing any visible state.
+    const moment = missionHistory.findBookmark(project, bookmark);
+    if (!moment) return fail('This event does not belong to the bookmarked mission. Check the original link.');
+    projects[key] = project;
+    resumeRecording(project, moment);
+    return true;
+  }
   const err = $('traceErr');
   err.hidden = !res.bad; if (res.bad) err.textContent = `${plural(res.bad, 'line')} skipped as unrecognized.`;
-  const wasDemo = cur().layoutDemo; projects[active] = makeProject(active, res.events, true); projects[active].layoutDemo = wasDemo;
-  projects[active].skippedEvents = res.bad;
+  project.layoutDemo = target.layoutDemo;
+  projects[key] = project;
   enter(); atlasQueueFit(); atlasWriteRoute(true);
   return true;
 }
@@ -4685,7 +4851,7 @@ function syncReviewEntry(coven, count) {
 }
 const reviewQueue = window.mountReviewQueue({
   html, plural,
-  getRows: () => window.CovenReviewQueue.rows(projects, key => fam(key).name),
+  getRows: scope => window.CovenReviewQueue.rows(projects, key => fam(key).name, scope),
   read(row) {
     const project = projects[row.project], request = project.world.asks.get(row.id);
     return {request, state: [request, requestCap(project.world, request), project.recorded, live]};
@@ -4696,10 +4862,10 @@ const reviewQueue = window.mountReviewQueue({
     if (index < 0 || index >= project.applied || project.trace[index].mission !== request.mission) return null;
     return {project, mission: request.mission, position: index + 1};
   },
-  inspectOpening({project, mission, position}, resume) {
+  inspectOpening({project, mission, position}, resume, scope) {
     const name = project.world.missions.get(mission)?.name || mission;
     missionHistory.open(project, mission, name, {position, resume() {
-      atlasOverview();
+      if (scope) scope.restore(); else atlasOverview();
       resume();
     }});
   },
@@ -4719,7 +4885,7 @@ const famsOpen = new Set(), famSec = {}; let famTry = '';
 const saveFams = () => { const o = {}; Object.keys(FAM_DEF).forEach(k => { o[k] = {roles: FAM[k].roles, sym: FAM[k].sym, color: FAM[k].color}; }); store.set('coven-compass-fams', o); };
 function famChanged(focusId) {                       // a familiar's mark is drawn in many places, so everything that shows one is redrawn
   saveFams(); Object.keys(FAM_DEF).forEach(k => { FAM[k].role = FAM[k].roles.join(', '); document.documentElement.style.setProperty('--fam-' + k, FAM[k].color); });
-  $('nmLeads').querySelectorAll('.nm-lead').forEach(b => { const k = b.dataset.k; b.innerHTML = avatar(k); b.append(FAM[k].name); });
+  $('nmLeads').querySelectorAll('.nm-lead').forEach(b => { const k = b.dataset.k; labelMissionLead(b, k); });
   setLead(nm.lead); rebuild(); drawFams(focusId); drawRoute();
 }
 function drawFams(focusId) {
@@ -5104,7 +5270,7 @@ const tplLabel = () => { const t = tplOf(nm.tpl); return t ? t.name + (nm.tplEdi
 // the brief is set with intent: four rows that say what they hold and open to change it
 function drawBriefForm(focusId) {
   const box = $('nmBrief'), b = nm.brief; box.textContent = '';
-  const again = (id, fn) => () => { fn(); nm.briefTouched = true; if (id.indexOf('tp-')) nm.tplEdited = true; closeBrief(nm.brief); drawBriefForm(id); drawNew(); };
+  const again = (id, fn) => () => { fn(); nm.briefTouched = true; if (!id.startsWith('tp-')) nm.tplEdited = true; closeBrief(nm.brief); drawBriefForm(id); drawNew(); };
   const tog = (id, label, on, fn) => { const x = html('button', 'tg', label); x.type = 'button'; x.dataset.id = id; x.setAttribute('aria-pressed', String(on)); x.addEventListener('click', again(id, fn)); return x; };
   const tgs = (label, items) => { const r = html('div', 'tgs'); if (label) r.appendChild(html('span', null, label)); items.forEach(x => r.appendChild(x)); return r; };
   const step = (id, label, k, v, by, min, set) => {
@@ -5143,20 +5309,22 @@ function drawBriefForm(focusId) {
     dBody.push(tgs(KIND[a.kind][0] + ' as', KIND[a.kind][1].map(f => tog(`f-${a.kind}-${f}`, f.toUpperCase(), a.formats.includes(f), () => flip(a.formats, f)))));
     if (KIND[a.kind][2]) dBody.push(tgs('in', LANGS.map(l => tog(`l-${a.kind}-${l}`, l, a.langs.includes(l), () => flip(a.langs, l)))));
   });
-  row('deliver', 'doc', 'ok', 'Deliver', b.deliver.map(artText).join('; '), dBody);
+  row('deliver', 'doc', 'ok', 'Deliverables', b.deliver.map(artText).join('; '), dBody);
   const fl = Object.keys(b.atLeast).map(k => floorText(k, b.atLeast[k]));
-  row('floor', 'floor', '', 'At least', fl.length ? fl.join(', ') : 'Nothing required', Object.keys(FLOOR).map(k => { const by = floorBy(b, k), min = by ? REQUIRES[by.kind].atLeast[k] : 0, r = step('fl-' + k, FLOOR[k][0] + (by ? ' · required' : ''), k, b.atLeast[k] || 0, FLOOR[k][1], min, v => { if (v) b.atLeast[k] = v; else delete b.atLeast[k]; }); if (by) r.title = `Required: ${REQUIRES[by.kind].why}`; return r; }));
-  row('cap', 'cap', 'q', 'At most', Object.keys(b.atMost).map(k => capText(k, b.atMost[k])).join(' · '), Object.keys(CAP).map(k => step('cp-' + k, CAP[k][0], k, b.atMost[k], CAP[k][1], CAP[k][2], v => { b.atMost[k] = v; })));
-  row('measure', 'gauge', '', 'Measured by', b.measure.length ? b.measure.map(k => MEASURE[k].toLowerCase()).join(', ') : 'Nothing', [tgs('', Object.keys(MEASURE).map(k => tog('m-' + k, MEASURE[k], b.measure.includes(k), () => flip(b.measure, k))))]);
+  row('floor', 'floor', '', 'Minimum targets', fl.length ? fl.join(', ') : 'Nothing required', Object.keys(FLOOR).map(k => { const by = floorBy(b, k), min = by ? REQUIRES[by.kind].atLeast[k] : 0, r = step('fl-' + k, FLOOR[k][0] + (by ? ' · required' : ''), k, b.atLeast[k] || 0, FLOOR[k][1], min, v => { if (v) b.atLeast[k] = v; else delete b.atLeast[k]; }); if (by) r.title = `Required: ${REQUIRES[by.kind].why}`; return r; }));
+  row('cap', 'cap', 'q', 'Resource limits', Object.keys(b.atMost).map(k => capText(k, b.atMost[k])).join(' · '), Object.keys(CAP).map(k => step('cp-' + k, CAP[k][0], k, b.atMost[k], CAP[k][1], CAP[k][2], v => { b.atMost[k] = v; })));
+  row('measure', 'gauge', '', 'Success measures', b.measure.length ? b.measure.map(k => MEASURE[k].toLowerCase()).join(', ') : 'Nothing', [tgs('', Object.keys(MEASURE).map(k => tog('m-' + k, MEASURE[k], b.measure.includes(k), () => flip(b.measure, k))))]);
+  $('nmOutput').textContent = b.deliver.map(artText).join(' · ') || 'No deliverables set';
+  $('nmLimits').textContent = [tplLabel() || 'Custom brief', ...['minutes', 'usd'].filter(key => b.atMost[key]).map(key => capText(key, b.atMost[key]))].join(' · ');
   if (focusId) { const el = box.querySelector(`[data-id="${focusId}"]`); if (el && !el.disabled) el.focus(); }
 }
 function setLead(k, focus) {
   nm.lead = k;
   $('nmLeads').querySelectorAll('.nm-lead').forEach(b => { const on = b.dataset.k === k; b.setAttribute('aria-checked', String(on)); b.tabIndex = on ? 0 : -1; if (on && focus) b.focus(); });
-  if (!nm.touched && !nm.edit) $('nmName').value = NM_IDEA[k] || '';
+  $('nmName').placeholder = 'e.g. ' + (NM_IDEA[k] || 'Prepare a release brief');
   if (!nm.briefTouched && !nm.edit) { nm.tpl = tplFor(k).id; nm.tplEdited = false; nm.brief = tplBrief(nm.tpl); }
   const f = fam(k), box = $('nmTerms'); box.textContent = ''; box.style.setProperty('--hue', f.hue);
-  [['', `<svg viewBox="-10 -10 20 20" aria-hidden="true">${sigil(k)}</svg>`, f.roles && f.roles.length > 1 ? 'Roles' : 'Role', (f.roles || [f.role]).join(', ')], ['ok', ICON.check, 'Allowed without asking', f.may], ['q', ICON.gate, 'Requires approval', f.must]].forEach(([cls, icon, key, val]) => {
+  [['ok', ICON.check, 'Can do', f.may], ['q', ICON.gate, 'Ask first', f.must]].forEach(([cls, icon, key, val]) => {
     const li = html('li', cls); li.innerHTML = icon; li.append(html('span', null, key), val); box.appendChild(li); });
   drawBriefForm(); drawNew();
 }
@@ -5176,20 +5344,25 @@ function drawNew() {
   if (prompt) { prompt.hidden = atlasScope === 'coven' || !bare || show || cz.open; $('emptyNew').disabled = !ok; $('emptyNew').title = ok ? 'Open a new mission' : 'Go live to open a mission'; }
   stage.classList.toggle('composing', show || cz.open);
   if (!show) return;
-  $('nmLeadL').textContent = nm.match && nm.match.k === nm.lead && !nm.leadTouched ? `Who leads · matched as ${nm.match.role}, on “${nm.match.words[0]}”` : 'Who leads';
-  $('nmTitle').textContent = EM ? 'Edit brief' : 'New mission'; $('raise').textContent = EM ? 'Save brief' : 'Open mission'; $('nmLeadSec').hidden = !!EM;
-  setMissionName($('emptyName'), EM ? EM.name : active); $('emptyState').textContent = EM ? '' : n ? `${n} open` : 'Dormant'; $('emptyState').className = 'hd-s ' + (n ? 'on' : 'off'); $('emptyState').hidden = !!EM;
+  $('nmLeadL').textContent = nm.match && nm.match.k === nm.lead && !nm.leadTouched ? `Mission lead · suggested for “${nm.match.words[0]}”` : 'Mission lead';
+  $('nmTitle').textContent = EM ? 'Edit brief' : 'New mission'; $('raise').textContent = EM ? 'Save brief' : 'Create mission'; $('nmLeadSec').hidden = !!EM;
+  setMissionName($('emptyName'), EM ? EM.name : active); $('emptyState').hidden = true;
   $('emptyX').hidden = false;
-  $('nmFoot').textContent = !canAct() ? 'Replaying. Go live first.' : EM ? 'Psyche tells the council.' : `Starts with 6 of up to ${nm.brief.atMost.agents} agents.`;
+  $('nmFoot').textContent = !ok ? (c.recorded ? 'Imported recording · read-only' : 'Go live to make changes.') : EM ? 'Applies to this mission.' : $('nmName').value.trim() ? 'Local simulation · 6 starting agents' : 'Enter a mission name to continue.';
+  $('empty').setAttribute('aria-label', EM ? 'Edit brief' : 'New mission');
   $('raise').disabled = !ok || !$('nmName').value.trim(); $('nmName').disabled = !ok || !!EM;
 }
-function openNew(editId) {
+function openNew(editId, onCancel) {
+  nm.onCancel = onCancel;
   nm.fromInspector = false;
   const c = cur(), M = editId ? c.world.missions.get(editId) : null;
   if (!M && c.sel) select(null); if (atlasScope === 'coven') setView();
+  if (M && !nm.edit) nm.draftName = $('nmName').value;
   nm.edit = M ? M.id : null; nm.open = M ? 'deliver' : null;
   if (M) { nm.brief = M.brief ? JSON.parse(JSON.stringify(M.brief)) : (NM_BRIEF[M.seats[0]] || NM_BRIEF.echo)(); if (!nm.brief.deliver.length) nm.brief.deliver.push({kind: 'report', formats: ['md'], langs: []}); Object.keys(CAP).forEach(k => { if (!nm.brief.atMost[k]) nm.brief.atMost[k] = (NM_BRIEF.echo().atMost)[k]; }); nm.briefTouched = true; $('nmName').value = M.name;
     const t0 = M.tpl ? allTpl().find(t => M.tpl.indexOf(t.name) === 0) : null; nm.tpl = t0 ? t0.id : null; nm.tplEdited = !!t0 && M.tpl !== t0.name; }
+  $('nmPermissions').open = false;
+  setBriefExpanded(!!M);
   c.composing = true; drawBriefForm(); drawNew();
   if (window.CovenMobileUI) window.CovenMobileUI.activate('empty');
   if (M) $('nmTitle').focus({preventScroll: true});
@@ -5199,18 +5372,36 @@ function closeNew() {
   const c = cur(), returnToBrief = nm.edit && nm.fromInspector;
   nm.fromInspector = false; c.composing = false; c.emptyDismissed = true;
   nm.touched = false; nm.leadTouched = false; nm.match = null; if (!nm.edit && nm.briefTouched) { nm.briefTouched = false; }
-  if (nm.edit) { nm.edit = null; nm.briefTouched = false; nm.open = null; setLead(nm.lead); }
+  if (nm.edit) { $('nmName').value = nm.draftName || ''; nm.edit = null; nm.briefTouched = false; nm.open = null; setLead(nm.lead); }
   drawNew(); if (window.CovenMobileUI) window.CovenMobileUI.sync();
+  if (nm.onCancel) {
+    const restore = nm.onCancel; nm.onCancel = null;
+    return restore();
+  }
   const trigger = (returnToBrief && $('inspect').querySelector('[data-focus="edit-brief"]')) || $('emptyNew');
   if (trigger && !trigger.closest('[hidden],[inert]') && !trigger.disabled) trigger.focus({preventScroll: true});
 }
+function setBriefExpanded(expanded) {
+  $('nmBrief').hidden = !expanded;
+  $('nmPreview').hidden = expanded;
+  $('nmCustomize').setAttribute('aria-expanded', String(expanded));
+  $('nmCustomize').textContent = expanded ? 'Show summary' : 'Customize';
+}
+$('nmCustomize').onclick = () => setBriefExpanded($('nmBrief').hidden);
+function labelMissionLead(button, k) {
+  const f = fam(k);
+  button.innerHTML = avatar(k);
+  const text = html('span', 'nm-lead-copy');
+  text.append(html('b', '', f.name), html('small', '', (f.roles || [f.role]).join(', ')));
+  button.appendChild(text);
+}
 Object.keys(FAM).forEach(k => {
   const b = html('button', 'nm-lead'); b.type = 'button'; b.dataset.k = k; b.setAttribute('role', 'radio'); b.style.setProperty('--hue', FAM[k].hue);
-  b.innerHTML = avatar(k); b.append(FAM[k].name); b.addEventListener('click', () => { nm.leadTouched = true; setLead(k); }); $('nmLeads').appendChild(b);
+  labelMissionLead(b, k); b.addEventListener('click', () => { nm.leadTouched = true; setLead(k); }); $('nmLeads').appendChild(b);
 });
 $('nmLeads').addEventListener('keydown', ev => {
   const ks = Object.keys(FAM), d = ev.key === 'ArrowRight' || ev.key === 'ArrowDown' ? 1 : ev.key === 'ArrowLeft' || ev.key === 'ArrowUp' ? -1 : 0;
-  if (d) { ev.preventDefault(); setLead(ks[(ks.indexOf(nm.lead) + d + ks.length) % ks.length], true); }
+  if (d) { ev.preventDefault(); nm.leadTouched = true; nm.match = null; setLead(ks[(ks.indexOf(nm.lead) + d + ks.length) % ks.length], true); }
 });
 $('nmName').addEventListener('input', () => { nm.touched = true;
   if (composingText.has($('nmName'))) return;
@@ -5225,21 +5416,23 @@ $('empty').addEventListener('submit', ev => {
   const c = cur(), w = c.world, name = $('nmName').value.trim().slice(0, 60), k = nm.lead, f = fam(k), brief = normBrief(nm.brief);
   if (nm.edit) {                                    // a changed brief is said to Psyche, who tells the council
     const M = w.missions.get(nm.edit); if (!M || !canAct()) return;
-    c.composing = false; nm.edit = null; nm.briefTouched = false; nm.open = null;
+    c.composing = false; $('nmName').value = nm.draftName || ''; nm.edit = null; nm.briefTouched = false; nm.open = null;
     emit(c, {type: 'you.said', text: `Change the brief for ${M.name}.`, mission: M.id});
     const tname = tplLabel();
     setTimeout(() => { rebrief(c, M, brief, tname);
       emit(c, {type: 'psyche.said', text: `${M.name} has a new brief. ${briefSentence(brief)}`}); if (cur() === c) { panelView = 'brief'; select(M.id, null, 'side'); } }, 450);
     return setLead(k);
   }
-  if (!name || !canAct()) return;
+  if (!name || !canAct() || $('empty').hidden) return;
+  nm.onCancel = null;
   c.composing = false; nm.touched = false; nm.briefTouched = false; nm.open = null;
   emit(c, {type: 'you.said', text: `Open a mission: ${name}. ${f.name} leads. ${tplLabel() ? tplLabel() + ' brief. ' : ''}${briefSentence(brief)}`});
-  { const tname = tplLabel(); setTimeout(() => openMission(c, name, k, brief, tname), 450); }
-  setLead(k);
+  const mission = openMission(c, name, k, brief, tplLabel(), false);
+  $('nmName').value = ''; nm.leadTouched = false; nm.match = null;
+  setLead(k); panelView = 'brief'; select(mission, null, 'side');
 });
 // opening a mission is the same act from the form or from a conversation: Psyche confirms, seats the lead, spawns the first agents
-function openMission(c, name, k, brief, template) {
+function openMission(c, name, k, brief, template, autoSelect = true) {
   const f = fam(k), mission = 'm-' + (topNum(c, 'mission.opened', 'mission') + 1), task = 'k-' + (topNum(c, 'task.opened', 'task') + 1), a0 = topNum(c, 'agent.spawned', 'agent');
   emit(c, {type: 'psyche.said', text: `Opening ${name} with ${f.name} on its council. I will hold it to that brief and tell you if a limit is reached.`});
   emit(c, template ? {type: 'mission.opened', mission, name, brief, template} : {type: 'mission.opened', mission, name, brief});
@@ -5247,7 +5440,8 @@ function openMission(c, name, k, brief, template) {
   emit(c, {type: 'task.opened', task, mission, familiar: k, name});
   for (let i = 1; i <= 6; i++) setTimeout(() => emit(c, {type: 'agent.spawned', agent: 'a-' + String(a0 + i).padStart(3, '0'), mission, familiar: k, task, doing: act(k)}), 160 * i);
   setTimeout(() => emit(c, {type: 'familiar.report', mission, familiar: k, text: `${name} is open with 6 agents inside the ward. Waiting for direction.`}), 1500);
-  setTimeout(() => { if (cur() === c && !c.sel && c.world.missions.has(mission)) select(mission); }, 1750);
+  if (autoSelect) setTimeout(() => { if (cur() === c && !c.sel && c.world.missions.has(mission)) select(mission); }, 1750);
+  return mission;
 }
 // a changed brief: a raised limit lets a mission stopped at that limit carry on, and answers its request
 function rebrief(c, M, brief, template) {
@@ -6281,6 +6475,13 @@ function atlasRestoreRoute(initial) {
     if (window.CovenAtlas.dismissNotice) window.CovenAtlas.dismissNotice();
   }
   const route = window.CovenMissionNavigation.parse(location.hash); let notice = '';
+  if (route?.scope === 'recording') {
+    atlasLastRoute = location.hash;
+    atlasNavigationReady = true;
+    openRecordingBookmark(route);
+    return;
+  }
+  if (recordingPrompt.open) closeRecordingPrompt();
   const locked = cam.locked; if (locked) setLock(false);
   atlasRestoringRoute = true;
   try {
@@ -6313,6 +6514,22 @@ function findProjectMission(key, needle) {
   }
   return '';
 }
+function missionCreationHint(key) {
+  const project = projects[key];
+  if (!project) return 'Choose an available Project.';
+  if (project.recorded) return 'Imported recordings are read-only.';
+  return canAct(project) ? '' : 'Return to live simulation to create a mission.';
+}
+function newMissionFromBrowser(key, onCancel) {
+  if (missionCreationHint(key)) return;
+  atlasOpenProject(key);
+  openNew(null, onCancel);
+  // The Project transition can detach the focused drawer before the form is painted.
+  requestAnimationFrame(() => {
+    const focused = document.activeElement;
+    if (cur().composing && !$('empty').hidden && (focused === document.body || focused.closest('[hidden]'))) $('nmName').focus();
+  });
+}
 function atlasSnapshot(includeMissions) {
   const ps = [], missionItems = [], fs = new Map(Object.keys(FAM).map(k => [k, {key: k, name: fam(k).name, color: fam(k).hue, avatar: avatar(k), projects: 0, agents: 0}]));
   const missionBrowser = $('atlasMissionBrowser');
@@ -6328,7 +6545,10 @@ function atlasSnapshot(includeMissions) {
     ps.push({key: k, missions: w.missions.size, agents: w.agents.size, needs: q, previewNames});
     if (showMissions) w.missions.forEach(M => {
       const seal = sealOf(w, M);
-      missionItems.push({project: k, id: M.id, name: M.name, state: seal.state, stateLabel: SEAL_STATE[seal.state][0], agents: countOf(w, a => a.mission === M.id), needs: requests.filter(q => q.mission === M.id).length, council: M.seats.map(f => fam(f).name).join(', '), seal: includeMissions === 'review' ? '' : sealSvg(seal, 30)});
+      const pending = requests.filter(q => q.mission === M.id);
+      const first = pending[0];
+      const requestPreview = first?.title ? (first.fam ? fam(first.fam).name + ' · ' : '') + first.title : '';
+      missionItems.push({project: k, id: M.id, name: M.name, state: seal.state, stateLabel: SEAL_STATE[seal.state][0], agents: countOf(w, a => a.mission === M.id), needs: pending.length, requestPreview, council: M.seats.map(f => fam(f).name).join(', '), seal: includeMissions === 'review' ? '' : sealSvg(seal, 30)});
     });
     missions += w.missions.size; agents += w.agents.size; needs += q;
     w.agents.forEach(a => by.set(a.fam, (by.get(a.fam) || 0) + 1));
@@ -6337,9 +6557,57 @@ function atlasSnapshot(includeMissions) {
   const c = cur(), M = c.sel && c.world.missions.get(c.sel), scope = atlasScope === 'coven' ? 'coven' : M ? 'mission' : 'project';
   return {active, scope, projects: ps, familiars: [...fs.values()], missions, missionItems, agents, needs, highlight: sc.hl || null, mission: M ? M.name : null, missionId: M ? M.id : null, detail: c.detail, view: panelView, camera: {locked: cam.locked, formation: missionFormation}};
 }
+// A bookmark identifies local bytes and two exact events. Its fragment never contains trace fields.
+const recordingPrompt = $('recordingPrompt');
+let pendingBookmark = null;
+function nextRecordingKey() {
+  const base = 'Local recording';
+  let key = base;
+  for (let n = 2; Object.hasOwn(projects, key); n++) key = base + ' (' + n + ')';
+  return key;
+}
+function closeRecordingPrompt() {
+  pendingBookmark = null;
+  traceRead++;
+  if (recordingPrompt.open) recordingPrompt.close();
+}
+function resumeRecording(project, moment) {
+  closeRecordingPrompt();
+  atlasRestoringRoute = true;
+  try {
+    atlasOpenProject(project.key);
+    missionHistory.resumeBookmark(project, moment);
+  } finally { atlasRestoringRoute = false; }
+  atlasLastRoute = location.hash;
+}
+function openRecordingBookmark(route) {
+  closeRecordingPrompt();
+  const loaded = Object.values(projects).find(project => project.recordingDigest === route.digest);
+  const moment = loaded && missionHistory.findBookmark(loaded, route);
+  if (moment) return resumeRecording(loaded, moment);
+  pendingBookmark = route;
+  $('recordingPromptTitle').textContent = 'Resume event ' + route.position;
+  $('recordingPromptError').hidden = !loaded;
+  if (loaded) $('recordingPromptError').textContent = 'This event does not belong to the bookmarked mission. Check the original link.';
+  recordingPrompt.showModal();
+  $('chooseRecording').focus();
+}
+$('chooseRecording').onclick = () => $('bookmarkFile').click();
+$('bookmarkFile').onchange = event => {
+  const file = event.target.files[0];
+  event.target.value = '';
+  if (file && pendingBookmark) loadTrace(file, $('recordingPromptError'), pendingBookmark);
+};
+$('leaveRecording').onclick = () => {
+  closeRecordingPrompt();
+  atlasWriteRoute(true);
+  atlasFocusSelection(false);
+};
+recordingPrompt.oncancel = event => { event.preventDefault(); $('leaveRecording').click(); };
+recordingPrompt.addEventListener('keydown', event => event.stopPropagation());
 if (window.CovenProjection) window.CovenProjection.register(window.CovenProjection.createSimulationSource({worlds: () => Object.keys(projects).map(k => [k, projects[k].world]), summarize: SimModel.summarize}));
 if (window.CovenAtlas) {
-  window.CovenAtlas.mount({setMissionName, findProjectMission, syncReviewEntry, snapshot: atlasSnapshot, overview: atlasOverview, openProject: atlasOpenProject, openMission: atlasOpenMission, setProjectCount: atlasSetProjectCount, newProject: () => openProjectForm(), camera: atlasCamera, highlight: covHl, legend: () => $('keyBtn').click()});
+  window.CovenAtlas.mount({setMissionName, findProjectMission, syncReviewEntry, missionCreationHint, newMission: newMissionFromBrowser, snapshot: atlasSnapshot, overview: atlasOverview, openProject: atlasOpenProject, openMission: atlasOpenMission, setProjectCount: atlasSetProjectCount, newProject: () => openProjectForm(), camera: atlasCamera, highlight: covHl, legend: () => $('keyBtn').click()});
   $('plan').setAttribute('role', 'group');
   atlasRestoreRoute(true);
 }

@@ -463,8 +463,15 @@ test('selected-mission fit remains centered in its asymmetric safe frame after t
     project.fam = familiar;
     const fitted = context.fitTarget(project);
     const center = projectToScreen(anchor, [0, 0], fitted, f.stage);
-    near(center[0], frame.cx, 'selected item stays horizontally centered with an off-center squad');
-    near(center[1], frame.cy, 'selected item stays vertically centered with an off-center squad');
+    const left = projectToScreen([position.x - 43, position.y], [0, 0], fitted, f.stage)[0];
+    const right = projectToScreen([seat.x + seat.R + 6, seat.y], [0, 0], fitted, f.stage)[0];
+    assert.ok(left >= frame.x && right <= frame.x + frame.width, 'the entire squad stays in the visible frame');
+    if (familiar) near(center[0], frame.cx, 'the familiar stays centered when the squad fits around it');
+    else assert.ok((right - left) / frame.width > .75, 'the asymmetric mission uses the available width');
+    const top = projectToScreen([seat.x, seat.y - seat.R - 6], [0, 0], fitted, f.stage)[1];
+    const bottom = projectToScreen([position.x, position.y + 43], [0, 0], fitted, f.stage)[1];
+    assert.ok(top >= frame.y && bottom <= frame.y + frame.height, 'all vertical extents stay in view');
+    if (familiar) near(center[1], frame.cy, 'the familiar uses spare vertical space to stay centered');
   }
   seat.id = project.focusGroup = 'm1/astra';
   seat.slots = {left: 330, right: 400, top: -190, bottom: -140};
