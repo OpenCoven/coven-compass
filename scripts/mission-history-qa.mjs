@@ -45,7 +45,8 @@ try {
   await page.setViewportSize(viewport);
   await page.goto(new URL('#/project/psyche-build', url).href);
   await page.reload();
-  for (const id of ['workspaceTools', 'traceBox', 'traceLoad']) await activate(loc('#' + id + ' > summary'));
+  for (const id of ['workspaceTools', 'traceBox']) await activate(loc('#' + id + ' > summary'));
+  await activate(loc('#traceImport'));
   const [chooser] = await Promise.all([page.waitForEvent('filechooser'), activate(loc(keyboard ? '#traceFile' : '#traceDrop'))]);
   await chooser.setFiles(recording);
   const tray = loc('.atlas-mission-group[data-m="release"] .mission-tasks');
@@ -136,9 +137,10 @@ try {
   assert.ok(await focused(btn('History')));
   if (mode === 'desktop') {
     // Replacing the active recording preserves its Project key, so exercise the normal import again.
-    for (const id of ['workspaceTools', 'traceBox', 'traceLoad']) {
+    for (const id of ['workspaceTools', 'traceBox']) {
       if (!await loc('#' + id).evaluate(el => el.open)) await activate(loc('#' + id + ' > summary'));
     }
+    await activate(loc('#traceImport'));
     const [replacement] = await Promise.all([page.waitForEvent('filechooser'), activate(loc('#traceDrop'))]);
     await replacement.setFiles(recording);
     await loc('#inspect').waitFor({state: 'hidden'});

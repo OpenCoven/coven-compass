@@ -37,9 +37,10 @@ window.CovenHistoryView = function ({model, current, familiar, eventIcon, readSe
     'project.stopped': 'Project stopped', 'project.resumed': 'Project resumed', 'project.renamed': 'Project renamed',
     'project.moved': 'Project moved', 'project.founded': 'Project created',
   };
+  function eventTitle(event) { return titles[event.type] || (event.type === 'council.seated' ? 'Council seat recorded' : event.type); }
   function headline(event) {
     if (event.type === 'council.seated') return event.familiar ? familiar(event.familiar).name + ' joined the council' : 'Council seat recorded';
-    const title = titles[event.type] || event.type;
+    const title = eventTitle(event);
     const subject = event.type === 'task.opened' ? event.name : event.type === 'gate.requested' ? event.title : event.agent;
     return subject ? title + ' · ' + subject : title;
   }
@@ -327,5 +328,5 @@ window.CovenHistoryView = function ({model, current, familiar, eventIcon, readSe
     if (project !== state.project || project.applied !== state.selected || project.world.t !== at(state.selected).t ||
         project.sel !== (project.world.missions.has(state.mission) ? state.mission : null)) back.hidden = true;
   }
-  return {open, reset, syncPosition, findBookmark, resumeBookmark};
+  return {open, reset, syncPosition, findBookmark, resumeBookmark, eventTitle};
 };
