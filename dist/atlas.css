@@ -1167,3 +1167,22 @@ body.atlas-enhanced.atlas-adaptive-mobile #atlasCameraDock button {
 @media (max-width: 480px) {
   body.atlas-enhanced.atlas-adaptive-mobile .atlas-map-footer:has(#atlasCameraDock:not([hidden])) .atlas-familiar-name { display: none; }
 }
+
+/* Keep collection actions next to their results at every sheet size. */
+body.atlas-enhanced .atlas-result-summary { display: flex; flex: none; align-items: center; justify-content: space-between; flex-wrap: wrap; column-gap: 8px; min-height: 32px; }
+body.atlas-enhanced .atlas-result-summary :is(#atlasProjectClear, #atlasMissionReset) { min-height: 32px; padding: 4px 8px; color: var(--primary-hi); border-color: var(--border); background: var(--card); font-size: 11px; }
+body.atlas-enhanced .atlas-result-summary [hidden], body.atlas-enhanced .atlas-pending[hidden] { display: none; }
+body.atlas-enhanced .atlas-empty-result, body.atlas-enhanced #atlasMissionEmpty { margin: 0 3px; padding: 14px; border: 1px dashed var(--border-strong); border-radius: 7px; color: var(--muted-foreground); font-size: 12px; line-height: 1.5; }
+body.atlas-enhanced .atlas-drawer-heading #atlasNewProject { flex: none; width: auto; min-height: 32px; margin: 0 0 0 auto; color: var(--primary-hi); }
+body.atlas-enhanced .atlas-project-copy b { white-space: normal; overflow-wrap: anywhere; text-overflow: clip; font-size: 13px; }
+body.atlas-enhanced .atlas-project-copy > span { color: var(--muted-foreground); font-size: 11px; }
+body.atlas-enhanced .atlas-project-state[data-state="attention"], body.atlas-enhanced .atlas-pending { color: var(--primary-hi); font-size: 11px; font-variant-numeric: tabular-nums; }
+body.atlas-enhanced .atlas-mission-row:is([data-state="broken"], [data-state="stalled"]) .atlas-mission-meta { border-style: dashed; color: var(--foreground); }
+body.atlas-enhanced .atlas-mission-row[data-state="broken"] .atlas-mission-meta { border-color: var(--warn); }
+body.atlas-enhanced .atlas-mission-row[data-state="sealed"] .atlas-mission-meta { border-style: double; border-width: 3px; }
+.brief-card .target-met, .brief-card .limit-state { display: inline-block; margin-inline-start: 5px; font-size: 10px; font-weight: 600; }
+.brief-card .target-met { color: var(--primary-hi); }
+body.atlas-enhanced #mission-section .bfl > b { white-space: normal; text-align: end; overflow-wrap: anywhere; }
+@media (max-width: 1100px), (pointer: coarse) {
+  body.atlas-enhanced .atlas-result-summary :is(#atlasProjectClear, #atlasMissionReset), body.atlas-enhanced .atlas-drawer-heading #atlasNewProject { min-height: 44px; }
+}

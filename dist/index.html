@@ -3808,7 +3808,11 @@ function syncInspect(force) {
     next.title = next.disabled ? 'Next mission' : 'Next mission · ' + missionOrder[position + 1].name;
     previous.addEventListener('click', () => select(missionOrder[position - 1].id, null, 'side'));
     next.addEventListener('click', () => select(missionOrder[position + 1].id, null, 'side'));
-    stepper.append(previous, html('span', '', (position + 1) + ' / ' + missionOrder.length), next);
+    const positionLabel = html('span', '', (position + 1) + ' / ' + missionOrder.length);
+    stepper.setAttribute('role', 'group');
+    stepper.setAttribute('aria-label', 'Mission ' + (position + 1) + ' of ' + missionOrder.length);
+    positionLabel.setAttribute('aria-hidden', 'true');
+    stepper.append(previous, positionLabel, next);
     const counts = html('dl', 'i-counts'); insp.nums = {};
     ['gate', 'work', 'idle'].forEach(st => { const d = html('div', st), dd = html('dd'); insp.nums[st] = dd; d.append(html('dt', null, STATE[st]), dd); counts.appendChild(d); });
     const seg = html('div', 'seg i-view'); seg.setAttribute('role', 'tablist'); seg.setAttribute('aria-label', 'Mission sections');
@@ -3898,7 +3902,11 @@ function syncInspect(force) {
       const line = (g, label, value, frac, cls) => {
         const row = html('div', 'bfl' + (cls ? ' ' + cls : ''));
         const name = html('span', '', label);
-        if (cls === 'near' || cls === 'over') name.appendChild(html('small', 'limit-state', cls === 'over' ? 'At limit' : 'Near limit'));
+        if (cls === 'near' || cls === 'over') {
+          const level = frac > 1 ? 'Over limit' : frac === 1 ? 'At limit' : 'Near limit';
+          name.appendChild(html('small', 'limit-state', level + ' · ' + Math.round(frac * 100) + '%'));
+        }
+        if (cls === 'met') name.appendChild(html('small', 'target-met', 'Met'));
         row.append(name, html('b', '', value));
         if (frac != null) {
           const meter = html('i', 'meter'), fill = html('i');
@@ -5942,6 +5950,13 @@ function atlasRestoreRoute(initial) {
   // Only an unreadable link is shown on screen as well (#45); the other notices stay screen-reader only.
   if (window.CovenAtlas) { window.CovenAtlas.update(); if (notice) window.CovenAtlas.announce(notice, {visible: !route}); }
 }
+function findProjectMission(key, needle) {
+  for (const mission of projects[key].world.missions.values()) {
+    const name = mission.name || mission.id;
+    if (typeof name === 'string' && name.toLocaleLowerCase().includes(needle)) return name;
+  }
+  return '';
+}
 function atlasSnapshot(includeMissions) {
   const ps = [], missionItems = [], fs = new Map(Object.keys(FAM).map(k => [k, {key: k, name: fam(k).name, color: fam(k).hue, avatar: avatar(k), projects: 0, agents: 0}]));
   const missionBrowser = $('atlasMissionBrowser');
@@ -5968,7 +5983,7 @@ function atlasSnapshot(includeMissions) {
 }
 if (window.CovenProjection) window.CovenProjection.register(window.CovenProjection.createSimulationSource({worlds: () => Object.keys(projects).map(k => [k, projects[k].world]), summarize: SimModel.summarize}));
 if (window.CovenAtlas) {
-  window.CovenAtlas.mount({setMissionName, snapshot: atlasSnapshot, overview: atlasOverview, openProject: atlasOpenProject, openMission: atlasOpenMission, setProjectCount: atlasSetProjectCount, newProject: () => openProjectForm(), camera: atlasCamera, highlight: covHl, legend: () => $('keyBtn').click()});
+  window.CovenAtlas.mount({setMissionName, findProjectMission, snapshot: atlasSnapshot, overview: atlasOverview, openProject: atlasOpenProject, openMission: atlasOpenMission, setProjectCount: atlasSetProjectCount, newProject: () => openProjectForm(), camera: atlasCamera, highlight: covHl, legend: () => $('keyBtn').click()});
   $('plan').setAttribute('role', 'group');
   atlasRestoreRoute(true);
 }
