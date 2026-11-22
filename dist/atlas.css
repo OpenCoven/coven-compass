@@ -1225,3 +1225,30 @@ body.atlas-adaptive-mobile #historyReturn { bottom: calc(var(--mobile-chrome-hei
 .history-source-event { margin: 8px 0; color: var(--muted-foreground); }
 .history-source-event summary { cursor: pointer; }
 .history-source-event pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: .85em; }
+body.atlas-enhanced[data-atlas-scope="coven"] .plan-head .workspace-urgent { display: flex; }
+body.atlas-enhanced[data-atlas-scope="coven"] .workspace-urgent .stop-ctl { display: none; }
+#reviewQueue { box-sizing: border-box; width: min(28rem, calc(100vw - 20px)); max-height: calc(100dvh - 24px); margin: auto; padding: 16px; border: 1px solid var(--border-strong); border-radius: 12px; color: var(--foreground); background: var(--card); }
+#reviewQueue[open] { display: flex; flex-direction: column; gap: 10px; }
+#reviewQueue::backdrop { background: rgb(8 8 12 / 72%); }
+#reviewQueue header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+#reviewQueue h2 { font-size: 18px; line-height: 1.3; overflow-wrap: anywhere; margin: 3px 0 0; }
+#reviewQueue small, #queueTools label, #queueStatus, .queue-row span { color: var(--muted-foreground); font-size: 12px; }
+#queueTools label { display: block; margin-bottom: 4px; }
+#queueFilter { width: 100%; padding: 8px; background: var(--well); border: 1px solid var(--border); border-radius: 6px; color: var(--foreground); }
+#queueStatus { margin: 0; overflow-wrap: anywhere; }
+#queueList, #queueDetail { min-height: 0; overflow: auto; overscroll-behavior: contain; }
+#queueList h3 { font-size: 12px; color: var(--primary-hi); margin: 12px 0 4px; }
+.queue-row { display: grid; gap: 2px; text-align: start; width: 100%; min-height: 44px; padding: 8px; border-radius: 4px; overflow-wrap: anywhere; }
+.queue-row b { font-weight: 550; }
+.queue-row:hover, .queue-row:focus-visible { background: var(--card-raised); }
+#queueDetail .cf { position: static; margin-top: 10px; border: 0; background: var(--well); box-shadow: none; }
+#queueDetail .cf-l, #queueDetail .cf-r { padding-inline: 12px; }
+#reviewQueue :focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }
+@media (max-width: 600px) {
+  #queueFilter { min-height: 44px; font-size: 16px; }
+  #reviewQueue .btn { min-height: 44px; }
+  body[data-atlas-scope="coven"] #needTxt .w { display: none; }
+}
+@container left (min-width: 720px) {
+  body[data-atlas-scope="coven"] .need-ctl .attn .w { display: inline; position: static; width: auto; height: auto; opacity: 1; margin-inline-end: 5px; }
+}

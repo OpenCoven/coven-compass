@@ -1,0 +1,7 @@
+Overview return on 3574c0168dee16bf5207674c81df16600b2b2ee1, budget <= 100 ms
+PASS desktop   4 Projects: 43.300 ms median (n=5, 32.300–52.900 ms)
+PASS desktop  32 Projects: 41.500 ms median (n=5, 37.200–47.300 ms)
+PASS desktop 128 Projects: 98.800 ms median (n=5, 73.300–147.400 ms)
+PASS narrow    4 Projects: 23.000 ms median (n=5, 18.400–32.900 ms)
+PASS narrow   32 Projects: 38.600 ms median (n=5, 33.100–40.700 ms)
+PASS narrow  128 Projects: 68.300 ms median (n=5, 43.000–69.200 ms)
