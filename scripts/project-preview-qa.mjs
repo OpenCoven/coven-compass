@@ -793,3 +793,69 @@ test('older Psyche settings keep a saved floating panel and its size', async () 
     await page.waitForFunction(() => Math.round(document.getElementById('psyche').getBoundingClientRect().width) === 430);
   } finally { await page.close(); }
 });
+
+test('Board cards captions and the Tasks target clear familiar badges and task groups across viewport changes', async () => {
+  const page = await browser.newPage({viewport: {width: 1440, height: 900}, reducedMotion: 'reduce'});
+  const mission = page.locator('.atlas-mission-current[data-m="m-1"]');
+  const caption = page.locator('#missionCaptions .mission-caption').filter({hasText: 'Board cards'});
+  try {
+    for (const [width, height] of [[1440, 900], [1024, 768], [390, 844], [844, 390], [320, 568]]) {
+      await page.setViewportSize({width, height});
+      await page.goto(new URL('#/project/coven-cave/mission/m-1?detail=card', base).href);
+      await mission.waitFor();
+      for (const deltaY of [0, -230, 330]) {
+        const seal = await mission.locator('.se-face').boundingBox();
+        if (deltaY) await page.locator('#plan').dispatchEvent('wheel', {ctrlKey: true, deltaY, clientX: seal.x + seal.width / 2, clientY: seal.y + seal.height / 2});
+        await page.evaluate(async () => { for (let i = 0; i < 8; i++) await new Promise(requestAnimationFrame); });
+        const fallback = await mission.evaluate(el => el.classList.contains('caption-in-list'));
+        if (fallback) {
+          assert.match(await caption.innerText(), /3 tasks/);
+          continue;
+        }
+        const collisions = await mission.evaluate(group => {
+          const controls = ['.lead-name', '.atlas-mission-state', '.task-tray-hit'].map(selector => group.querySelector(selector));
+          const shapes = document.querySelectorAll('.atlas-project-detail .seat .familiar-disc, .squad-plane > rect');
+          const result = [];
+          for (const control of controls) {
+            const a = control.getBoundingClientRect();
+            if (!a.width || getComputedStyle(control).visibility === 'hidden') continue;
+            for (const shape of shapes) {
+              const b = shape.getBoundingClientRect();
+              if (b.width && a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top) result.push(control.getAttribute('class'));
+            }
+          }
+          return result;
+        });
+        assert.ok(await mission.locator('.task-tray-hit').isVisible());
+        assert.deepEqual(collisions, [], width + '×' + height + ' wheel ' + deltaY);
+      }
+    }
+  } finally { await page.close(); }
+});
+
+test('a crowded map transfers its Tasks action and keyboard focus to the caption list and back', async () => {
+  const page = await browser.newPage({viewport: {width: 1440, height: 900}, reducedMotion: 'reduce'});
+  try {
+    await page.goto(new URL('#/project/coven-cave/mission/m-1?detail=card', base).href);
+    const tray = page.locator('.atlas-mission-current .mission-tasks');
+    const caption = page.locator('#missionCaptions .mission-caption').filter({hasText: 'Board cards'});
+    await tray.focus();
+    // Cover the available label space using a measured toolbar, independently of the sample's geometry.
+    const coverMap = () => page.addStyleTag({content: '#atlasCameraDock {position:fixed!important; inset:0!important; width:auto!important; height:auto!important; pointer-events:none}'});
+    const redraw = () => page.evaluate(() => window.dispatchEvent(new Event('resize')));
+    const cover = await coverMap();
+    await redraw();
+    await caption.waitFor();
+    assert.match(await caption.innerText(), /3 tasks/);
+    assert.ok(await caption.evaluate(el => el === document.activeElement));
+    await cover.evaluate(el => el.remove());
+    await redraw();
+    await tray.waitFor();
+    assert.ok(await tray.evaluate(el => el === document.activeElement));
+    await coverMap();
+    await redraw();
+    await caption.waitFor();
+    await page.keyboard.press('Enter');
+    await page.locator('#inspect [role="tab"][aria-selected="true"]').filter({hasText: 'Tasks'}).waitFor();
+  } finally { await page.close(); }
+});
