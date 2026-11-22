@@ -58,7 +58,9 @@ for (const width of [1440, 390]) for (const input of ['pointer', 'keyboard']) {
       await page.goto(new URL('#/project/' + target + '/mission/proof?view=brief&detail=side', base).href);
       await button('History').click();
       const entry = button('Show event ' + first.opening + ' on map');
-      if (!await entry.count()) await el('#historyNext').click();
+      const opening = el('.history-event[data-position="' + first.opening + '"]');
+      if (!await opening.count()) await el('#historyNext').click();
+      await opening.click();
       await entry.click();
       await el(mobile ? '#atlasMobileMap' : '#atlasOverview').click();
       await activate(el('#needBtn'));
@@ -93,7 +95,7 @@ for (const width of [1440, 390]) for (const input of ['pointer', 'keyboard']) {
         await activate(investigate);
         assert.match(await el('#historySource').innerText(), /coven-cave · proof/);
         assert.ok(await entry.evaluate(e => e === document.activeElement));
-        const source = page.locator('#historyRows li').filter({has: entry}).locator('details[open] pre');
+        const source = page.locator('#historyDetail details[open] pre');
         await source.waitFor();
         const record = JSON.parse(await source.innerText());
         assert.deepEqual([record.type, record.mission, record.ask, record.title], ['gate.requested', mission, id, title]);

@@ -1186,43 +1186,83 @@ body.atlas-enhanced #mission-section .bfl > b { white-space: normal; text-align:
 }
 
 #missionHistory {
-  width: min(640px, calc(100vw - 24px)); max-height: calc(100dvh - 32px); padding: 0;
-  box-sizing: border-box; border: 1px solid var(--border-strong); border-radius: 14px;
-  color: var(--foreground); background: var(--card); font: inherit; overflow: auto;
+  box-sizing: border-box; width: min(46rem, calc(100% - 20px)); max-height: calc(100dvh - 24px);
+  margin: auto; padding: 0; border: 1px solid var(--border-strong); border-radius: 14px;
+  background: var(--card); color: var(--foreground); font: inherit; overflow: hidden;
 }
+#missionHistory[open] { display: flex; flex-direction: column; }
 #missionHistory::backdrop { background: rgb(0 0 0 / .72); }
-#missionHistory header { position: sticky; top: 0; z-index: 1; display: flex; justify-content: space-between; align-items: start; gap: 12px; background: var(--card); border-bottom: 1px solid var(--border); padding: 16px 20px; }
-#missionHistory header span, #historyCount { color: var(--primary); }
-#missionHistory h2 { margin: 3px 0; font-size: 1.5rem; overflow-wrap: anywhere; }
+.history-heading { flex: none; display: flex; gap: 12px; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding: 14px 20px; }
+#historyLabel { color: var(--primary-hi); font-size: .84em; }
+#historyTitle { margin: 2px 0 0; font-size: 1.45em; line-height: 1.2; overflow-wrap: anywhere; max-height: 2.5em; overflow: auto; }
+.history-content { min-height: 0; overflow: auto; padding: 0 16px 16px; overscroll-behavior: contain; }
 #missionHistory p { margin: 0; }
-#historySource, .history-content > p, .history-range small, .history-event-head time { color: var(--muted-foreground); }
-.history-content { padding: 16px 20px; display: grid; gap: 16px; }
-.history-range { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
-.history-range > div { display: grid; align-content: start; gap: 6px; }
-.history-range input { width: 100%; box-sizing: border-box; background: var(--well); border: 1px solid var(--border-strong); border-radius: 6px; padding: 8px; color: inherit; }
-.history-range small, #historySource { overflow-wrap: anywhere; }
-#historyRows { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
-#historyRows li { padding: 12px; background: var(--card-raised); border: 1px solid var(--border); border-radius: 8px; overflow-wrap: anywhere; }
-.history-event-head, .history-actions, #historyPages { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px; }
-.history-event-head time, #historyRows code { font-size: .82em; }
-.history-change { display: grid; gap: 3px; margin: 10px 0; }
-.history-actions { justify-content: start; }
+.history-context, .history-toolbar, .history-actions, .history-bounds, #historyPages { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.history-context { padding: 8px 2px; border-bottom: 1px solid var(--border); }
+#historySource { min-width: 0; flex: 1; overflow-wrap: anywhere; color: var(--muted-foreground); font-size: .87em; }
+.history-import summary, .history-source-event summary { cursor: pointer; }
+.history-import summary { color: var(--muted-foreground); padding: 6px; }
+.history-import[open] { flex-basis: 100%; }
+.history-import .btn { margin: 4px 0 6px; }
+#historyWarning, #historyError { padding: 8px; border-inline-start: 2px solid var(--primary); background: var(--primary-soft); }
+.history-toolbar { padding: 9px 2px; }
+#historyCount { font-weight: 600; font-variant-numeric: tabular-nums; }
+#historyRange { background: var(--card-raised); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; }
+#historyRange p, .history-range small { color: var(--muted-foreground); }
+.history-range { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(13rem,100%),1fr)); gap: 14px; margin-top: 10px; }
+.history-range > div { display: grid; align-content: start; gap: 5px; min-width: 0; }
+.history-range small { overflow-wrap: anywhere; }
+.history-range input { width: 100%; box-sizing: border-box; background: var(--well); color: inherit; border: 1px solid var(--border-strong); border-radius: 6px; padding: 8px; }
+.history-workspace { background: var(--well); border-radius: 10px; }
+.history-workspace:has(#historyRows:empty) { display: none; }
+#historyRows { list-style: none; margin: 0; padding: 4px; }
+#historyRows li { position: relative; }
+#historyRows li:not(:last-child)::before { content: ""; position: absolute; inset: 28px auto -28px 21px; width: 1px; background: var(--border-strong); pointer-events: none; }
+.history-event { position: relative; box-sizing: border-box; width: 100%; display: flex; align-items: center; gap: 11px; padding: 10px 8px; min-height: 54px; border: 1px solid transparent; border-radius: 6px; background: transparent; color: inherit; font: inherit; text-align: start; cursor: pointer; }
+.history-event:hover { background: var(--card); }
+.history-event[aria-expanded="true"] { background: var(--card-raised); border-inline-start: 2px solid var(--primary); padding-inline-start: 7px; }
+.history-mark { flex: none; display: grid; place-items: center; width: 24px; height: 24px; border: 1px solid var(--border-strong); border-radius: 50%; background: var(--card); color: var(--primary); }
+.history-mark svg { width: 15px; height: 15px; }
+.history-mark .avatar { width: 24px; height: 24px; }
+.history-limit { color: var(--warn); }
+.history-event-copy { display: grid; gap: 2px; min-width: 0; overflow-wrap: anywhere; }
+.history-event-copy strong { font-weight: 560; }
+.history-event-meta, .history-detail-meta { display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: .84em; color: var(--muted-foreground); font-variant-numeric: tabular-nums; }
+#historyDetail { position: relative; min-width: 0; padding: 15px; margin: 0 4px 8px 20px; background: var(--card-raised); border: 1px solid var(--border); border-radius: 8px; overflow-wrap: anywhere; }
+#historyEventTitle { margin: 6px 0 12px; font-size: 1.18em; line-height: 1.35; }
+.history-changes { margin: 0; }
+.history-changes dt { margin-top: 9px; color: var(--muted-foreground); font-size: .87em; }
+.history-changes dd { margin: 2px 0 0; }
+.history-changes dd span { color: var(--muted-foreground); }
+.history-changes b { font-weight: 550; }
+.history-notice { color: var(--primary-hi); }
+.history-actions, .history-bounds { justify-content: start; padding-top: 10px; }
+#historyDetail .history-map-action { background: var(--primary-soft); border-color: var(--ring); color: var(--primary-hi); }
+.history-source-event { border-top: 1px solid var(--border); margin-top: 12px; padding-top: 8px; color: var(--muted-foreground); }
+.history-source-event pre { white-space: pre-wrap; font-size: .9em; }
+#historyPages { padding: 8px; }
+#missionHistory :is(button,summary,input):focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }
+@media (min-width: 860px) and (min-height: 520px) {
+  #missionHistory { width: min(55rem,calc(100% - 40px)); }
+  .history-workspace { display: grid; grid-template-columns: 1.1fr 1fr; align-items: start; }
+  .history-feed, #historyDetail { max-height: min(54dvh,36rem); box-sizing: border-box; overflow: auto; }
+  #historyDetail { margin: 4px; }
+}
+@media (pointer: coarse), (max-width: 500px) {
+  #missionHistory :is(.btn,summary) { min-height: 44px; box-sizing: border-box; }
+  #missionHistory summary { align-content: center; }
+  .history-heading { padding: 10px 14px; }
+  .history-content { padding-inline: 10px; }
+}
+@media (max-height: 519px) {
+  .history-heading { padding-block: 6px; }
+  .history-heading > div { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  #historyTitle { font-size: 1.15em; margin: 0; }
+}
 #historyReturn { position: fixed; z-index: 45; bottom: max(76px, 12dvh); left: 50%; transform: translateX(-50%); width: max-content; max-width: 88vw; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; padding: 8px 12px; border: 1px solid var(--border-strong); background: var(--card); border-radius: 8px; }
 body.atlas-adaptive-mobile #historyReturn { bottom: calc(var(--mobile-chrome-height, 108px) + env(safe-area-inset-bottom, 0px) + 8px); }
-@media (max-width: 500px) {
-  #missionHistory header, .history-content { padding: 12px; }
-  .history-range button { white-space: normal; min-height: 42px; }
-  .history-actions button, #historyResume { min-height: 40px; }
-}
-
-.history-import label { cursor: pointer; position: relative; }
-.history-import label:focus-within { outline: 2px solid var(--focus, currentColor); outline-offset: 2px; }
-#historyError { color: var(--attention); }
-#historyMapNote { flex: 1 0 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-#historyRows li p { overflow-wrap: anywhere; }
-.history-source-event { margin: 8px 0; color: var(--muted-foreground); }
-.history-source-event summary { cursor: pointer; }
-.history-source-event pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: .85em; }
+@media (max-width: 500px) { #historyResume { min-height: 44px; } }
+#historyMapNote { flex: 1 0 100%; overflow-wrap: anywhere; max-height: 3.5em; overflow: auto; }
 
 /* The closed channel is attached to the map edge. The compact crown clears the map footer. */
 .psyche-launcher {

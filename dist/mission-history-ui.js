@@ -1,5 +1,5 @@
 // The inspector owns the entry point. Playback remains in charge of map selection and time.
-window.CovenHistoryView = function ({model, current, readSeal, showMoment, restoreInspector, importRecording}) {
+window.CovenHistoryView = function ({model, current, familiar, eventIcon, readSeal, showMoment, restoreInspector, importRecording}) {
   const byId = id => document.getElementById(id);
   const dialog = byId('missionHistory'), back = byId('historyReturn'), list = byId('historyRows');
   const at = pos => state.project.trace[pos - 1];
@@ -23,10 +23,51 @@ window.CovenHistoryView = function ({model, current, readSeal, showMoment, resto
     b.addEventListener('click', action);
     return b;
   }
+  const detail = byId('historyDetail'), workspace = dialog.querySelector('.history-workspace');
+  const feed = dialog.querySelector('.history-feed'), content = dialog.querySelector('.history-content');
+  const wide = matchMedia('(min-width: 860px) and (min-height: 520px)');
+  const titles = {
+    'mission.opened': 'Mission opened', 'mission.closed': 'Mission closed', 'mission.renamed': 'Mission renamed',
+    'mission.briefed': 'Brief updated', 'mission.paused': 'Mission paused', 'mission.resumed': 'Mission resumed',
+    'mission.progress': 'Progress recorded', 'task.opened': 'Task opened', 'task.lead.added': 'Task lead added',
+    'agent.assigned': 'Agent assignment recorded', 'agent.spawned': 'Agent joined', 'agent.retired': 'Agent retired',
+    'agent.state': 'Agent activity updated', 'artifact.state': 'Deliverable updated', 'gate.requested': 'Decision requested',
+    'gate.resolved': 'Decision recorded', 'familiar.report': 'Familiar reported', 'psyche.said': 'Psyche replied',
+    'psyche.routed': 'Psyche routed a message', 'you.said': 'You sent a message', 'round.closed': 'Conversation closed',
+    'project.stopped': 'Project stopped', 'project.resumed': 'Project resumed', 'project.renamed': 'Project renamed',
+    'project.moved': 'Project moved', 'project.founded': 'Project created',
+  };
+  function headline(event) {
+    if (event.type === 'council.seated') return event.familiar ? familiar(event.familiar).name + ' joined the council' : 'Council seat recorded';
+    const title = titles[event.type] || event.type;
+    const subject = event.type === 'task.opened' ? event.name : event.type === 'gate.requested' ? event.title : event.agent;
+    return subject ? title + ' · ' + subject : title;
+  }
+  function setRangeOpen(open) {
+    byId('historyRange').hidden = !open;
+    const toggle = byId('historyRangeToggle');
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.textContent = open ? 'Hide range' : 'Edit range';
+  }
+  byId('historyRangeToggle').onclick = () => setRangeOpen(byId('historyRange').hidden);
+  function placeDetail() {
+    const selected = list.querySelector('[aria-expanded="true"]');
+    const parent = wide.matches || !selected ? workspace : selected.parentElement;
+    if (detail.parentElement !== parent) {
+      const focused = detail.contains(document.activeElement) && document.activeElement;
+      parent.append(detail);
+      if (focused) focused.focus({preventScroll: true});
+    }
+  }
+  wide.addEventListener('change', () => {
+    if (dialog.open && wide.matches && detail.hidden) render();
+    else placeDetail();
+  });
   function updateRange(key, value) {
     if (!Number.isInteger(value) || value < 0 || value > state.length) return render();
     state[key] = value;
     state.page = 0;
+    state.scroll = null;
     state.selected = null;
     render();
   }
@@ -39,6 +80,8 @@ window.CovenHistoryView = function ({model, current, readSeal, showMoment, resto
     };
   }
   function show(entry) {
+    if (dialog.open) state.scroll = entry.position === state.selected ? {feed: feed.scrollTop, content: content.scrollTop, detail: detail.scrollTop} : null;
+    else if (entry.position !== state.selected) state.scroll = null;
     state.selected = entry.position;
     const wasModal = dialog.open;
     if (wasModal) dialog.close();
@@ -63,11 +106,70 @@ window.CovenHistoryView = function ({model, current, readSeal, showMoment, resto
       if (next) show(next);
     };
   }
+  byId('historyLoad').onclick = () => byId('historyFile').click();
   byId('historyFile').onchange = async event => {
     const file = event.target.files[0];
     event.target.value = '';
     if (file) await importRecording(file);
   };
+  function selectEvent(entry, focusDetail = false) {
+    const previous = list.querySelector('[aria-expanded="true"]');
+    if (previous) previous.setAttribute('aria-expanded', 'false');
+    const trigger = list.querySelector('[data-position="' + entry.position + '"]');
+    trigger.setAttribute('aria-expanded', 'true');
+    state.selected = entry.position;
+    const event = at(entry.position);
+    const heading = element('h3', headline(event));
+    heading.id = 'historyEventTitle'; heading.tabIndex = -1;
+    const stamp = element('time', time(entry.time));
+    if (stamp.textContent !== 'Unknown time') stamp.dateTime = new Date(entry.time).toISOString();
+    const meta = element('div', null, 'history-detail-meta');
+    meta.append(element('span', 'Event ' + entry.position), stamp);
+    detail.replaceChildren(meta, heading);
+    if (entry.unknown) detail.append(element('p', entry.unknown, 'history-notice'));
+    if (entry.changes.length) {
+      const changes = element('dl', null, 'history-changes');
+      for (const {label, before, after} of entry.changes) {
+        const value = element('dd');
+        value.append(element('span', before), document.createTextNode(' → '), element('b', after));
+        changes.append(element('dt', label), value);
+      }
+      detail.append(changes);
+    }
+    if (entry.details) detail.append(element('p', entry.details, 'history-fields'));
+    if (entry.finalStatus === 'open') detail.append(element('p', state.project.skippedEvents ? 'Open after the last recognized event' :
+      state.project.recorded ? 'Open at end of recording' : 'Open at latest event', 'history-notice'));
+    if (entry.finalStatus === 'held' && !entry.relatedPosition) detail.append(element('p', 'Held when the mission closed'));
+    const jump = button('Show on map', () => show(entry));
+    jump.classList.add('history-map-action');
+    jump.setAttribute('aria-label', 'Show event ' + entry.position + ' on map');
+    const actions = element('div', null, 'history-actions');
+    actions.append(jump);
+    if (entry.relatedPosition) {
+      const target = entry.relatedPosition;
+      const link = button(entry.type === 'gate.requested' ? 'View resolution' : 'View request', () => show(state.entries.find(item => item.position === target)));
+      link.title = 'Event ' + target;
+      actions.append(link);
+    }
+    const source = element('details', null, 'history-source-event');
+    const json = element('pre');
+    source.append(element('summary', 'Recorded event'), element('code', entry.type), json);
+    const loadSource = () => { if (source.open && !json.textContent) json.textContent = JSON.stringify(event, null, 2); };
+    source.addEventListener('toggle', loadSource);
+    source.open = state.origin?.position === entry.position;
+    loadSource();
+    const bounds = element('div', null, 'history-bounds');
+    for (const key of ['start', 'end']) {
+      bounds.append(button(key === 'start' ? 'Start here' : 'End here', () => {
+        setRangeOpen(true); updateRange(key, entry.position); byId('history-' + key).focus();
+      }));
+    }
+    detail.append(actions, source, bounds);
+    detail.hidden = false;
+    placeDetail();
+    detail.scrollTop = 0;
+    if (focusDetail) heading.focus();
+  }
   function render() {
     for (const key of ['start', 'end']) {
       const input = byId('history-' + key);
@@ -76,53 +178,33 @@ window.CovenHistoryView = function ({model, current, readSeal, showMoment, resto
       byId('history-' + key + '-note').textContent = moment(state[key]);
     }
     const entries = window.CovenMissionHistory.between(state.entries, state.start, state.end);
-    const offset = state.page * pageSize;
+    const offset = state.page * pageSize, page = entries.slice(offset, offset + pageSize);
     byId('historyCount').textContent = state.end < state.start ? 'End must be at or after start.' :
-      entries.length ? (offset + 1) + '–' + Math.min(offset + pageSize, entries.length) + ' of ' + entries.length + ' mission events' :
-      'No recorded events for this mission in the interval.';
+      entries.length > pageSize ? (offset + 1) + '–' + (offset + page.length) + ' of ' + entries.length + ' events' :
+      entries.length ? entries.length + (entries.length === 1 ? ' event' : ' events') : 'No mission events in this range.';
+    workspace.append(detail); detail.hidden = true;
     list.replaceChildren();
-    for (const entry of entries.slice(offset, offset + pageSize)) {
+    for (const entry of page) {
+      const event = at(entry.position), group = entry.type.split('.')[0];
       const row = element('li');
-      const head = element('div', null, 'history-event-head');
-      head.append(element('strong', 'Event ' + entry.position), element('time', time(entry.time)));
-      row.append(head, element('code', entry.type));
-      if (entry.unknown) row.append(element('p', entry.unknown));
-      for (const {label, before, after} of entry.changes) {
-        const change = element('div', null, 'history-change');
-        change.append(element('strong', label), element('span', before + ' → ' + after));
-        row.append(change);
-      }
-      if (entry.details) row.append(element('p', entry.details));
-      if (entry.finalStatus === 'open') {
-        const status = state.project.skippedEvents ? 'Open after the last recognized event' :
-          state.project.recorded ? 'Open at end of recording' : 'Open at latest event';
-        row.append(element('strong', status));
-      }
-      if (entry.finalStatus === 'held' && !entry.relatedPosition) row.append(element('p', 'Held when the mission closed'));
-      const jump = button('Show on map', () => show(entry));
-      jump.dataset.position = entry.position;
-      jump.setAttribute('aria-label', 'Show event ' + entry.position + ' on map');
-      const actions = element('div', null, 'history-actions');
-      actions.append(jump, button('Start here', () => { updateRange('start', entry.position); byId('history-start').focus(); }),
-        button('End here', () => { updateRange('end', entry.position); byId('history-end').focus(); }));
-      if (entry.relatedPosition) {
-        const position = entry.relatedPosition;
-        const label = entry.type === 'gate.requested' ? 'Show resolution' : 'Show request';
-        actions.append(button(label + ' · event ' + position, () => show(state.entries.find(item => item.position === position))));
-      }
-      const source = element('details', null, 'history-source-event');
-      const json = element('pre');
-      source.append(element('summary', 'Recorded event'), json);
-      source.addEventListener('toggle', () => {
-        if (source.open && !json.textContent) json.textContent = JSON.stringify(at(entry.position), null, 2);
-      });
-      if (state.origin?.position === entry.position) {
-        json.textContent = JSON.stringify(at(entry.position), null, 2);
-        source.open = true;
-      }
-      row.append(source, actions);
-      list.append(row);
+      const trigger = button('', () => selectEvent(entry, true));
+      trigger.className = 'history-event'; trigger.dataset.position = entry.position;
+      trigger.setAttribute('aria-expanded', 'false'); trigger.setAttribute('aria-controls', 'historyDetail');
+      const mark = element('span', null, 'history-mark');
+      mark.setAttribute('aria-hidden', 'true'); mark.innerHTML = eventIcon(group, event.familiar);
+      if ((entry.type === 'mission.paused' && event.reason === 'limit') || (entry.type === 'gate.requested' && event.limit)) mark.classList.add('history-limit');
+      const copy = element('span', null, 'history-event-copy');
+      const metadata = element('span', null, 'history-event-meta');
+      const exact = time(entry.time);
+      const clock = element('time', exact === 'Unknown time' ? exact : exact.split(' ')[1].slice(0, 8) + ' UTC');
+      if (exact !== 'Unknown time') clock.dateTime = new Date(entry.time).toISOString();
+      clock.title = exact;
+      metadata.append(element('span', '#' + entry.position), clock);
+      copy.append(element('strong', headline(event)), metadata);
+      trigger.append(mark, copy); row.append(trigger); list.append(row);
     }
+    const selected = page.find(entry => entry.position === state.selected) || (wide.matches && page[0]);
+    if (selected) selectEvent(selected);
     byId('historyPrev').disabled = state.page === 0;
     byId('historyNext').disabled = offset + pageSize >= entries.length;
     byId('historyPages').hidden = entries.length <= pageSize;
@@ -134,6 +216,7 @@ window.CovenHistoryView = function ({model, current, readSeal, showMoment, resto
     state.length = project.trace.length;
   }
   function open(project, mission, name, origin = null) {
+    const returning = !back.hidden && state?.project === project && state.mission === mission;
     if (!state || state.project !== project || state.mission !== mission) {
       state = {project, mission, start: 0, end: project.trace.length, page: 0, selected: null, length: -1};
     }
@@ -154,16 +237,28 @@ window.CovenHistoryView = function ({model, current, readSeal, showMoment, resto
     dialog.querySelector('.history-import').hidden = !!origin;
     byId('historyError').hidden = true;
     byId('historyTitle').textContent = name;
-    byId('historySource').textContent = (project.recorded ? 'Imported recording' : project.sample ? 'Built-in sample · Local simulation' : 'Local simulation') + ' · ' + project.key + ' · ' + mission +
-      (project.skippedEvents ? ' · Incomplete recording (' + project.skippedEvents + ' unrecognized). Changes in skipped records are unknown.' : '');
+    if (!returning) {
+      setRangeOpen(false);
+      dialog.querySelector('.history-import').open = false;
+      state.scroll = null;
+    }
+    byId('historySource').textContent = (project.recorded ? 'Imported recording' : project.sample ? 'Built-in sample · Local simulation' : 'Local simulation') + ' · ' + project.key + ' · ' + mission;
+    byId('historyWarning').hidden = !project.skippedEvents;
+    byId('historyWarning').textContent = project.skippedEvents ? 'Incomplete recording · ' + project.skippedEvents + ' unrecognized. Changes in skipped records are unknown.' : '';
     back.hidden = true;
     render();
-    const target = list.querySelector('button[data-position="' + state.selected + '"]') || byId('historyTitle');
+    const target = (origin || returning) && detail.querySelector('.history-map-action') || byId('historyTitle');
     target.autofocus = true;
     dialog.showModal();
     target.autofocus = false;
     window.CovenMobileUI?.sync();
-    target.focus();
+    target.focus({preventScroll: true});
+    if (returning && state.scroll) {
+      feed.scrollTop = state.scroll.feed; content.scrollTop = state.scroll.content; detail.scrollTop = state.scroll.detail;
+    } else if (origin || returning) {
+      list.querySelector('[aria-expanded="true"]')?.scrollIntoView({block: 'nearest'});
+      target.scrollIntoView({block: 'nearest'});
+    } else { feed.scrollTop = 0; content.scrollTop = 0; }
   }
   function close() {
     dialog.close();
@@ -178,7 +273,7 @@ window.CovenHistoryView = function ({model, current, readSeal, showMoment, resto
   dialog.addEventListener('keydown', ev => ev.stopPropagation());
   byId('historyResume').onclick = () => open(state.project, state.mission, state.name, state.origin);
   for (const [id, delta] of [['historyPrev', -1], ['historyNext', 1]]) {
-    byId(id).onclick = () => { state.page += delta; render(); list.querySelector('button')?.focus(); };
+    byId(id).onclick = () => { state.page += delta; state.selected = null; state.scroll = null; render(); list.querySelector('button')?.focus(); };
   }
   function reset() {
     if (dialog.open) dialog.close();

@@ -1682,16 +1682,27 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
 </div>
 
 <dialog id="missionHistory" aria-labelledby="historyLabel historyTitle" aria-describedby="historySource">
-  <header><div><span id="historyLabel">Mission history</span><h2 id="historyTitle" tabindex="-1"></h2><p id="historySource"></p></div><button class="btn" type="button" id="historyClose">Close</button></header>
+  <header class="history-heading">
+    <div><span id="historyLabel">Mission history</span><h2 id="historyTitle" tabindex="-1"></h2></div>
+    <button class="btn" type="button" id="historyClose">Close</button>
+  </header>
   <div class="history-content">
-    <div class="history-import"><label class="btn sm" for="historyFile">Load a local recording<input class="sr" type="file" id="historyFile" accept=".jsonl,.ndjson,.json,.txt"></label><p id="historyError" role="alert" hidden></p></div>
-    <p>Compare the changes after the start event through the end event. Event numbers follow recording order, including events at the same time.</p>
-    <div class="history-range">
-      <div><label for="history-start">After event</label><input id="history-start" type="number" min="0" step="1" aria-describedby="history-start-note"><small id="history-start-note"></small><button class="btn sm" id="history-start-cursor" type="button">Start at replay position</button></div>
-      <div><label for="history-end">Through event</label><input id="history-end" type="number" min="0" step="1" aria-describedby="history-end-note"><small id="history-end-note"></small><button class="btn sm" id="history-end-cursor" type="button">End at replay position</button></div>
+    <div class="history-context"><p id="historySource"></p><details class="history-import"><summary>Source</summary><button class="btn" type="button" id="historyLoad">Load recording</button><input hidden type="file" id="historyFile" accept=".jsonl,.ndjson,.json,.txt"></details></div>
+    <p id="historyWarning" hidden></p><p id="historyError" role="alert" hidden></p>
+    <div class="history-toolbar"><p id="historyCount" role="status"></p><button class="btn" id="historyRangeToggle" aria-expanded="false" aria-controls="historyRange">Edit range</button></div>
+    <section id="historyRange" hidden aria-label="Comparison range">
+      <p>Includes events after the start and through the end, in recording order.</p>
+      <div class="history-range">
+        <div><label for="history-start">After event</label><input id="history-start" type="number" min="0" step="1" aria-describedby="history-start-note"><small id="history-start-note"></small><button class="btn sm" id="history-start-cursor" type="button">Use replay start</button></div>
+        <div><label for="history-end">Through event</label><input id="history-end" type="number" min="0" step="1" aria-describedby="history-end-note"><small id="history-end-note"></small><button class="btn sm" id="history-end-cursor" type="button">Use replay end</button></div>
+      </div>
+    </section>
+    <div class="history-workspace">
+      <div class="history-feed"><ol id="historyRows" aria-label="Mission events"></ol>
+        <nav id="historyPages" aria-label="History pages" hidden><button class="btn" id="historyPrev" type="button">Previous events</button><button class="btn" id="historyNext" type="button">Next events</button></nav>
+      </div>
+      <section id="historyDetail" aria-labelledby="historyEventTitle" hidden></section>
     </div>
-    <p id="historyCount" role="status"></p><ol id="historyRows"></ol>
-    <nav id="historyPages" aria-label="History pages" hidden><button class="btn" id="historyPrev" type="button">Previous events</button><button class="btn" id="historyNext" type="button">Next events</button></nav>
   </div>
 </dialog>
 <div id="historyReturn" hidden><span id="historyMapNote" role="status"></span><button class="btn sm" type="button" id="historyBackEvent">Previous event</button><button class="btn sm" type="button" id="historyForwardEvent">Next event</button><button class="btn" id="historyResume" type="button">Return to History</button></div>
@@ -3948,7 +3959,14 @@ function placeCard() {
 // A mission lists its council, one row per familiar. A familiar lists every council it sits on, one row per mission.
 const insp = {sig: '', nums: null, dots: new Map(), taskSummaries: [], slot: null};
 const missionHistory = window.CovenHistoryView({
-  model: SimModel, current: cur, readSeal: (w, m) => SEAL_STATE[sealOf(w, m).state][0],
+  model: SimModel, current: cur, familiar: fam,
+  eventIcon(group, familiar) {
+    if ((group === 'council' || group === 'familiar') && familiar) return avatar(familiar);
+    if (group === 'task') return '<svg viewBox="-6 -6 12 12" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="' + taskCogPath + '"/></svg>';
+    if (group === 'mission') return '<svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor"/><path d="M10 4a6 6 0 1 1-5.2 9L10 10Z" fill="currentColor"/></svg>';
+    return ({gate: ICON.ward, project: ICON.folder, agent: ICON.gate, artifact: ICON.file, psyche: ICON.speak, you: ICON.speak})[group] || ICON.pulse;
+  },
+  readSeal: (w, m) => SEAL_STATE[sealOf(w, m).state][0],
   async importRecording(file) {
     if (await loadTrace(file, $('historyError'))) window.CovenAtlas.openMissionsForProject(active);
   },
@@ -3956,7 +3974,12 @@ const missionHistory = window.CovenHistoryView({
     if (cur() !== project || atlasScope === 'coven') atlasOpenProject(project.key);
     jumpTo(t, position);
     const exists = cur().world.missions.has(mission);
-    if (exists) select(mission, null, 'card', {focus: false});
+    if (exists) {
+      const event = project.trace[position - 1];
+      const request = project.world.asks.get(event?.ask);
+      const focusGroup = window.matchMedia('(max-width: 500px)').matches && request?.agents.length && request.fam;
+      select(mission, focusGroup || null, 'card', {focus: false, group: !!focusGroup});
+    }
     return exists;
   },
   restoreInspector(mission) {

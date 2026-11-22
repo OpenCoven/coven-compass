@@ -27,7 +27,23 @@ try {
     else await target.click();
   }
   const shot = name => page.screenshot({path: join(shots, engine + '-' + mode + '-' + name + '.png')});
+  // The short landscape and small phone layouts previously opened below the first event.
+  for (const [width, height] of [[320,568], [844,390], [1440,900]]) {
+    await page.setViewportSize({width, height});
+    await page.goto(new URL('#/project/psyche-build/mission/m-3?view=brief&detail=side', url).href);
+    await activate(btn('History'));
+    const first = loc('.history-event').first();
+    assert.match(await first.innerText(), /Mission opened/);
+    const bounds = await first.boundingBox();
+    assert.ok(bounds.y >= 0 && bounds.y + bounds.height <= height);
+    assert.ok(await loc('#missionHistory').evaluate(el => el.scrollWidth <= el.clientWidth));
+    await activate(loc('.history-event').nth(2));
+    assert.equal(await loc('#historyDetail').evaluate(el => el.parentElement.tagName === 'LI'), width < 860);
+    await activate(btn('Close'));
+  }
+  await page.setViewportSize(touch ? {width: 390, height: 844} : {width: 1440, height: 900});
   await page.goto(new URL('#/project/psyche-build', url).href);
+  await page.reload();
   for (const id of ['workspaceTools', 'traceBox', 'traceLoad']) await activate(loc('#' + id + ' > summary'));
   const [chooser] = await Promise.all([page.waitForEvent('filechooser'), activate(loc(keyboard ? '#traceFile' : '#traceDrop'))]);
   await chooser.setFiles(recording);
@@ -45,7 +61,11 @@ try {
   const dialog = page.getByRole('dialog', {name:'Mission history Publication review', exact:true});
   await dialog.waitFor();
   assert.match(await loc('#historySource').innerText(), /Imported recording.*release/);
-  const row = n => loc('#historyRows li').filter({has: btn('Show event ' + n + ' on map')});
+  const detail = loc('#historyDetail');
+  const row = n => loc('#historyRows [data-position="' + n + '"]');
+  async function inspect(n) { await activate(row(n)); return detail.innerText(); }
+  assert.equal(await loc('#historyRange').isVisible(), false);
+  await activate(loc('#historyRangeToggle'));
   const range = async (which, n) => {
     const input = loc('#history-' + which);
     if (keyboard) {
@@ -57,21 +77,22 @@ try {
   };
   await range('start', 1);
   await range('end', 2);
-  assert.match(await row(2).innerText(), /council.seated/);
-  await activate(btn('End at replay position'));
+  assert.match(await inspect(2), /Cody joined the council/);
+  await activate(btn('Use replay end'));
   assert.equal(await loc('#history-end').inputValue(), '9');
-  assert.match(await row(9).innerText(), /Release review → Publication review/);
-  await activate(row(8).getByRole('button', {name:'End here'}));
+  assert.match(await inspect(9), /Release review → Publication review/);
+  await inspect(8); await activate(btn('End here'));
   await range('start', 4);
-  assert.match(await row(5).innerText(), /worker-1[\s\S]*No recorded agent → Draft notes \(draft\)/);
-  assert.match(await row(6).innerText(), /worker-1[\s\S]*Draft notes \(draft\) → Check sources \(check\)/);
-  assert.match(await row(7).innerText(), /06:20:05Z[\s\S]*Approve publication[\s\S]*Waiting for decision/);
-  assert.match(await row(8).innerText(), /Waiting for decision → Allowed/);
-  assert.match(await row(7).innerText(), /Active → Needs you/);
-  assert.match(await row(8).innerText(), /Needs you → Active/);
-  const disclosure = row(6).locator('summary');
+  assert.match(await inspect(5), /worker-1[\s\S]*No recorded agent → Draft notes \(draft\)/);
+  assert.match(await inspect(6), /worker-1[\s\S]*Draft notes \(draft\) → Check sources \(check\)/);
+  assert.match(await inspect(7), /06:20:05Z[\s\S]*Approve publication[\s\S]*Waiting for decision/);
+  assert.match(await inspect(8), /Waiting for decision → Allowed/);
+  assert.match(await inspect(7), /Active → Needs you/);
+  assert.match(await inspect(8), /Needs you → Active/);
+  await inspect(6);
+  const disclosure = detail.locator('summary');
   await activate(disclosure);
-  const payload = row(6).locator('pre').filter({hasText:'agent.assigned'});
+  const payload = detail.locator('pre').filter({hasText:'agent.assigned'});
   await payload.waitFor();
   const raw = JSON.parse(await payload.innerText());
   assert.deepEqual([raw.type, raw.agent, raw.task], ['agent.assigned', 'worker-1', 'check']);
@@ -79,6 +100,9 @@ try {
   await row(6).scrollIntoViewIfNeeded();
   await shot('history');
   const event = btn('Show event 6 on map');
+  const scroll = () => loc('.history-content').evaluate(content => [content.scrollTop, content.querySelector('.history-feed').scrollTop]);
+  await event.scrollIntoViewIfNeeded();
+  const beforeMap = await scroll();
   await activate(event);
   await loc('#historyReturn').waitFor();
   assert.match(await loc('#historyMapNote').innerText(), /Event 6 .*agent.assigned/);
@@ -89,10 +113,12 @@ try {
   await shot('map');
   await activate(btn('Return to History'));
   assert.ok(await focused(event));
+  const afterMap = await scroll();
+  assert.ok(afterMap.every((value, i) => Math.abs(value - beforeMap[i]) < 2), 'history restores its scroll position');
   assert.deepEqual(await Promise.all(['start','end'].map(k => loc('#history-' + k).inputValue())), ['4','8']);
-  await activate(btn('Start at replay position'));
+  await activate(btn('Use replay start'));
   assert.equal(await loc('#history-start').inputValue(), '6');
-  assert.match(await loc('#historyRows').innerText(), /gate.resolved/);
+  assert.match(await loc('#historyRows').innerText(), /Decision recorded/);
   if (keyboard) await page.keyboard.press('Escape'); else await activate(btn('Close'));
   assert.ok(await focused(btn('History')));
   if (mode === 'desktop') {
