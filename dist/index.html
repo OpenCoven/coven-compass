@@ -1682,6 +1682,20 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
   </main>
 </div>
 
+<dialog id="missionHistory" aria-labelledby="historyLabel historyTitle" aria-describedby="historySource">
+  <header><div><span id="historyLabel">Mission history</span><h2 id="historyTitle" tabindex="-1"></h2><p id="historySource"></p></div><button class="btn" type="button" id="historyClose">Close</button></header>
+  <div class="history-content">
+    <p>Compare the changes after the start event through the end event. Event numbers follow recording order, including events at the same time.</p>
+    <div class="history-range">
+      <div><label for="history-start">After event</label><input id="history-start" type="number" min="0" step="1" aria-describedby="history-start-note"><small id="history-start-note"></small><button class="btn sm" id="history-start-cursor" type="button">Start at replay position</button></div>
+      <div><label for="history-end">Through event</label><input id="history-end" type="number" min="0" step="1" aria-describedby="history-end-note"><small id="history-end-note"></small><button class="btn sm" id="history-end-cursor" type="button">End at replay position</button></div>
+    </div>
+    <p id="historyCount" role="status"></p><ol id="historyRows"></ol>
+    <nav id="historyPages" aria-label="History pages" hidden><button class="btn" id="historyPrev" type="button">Previous events</button><button class="btn" id="historyNext" type="button">Next events</button></nav>
+  </div>
+</dialog>
+<div id="historyReturn" hidden><span id="historyMapNote"></span><button class="btn" id="historyResume" type="button">Return to History</button></div>
+
 <div class="modal" id="keyModal" hidden>
   <div class="modal-bg" id="keyBg"></div>
   <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="keyTitle">
@@ -1767,6 +1781,8 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
 <script src="atlas-presentation.js"></script>
 <script src="map-focus.js"></script>
 <script src="simulation-model.js"></script>
+<script src="mission-history.js"></script>
+<script src="mission-history-ui.js"></script>
 <script src="projection-source.js"></script>
 <script>
 (() => {
@@ -2777,32 +2793,32 @@ function setMissionName(el, name) {
   });
   return el;
 }
-function prepareMissionLabel(s, name, scale) {
+function prepareMissionLabel(s, name, scale, maxWidth = 112) {
   const pixels = 10.5 * fsz;
   const units = Math.ceil(10 * Math.max(13 / 3, pixels / Math.max(scale, .01))) / 10;
-  if (s.labelName === name && s.labelUnits === units && s.labelFit) return null;
+  if (s.labelName === name && s.labelUnits === units && s.labelWidth === maxWidth && s.labelFit) return null;
   s.name.style.fontSize = units + 'px';
   s.name.textContent = '';
   const first = svgEl('tspan', {x: 0}, s.name);
   const text = name.trim().replace(/\s+/gu, ' ');
   first.textContent = text;
-  return {s, name, text, units, first};
+  return {s, name, text, units, first, maxWidth};
 }
-function measureMissionLabel({s, name, text, units, first}) {
+function measureMissionLabel({s, name, text, units, first, maxWidth}) {
   // Measure one shaped SVG run. Word and line offsets use the same UTF-16
   // units as getSubStringLength; whitespace is normalized before indexing.
   const width = first.getComputedTextLength();
   const addressable = first.getNumberOfChars() === text.length;
   const fits = (line, start) => {
-    if (addressable) return first.getSubStringLength(start, line.length) <= 112;
+    if (addressable) return first.getSubStringLength(start, line.length) <= maxWidth;
     // Some characters can be discarded by SVG layout. Measure that line directly.
     first.textContent = line;
-    return first.getComputedTextLength() <= 112;
+    return first.getComputedTextLength() <= maxWidth;
   };
-  const lines = width > 112 ? missionNameLines(text, fits) : text ? [text] : [];
+  const lines = width > maxWidth ? missionNameLines(text, fits) : text ? [text] : [];
   const leading = units * 1.13;
   let start = 0;
-  s.needsCaption = lines.length * leading > 49 || (width > 112 && lines.some(line => {
+  s.needsCaption = lines.length * leading > 49 || (width > maxWidth && lines.some(line => {
     const ok = fits(line, start);
     start += line.length + 1;
     return !ok;
@@ -2811,6 +2827,7 @@ function measureMissionLabel({s, name, text, units, first}) {
   // Hidden SVG text can report zero until its scope is visible.
   s.labelName = !name || width > 0 ? name : null;
   s.labelUnits = units;
+  s.labelWidth = maxWidth;
   s.labelSide = null;
 }
 function drawMissionLabel(s, reference, side) {
@@ -2829,8 +2846,8 @@ function drawMissionLabel(s, reference, side) {
   });
   s.reference = reference; s.labelSide = side;
 }
-function labelMission(s, name, scale, reference, side = 1) {
-  const run = prepareMissionLabel(s, name, scale);
+function labelMission(s, name, scale, reference, side = 1, maxWidth = 112) {
+  const run = prepareMissionLabel(s, name, scale, maxWidth);
   if (run) measureMissionLabel(run);
   drawMissionLabel(s, reference, side);
 }
@@ -2992,7 +3009,12 @@ function project() {
     const captionScale = s.readable ? faceScale : reveal;
     const lateral = lowWideMap && s.readable && Math.abs(q[1]) * screenScale < s.diameter / 2 + 45 && Math.abs(q[0]) > radius;
     if (mission) {
-      labelMission(s, mission.name, screenScale * captionScale, missionNumber, lateral ? 0 : side);
+      // Wrap inward-facing text before its centered line can reach the crown.
+      const hub = hubRadius / screenScale;
+      const nearCrown = Math.abs(q[1] - pc[1]) <= hub + (radius + 55) * captionScale;
+      const clearance = 2 * (Math.abs(q[0] - pc[0]) - hub) / captionScale;
+      const maxWidth = nearCrown && s.readable && !lateral ? clamp(Math.floor(clearance - 2), 1, 112) : 112;
+      labelMission(s, mission.name, screenScale * captionScale, missionNumber, lateral ? 0 : side, maxWidth);
       if (s.needsCaption || !s.readable) {
         s.referenceMark.textContent = String(missionNumber);
         captions.push([active, s.id, mission.name, missionNumber]);
@@ -3728,6 +3750,20 @@ function placeCard() {
 // ------------------------------------------------------------ side panel + agent info
 // A mission lists its council, one row per familiar. A familiar lists every council it sits on, one row per mission.
 const insp = {sig: '', nums: null, dots: new Map(), taskSummaries: [], slot: null};
+const missionHistory = window.CovenHistoryView({
+  model: SimModel, current: cur, readSeal: (w, m) => SEAL_STATE[sealOf(w, m).state][0],
+  showMoment(mission, t) {
+    jumpTo(t);
+    const exists = cur().world.missions.has(mission);
+    if (exists) select(mission, null, 'card', {focus: false});
+    return exists;
+  },
+  restoreInspector(mission) {
+    if (!cur().world.missions.has(mission)) return $('stage').focus();
+    select(mission, null, 'side', {focus: false});
+    $('inspect').querySelector('[data-focus="mission-history"]')?.focus();
+  },
+});
 let panelView = store.get('coven-compass-panel');
 if (!['brief', 'council', 'tasks', 'agents'].includes(panelView)) panelView = 'brief';
 function syncInspect(force) {
@@ -3947,6 +3983,7 @@ function syncInspect(force) {
       [['Allowed without asking', f.may], ['Requires approval', f.must]].forEach(([k, v]) => { const r = html('div', 'kv'); r.append(html('dt', null, k), html('dd', null, v)); dl.appendChild(r); });
       wd.append(sm, dl); box.appendChild(wd);
     }
+    addAction('mission-history', 'History', ICON.pulse, 'Compare recorded changes', () => missionHistory.open(c, M.id, M.name));
     addAction('ask-psyche', editable ? 'Ask Psyche' : 'View chat',
       '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3.5h10v7H7l-3.5 2.5v-2.5H3z" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"/></svg>',
       editable ? 'Progress and blockers' : 'Replay conversation', () => {
@@ -4199,10 +4236,11 @@ function lintEvent(text, c) {
 // an edited event rewrites history: the project is rebuilt by replaying the changed trace
 function retrace(tr) {
   const o = cur(), n = makeProject(active, tr, o.recorded); projects[active] = n;
+  missionHistory.reset();
   if (live) cursor = Date.now();
   seekTimeline(cursor, true);
   if (o.sel && n.world.missions.has(o.sel)) { n.sel = o.sel; n.fam = o.fam && n.world.missions.get(o.sel).seats.includes(o.fam) ? o.fam : null; n.detail = o.detail; n.camBack = o.camBack; }
-  n.ackN = o.ackN; n.votes = o.votes; n.noticed = o.noticed; n.sample = o.sample; n.layoutDemo = o.layoutDemo; n.dlg = o.dlg; n.sent = o.sent;
+  n.ackN = o.ackN; n.votes = o.votes; n.noticed = o.noticed; n.sample = o.sample; n.skippedEvents = o.skippedEvents; n.layoutDemo = o.layoutDemo; n.dlg = o.dlg; n.sent = o.sent;
   leadSig = needsSig = streamSig = marksSig = lcSig = wardSig = traceSig = ''; insp.sig = '';
   buildScene(); refresh(); atlasQueueFit(); atlasWriteRoute(true);
 }
@@ -4270,6 +4308,7 @@ async function loadTrace(file) {
   if (!res.events.length) return fail('No recognized events in that file. Each line needs t and a known type.');
   err.hidden = !res.bad; if (res.bad) err.textContent = `${plural(res.bad, 'line')} skipped as unrecognized.`;
   const wasDemo = cur().layoutDemo; projects[active] = makeProject(active, res.events, true); projects[active].layoutDemo = wasDemo;
+  projects[active].skippedEvents = res.bad;
   enter(); atlasQueueFit(); atlasWriteRoute(true);
 }
 {
@@ -5497,6 +5536,7 @@ function refresh() {
   }
 }
 function enter(preserveTime = false) {
+  missionHistory.reset();
   const c = cur();
   if (cz.open && cz.edit) { cz.open = false; $('projectForm').hidden = true; }
   if (!preserveTime) { playing = false; live = !c.recorded; cursor = tEnd(c); }

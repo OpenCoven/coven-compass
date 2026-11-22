@@ -1,0 +1,134 @@
+{
+  "public_url": "https://coven-compass.vercel.app/",
+  "artifact": {
+    "id": "dpl_2odh7yWA5n3cqPHSoz9aGErbcV88",
+    "target": "production",
+    "readyState": "READY",
+    "alias": [
+      "compass.opencoven.ai",
+      "coven-compass.vercel.app",
+      "coven-compass-0xbuns.vercel.app",
+      "coven-compass-git-main-0xbuns.vercel.app"
+    ],
+    "gitSource": {
+      "ref": "main",
+      "repoId": 1463750368,
+      "sha": "753b9ae9438128ddcd69ade2e64318b91386171f",
+      "type": "github",
+      "prId": null
+    },
+    "sha": "753b9ae9438128ddcd69ade2e64318b91386171f"
+  },
+  "dist_tree": "a17e3b1ef28c8cbc29effba62b8b50016d3d4335",
+  "identity_checks": {
+    "served_reads": 18,
+    "tracked_assets": 17,
+    "all_http_200_and_match_git": true,
+    "final_alias_and_hash_comparison": "equal",
+    "served_receipt": "served-final.txt"
+  },
+  "browser": {
+    "runner": "Playwright 1.48.2, Chromium 130.0.6723.31",
+    "standard": "public.json",
+    "plan_qa_passed": 6,
+    "project_preview": {
+      "passed": 15,
+      "total": 16,
+      "first_failure": "1440x900, pressed Astra floor on Source survey; runner timed out focusing an unpainted Astra floor on Review readiness",
+      "actual_arrow_right": "Starting on the Review readiness task tray, ArrowRight assigned both DOM focus and tabindex=0 to the hidden Astra floor. Reproduced on the alias and on a clean checkout."
+    },
+    "extra_viewports": "measured.json",
+    "extra_first_failure": "373x580, Project fit, focus #atlasBrowse. Review readiness text overlapped the crown in both simulation modes. Reproduced locally.",
+    "retired_routes": [
+      "404 https://coven-compass.vercel.app/handoff/",
+      "404 https://coven-compass.vercel.app/handoff/guide.html",
+      "404 https://coven-compass.vercel.app/downloads/Coven_Compass_Handoff_2026-11-19.zip",
+      "404 https://coven-compass.vercel.app/downloads/Coven_Compass_Handoff_2026-11-19.zip.sha256"
+    ],
+    "retirement": "PR #63 removed the public Handoff surface. Both legacy controls were absent in the DOM after opening Projects at all three standard viewport sizes."
+  },
+  "duo": {
+    "device": "iPhone19,4, iOS 27.3 (24C5049f), Safari 27.3 (8626.1.17)",
+    "method": "CoreDevice launched an ordinary Safari permalink. The paired Web Inspector read the visible public document. CoreDevice identified display LCD-1 as active immediately before and after the inner measurement. Human touch and speech were unavailable during this run.",
+    "permalink": {
+      "mission": "Source survey",
+      "route": "https://coven-compass.vercel.app/#/project/psyche-build/mission/m-2?view=brief&detail=side",
+      "focus": "missionDetailTitle",
+      "selected_inspector_tab": "Brief"
+    },
+    "inner": {
+      "heading": "Config refactor",
+      "layout": [
+        669,
+        819
+      ],
+      "visual": [
+        669,
+        819,
+        0,
+        0,
+        1
+      ],
+      "safeAreaTRBL": [
+        "0px",
+        "0px",
+        "34px",
+        "0px"
+      ],
+      "dpr": 3,
+      "orientation": "portrait-secondary",
+      "scrollWidth": 669,
+      "closeControl": [
+        {
+          "width": 44,
+          "height": 44,
+          "visible": true
+        }
+      ],
+      "reducedMotion": true,
+      "moreContrast": false
+    },
+    "fold_observation": "Separate snapshots. The transition between them was not witnessed. The inner reading was in Config refactor.",
+    "voiceover": "Disabled at session start. Val reported the device was busy before a current speech observation could be collected.",
+    "prior_human_evidence": "../safari-duo-2026-11-20-c158236.json",
+    "unavailable_device": "Paired iPhone 16 Pro Max reported unavailable."
+  },
+  "mac": {
+    "device": "MacBook Pro, macOS 27.2.1, Safari 27.2",
+    "web_area_points": [
+      1431,
+      997
+    ],
+    "input": "macOS Accessibility API AXPress",
+    "result": [
+      "Pressed Browse missions",
+      "Pressed Source survey",
+      "Opened Optional(https://coven-compass.vercel.app/#/project/psyche-build/mission/m-2?view=brief&detail=side)",
+      "Pressed Safari Reload",
+      "Reloaded Optional(https://coven-compass.vercel.app/#/project/psyche-build/mission/m-2?view=brief&detail=side)",
+      "Pressed Close details",
+      "Closed Optional(https://coven-compass.vercel.app/#/project/psyche-build/mission/m-2)"
+    ],
+    "speech": "No human speech observation. SafariDriver remote automation was disabled. Native AX actions succeeded."
+  },
+  "physical_matrix": {
+    "geometry": "Current inner display measured. Current outer CSS geometry requires the Duo in folded use. Prior outer measurements belong to the earlier artifact.",
+    "fold_and_orientation": "Prior fold retained mission and Brief. Draft, caret, filters and scroll retention across folds and rotation still require Val and the Duo.",
+    "split_view": "Val and the Duo, including minimum pane width.",
+    "software_keyboard": "Prior visible iOS keyboard. Current typing, emoji, prediction, selection and rotation require Val and the Duo.",
+    "ime_dictation": "Val with an installed composition keyboard, dictation and a physical keyboard.",
+    "multi_touch": "Val performing pinch, pan and cancellation on the touch screen.",
+    "safari_navigation": "Current Mac AX reload verified. Physical edge Back/Forward still require Val.",
+    "voiceover": "Val to focus Missions and report speech, then check rotor order, errors, nested sheets and focus return on the final release.",
+    "display_settings": "Reduced motion and default contrast observed on the current inner display. Val to assess enlarged text, page zoom and increased contrast.",
+    "sustained_use": "Val and the device for repeated interactions, background recovery and a timed battery, thermal and memory observation."
+  },
+  "files_sha256": {
+    "arrow-prod.png": "0e3982f4a2912e120b46770dfbdb693930ed6a326519fd33dc4eb0d85a01aaf9",
+    "focus-public.png": "b8e8bc25189792e394227237a512e2a3dae233ef8f79d5003187d970bc63c648",
+    "labels-live.png": "9cd29d1411ea82eaff807fdd2161cb5eea6a57e50f90e6a511dfedbe9cf86ebc",
+    "measured.json": "b83f392013bc68cc7f73924ec6e7bbad37562ec80e7073467f41bc1d354a0e28",
+    "public.json": "d206c16ab71ad1e4b7b105f404cacf803cf39598a4b9e95f2ae6432dc81718fa",
+    "served-final.txt": "63700ad208f23590f5c41cc723a06bed37fcbcc8087d8bb1e2e09a31667d55e1"
+  }
+}

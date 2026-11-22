@@ -2,13 +2,17 @@
 
 Mobile, replay, and layout checkpoints recorded November 18, 2026; combined-source verification tracked separately below.
 
+## November 22 UTC production recheck
+
+The production alias served `753b9ae9438128ddcd69ade2e64318b91386171f`. On the physical Duo running iOS and Safari 27.3, the Source survey permalink opened with focus on the inspector heading and Brief selected. In a separate observation with Config refactor open, the active inner display measured 669×819 CSS pixels at DPR 3. Its bottom safe area was 34 CSS pixels, and Close details was fully visible at 44×44 CSS pixels. The Mac Safari accessibility API opened Source survey, reloaded its permalink, and closed the inspector. VoiceOver speech on this revision awaits a human observation. The dated device matrix identifies the remaining physical checks and their owners. [Release and device receipt](tests/evidence/release-2026-11-22-753b9ae/receipt.json)
+
 ## November 20 physical Safari qualification
 
 Val exercised the public mission journey on an iPhone Duo running iOS 27.2 and Safari 27.2. The production alias served revision `c15823626a073540c3a8a5bff08f018eb360a091`. [Served-file hashes](tests/evidence/served-2026-11-20-c158236.json) · [Device observations and capture digests](tests/evidence/safari-duo-2026-11-20-c158236.json)
 
 On the outer portrait screen, Safari displayed the Missions drawer and its search field above the standard iOS keyboard. VoiceOver announced the Source survey result and the mission heading when Val opened it. Activating Close details returned the highlight and speech to the same row. Reloading the mission permalink restored Source survey and the Brief tab. Unfolding to the inner landscape display kept both visible. [Public mission permalink](https://coven-compass.vercel.app/#/project/psyche-build/mission/m-2?view=brief&detail=side)
 
-With Source survey open, Safari Web Inspector measured both the layout and visual viewport at 373×580 CSS pixels on the outer display. Visual offsets were (0, 0), visual scale was 1, device pixel ratio was 3, and all four CSS safe-area insets were zero. Reduce Motion was active. The Close details control measured 44×44 CSS pixels and fit inside the visual viewport. The inner landscape capture measured 2853×2007 image pixels. Its CSS dimensions still need a separate measurement.
+With Source survey open, Safari Web Inspector measured both the layout and visual viewport at 373×580 CSS pixels on the outer display. Visual offsets were (0, 0), visual scale was 1, device pixel ratio was 3, and all four CSS safe-area insets were zero. Reduce Motion was active. The Close details control measured 44×44 CSS pixels and fit inside the visual viewport. The inner landscape capture measured 2853×2007 image pixels. Its CSS dimensions were unmeasured in that session.
 
 The physical acceptance matrix below remains open for draft and caret retention, Split View, typing and composition, multi-touch, Back and Forward gestures, additional VoiceOver and display settings, and sustained use. Val owns human usability acceptance. [Current observations and remaining checks](https://github.com/OpenCoven/coven-compass/issues/39#issuecomment-7036702576)
 
@@ -197,7 +201,7 @@ Apple describes transitions among folded/unfolded use, portrait/landscape, and S
 
 ### Physical-device release acceptance
 
-These cases remain **unverified**. They are the next acceptance gate for a production device claim, not failures observed in the historical browser run.
+These cases still need full physical acceptance. They are the next acceptance gate for a production device claim, not failures observed in the historical browser run.
 
 | Case | Pass criterion |
 | --- | --- |
@@ -208,11 +212,12 @@ These cases remain **unverified**. They are the next acceptance gate for a produ
 | Real IME and dictation | Japanese/Chinese composition, candidate arrows, Escape, hardware Return, and dictation do not prematurely submit, dismiss, or move focus. |
 | Multi-touch | Two-finger pinch plus translation, adding/removing fingers, pointer cancellation, interruption, and pinch at zoom limits remain stable. Single-finger page/sheet scrolling is distinct from map manipulation. |
 | Safari navigation gestures | Edge Back/Forward and reload restore the intended route without an obscuring drawer or abandoned focus. |
-| VoiceOver | Rotor order, selected tabs, live announcements, nested sheets, form labels/errors, agent reveal, and focus return are usable without sight. |
 | Text and accessibility settings | Larger Text/page zoom, Reduce Motion, and Increase Contrast preserve reading, hit targets, and task completion at short heights. |
 | Sustained use | Exercise repeated gestures, long conversation history, mission switches, and background/foreground recovery; record frame pacing, memory, thermal behavior, and battery impact. No device performance claim has been made from the current checks. |
 
-No physical iPhone, Safari/WebKit run, on-screen iOS keyboard, actual folding hardware, VoiceOver session, or native application packaging evidence is established by this handoff. Historical browser captures and source-fixture success must not substitute for that evidence.
+**Deferred VoiceOver follow-up.** Val approved proceeding with merges, deployment and #39 qualification independently of a new VoiceOver run. When device time is available, record rotor order, selected tabs, announcements, nested sheets, form labels and errors, agent reveal, and spoken focus return against the revision tested. Earlier speech observations apply to their recorded release.
+
+The dated physical Safari sessions above establish only the device interactions recorded for their respective releases. Historical browser captures and source-fixture success must not substitute for that evidence.
 
 ## Reproduce the checks
 
