@@ -29,7 +29,7 @@ The table comes from #6. Run its focused check while you work, then `verify-all`
 | Map and camera | `src/atlas-layout.ts`, `src/atlas-viewport.ts` | `node --test tests/atlas-layout.test.cjs tests/atlas-viewport.test.cjs` |
 | Mobile controls and focus | `dist/mobile-ui.js`, `dist/mobile-interactions.js`, `dist/atlas.css` | `node --test tests/mobile-*.test.cjs` |
 | Map keyboard focus (one Tab stop, arrow keys inside) | `dist/map-focus.js`, `atlasFocusable` in `dist/index.html` | `node --test tests/map-focus.test.cjs`, then Tab through the map in a browser |
-| Simulation fold (what an event does to the world) | `dist/simulation-model.js` | `node --test tests/simulation-model.test.cjs tests/replay-*.test.cjs` |
+| Simulation fold (what an event does to the world) | `src/simulation-model.ts` | `node --test tests/simulation-model.test.cjs tests/replay-*.test.cjs tests/approval-replay.test.cjs` |
 | Projection sources (`?source=`) | `dist/projection-source.js`, `dist/fixtures/`, the guard at the top of the inline script in `dist/index.html` | `node --test tests/projection-source.test.cjs` |
 
 Keep `tests/fixtures/` (the pinned baseline) and the dated audits in `tests/evidence/` as historical evidence.
@@ -58,7 +58,7 @@ Keep `tests/fixtures/` (the pinned baseline) and the dated audits in `tests/evid
 | Path | What it is |
 | --- | --- |
 | `dist/index.html` | ~5.5k lines: sample traces, `seek`/`emit` (selection, camera, effects), scene build/sync/projection, seal renderer, replay loop. The main monolith. |
-| `dist/simulation-model.js` | The simulation model: a pure fold over a trace (`newWorld`, `apply`, `advance`, `append`, `summarize`). No DOM or timers; the page injects its constants. |
+| `src/simulation-model.ts` | The simulation model: a pure fold over a trace (`newWorld`, `apply`, `advance`, `append`, `summarize`). No DOM or timers; the page injects its constants. |
 | `dist/atlas-ui.js`, `dist/atlas.css` | Header, project search and sample presets, mission browser, drawer, familiar chips |
 | `src/atlas-layout.ts` | Pure geometry: paired project placement, corridors, gates, bounded mission packing |
 | `src/atlas-viewport.ts` | Measured safe-area fit |
@@ -109,4 +109,4 @@ Run `scripts/project-preview-qa.mjs` using the same external Playwright installa
 
 Install the clone-local hooks with `python3 scripts/install-secret-hooks.py` before working on branches. See [SECURITY.md](SECURITY.md) for the staged-index, full-history, production build and regression commands. Review a suspected exposure privately and report only the rule and object identifier.
 
-Edit the layout, crown, viewport and annotation-placement modules under `src/`. Their matching scripts under `dist/` are generated. Run `npm --prefix src ci`, `npm --prefix src run build` and `npm --prefix src run check` when changing typed modules, then run the usual site verification.
+Edit the simulation model, layout, crown, viewport and annotation-placement modules under `src/`. Their matching scripts under `dist/` are generated. Run `npm --prefix src ci`, `npm --prefix src run build` and `npm --prefix src run check` when changing typed modules, then run the usual site verification.
