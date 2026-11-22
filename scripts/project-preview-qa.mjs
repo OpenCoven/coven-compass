@@ -1057,3 +1057,45 @@ for (const [width, height] of [[1440, 900], [390, 844], [844, 390]]) {
     } finally { await page.close(); }
   });
 }
+
+for (const [width, height] of [[1440, 900], [390, 844], [844, 390]]) {
+  test(`create a mission from the browser at ${width}×${height}`, async () => {
+    const page = await browser.newPage({viewport: {width, height}, hasTouch: width < 1000, reducedMotion: 'reduce'});
+    const control = id => page.locator('#' + id);
+    const entry = control(width < 1000 ? 'atlasMobileMissions' : 'atlasMissions');
+    const add = control('atlasMissionCreate');
+    try {
+      await page.goto(new URL('#/coven', base).href);
+      await entry.click();
+      await add.click();
+      assert.ok(await control('atlasMissionProject').evaluate(el => el === document.activeElement));
+      await control('atlasMissionProject').selectOption('brand');
+      await control('atlasMissionSearch').fill('test filter');
+      await add.click();
+      await control('nmName').waitFor();
+      assert.equal(await control('emptyName').innerText(), 'brand');
+      await page.locator('#nmName:focus').waitFor();
+      await control('emptyX').click();
+      assert.equal(await control('atlasMissionSearch').inputValue(), 'test filter');
+      assert.ok(await add.evaluate(el => el === document.activeElement));
+      await add.press('Enter');
+      await control('nmName').fill('Review the field report');
+      await control('raise').click();
+      await page.waitForURL(/project\/brand\/mission\//);
+      if (width < 1000) await page.locator('#inspect [data-focus="mission-back"]').click();
+      else await entry.click();
+      await control('atlasMissionSearch').fill('field report');
+      const matching = page.locator('.atlas-mission-row:visible');
+      assert.equal(await matching.count(), 1);
+      assert.equal(await matching.getAttribute('data-project'), 'brand');
+      assert.equal(await matching.locator('.atlas-mission-title').innerText(), 'Review the field report');
+      await control('atlasMissionClose').click();
+      await control('traceFile').setInputFiles({name:'recording.jsonl', mimeType:'text/plain',
+        buffer:Buffer.from(JSON.stringify({t:1700000000,type:'mission.opened',mission:'test',name:'Recording'}))});
+      await control('traceKind').filter({hasText:'loaded'}).waitFor({state:'attached'});
+      await entry.click();
+      assert.ok(await add.isDisabled());
+      assert.equal(await control('atlasMissionCreateHint').innerText(), 'Imported recordings are read-only.');
+    } finally { await page.close(); }
+  });
+}

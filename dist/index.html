@@ -5287,7 +5287,8 @@ function drawNew() {
   $('nmFoot').textContent = !canAct() ? 'Replaying. Go live first.' : EM ? 'Psyche tells the council.' : `Starts with 6 of up to ${nm.brief.atMost.agents} agents.`;
   $('raise').disabled = !ok || !$('nmName').value.trim(); $('nmName').disabled = !ok || !!EM;
 }
-function openNew(editId) {
+function openNew(editId, onCancel) {
+  nm.onCancel = onCancel;
   nm.fromInspector = false;
   const c = cur(), M = editId ? c.world.missions.get(editId) : null;
   if (!M && c.sel) select(null); if (atlasScope === 'coven') setView();
@@ -5305,6 +5306,10 @@ function closeNew() {
   nm.touched = false; nm.leadTouched = false; nm.match = null; if (!nm.edit && nm.briefTouched) { nm.briefTouched = false; }
   if (nm.edit) { nm.edit = null; nm.briefTouched = false; nm.open = null; setLead(nm.lead); }
   drawNew(); if (window.CovenMobileUI) window.CovenMobileUI.sync();
+  if (nm.onCancel) {
+    const restore = nm.onCancel; nm.onCancel = null;
+    return restore();
+  }
   const trigger = (returnToBrief && $('inspect').querySelector('[data-focus="edit-brief"]')) || $('emptyNew');
   if (trigger && !trigger.closest('[hidden],[inert]') && !trigger.disabled) trigger.focus({preventScroll: true});
 }
@@ -5337,6 +5342,7 @@ $('empty').addEventListener('submit', ev => {
     return setLead(k);
   }
   if (!name || !canAct()) return;
+  nm.onCancel = null;
   c.composing = false; nm.touched = false; nm.briefTouched = false; nm.open = null;
   emit(c, {type: 'you.said', text: `Open a mission: ${name}. ${f.name} leads. ${tplLabel() ? tplLabel() + ' brief. ' : ''}${briefSentence(brief)}`});
   { const tname = tplLabel(); setTimeout(() => openMission(c, name, k, brief, tname), 450); }
@@ -6424,6 +6430,22 @@ function findProjectMission(key, needle) {
   }
   return '';
 }
+function missionCreationHint(key) {
+  const project = projects[key];
+  if (!project) return 'Choose an available Project.';
+  if (project.recorded) return 'Imported recordings are read-only.';
+  return canAct(project) ? '' : 'Return to live simulation to create a mission.';
+}
+function newMissionFromBrowser(key, onCancel) {
+  if (missionCreationHint(key)) return;
+  atlasOpenProject(key);
+  openNew(null, onCancel);
+  // The Project transition can detach the focused drawer before the form is painted.
+  requestAnimationFrame(() => {
+    const focused = document.activeElement;
+    if (cur().composing && !$('empty').hidden && (focused === document.body || focused.closest('[hidden]'))) $('nmName').focus();
+  });
+}
 function atlasSnapshot(includeMissions) {
   const ps = [], missionItems = [], fs = new Map(Object.keys(FAM).map(k => [k, {key: k, name: fam(k).name, color: fam(k).hue, avatar: avatar(k), projects: 0, agents: 0}]));
   const missionBrowser = $('atlasMissionBrowser');
@@ -6498,7 +6520,7 @@ recordingPrompt.oncancel = event => { event.preventDefault(); $('leaveRecording'
 recordingPrompt.addEventListener('keydown', event => event.stopPropagation());
 if (window.CovenProjection) window.CovenProjection.register(window.CovenProjection.createSimulationSource({worlds: () => Object.keys(projects).map(k => [k, projects[k].world]), summarize: SimModel.summarize}));
 if (window.CovenAtlas) {
-  window.CovenAtlas.mount({setMissionName, findProjectMission, syncReviewEntry, snapshot: atlasSnapshot, overview: atlasOverview, openProject: atlasOpenProject, openMission: atlasOpenMission, setProjectCount: atlasSetProjectCount, newProject: () => openProjectForm(), camera: atlasCamera, highlight: covHl, legend: () => $('keyBtn').click()});
+  window.CovenAtlas.mount({setMissionName, findProjectMission, syncReviewEntry, missionCreationHint, newMission: newMissionFromBrowser, snapshot: atlasSnapshot, overview: atlasOverview, openProject: atlasOpenProject, openMission: atlasOpenMission, setProjectCount: atlasSetProjectCount, newProject: () => openProjectForm(), camera: atlasCamera, highlight: covHl, legend: () => $('keyBtn').click()});
   $('plan').setAttribute('role', 'group');
   atlasRestoreRoute(true);
 }
