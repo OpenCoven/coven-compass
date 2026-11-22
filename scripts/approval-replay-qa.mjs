@@ -107,3 +107,27 @@ for (const [width, height] of [[1440, 900], [390, 844]]) {
     } finally { await page.close(); }
   });
 }
+
+test('a slower file read cannot replace the newer recording', async () => {
+  const page = await browser.newPage();
+  try {
+    // Hold the older native File read until the second import has reached the mission drawer.
+    await page.addInitScript(() => {
+      const read = File.prototype.text;
+      File.prototype.text = async function () {
+        const text = await read.call(this);
+        if (this.name === 'older.jsonl') await new Promise(resolve => { window.finishOlderRead = resolve; });
+        return text;
+      };
+    });
+    await page.goto(base);
+    await openMission(page, 1280, 'Source survey');
+    await activate(page, page.getByRole('button', {name: 'History', exact: true}));
+    await chooseRecording(page, 'older.jsonl', Buffer.from('{"t":1700000000,"type":"mission.opened","mission":"older","name":"Older recording"}'));
+    await page.waitForFunction(() => typeof window.finishOlderRead === 'function');
+    await chooseRecording(page, 'review.jsonl', recording);
+    await page.locator('#atlasMissionSearch:focus').waitFor();
+    await page.evaluate(() => window.finishOlderRead());
+    await openMission(page, 1280, 'Proof review');
+  } finally { await page.close(); }
+});

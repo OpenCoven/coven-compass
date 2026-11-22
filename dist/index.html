@@ -3774,12 +3774,7 @@ const insp = {sig: '', nums: null, dots: new Map(), taskSummaries: [], slot: nul
 const missionHistory = window.CovenHistoryView({
   model: SimModel, current: cur, readSeal: (w, m) => SEAL_STATE[sealOf(w, m).state][0],
   async importRecording(file) {
-    if (await loadTrace(file)) {
-      window.CovenAtlas.openMissionsForProject(active);
-    } else {
-      $('historyError').textContent = $('traceErr').textContent;
-      $('historyError').hidden = false;
-    }
+    if (await loadTrace(file, $('historyError'))) window.CovenAtlas.openMissionsForProject(active);
   },
   showMoment(project, mission, t, position) {
     if (cur() !== project || atlasScope === 'coven') atlasOpenProject(project.key);
@@ -4346,12 +4341,20 @@ $('traceCopy').addEventListener('click', () => {
   const fallback = () => { const r = document.createRange(); r.selectNodeContents($('traceSample')); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); $('traceCopy').textContent = 'Selected. Press copy'; };
   try { navigator.clipboard.writeText(TRACE_EXAMPLE).then(done, fallback); } catch (e) { fallback(); }
 });
-async function loadTrace(file) {
-  const err = $('traceErr'), fail = m => { err.textContent = m; err.hidden = false; };
+let traceRead = 0;
+async function loadTrace(file, feedback = $('traceErr')) {
   if (!file) return;
+  const target = cur(), request = ++traceRead;
+  const isCurrent = () => request === traceRead && cur() === target;
+  const fail = message => { feedback.textContent = message; feedback.hidden = false; };
   if (file.size > 5e6) return fail('That file is over 5 MB. Trim the trace and try again.');
-  let res; try { res = parseTrace(await file.text()); } catch (e) { return fail('That file could not be read.'); }
+  let text;
+  try { text = await file.text(); }
+  catch { if (isCurrent()) fail('That file could not be read.'); return; }
+  if (!isCurrent()) return;
+  const res = parseTrace(text);
   if (!res.events.length) return fail('No recognized events in that file. Each line needs t and a known type.');
+  const err = $('traceErr');
   err.hidden = !res.bad; if (res.bad) err.textContent = `${plural(res.bad, 'line')} skipped as unrecognized.`;
   const wasDemo = cur().layoutDemo; projects[active] = makeProject(active, res.events, true); projects[active].layoutDemo = wasDemo;
   projects[active].skippedEvents = res.bad;
@@ -5655,6 +5658,7 @@ function refresh() {
   }
 }
 function enter(preserveTime = false) {
+  traceRead++;
   missionHistory.reset();
   const c = cur();
   if (cz.open && cz.edit) { cz.open = false; $('projectForm').hidden = true; }
