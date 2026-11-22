@@ -1197,6 +1197,11 @@ body.atlas-adaptive-mobile #historyReturn { bottom: calc(var(--mobile-chrome-hei
   .history-actions button, #historyResume { min-height: 40px; }
 }
 
+.history-import label { cursor: pointer; position: relative; }
+.history-import label:focus-within { outline: 2px solid var(--focus, currentColor); outline-offset: 2px; }
+#historyError { color: var(--attention); }
+#historyMapNote { flex: 1 0 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#historyRows li p { overflow-wrap: anywhere; }
 .history-source-event { margin: 8px 0; color: var(--muted-foreground); }
 .history-source-event summary { cursor: pointer; }
 .history-source-event pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: .85em; }

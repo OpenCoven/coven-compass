@@ -1685,6 +1685,7 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
 <dialog id="missionHistory" aria-labelledby="historyLabel historyTitle" aria-describedby="historySource">
   <header><div><span id="historyLabel">Mission history</span><h2 id="historyTitle" tabindex="-1"></h2><p id="historySource"></p></div><button class="btn" type="button" id="historyClose">Close</button></header>
   <div class="history-content">
+    <div class="history-import"><label class="btn sm" for="historyFile">Load a local recording<input class="sr" type="file" id="historyFile" accept=".jsonl,.ndjson,.json,.txt"></label><p id="historyError" role="alert" hidden></p></div>
     <p>Compare the changes after the start event through the end event. Event numbers follow recording order, including events at the same time.</p>
     <div class="history-range">
       <div><label for="history-start">After event</label><input id="history-start" type="number" min="0" step="1" aria-describedby="history-start-note"><small id="history-start-note"></small><button class="btn sm" id="history-start-cursor" type="button">Start at replay position</button></div>
@@ -1694,7 +1695,7 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
     <nav id="historyPages" aria-label="History pages" hidden><button class="btn" id="historyPrev" type="button">Previous events</button><button class="btn" id="historyNext" type="button">Next events</button></nav>
   </div>
 </dialog>
-<div id="historyReturn" hidden><span id="historyMapNote"></span><button class="btn" id="historyResume" type="button">Return to History</button></div>
+<div id="historyReturn" hidden><span id="historyMapNote" role="status"></span><button class="btn sm" type="button" id="historyBackEvent">Previous event</button><button class="btn sm" type="button" id="historyForwardEvent">Next event</button><button class="btn" id="historyResume" type="button">Return to History</button></div>
 
 <div class="modal" id="keyModal" hidden>
   <div class="modal-bg" id="keyBg"></div>
@@ -2187,8 +2188,8 @@ function makeProject(key, trace, recorded) {
   return {key, trace, recorded: !!recorded, world: newWorld(), applied: 0, layout: layoutOf(trace), sel: null, fam: null, detail: null, pick: null, ackN: 0, expanded: new Set()};
 }
 let atlasNavigationReady = false, atlasRestoringRoute = false, atlasLastRoute = '';
-function seek(c, t, quiet) {
-  const {changed, reset, fresh} = SimModel.advance(c, t);
+function seek(c, t, quiet, through) {
+  const {changed, reset, fresh} = SimModel.advance(c, t, through);
   if (window.CovenMissionNavigation) {
     const cameraBack = c.camBack, result = window.CovenMissionNavigation.normalizeSelection(c);
     if (result.missionRemoved || result.familiarRemoved || result.agentRemoved) {
@@ -2224,10 +2225,10 @@ function tStart(c) {
 const canAct = () => live && !cur().recorded;
 // One replay position for every visible Project, including the overview.
 // A recording remains at its last event when the shared clock passes its end.
-function seekTimeline(t, quiet) {
+function seekTimeline(t, quiet, through) {
   let changed = false;
   Object.values(projects).forEach(c => {
-    if (seek(c, c.recorded ? Math.min(t, tEnd(c)) : t, quiet || c !== cur())) changed = true;
+    if (seek(c, c.recorded ? Math.min(t, tEnd(c)) : t, quiet || c !== cur(), c === cur() ? through : undefined)) changed = true;
   });
   return changed;
 }
@@ -3752,8 +3753,11 @@ function placeCard() {
 const insp = {sig: '', nums: null, dots: new Map(), taskSummaries: [], slot: null};
 const missionHistory = window.CovenHistoryView({
   model: SimModel, current: cur, readSeal: (w, m) => SEAL_STATE[sealOf(w, m).state][0],
-  showMoment(mission, t) {
-    jumpTo(t);
+  async importRecording(file) {
+    if (await loadTrace(file, $('historyError'))) window.CovenAtlas.openMissionsForProject(active);
+  },
+  showMoment(mission, t, position) {
+    jumpTo(t, position);
     const exists = cur().world.missions.has(mission);
     if (exists) select(mission, null, 'card', {focus: false});
     return exists;
@@ -3767,6 +3771,7 @@ const missionHistory = window.CovenHistoryView({
 let panelView = store.get('coven-compass-panel');
 if (!['brief', 'council', 'tasks', 'agents'].includes(panelView)) panelView = 'brief';
 function syncInspect(force) {
+  missionHistory.syncPosition();
   const c = cur(), w = c.world, box = $('inspect'), M = c.sel && c.detail === 'side' ? w.missions.get(c.sel) : null;
   if (!M || (c.fam && !M.seats.includes(c.fam))) { if (!box.hidden) { box.hidden = true; box.textContent = ''; insp.sig = ''; insp.dots = new Map(); insp.taskSummaries = []; insp.slot = null; if (window.CovenMobileUI) window.CovenMobileUI.sync(); } return; }
   const slotOf = a => c.layout.slot.get(a.id) || 0;
@@ -4246,7 +4251,7 @@ function retrace(tr) {
 }
 let evNote = '';
 function drawEvents() {
-  const c = cur(), box = $('traceEv'), n = c.trace.filter(e => e.t <= cursor).length, from = Math.max(0, n - 12); box.textContent = '';
+  const c = cur(), box = $('traceEv'), n = c.applied, from = Math.max(0, n - 12); box.textContent = '';
   for (let i = n - 1; i >= from; i--) box.appendChild(eventRow(c, c.trace[i]));
   $('traceEvNote').textContent = evNote || (n ? `The ${n - from} most recent${live ? '' : ' before ' + hm(cursor)}. Open one to read or change its JSON.` : 'No events before this moment.');
   $('traceEvNote').className = 'dr-note' + (evNote ? ' ok' : ''); evNote = '';
@@ -4300,16 +4305,25 @@ $('traceCopy').addEventListener('click', () => {
   const fallback = () => { const r = document.createRange(); r.selectNodeContents($('traceSample')); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); $('traceCopy').textContent = 'Selected. Press copy'; };
   try { navigator.clipboard.writeText(TRACE_EXAMPLE).then(done, fallback); } catch (e) { fallback(); }
 });
-async function loadTrace(file) {
-  const err = $('traceErr'), fail = m => { err.textContent = m; err.hidden = false; };
+let traceRead = 0;
+async function loadTrace(file, feedback = $('traceErr')) {
   if (!file) return;
+  const target = cur(), request = ++traceRead;
+  const isCurrent = () => request === traceRead && cur() === target;
+  const fail = message => { feedback.textContent = message; feedback.hidden = false; };
   if (file.size > 5e6) return fail('That file is over 5 MB. Trim the trace and try again.');
-  let res; try { res = parseTrace(await file.text()); } catch (e) { return fail('That file could not be read.'); }
+  let text;
+  try { text = await file.text(); }
+  catch { if (isCurrent()) fail('That file could not be read.'); return; }
+  if (!isCurrent()) return;
+  const res = parseTrace(text);
   if (!res.events.length) return fail('No recognized events in that file. Each line needs t and a known type.');
+  const err = $('traceErr');
   err.hidden = !res.bad; if (res.bad) err.textContent = `${plural(res.bad, 'line')} skipped as unrecognized.`;
   const wasDemo = cur().layoutDemo; projects[active] = makeProject(active, res.events, true); projects[active].layoutDemo = wasDemo;
   projects[active].skippedEvents = res.bad;
   enter(); atlasQueueFit(); atlasWriteRoute(true);
+  return true;
 }
 {
   const dz = $('traceDrop');
@@ -4330,7 +4344,7 @@ function openWard(key) {
   wardSig = ''; drawWard(); placePill(d); d.open = true;
   const r = $('wardBody').querySelector(`.dr[data-k="${key}"]`); if (r) { r.open = true; r.firstElementChild.focus(); }
 }
-function jumpTo(t) { const c = cur(); live = false; playing = false; cursor = clamp(t, tStart(c), tEnd(c)); clearPick(); seekTimeline(cursor); needsSig = ''; refresh(); }
+function jumpTo(t, through) { const c = cur(); live = false; playing = false; cursor = clamp(t, tStart(c), tEnd(c)); clearPick(); seekTimeline(cursor, false, through); needsSig = ''; refresh(); }
 function showAgent(q, id) { const c = cur(); if (c.sel !== q.mission || c.fam) select(q.mission); if (c.world.agents.has(id)) { c.pick = {id, via: 'plan'}; showPick(); } }
 function linkify(text, into) {
   String(text).split(/(https?:\/\/[^\s]+|\/[\w.\-]+(?:\/[\w.\-]+)*)/g).forEach((part, i) => {
@@ -5508,7 +5522,7 @@ $('play').addEventListener('click', () => {
 $('speed').addEventListener('click', () => { speed = SPEEDS[(SPEEDS.indexOf(speed) + 1) % SPEEDS.length]; timelineUI(); });
 $('live').addEventListener('click', goLive);
 $('traceFile').addEventListener('change', ev => { const f = ev.target.files && ev.target.files[0]; ev.target.value = ''; loadTrace(f); });
-$('traceReset').addEventListener('click', () => { const wasDemo = cur().layoutDemo; projects[active] = makeProject(active, sampleTrace(SAMPLES[active] ? active : 'ui', Date.now()), false); projects[active].layoutDemo = wasDemo; $('traceErr').hidden = true; enter(); atlasQueueFit(); atlasWriteRoute(true); });
+$('traceReset').addEventListener('click', () => { const wasDemo = cur().layoutDemo; projects[active] = makeProject(active, sampleTrace(SAMPLES[active] ? active : 'ui', Date.now()), false); projects[active].sample = true; projects[active].layoutDemo = wasDemo; $('traceErr').hidden = true; enter(); atlasQueueFit(); atlasWriteRoute(true); });
 
 // ------------------------------------------------------------ wiring
 ICON.stop = '<svg viewBox="0 0 14 14" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.3" fill="currentColor"/></svg>'; $('stopIc').innerHTML = ICON.stop;
@@ -5536,6 +5550,7 @@ function refresh() {
   }
 }
 function enter(preserveTime = false) {
+  traceRead++;
   missionHistory.reset();
   const c = cur();
   if (cz.open && cz.edit) { cz.open = false; $('projectForm').hidden = true; }
