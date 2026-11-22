@@ -1,0 +1,118 @@
+{
+  "base": "dc07695e813b0aa0cd318a7b9f22f6b7ecd611bc",
+  "implementation": "f93d505507297464e49e551c075c79163fffc929",
+  "distTree": "b6d82d7be6c6d55593b5cfd42cc669c43c2e7a25",
+  "recording": "tests/recordings/mission-history.jsonl",
+  "recordingSha256": "4ca2c4e659d9d8eaf219c8789cf124f2fcb6b345b994763b117b96e0108db60d",
+  "baseline": [
+    "Trace assignment {",
+    "  \"t\": \"2026-11-18T06:20:05.000Z\",",
+    "  \"type\": \"agent.assigned\",",
+    "  \"agent\": \"worker-1\",",
+    "  \"task\": \"check\"",
+    "}",
+    "Trace event count 9",
+    "Replay Release review, Needs you. Show its agents and tasks",
+    "Inspector \u2190",
+    "Publication review",
+    "\u00b7",
+    "psyche-build",
+    "\u00d7",
+    "At gate",
+    "0",
+    "Working",
+    "1",
+    "Idle",
+    "0",
+    "\u2039",
+    "1 / 1",
+    "\u203a",
+    "Brief",
+    "Council1",
+    "Tasks",
+    "Agents",
+    "Draft notes",
+    "0 agents",
+    "Cody",
+    "Unassigned",
+    "Check sources",
+    "1 agent",
+    "Cody",
+    "1 working",
+    "View chat",
+    "Replay conversation"
+  ],
+  "candidate": [
+    "chromium 156.0.8078.4 desktop passed",
+    "webkit 27.2 desktop passed",
+    "chromium 156.0.8078.4 touch passed",
+    "chromium 156.0.8078.4 keyboard passed"
+  ],
+  "sample": "Sample Review readiness request 160 interval 159 160 passed",
+  "dense": {
+    "browser": "130.0.6723.31",
+    "trials": [
+      {
+        "projects": 128,
+        "missions": 224,
+        "tasks": 736,
+        "agents": 3648,
+        "foldMs": 1.600000023841858,
+        "traceEvents": 187,
+        "mission": "m-1",
+        "changeEvents": 31,
+        "openMs": 40.299999952316284
+      },
+      {
+        "projects": 128,
+        "missions": 224,
+        "tasks": 736,
+        "agents": 3648,
+        "foldMs": 1.7000000476837158,
+        "traceEvents": 187,
+        "mission": "m-1",
+        "changeEvents": 31,
+        "openMs": 41.10000002384186
+      },
+      {
+        "projects": 128,
+        "missions": 224,
+        "tasks": 736,
+        "agents": 3648,
+        "foldMs": 1.7000000476837158,
+        "traceEvents": 187,
+        "mission": "m-1",
+        "changeEvents": 31,
+        "openMs": 42
+      },
+      {
+        "projects": 128,
+        "missions": 224,
+        "tasks": 736,
+        "agents": 3648,
+        "foldMs": 1.7999999523162842,
+        "traceEvents": 187,
+        "mission": "m-1",
+        "changeEvents": 31,
+        "openMs": 40.10000002384186
+      },
+      {
+        "projects": 128,
+        "missions": 224,
+        "tasks": 736,
+        "agents": 3648,
+        "foldMs": 1.5999999046325684,
+        "traceEvents": 187,
+        "mission": "m-1",
+        "changeEvents": 31,
+        "openMs": 43.199999928474426
+      }
+    ]
+  },
+  "screenshots": {
+    "baseline.png": "96115ace93a27f27f11ed87096a9a2b59f4de7a5521974a65f6221ccde3aabd8",
+    "chromium-desktop-history.png": "90fc0722bbd65f31c3d37513fb5b0ad2e0db6e64ca7a5e5f223b69dd0317343e",
+    "chromium-touch-history.png": "47bf7597c41bd0922b97c6e048bc0ebfd8036e645c82e5dd426b5170489a1626",
+    "chromium-touch-map.png": "7dd0b0de18ab12762bdb7300a3d055436c463758daae6d71ca38daec3c31ba69"
+  }
+}
