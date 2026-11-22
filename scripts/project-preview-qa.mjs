@@ -588,6 +588,28 @@ test('map key topics fit desktop, tablet, phone and short landscape screens', as
   }
 });
 
+test('mission details and the selected task plane share the resized stage', async () => {
+  const page = await browser.newPage({viewport: {width: 1720, height: 960}, reducedMotion: 'reduce'});
+  try {
+    await page.goto(new URL('#/project/psyche-build/mission/m-2?familiar=astra', base).href);
+    let previousWidth = Infinity;
+    for (const width of [1720, 1260]) {
+      await page.setViewportSize({width, height: 960});
+      const manifest = page.locator('#notes .manifest');
+      await manifest.waitFor();
+      await page.waitForFunction(() => {
+        const stage = document.querySelector('#stage').getBoundingClientRect();
+        const cards = document.querySelector('#notes .manifest').getBoundingClientRect();
+        const group = document.querySelector('.atlas-squad[data-m="m-2"][data-fam="astra"] .squad-plane rect')?.getBoundingClientRect();
+        return group && group.width > 0 && group.left >= cards.right && group.right <= stage.right && group.top >= stage.top && group.bottom <= stage.bottom;
+      });
+      const cardWidth = (await manifest.boundingBox()).width;
+      assert.ok(cardWidth < previousWidth, 'the detail rail adapts as the stage narrows');
+      previousWidth = cardWidth;
+    }
+  } finally { await page.close(); }
+});
+
 test('familiar card connector meets the painted group and stays attached on zoom', async () => {
   const page = await browser.newPage({viewport: {width: 1440, height: 900}, reducedMotion: 'reduce'});
   try {

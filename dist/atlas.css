@@ -304,6 +304,24 @@ body.atlas-enhanced #plan .lane.off { opacity: .14; }
 body.atlas-enhanced .thread.ask { stroke: var(--attention); stroke-dasharray: 4 4; }
 body.atlas-enhanced .hud { top: 76px; }
 body.atlas-enhanced .manifest { top: 76px; bottom: 72px; scrollbar-width: thin; scrollbar-color: #4a425b transparent; scroll-padding-block: 8px; overscroll-behavior: contain; padding: 2px 4px 4px 0; }
+/* Size detail cards against the map left beside the conversation rail. */
+@container atlas-stage (min-width: 700px) {
+  body.atlas-enhanced:not(.atlas-adaptive-mobile) #notes .manifest {
+    width: min(clamp(252px, 32cqw, 456px), calc(440px * var(--fs, 1)));
+    gap: clamp(8px, 1cqw, 14px);
+  }
+  body.atlas-enhanced:not(.atlas-adaptive-mobile) .manifest :is(.hud, .plate.seat) {
+    padding: clamp(12px, 1.45cqw, 22px);
+  }
+  body.atlas-enhanced:not(.atlas-adaptive-mobile) .manifest .hb {
+    min-height: calc(clamp(23px, 2.4cqw, 32px) * var(--fs, 1));
+  }
+  body.atlas-enhanced:not(.atlas-adaptive-mobile) .manifest :is(.hb, .nt, .plate-h .rl) {
+    font-size: calc(clamp(12.5px, 1.12cqw, 15px) * var(--fs, 1));
+  }
+  body.atlas-enhanced:not(.atlas-adaptive-mobile) .manifest .nt { padding-block: clamp(3px, .45cqw, 7px); }
+  body.atlas-enhanced:not(.atlas-adaptive-mobile) .manifest .hb b { white-space: normal; overflow-wrap: anywhere; }
+}
 body.atlas-enhanced .manifest::-webkit-scrollbar { display: block; width: 5px; }
 body.atlas-enhanced .manifest::-webkit-scrollbar-thumb { background: #4a425b; border-radius: 5px; }
 body.atlas-enhanced .inspect { top: 76px; width: min(350px, 100%); gap: 14px; padding: 16px; background: rgba(23, 23, 28, .98); border-color: var(--border-strong); overscroll-behavior: contain; scrollbar-color: #4a425b transparent; scroll-padding-block: 16px; }

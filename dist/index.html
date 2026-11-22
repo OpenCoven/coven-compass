@@ -3748,9 +3748,15 @@ function fitTarget(c) {
     const agent = sc.agents.get(a.id); if (agent) add(agent.q[0], agent.q[1], 14);
   });
   const x = focusedSeat ? focusedSeat.bx : ms.x, y = focusedSeat ? focusedSeat.by : ms.y;
-  const halfWidth = Math.max(x - x0, x1 - x) + 16, halfHeight = Math.max(y - y0, y1 - y) + 28;
-  const target = window.CovenAtlasViewport.fit({x0: x - halfWidth, y0: y - halfHeight, x1: x + halfWidth, y1: y + halfHeight}, {width: stage.clientWidth, height: stage.clientHeight, frame: atlasViewportFrame(true), fill: .88, minZoom: ZMIN, maxZoom: 2.3});
-  return {zoom: target.zoom, px: clamp(target.px, -PAN, PAN), py: clamp(target.py, -PAN, PAN)};
+  const frame = atlasViewportFrame(true);
+  const bounds = {x0: x0 - 16, x1: x1 + 16, y0: y0 - 28, y1: y1 + 28};
+  const target = window.CovenAtlasViewport.fit(bounds, {width: stage.clientWidth, height: stage.clientHeight, frame, fill: .92, minZoom: ZMIN, maxZoom: 2.3});
+  // Use spare room to center the selection, stopping where a task plane would leave the frame.
+  const slackX = Math.max(0, (frame.width / target.scale - (bounds.x1 - bounds.x0)) / 2);
+  const slackY = Math.max(0, (frame.height / target.scale - (bounds.y1 - bounds.y0)) / 2);
+  const offsetX = clamp(x - (x0 + x1) / 2, -slackX, slackX);
+  const offsetY = clamp(y - (y0 + y1) / 2, -slackY, slackY);
+  return {zoom: target.zoom, px: clamp(target.px + offsetX, -PAN, PAN), py: clamp(target.py + offsetY, -PAN, PAN)};
 }
 // A selected mission is written into the space it occupies: a title plate for the mission, a plate beside each council
 // seat listing that familiar's tasks, and a tag on anything of its waiting at a gate.
