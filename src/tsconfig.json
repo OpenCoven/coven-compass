@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "none",
+    "lib": ["ES2022", "DOM"],
+    "types": [],
+    "strict": true,
+    "noEmitOnError": true,
+    "newLine": "lf",
+    "rootDir": ".",
+    "outDir": "../dist"
+  },
+  "include": ["*.ts"]
+}

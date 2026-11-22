@@ -9,3 +9,16 @@ See the [README](README.md) to run the map locally and [AGENTS.md](AGENTS.md) fo
 | Project and mission navigation | `dist/mission-navigation.js`, `dist/atlas-ui.js`, and their app bindings in `dist/index.html` | `node --test tests/navigation.test.cjs tests/mission-interactions.test.cjs` |
 | Map placement and camera | `dist/atlas-layout.js`, `dist/atlas-viewport.js` | `node --test tests/atlas-layout.test.cjs tests/atlas-viewport.test.cjs` |
 | Mobile controls and focus | `dist/mobile-ui.js`, `dist/mobile-interactions.js`, `dist/atlas.css` | `node --test tests/mobile-*.test.cjs` |
+
+## Migrating a module to TypeScript
+
+The crown renderer and annotation placement are authored in `src/atlas-crown.ts` and `src/atlas-presentation.ts`. The browser and Node tests consume their generated classic scripts in `dist/`. From the repository root, install the pinned development compiler once and run the following after editing either source.
+
+```sh
+npm --prefix src ci
+npm --prefix src run build
+npm --prefix src run check
+node scripts/verify-all.mjs --check
+```
+
+Migrate one module with its callers. Start with pure helpers such as viewport geometry, then the simulation fold and navigation codec. Type the inputs, outputs and existing browser globals, preserve CommonJS exports used in tests, and commit the generated script beside the source change. For the inline application, extract one responsibility at a time behind a typed API and verify its browser interaction before moving the next one. Serving a checkout requires only the files in `dist/`.

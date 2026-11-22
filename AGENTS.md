@@ -107,3 +107,5 @@ Run `scripts/project-preview-qa.mjs` using the same external Playwright installa
 ## Secret checks
 
 Install the clone-local hooks with `python3 scripts/install-secret-hooks.py` before working on branches. See [SECURITY.md](SECURITY.md) for the staged-index, full-history, production build and regression commands. Review a suspected exposure privately and report only the rule and object identifier.
+
+Edit the crown and annotation-placement modules under `src/`. Their matching scripts under `dist/` are generated. Run `npm --prefix src ci`, `npm --prefix src run build` and `npm --prefix src run check` when changing typed modules, then run the usual site verification.
