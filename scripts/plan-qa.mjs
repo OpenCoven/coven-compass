@@ -253,3 +253,36 @@ test('custom Coven totals retain every Project, static route, and searchable key
     await page.close();
   }
 });
+
+test('familiar identities and task controls remain distinct at Project fit', async () => {
+  for (const [width, height, minimumDisc] of [[1440, 900, 38], [390, 844, 26], [844, 390, 22], [320, 568, 16], [667, 375, 19]]) {
+    const page = await browser.newPage({viewport: {width, height}, reducedMotion: 'reduce', hasTouch: width < 1000});
+    try {
+      await page.goto(url);
+      await page.locator('.atlas-project-detail .seat[transform]').first().waitFor();
+      await readView(page);
+      const observed = await page.evaluate(() => {
+        const bounds = selector => [...document.querySelectorAll('.atlas-project-detail ' + selector)]
+          .map(el => el.getBoundingClientRect()).filter(r => r.width > 0 && r.height > 0);
+        const trays = bounds('.task-tray-hit');
+        const controls = [...bounds('.atlas-project-decision rect:not(.atlas-map-hit)'), ...bounds('.atlas-local-psyche')];
+        const intersects = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+        return {
+          discs: bounds('.familiar-disc').map(r => r.width),
+          glyphs: bounds('.seat .sig').map(r => Math.max(r.width, r.height)),
+          seals: bounds('.se-face').map(r => r.width),
+          trays: trays.length, controls: controls.length,
+          crowded: trays.some((tray, i) => [...trays.slice(i + 1), ...controls].some(other => intersects(tray, other))),
+        };
+      });
+      assert.ok(observed.discs.length && observed.glyphs.length === observed.discs.length);
+      assert.ok(Math.min(...observed.discs) >= minimumDisc, width + 'px familiar discs');
+      assert.ok(Math.min(...observed.glyphs) >= minimumDisc / 2, width + 'px identity glyphs');
+      assert.ok(Math.max(...observed.discs) < Math.min(...observed.seals), 'missions retain their higher level');
+      assert.ok(observed.trays === 4 && observed.controls >= 2);
+      assert.equal(observed.crowded, false, width + 'px trays, decisions and Psyche have separate space');
+    } finally {
+      await page.close();
+    }
+  }
+});

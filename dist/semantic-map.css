@@ -73,7 +73,7 @@ body.atlas-enhanced #plan .atlas-decision:focus-visible rect:not(.atlas-map-hit)
 body.atlas-enhanced #plan .seat > .sig { display: inline; pointer-events: none; }
 body.atlas-enhanced #plan .atlas-glyph-hit { fill: transparent; stroke: none; pointer-events: all; }
 body.atlas-enhanced #plan .familiar-disc {
-  fill: #1b1b22;
+  fill: color-mix(in srgb, var(--hue) 12%, #17171c);
   stroke: var(--hue);
   stroke-width: 1.35;
   vector-effect: non-scaling-stroke;
@@ -84,7 +84,7 @@ body.atlas-enhanced #plan .seat:is(:hover, :focus-visible, .sel) .familiar-disc 
 }
 body.atlas-enhanced #plan .atlas-local-psyche { cursor: pointer; }
 body.atlas-enhanced #plan .atlas-squad > .task-l {
-  fill: #e6e3ec;
+  fill: color-mix(in srgb, var(--hue) 75%, white);
   font-size: calc(12px * var(--u, 1) * var(--fs, 1));
   font-weight: 500;
 }
@@ -123,6 +123,7 @@ body.atlas-enhanced #plan .road.dormant { stroke-opacity: 1; }
 .preview-compact-ring { fill: color-mix(in srgb, var(--hue) 52%, #302c38); stroke: var(--hue); stroke-width: 12; }
 .preview-group { fill: #2b2830; stroke: #423c4b; stroke-width: 2; }
 .preview-member { fill: #211f27; stroke: var(--hue); stroke-width: 6; stroke-linecap: round; }
+.preview-familiar-glyph { color: var(--hue); pointer-events: none; }
 .preview-task { fill: var(--hue); }
 .preview-mission .se-status { stroke-width: 3; }
 .preview-mission .se-track, .preview-mission .se-progress { stroke-width: 8; }

@@ -32,7 +32,8 @@ function extract(name) {
 
 function load(names, globals = {}, prelude = '') {
   const context = vm.createContext({...globals});
-  new vm.Script(`${prelude}\n${names.map(extract).join('\n')}`, {
+  const mapSizes = source.slice(source.indexOf('const FAMILIAR_RADIUS'), source.indexOf('const S = 280'));
+  new vm.Script(`${mapSizes}\n${prelude}\n${names.map(extract).join('\n')}`, {
     filename: 'actual-site-atlas-integration.js',
   }).runInContext(context);
   return context;
@@ -170,7 +171,7 @@ test('overview keeps an exact accessible mission total across preview densities'
 test('miniatures retain Project-scoped mission, council and task identities as replay changes', () => {
   const fam = k => ({name: k, hue: k === 'astra' ? '#9cc2f2' : '#e8c99a', roles: []});
   const fixture = load(['createProjectPreview', 'syncProjectPreview', 'updateVisibleProjectPreviews', 'sealOf', 'buildSeal', 'drawSeal'], {
-    window: {CovenAtlasLayout: layout}, svgEl, fam, MAX_WEDGES: 8, MIN_WEDGE: 12, WARN_AT: .85,
+    window: {CovenAtlasLayout: layout}, svgEl, fam, sigil: key => `<path data-symbol="${key}"/>`, MAX_WEDGES: 8, MIN_WEDGE: 12, WARN_AT: .85,
     pol: (r, a) => [r * Math.cos(a * Math.PI / 180), r * Math.sin(a * Math.PI / 180)],
     countOf: (w, pred) => [...w.agents.values()].filter(pred).length, openAsks: w => [...w.asks.values()],
   });
@@ -193,6 +194,7 @@ test('miniatures retain Project-scoped mission, council and task identities as r
   assert.equal(item.node.getAttribute('data-preview-mission'), 'm1');
   assert.deepEqual([...item.members.keys()], ['astra', 'cody']);
   const astra = item.members.get('astra');
+  assert.match(astra.glyph.innerHTML, /data-symbol="astra"/);
   assert.equal(astra.task.style.display, '');
   assert.equal(item.members.get('cody').task.style.display, 'none');
   world.asks.set('gate', {mission: 'm1', fam: 'cody'});
@@ -382,7 +384,7 @@ test('Project fit frames actual content for empty, single-mission, and dense pro
     for (let i = 0; i < count; i++) {
       const x = i % 8 * 170, y = Math.floor(i / 8) * 195;
       missions.set(i, {x, y}); points.push([x - 43, y - 43], [x + 43, y + 60]);
-      seats.set(i, {bx: x + 74, by: y - 78}); points.push([x + 48, y - 93], [x + 100, y - 46]);
+      seats.set(i, {bx: x + 74, by: y - 78}); points.push([x + 42, y - 103], [x + 106, y - 37]);
     }
     const gateL = [{x: 180, y: 0, asks: count ? [{}] : []}, {x: 9e4, y: 8e4, asks: []}];
     if (count) points.push([166, -14], [194, 14]);

@@ -118,7 +118,8 @@ function fixture(trace = []) {
   context.SimModel = loadSimulationModel({ normBrief: () => null, fam: context.fam });
   const names = ['seek', 'sync', 'syncTaskPlane', 'syncTaskTray', 'sealOf', 'buildSeal', 'drawSeal',
     'atlasProjectGhost'];
-  new vm.Script(`${constants}\n${names.map(extract).join('\n')}`, {
+  const mapSizes = source.slice(source.indexOf('const FAMILIAR_RADIUS'), source.indexOf('const S = 280'));
+  new vm.Script(`${mapSizes}\n${constants}\n${names.map(extract).join('\n')}`, {
     filename: 'actual-replay-render-functions.js',
   }).runInContext(context);
   const P = (x, y) => [x, y];
