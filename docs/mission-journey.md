@@ -36,7 +36,7 @@ python3 -m http.server 18575 --bind 127.0.0.1 --directory dist
 ```sh
 url=http://127.0.0.1:18575
 shots=$(mktemp -d)
-cp scripts/mission-{journey-qa,history-qa,request-qa,history-performance}.mjs scripts/{approval-replay,replay-bookmark,project-preview}-qa.mjs "$qa/"
+cp scripts/mission-{journey-qa,history-qa,request-qa,history-performance}.mjs scripts/{approval-replay,replay-bookmark,project-preview,plan}-qa.mjs "$qa/"
 node scripts/verify-served.mjs "$url/" "$(git rev-parse HEAD)"
 for engine in chromium webkit; do
   COMPASS_JOURNEY_SHOTS="$shots" node "$qa/mission-journey-qa.mjs" "$url" "$engine" || exit 1
@@ -48,6 +48,7 @@ for engine in chromium webkit; do
 done
 node "$qa/approval-replay-qa.mjs" "$url" tests/recordings/approval-replay.jsonl
 node "$qa/project-preview-qa.mjs" "$url"
+node "$qa/plan-qa.mjs" "$url"
 node "$qa/mission-history-performance.mjs" "$url"
 ```
 

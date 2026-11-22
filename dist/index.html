@@ -3163,7 +3163,7 @@ function project() {
     s.label.style.visibility = '';
     s.disc.setAttribute('r', f(badgeRadius));
     s.rings.g.setAttribute('transform', 'scale(' + (badgeRadius / 20) + ')');
-    s.glyph.setAttribute('transform', 'scale(' + f(badgeRadius / 15) + ')');
+    s.glyph.setAttribute('transform', 'scale(' + f(badgeRadius / 12.5) + ')');
     s.hit.setAttribute('r', f(clamp(minHit / 2, badgeRadius + 2, 34)));
     s.badge.setAttribute('transform', `translate(${f(badge[0])} ${f(badge[1])})`);
     s.bsx = badge[0]; s.bsy = badge[1]; s.cx = s.x; s.cy = s.y; s.ry = s.R;
