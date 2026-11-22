@@ -1,0 +1,8 @@
+{"t":"2026-11-18T12:00:00Z","type":"mission.opened","mission":"proof","name":"Proof review"}
+{"t":"2026-11-18T12:00:01Z","type":"mission.opened","mission":"index","name":"Index review"}
+{"t":"2026-11-18T12:00:02Z","type":"council.seated","mission":"proof","familiar":"cody"}
+{"t":"2026-11-18T12:00:03Z","type":"agent.spawned","mission":"proof","familiar":"cody","agent":"proofreader"}
+{"t":"2026-11-18T12:00:04Z","type":"gate.requested","mission":"proof","familiar":"cody","agents":["proofreader"],"ask":"proof-1","gate":"N","title":"Approve proof"}
+{"t":"2026-11-18T12:00:04Z","type":"gate.requested","mission":"index","ask":"index-1","title":"Approve proof"}
+{"t":"2026-11-18T12:00:04Z","type":"gate.resolved","ask":"proof-1","decision":"allowed_once"}
+{"t":"2026-11-18T12:00:05Z","type":"gate.requested","mission":"proof","familiar":"cody","agents":["proofreader"],"ask":"proof-2","gate":"N","title":"Release proof"}

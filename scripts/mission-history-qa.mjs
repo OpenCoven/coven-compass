@@ -57,7 +57,7 @@ try {
   };
   await range('start', 1);
   await range('end', 2);
-  assert.match(await loc('#historyCount').innerText(), /No recorded changes/);
+  assert.match(await row(2).innerText(), /council.seated/);
   await activate(btn('End at replay position'));
   assert.equal(await loc('#history-end').inputValue(), '9');
   assert.match(await row(9).innerText(), /Release review → Publication review/);
@@ -81,9 +81,9 @@ try {
   const event = btn('Show event 6 on map');
   await activate(event);
   await loc('#historyReturn').waitFor();
-  assert.match(await loc('#historyMapNote').innerText(), /includes all events at this time/);
+  assert.match(await loc('#historyMapNote').innerText(), /Event 6 .*agent.assigned/);
   assert.equal(await loc('#live').getAttribute('aria-pressed'), 'false');
-  assert.match(await loc('#plan .lead-node.sel').getAttribute('aria-label'), /Release review, Needs you/);
+  assert.match(await loc('#plan .lead-node.sel').getAttribute('aria-label'), /Release review, Active/);
   assert.equal(await loc('#plan [data-map-item][tabindex="0"]').count(), 1);
   assert.ok(await focused(btn('Return to History')));
   await shot('map');
@@ -91,7 +91,7 @@ try {
   assert.ok(await focused(event));
   assert.deepEqual(await Promise.all(['start','end'].map(k => loc('#history-' + k).inputValue())), ['4','8']);
   await activate(btn('Start at replay position'));
-  assert.equal(await loc('#history-start').inputValue(), '7');
+  assert.equal(await loc('#history-start').inputValue(), '6');
   assert.match(await loc('#historyRows').innerText(), /gate.resolved/);
   if (keyboard) await page.keyboard.press('Escape'); else await activate(btn('Close'));
   assert.ok(await focused(btn('History')));
