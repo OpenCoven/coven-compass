@@ -307,7 +307,8 @@ body.atlas-enhanced .manifest { top: 76px; bottom: 72px; scrollbar-width: thin; 
 /* Size detail cards against the map left beside the conversation rail. */
 @container atlas-stage (min-width: 700px) {
   body.atlas-enhanced:not(.atlas-adaptive-mobile) #notes .manifest {
-    width: min(clamp(252px, 32cqw, 456px), calc(440px * var(--fs, 1)));
+
+    width: clamp(252px, 32cqw, calc(440px * var(--fs, 1)));
     gap: clamp(8px, 1cqw, 14px);
   }
   body.atlas-enhanced:not(.atlas-adaptive-mobile) .manifest :is(.hud, .plate.seat) {
@@ -321,6 +322,12 @@ body.atlas-enhanced .manifest { top: 76px; bottom: 72px; scrollbar-width: thin; 
   }
   body.atlas-enhanced:not(.atlas-adaptive-mobile) .manifest .nt { padding-block: clamp(3px, .45cqw, 7px); }
   body.atlas-enhanced:not(.atlas-adaptive-mobile) .manifest .hb b { white-space: normal; overflow-wrap: anywhere; }
+}
+@media (max-height: 960px) {
+  body.atlas-enhanced:not(.atlas-adaptive-mobile) .manifest :is(.hud, .plate.seat) { padding: 11px 14px; }
+  body.atlas-enhanced:not(.atlas-adaptive-mobile) .manifest .hud { gap: 9px; }
+  body.atlas-enhanced:not(.atlas-adaptive-mobile) .manifest .hb { min-height: calc(23px * var(--fs, 1)); }
+  body.atlas-enhanced:not(.atlas-adaptive-mobile) .manifest .nt { padding-block: 3px; }
 }
 body.atlas-enhanced .manifest::-webkit-scrollbar { display: block; width: 5px; }
 body.atlas-enhanced .manifest::-webkit-scrollbar-thumb { background: #4a425b; border-radius: 5px; }
