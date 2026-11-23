@@ -81,7 +81,7 @@ test('playing a recording retires the exact request and returns focus to the emp
     await page.goto(new URL('#/project/psyche-build', base).href);
     await page.locator('#workspaceTools > summary').click();
     await page.locator('#traceBox > summary').click();
-    await page.locator('#traceLoad > summary').click();
+    await page.locator('#traceImport').click();
     const events = [
       {t:'2020-01-01T00:00:00Z', type:'mission.opened', name:'Recorded survey'},
       {t:'2020-01-01T00:00:05Z', type:'gate.requested', ask:'q-1', familiar:'astra', title:'Review recorded sources'},
