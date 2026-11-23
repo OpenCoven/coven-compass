@@ -2,7 +2,7 @@
 
 ## Current work and acceptance
 
-At the November 23 closeout, Compass main `1e6190a` serves a local simulation with typed map geometry and replay, explicit simulation and fixture projection sources, and a read-only recording viewer. Contributors can exercise Project selection, mission history and approvals from a local checkout. The first production integration proposed below is an authenticated Project read. Its prerequisites are tracked in [#2](https://github.com/OpenCoven/coven-compass/issues/2) and [#36](https://github.com/OpenCoven/coven-compass/issues/36).
+At the November 23 closeout, Compass main `5201943` serves a local simulation with typed map geometry and replay, explicit simulation and fixture projection sources, and a read-only recording viewer. Contributors can exercise Project selection, mission history and approvals from a local checkout. The first production integration proposed below is an authenticated Project read. Its prerequisites are tracked in [#2](https://github.com/OpenCoven/coven-compass/issues/2) and [#36](https://github.com/OpenCoven/coven-compass/issues/36).
 
 ### Delivered foundations
 
@@ -15,7 +15,7 @@ At the November 23 closeout, Compass main `1e6190a` serves a local simulation wi
 | M5 · Discovery packet | [#11 · 3ddeafe](https://github.com/OpenCoven/coven-compass/pull/11) | Verify the pinned packet with `shasum -a 256 -c SHA256SUMS` in its [directory](../discovery/2026-11-19-d01-d04/). Val accepted the research. Nova retains decision routing in #2. |
 | M6 · Projection sources | [#12 · e556b08](https://github.com/OpenCoven/coven-compass/pull/12) | Simulation and fixture modes expose freshness and availability. [#34](https://github.com/OpenCoven/coven-compass/pull/34) hardened version, time and container handling. Run `node --test tests/projection-source.test.cjs`. |
 
-The keyboard and compact-label follow-ups landed through #43 and #47. The strictly 2D presentation in #48 superseded #32. Public entry-point qualification was delivered under #38. [#13](https://github.com/OpenCoven/coven-compass/issues/13) records the milestone history. The Projects drawer fix from #67 landed with #77. [#66](https://github.com/OpenCoven/coven-compass/issues/66) records the cold WebKit pointer and control journeys against the current drawer and the separate #103 candidate.
+The keyboard and compact-label follow-ups landed through #43 and #47. The strictly 2D presentation in #48 superseded #32. Public entry-point qualification was delivered under #38. [#13](https://github.com/OpenCoven/coven-compass/issues/13) records the milestone history. The Projects drawer fix from #67 landed with #77. [#66](https://github.com/OpenCoven/coven-compass/issues/66) records the cold WebKit pointer and control journeys on the pre-#103 main and the drawer candidate. [#103](https://github.com/OpenCoven/coven-compass/pull/103) subsequently landed the responsive drawer and the shared regression for descendant activation and compact task captions.
 
 ### Next decisions and delivery gates
 

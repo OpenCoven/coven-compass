@@ -28,7 +28,7 @@ try {
     });
     await page.goto(new URL('#/coven', process.argv[2]).href);
     await page.locator('#atlasBrowse').click();
-    await page.locator('.atlas-layout-simulation > summary').click();
+    await page.locator('#atlasOpenLayout').click();
     await page.getByRole('button', {name: 'Simulate a Coven with 128 Projects'}).click();
     assert.equal(await page.locator('.ghostfort').count(), 128);
     await page.locator('.ghostfort[aria-label^="psyche-build,"]').focus();

@@ -47,9 +47,24 @@
     $('atlasBrowse').setAttribute('aria-expanded', 'false');
     if (restoreFocus) $('atlasBrowse').focus({ preventScroll: true });
   }
+  function setProjectPage(layout, focus) {
+    $('atlasProjectDirectory').hidden = layout;
+    $('atlasLayoutPage').hidden = !layout;
+    $('atlasProjectTools').hidden = layout;
+    $('atlasLayoutBack').hidden = !layout;
+    $('atlasNewProject').hidden = layout;
+    $('atlasProjectBadge').hidden = layout;
+    $('atlasProjectsTitle').textContent = layout ? 'Sample layout' : 'Projects';
+    if (focus) $(layout ? 'atlasLayoutBack' : 'atlasOpenLayout').focus();
+  }
+  function dismissBrowse() {
+    if (!$('atlasLayoutPage').hidden) setProjectPage(false, true);
+    else closeBrowse(true);
+  }
   function openBrowse() {
     closeMissions(false);
     var drawer = $('atlasSidebar');
+    setProjectPage(false, false);
     drawer.hidden = false;
     if (window.CovenMobileUI) window.CovenMobileUI.activate('atlasSidebar');
     document.body.classList.add('atlas-browse-open');
@@ -270,6 +285,7 @@
     var total = projectNodes.size;
     var result = (needle ? count + ' of ' + total : total) + (total === 1 ? ' Project' : ' Projects');
     if (status.textContent !== result) status.textContent = result;
+    $('atlasProjectBadge').textContent = needle ? count + '/' + total : String(total);
     $('atlasProjectClear').hidden = !projectQuery;
     $('atlasProjectEmpty').hidden = !needle || count > 0;
   }
@@ -323,35 +339,58 @@
     var title = node('h2', '', 'Projects'); title.id = 'atlasProjectsTitle';
     var close = button('atlasBrowseClose', '×', function () { closeBrowse(true); });
     close.setAttribute('aria-label', 'Close the Project browser');
-    heading.append(title, close);
-    var projectSearchLabel = node('label', 'atlas-project-search', 'Find a Project'), projectSearch = node('input');
-    projectSearch.id = 'atlasProjectSearch'; projectSearch.type = 'search'; projectSearch.placeholder = 'Project or mission name'; projectSearch.autocomplete = 'off';
-    projectSearchLabel.append(projectSearch);
+    var projectSearchLabel = node('div', 'atlas-project-search'), projectSearch = node('input');
+    var searchIcon = node('span', 'atlas-search-mark');
+    searchIcon.innerHTML = '<svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="5"/><path d="m12 12 4 4"/></svg>';
+    projectSearch.setAttribute('aria-label', 'Search projects or missions');
+    projectSearch.id = 'atlasProjectSearch'; projectSearch.type = 'search'; projectSearch.placeholder = 'Search projects or missions'; projectSearch.autocomplete = 'off';
+    projectSearchLabel.append(searchIcon, projectSearch);
     projectSearch.addEventListener('input', function () { projectQuery = projectSearch.value; filterProjects(); });
-    var projectCount = node('p', 'atlas-project-count'); projectCount.id = 'atlasProjectCount'; projectCount.setAttribute('role', 'status');
-    var projectClear = button('atlasProjectClear', 'Clear search', function () {
+    var projectCount = node('p', 'sr-only'); projectCount.id = 'atlasProjectCount'; projectCount.setAttribute('role', 'status');
+    var projectClear = button('atlasProjectClear', '×', function () {
       projectSearch.value = projectQuery = ''; filterProjects(); projectSearch.focus();
     });
     projectClear.hidden = true;
-    var projectSummary = node('div', 'atlas-result-summary'); projectSummary.append(projectCount, projectClear);
+    projectClear.setAttribute('aria-label', 'Clear search');
+    projectSearchLabel.append(projectClear);
+    var projectBadge = node('span', 'atlas-project-count-badge'); projectBadge.id = 'atlasProjectBadge'; projectBadge.setAttribute('aria-hidden', 'true');
     var projectEmpty = node('p', 'atlas-empty-result', 'No matching Projects. Try another Project or mission name.');
     projectEmpty.id = 'atlasProjectEmpty'; projectEmpty.hidden = true;
     var projects = node('div'); projects.id = 'atlasProjects';
-    var newProject = button('atlasNewProject', 'New Project', function () { closeBrowse(false); api.newProject(); });
-    var simulation = node('details', 'atlas-layout-simulation'), simulationTitle = node('summary', '', 'Try a larger Coven');
-    var presets = node('div', 'atlas-layout-presets');
-    var custom = node('form', 'atlas-layout-custom'), label = node('label', '', 'Total Projects');
+    var newProject = button('atlasNewProject', 'New project', function () { closeBrowse(false); api.newProject(); });
+    var simulation = node('section', 'atlas-layout-simulation'); simulation.id = 'atlasLayoutPage'; simulation.hidden = true;
+    var layoutBack = headerAction(button('atlasLayoutBack', '', function () { setProjectPage(false, true); }), '', '<path d="m12 5-5 5 5 5"/>');
+    layoutBack.hidden = true; layoutBack.setAttribute('aria-label', 'Back to projects');
+    var layoutFacts = node('div', 'atlas-layout-facts'); layoutFacts.id = 'atlasLayoutFacts';
+    var layoutSize = node('strong'); layoutSize.id = 'atlasLayoutSize';
+    var sampleCount = node('span'); sampleCount.id = 'atlasSampleCount';
+    layoutFacts.append(layoutSize, sampleCount);
+    var presetLabel = node('h3', '', 'Preview size'); presetLabel.id = 'atlasPresetLabel';
+    var presets = node('div', 'atlas-layout-presets'); presets.id = 'atlasLayoutPresets';
+    presets.setAttribute('role', 'group'); presets.setAttribute('aria-labelledby', presetLabel.id);
+    var custom = node('form', 'atlas-layout-custom'), label = node('label', '', 'Custom total');
     var total = node('input'), apply = node('button', 'atlas-button', 'Set total');
+    total.setAttribute('aria-describedby', 'atlasCountMinimum');
     total.id = 'atlasCustomCount'; total.type = 'number'; total.min = '1'; total.step = '1'; total.required = true;
     total.addEventListener('input', function () { total.setCustomValidity(''); });
-    label.htmlFor = total.id; apply.type = 'submit'; custom.append(label, total, apply);
+    var minimum = node('small'); minimum.id = 'atlasCountMinimum';
+    label.htmlFor = total.id; apply.type = 'submit'; custom.append(label, total, apply, minimum);
     var progress = node('p'); progress.id = 'atlasLayoutStatus'; progress.setAttribute('role', 'status');
+    var layoutRequest = 0;
     async function populate(count) {
+      var request = ++layoutRequest;
+      simulation.setAttribute('aria-busy', 'true');
+      reset.hidden = false;
       progress.textContent = count ? 'Preparing a Coven with ' + count + ' Projects…' : 'Removing extra samples…';
       try {
-        if (await api.setProjectCount(count)) { progress.textContent = ''; closeBrowse(true); }
+        if (await api.setProjectCount(count) && request === layoutRequest) { progress.textContent = ''; closeBrowse(true); }
       } catch (error) {
-        progress.textContent = 'Could not finish preparing the sample Projects. ' + error.message;
+        if (request === layoutRequest) progress.textContent = 'Could not prepare the sample projects. ' + error.message;
+      } finally {
+        if (request === layoutRequest) {
+          simulation.removeAttribute('aria-busy');
+          reset.hidden = !Number(simulation.dataset.samples);
+        }
       }
     }
     custom.addEventListener('submit', function (event) {
@@ -362,15 +401,23 @@
     });
     [8, 16, 32, 64, 128].forEach(function (count) {
       var preset = button('', String(count), function () { populate(count); });
-      preset.setAttribute('aria-label', 'Simulate a Coven with ' + count + ' Projects'); presets.append(preset);
+      preset.dataset.total = String(count); preset.setAttribute('aria-label', 'Simulate a Coven with ' + count + ' Projects'); presets.append(preset);
     });
     var reset = button('atlasResetLayout', 'Remove extra samples', function () { populate(0); });
-    simulation.append(simulationTitle, node('p', '', 'Adds sample Projects to explore the layout. Your own projects stay intact.'), presets, custom, reset, progress);
-    var legend = button('atlasLegend', 'Legend', function () { closeBrowse(true); api.legend(); });
-    legend.title = 'Read the shapes, colors, and mission states';
-    heading.insertBefore(newProject, close);
-    aside.append(heading, projectSearchLabel, projectSummary, projectEmpty, projects, simulation, legend);
-    bindResultKeys(aside, projectSearch, projects, closeBrowse);
+    var description = node('p', 'atlas-layout-help', 'Preview a larger Coven with temporary sample projects.');
+    simulation.append(layoutFacts, description, presetLabel, presets, custom, reset, progress);
+    var tools = node('div', 'atlas-project-tools'); tools.id = 'atlasProjectTools';
+    var openLayout = headerAction(button('atlasOpenLayout', '', function () { setProjectPage(true, true); }), 'Sample layout', '<rect x="3" y="3" width="5" height="5" rx="1"/><rect x="12" y="3" width="5" height="5" rx="1"/><rect x="3" y="12" width="5" height="5" rx="1"/><rect x="12" y="12" width="5" height="5" rx="1"/>');
+    openLayout.setAttribute('aria-controls', simulation.id);
+    var legend = headerAction(button('atlasLegend', '', function () { closeBrowse(true); api.legend(); }), 'Map key', '<circle cx="10" cy="10" r="7"/><path d="M10 9v5m0-8v1"/>');
+    var directory = node('div', 'atlas-directory'); directory.id = 'atlasProjectDirectory';
+    var results = node('div', 'atlas-directory-results');
+    results.append(projectEmpty, projects); directory.append(projectSearchLabel, results);
+    var identity = node('div', 'atlas-directory-title'); identity.append(title, projectBadge);
+    heading.append(layoutBack, identity, newProject, close);
+    tools.append(openLayout, legend);
+    aside.append(heading, projectCount, directory, simulation, tools);
+    bindResultKeys(aside, projectSearch, projects, dismissBrowse);
     shield(aside);
 
     var missionBrowser = node('aside', 'atlas-mission-browser'); missionBrowser.id = 'atlasMissionBrowser'; missionBrowser.hidden = true;
@@ -533,13 +580,14 @@
           $('atlasProjects').append(b); projectNodes.set(p.key, b);
         }
         b.querySelector('b').textContent = p.key;
-        b.querySelector('.atlas-project-copy > span').textContent = p.missions + (p.missions === 1 ? ' mission' : ' missions') + ' · ' + p.agents + ' agents';
+        b.querySelector('.atlas-project-copy > span').textContent = p.missions || p.agents ? p.missions + (p.missions === 1 ? ' mission' : ' missions') + ' · ' + p.agents + (p.agents === 1 ? ' agent' : ' agents') : 'No missions yet';
         var state = b.querySelector('.atlas-project-state');
-        state.textContent = p.needs ? p.needs + (p.needs === 1 ? ' request' : ' requests') : p.agents || p.missions ? 'Open' : 'Dormant';
+        state.textContent = p.needs ? p.needs + (p.needs === 1 ? ' request' : ' requests') : p.agents || p.missions ? '' : 'Dormant';
+        state.hidden = !state.textContent;
         state.dataset.state = p.needs ? 'attention' : p.agents || p.missions ? 'active' : 'dormant';
         b.dataset.active = String(p.key === s.active);
         b.setAttribute('aria-current', p.key === s.active ? 'true' : 'false');
-        var projectLabel = p.key + ', ' + p.missions + (p.missions === 1 ? ' mission' : ' missions') + ', ' + p.agents + ' agents' + (p.needs ? ', ' + p.needs + ' requests need you' : '');
+        var projectLabel = p.key + ', ' + p.missions + (p.missions === 1 ? ' mission' : ' missions') + ', ' + p.agents + (p.agents === 1 ? ' agent' : ' agents') + (p.needs ? ', ' + p.needs + (p.needs === 1 ? ' request needs you' : ' requests need you') : '');
         var names = p.previewNames || [], remaining = p.missions - names.length;
         var preview = b.querySelector('.atlas-project-preview-names');
         preview.dataset.summary = names.join(' · ') + (names.length && remaining > 0 ? ' · +' + remaining : '');
@@ -547,6 +595,20 @@
         b.setAttribute('aria-label', projectLabel); b.title = projectLabel;
       });
       projectNodes.forEach(function (b, k) { if (!currentKeys.has(k)) { b.remove(); projectNodes.delete(k); } });
+      var extra = s.projects.filter(function (p) { return p.layoutDemo; }).length;
+      var fixed = s.projects.length - extra, layout = $('atlasLayoutPage');
+      layout.dataset.samples = String(extra);
+      $('atlasLayoutSize').textContent = s.projects.length + (s.projects.length === 1 ? ' project on the map' : ' projects on the map');
+      $('atlasSampleCount').textContent = extra ? extra + ' temporary' : '';
+      $('atlasSampleCount').hidden = !extra;
+      $('atlasCountMinimum').textContent = 'Minimum ' + Math.max(1, fixed) + ' to keep your existing projects.';
+      $('atlasCustomCount').min = String(Math.max(1, fixed));
+      $('atlasCustomCount').placeholder = String(s.projects.length);
+      $('atlasResetLayout').hidden = !extra && !layout.hasAttribute('aria-busy');
+      Array.from($('atlasLayoutPresets').children).forEach(function (preset) {
+        preset.disabled = Number(preset.dataset.total) < fixed;
+        preset.setAttribute('aria-pressed', String(Number(preset.dataset.total) === s.projects.length));
+      });
       filterProjects();
       s.familiars.forEach(function (f) {
         var b = familiarNodes.get(f.key);
@@ -568,5 +630,5 @@
       familiarNodes.forEach(function (b, k) { if (!s.familiars.some(function (f) { return f.key === k; })) { b.remove(); familiarNodes.delete(k); } });
     }
   }
-  window.CovenAtlas = { mount: mount, update: update, matchingMissions: matchingMissions, openMissions: openMissions, openMissionsForProject: openMissionsForProject, closeMissions: closeMissions, closeBrowse: closeBrowse, announce: announce, dismissNotice: dismissNotice };
+  window.CovenAtlas = { mount: mount, update: update, matchingMissions: matchingMissions, openMissions: openMissions, openMissionsForProject: openMissionsForProject, closeMissions: closeMissions, closeBrowse: closeBrowse, dismissBrowse: dismissBrowse, announce: announce, dismissNotice: dismissNotice };
 }());
