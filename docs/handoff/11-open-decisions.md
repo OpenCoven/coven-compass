@@ -4,7 +4,7 @@
 
 ## Decisions that can proceed as reversible implementation work
 
-During a separately assigned implementation task, the team can inspect repositories, map existing contracts, create isolated adapters and fixtures, prepare draft issues/PRs, and gather evidence within that task's authorization. This handoff request itself covers the source package, documentation, and Site download surface; it does not dispatch the proposed production work. Once implementation is assigned, carry authorized work far enough to make a policy choice concrete instead of stopping at a generic approval note.
+During a separately assigned implementation task, the team can inspect repositories, map existing contracts, create isolated adapters and fixtures, prepare draft issues/PRs, and gather evidence within that task's authorization. The handoff lives in Git. [PR #63](https://github.com/OpenCoven/coven-compass/pull/63) retired the public reader and download. Production work follows the owners and dependencies in the [implementation plan](05-implementation-plan.md#current-work-and-acceptance). Once implementation is assigned, carry authorized work far enough to make a policy choice concrete instead of stopping at a generic approval note.
 
 Record a decision as **proposed**, **accepted by owner**, **implemented**, and **verified** separately. A checked-in proposal is not an owner decision; a merged patch is not proof of packaged or remote behavior. Superseded proposals remain linked to the decision that replaced them.
 
@@ -25,7 +25,7 @@ Record a decision as **proposed**, **accepted by owner**, **implemented**, and *
 | D11 | **Canonical metric mapping.** Psyche owner; UI/Brand consumers | Preserve the current visual vocabulary while mapping each displayed quantity to a verified canonical field or computed projection. | The prototype uses role-owned target progress, wedge shares and resource-limit ratios. Decide whether equivalent production semantics exist. Unsupported metrics should show unknown or be omitted, not be approximated as authoritative progress. |
 | D12 | **Pilot scope and publication.** Val; component owners | A one-repository, one-Project, single-authority-host pilot with an explicit bounded operation and rollback/recovery record. | Select the repository, familiar root/revision, runtime, destination, budget, capabilities and human acceptance owner. Published or paid remote execution requires its own concrete acceptance and authorization; a successful Site simulation is not that evidence. |
 
-## Status of D01–D04: discovery delivered, awaiting owners
+## D01–D04 decisions and remaining work
 
 Sage's read-only discovery for issue #2 is summarized in the [public discovery record](../discovery/2026-11-20-public/README.md). **Every recommendation in it is proposed.** None of these four decisions is accepted, apart from parts of D01: Val decided the naming and the Castle definition on 2026-11-19, and the Project ID issuer on 2026-11-22.
 
@@ -40,7 +40,7 @@ Recording an owner's acceptance is the owner's act. Agents may add evidence here
 
 ## Recommended dependency order
 
-Resolve D01–D04 through repository discovery and a read-only adapter first. Those decisions make the nouns and read path concrete without changing authority. Prepare D05–D09 as a single vertical operation: one bounded mission, one attempt, one decision, one terminal receipt, including interrupted submission and cancellation. Then exercise D10 through a small synchronized artifact set, not the entire Host directory. Evaluate D11 with real canonical sample records before committing to visual metric claims. D12 is the pilot acceptance decision once the earlier evidence exists.
+For the next D01–D04 decisions, Nova routes the open identity and binding questions under [#2](https://github.com/OpenCoven/coven-compass/issues/2). Cave, Host, Coven and SDK owners record the supported discovery, read and recovery boundaries. Once those are pinned, Compass can exercise one read-only Project through [#36](https://github.com/OpenCoven/coven-compass/issues/36). Prepare D05–D09 as a single vertical operation: one bounded mission, one attempt, one decision, one terminal receipt, including interrupted submission and cancellation. Then exercise D10 through a small synchronized artifact set, not the entire Host directory. Evaluate D11 with real canonical sample records before committing to visual metric claims. D12 is the pilot acceptance decision once the earlier evidence exists.
 
 Discovery may show that several choices are already implemented and documented. In that case, record the exact contract/revision and adopt it; do not reopen the decision or fork its schema merely because this packet uses different provisional field names.
 
