@@ -42,6 +42,12 @@ for (const [width, height] of [[1440, 900], [768, 1024], [390, 844], [844, 390],
       await activate(loc('#traceEv summary').first());
       const editor = loc('#traceEv textarea').first();
       const original = await editor.inputValue();
+      if (width === 1440) {
+        await editor.focus();
+        await page.keyboard.press(engine === 'webkit' ? 'Alt+Tab' : 'Tab');
+        assert.equal(await editor.inputValue(), original);
+        assert.ok(await panel.getByRole('button', {name: 'Format', exact: true}).evaluate(el => el.matches(':focus')));
+      }
       await editor.fill('{');
       assert.equal(await editor.getAttribute('aria-invalid'), 'true');
       assert.ok(await panel.getByRole('button', {name: 'Save', exact: true}).isDisabled());
@@ -50,7 +56,7 @@ for (const [width, height] of [[1440, 900], [768, 1024], [390, 844], [844, 390],
       assert.equal(await editor.inputValue(), '{');
       await editor.fill(original + '\n');
       await activate(panel.getByRole('button', {name: 'Save', exact: true}));
-      assert.match(await loc('#traceEvNote').innerText(), /saved/i);
+      assert.match(await loc('#traceSaved').innerText(), /saved/i);
       await activate(loc('#traceImport')); await fits();
       const choose = async content => {
         const [picker] = await Promise.all([page.waitForEvent('filechooser'), activate(loc(width < 1000 ? '#traceDrop' : '#traceFile'))]);
@@ -76,3 +82,35 @@ for (const [width, height] of [[1440, 900], [768, 1024], [390, 844], [844, 390],
     } finally { await page.close(); }
   });
 }
+
+test('replay time follows the cursor between events and keeps an open draft intact', async () => {
+  const page = await browser.newPage();
+  try {
+    await page.goto(new URL('#/project/psyche-build', base).href);
+    const recording = [0, 1200].map((offset, i) => JSON.stringify({t: 1800000000 + offset, type: 'mission.opened', mission: 'm' + i, name: 'Mission ' + i})).join('\n');
+    await page.locator('#traceFile').setInputFiles({name: 'spaced.jsonl', mimeType: 'text/plain', buffer: Buffer.from(recording)});
+    await page.locator('#traceKind').filter({hasText: 'loaded'}).waitFor({state: 'attached'});
+    await page.locator('#workspaceTools > summary').click();
+    await page.locator('#traceBox > summary').click();
+    await page.getByRole('button', {name: 'Events', exact: true}).click();
+    const scrub = page.locator('#scrub'), note = page.locator('#traceEvNote');
+    const seek = value => scrub.evaluate((el, at) => {
+      el.value = at;
+      el.dispatchEvent(new Event('input', {bubbles: true}));
+    }, value);
+    for (const position of [300, 600]) {
+      await seek(position);
+      const time = (await page.locator('#clock').innerText()).slice(0, 5);
+      assert.equal(await note.innerText(), '1 event · newest first · through ' + time);
+    }
+    await page.locator('#traceEv summary').click();
+    const editor = page.locator('#traceEv textarea');
+    await editor.fill('{');
+    await seek(1000);
+    assert.equal(await editor.inputValue(), '{');
+    assert.match(await note.innerText(), /List paused for inspection/);
+    await page.locator('#traceEv summary').click();
+    await page.locator('#traceFilter').focus();
+    await note.filter({hasText: '2 events · newest first · through'}).waitFor();
+  } finally { await page.close(); }
+});

@@ -1455,6 +1455,7 @@ body.atlas-adaptive-mobile[data-mobile-layout="landscape"][data-mobile-overlay="
 .trace-caption { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 5px 8px; }
 .trace-chart { padding: 10px; background: var(--well); border: 1px solid var(--border); border-radius: 8px; }
 .trace-chart .density { margin: 10px 0 5px; height: 40px; }
+#traceSaved:empty { display: none; }
 #traceInfo, .trace-hint, #traceEmpty { color: var(--muted-foreground); font-size: .94em; }
 #traceLegend { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(120px,100%),1fr)); gap: 6px; margin-top: 8px; }
 #traceLegend .trace-kind { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 6px; padding: 8px 9px; text-align: start; border: 1px solid var(--border); background: var(--card-raised); border-radius: 7px; }

@@ -1563,7 +1563,7 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
                 </section>
                 <section class="trace-page" id="traceEvents" aria-label="Recent events" hidden>
                   <div class="trace-caption"><label for="traceFilter">Recent events</label><select id="traceFilter"><option value="">All kinds</option></select></div>
-                  <p class="trace-hint" id="traceEvNote"></p><div class="evs" id="traceEv"></div>
+                  <p class="trace-hint" id="traceEvNote"></p><p class="trace-hint" id="traceSaved" role="status"></p><div class="evs" id="traceEv"></div>
                 </section>
                 <section class="trace-page" id="traceLoad" aria-label="Import recording" hidden>
                   <h3>Import recording</h3>
@@ -4612,6 +4612,7 @@ function showTraceView(id) {
     button.setAttribute('aria-pressed', String(selected));
     $(button.dataset.traceView).hidden = !selected;
   }
+  $('traceSaved').textContent = '';
   $('traceBody').scrollTop = 0;
   $('traceBody').querySelector('.trace-scroll').scrollTop = 0;
   if (id === 'traceEvents') drawEvents();
@@ -4620,7 +4621,7 @@ traceNav.addEventListener('click', ev => {
   const button = ev.target.closest('[data-trace-view]');
   if (button) showTraceView(button.dataset.traceView);
 });
-traceFilter.addEventListener('change', () => drawEvents());
+traceFilter.addEventListener('change', () => { $('traceSaved').textContent = ''; drawEvents(); });
 function drawTrace() {
   const c = cur(), tr = c.trace, t0 = tStart(c), t1 = tEnd(c), span = Math.max(1, t1 - t0);
   const mark = $('traceNow'); if (mark) mark.style.left = (clamp((cursor - t0) / span, 0, 1) * 100).toFixed(2) + '%';
@@ -4698,18 +4699,22 @@ let traceListProject, traceListApplied, traceListFilter;
 function drawEvents() {
   const c = cur(), box = $('traceEv'), filter = traceFilter.value, n = c.applied;
   const same = traceListProject === c && traceListFilter === filter;
-  // Keep the reader's place and any unsaved JSON while the timeline advances.
-  if (same && (traceListApplied === n || box.querySelector('details[open]') || box.contains(document.activeElement))) return;
-  traceListProject = c; traceListApplied = n; traceListFilter = filter;
-  const types = FAMILY.find(([name]) => name === filter)?.[1];
-  const rows = [];
-  for (let i = n - 1; i >= 0 && rows.length < 12; i--) {
-    if (!types || types.includes(c.trace[i].type)) rows.push(eventRow(c, c.trace[i]));
+  // Keep the current rows while a reader or editor is using them.
+  const held = same && traceListApplied !== n && (box.contains(document.activeElement) || !!box.querySelector('details[open]'));
+  if (!same || (traceListApplied !== n && !held)) {
+    traceListProject = c; traceListApplied = n; traceListFilter = filter;
+    const types = FAMILY.find(([name]) => name === filter)?.[1];
+    const rows = [];
+    for (let i = n - 1; i >= 0 && rows.length < 12; i--) {
+      if (!types || types.includes(c.trace[i].type)) rows.push(eventRow(c, c.trace[i]));
+    }
+    box.replaceChildren(...rows);
   }
-  box.replaceChildren(...rows);
-  $('traceEvNote').textContent = rows.length
-    ? plural(rows.length, 'event') + ' · newest first' + (live ? '' : ' · through ' + hm(cursor))
-    : 'No matching events at this point in the timeline.';
+  const count = box.childElementCount;
+  let note = count ? plural(count, 'event') + ' · newest first' : 'No matching events at this point in the timeline.';
+  if (held) note += ' · List paused for inspection';
+  else if (count && !live) note += ' · through ' + hm(cursor);
+  if ($('traceEvNote').textContent !== note) $('traceEvNote').textContent = note;
 }
 function eventRow(c, e) {
   const d = html('details', 'ev' + (e.type.startsWith('gate.') ? ' q' : '')), sm = html('summary');
@@ -4739,7 +4744,6 @@ function jsonEditor(c, e) {
   ta.addEventListener('input', lint);
   ta.addEventListener('keydown', ev => {
     if (composingInput(ev)) return;
-    if (ev.key === 'Tab' && !ev.shiftKey && !ev.altKey && !ev.ctrlKey && !ev.metaKey) { ev.preventDefault(); ta.setRangeText('  ', ta.selectionStart, ta.selectionEnd, 'end'); lint(); }
     if (ev.key === 's' && (ev.metaKey || ev.ctrlKey)) { ev.preventDefault(); save.click(); }
     if (ev.key === 'Escape') { ev.stopPropagation(); wrap.parentElement.querySelector('summary').focus(); }
   });
@@ -4749,7 +4753,7 @@ function jsonEditor(c, e) {
     const i = c.trace.indexOf(e); if (i < 0 || c !== cur()) { msg.textContent = 'This event has moved. Reopen it.'; msg.className = 'je-msg bad'; return; }
     const tr = c.trace.slice(); tr[i] = res.obj; tr.sort((a, b) => a.t - b.t);
     retrace(tr); tracePanelProject = cur(); drawEvents(); traceFilter.focus();
-    $('traceEvNote').textContent = 'Saved ' + res.obj.type + '. The project was replayed.';
+    $('traceSaved').textContent = 'Saved ' + res.obj.type + '. The project was replayed.';
   });
   box.append(pre, ta); bar.append(msg, fmt, save); wrap.append(box, bar); lint();
   return wrap;
