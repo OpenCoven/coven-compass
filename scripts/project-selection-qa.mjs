@@ -59,17 +59,30 @@ async function run(input) {
       assert.equal(new URL(page.url()).hash, '#/coven');
     } else {
       if (input === 'keyboard') await page.keyboard.press('Enter');
-      else await activate(row);
+      else await activate(row.locator('.atlas-project-icon'));
       await page.waitForURL(url => url.hash === route, {timeout: 2500});
       await drawer.waitFor({state: 'hidden'});
       const trays = page.locator('#plan .mission-tasks:visible');
       await trays.first().waitFor();
       const labels = await trays.evaluateAll(els => els.map(el => el.getAttribute('aria-label')));
-      result.missions = labels.map(label => label.match(/^\d+ tasks? on (.+?):/)?.[1]).sort();
+      const captions = page.locator('#missionCaptions .mission-caption[data-tasks="true"]:visible');
+      const fallbackNames = await captions.locator(':scope > span').allTextContents();
+      result.missions = labels.map(label => label.match(/^\d+ tasks? on (.+?):/)?.[1]).concat(fallbackNames).sort();
       assert.deepEqual(result.missions, missions);
       if (input === 'pointer' || touch) {
         const clicks = await page.evaluate(() => window.selectionEvents.filter(event => event.type === 'click'));
+        assert.notEqual(clicks[0]?.tag, 'BUTTON', 'one activation originates on a child of the Project button');
         assert.deepEqual(clicks.map(click => [click.target, click.hidden]), [['psyche-build', false]]);
+      }
+      if (touch && fallbackNames.length) {
+        const caption = captions.first(), name = fallbackNames[0];
+        const count = parseInt(await caption.locator('small').innerText());
+        assert.ok(count > 0);
+        await caption.tap();
+        await page.locator('#inspect .tname').first().waitFor();
+        assert.equal(await page.locator('#missionDetailTitle').innerText(), name);
+        assert.equal(await page.locator('#inspect .tname').count(), count);
+        result.captionTasks = {name, count};
       }
       if (!touch) assert.ok(await page.locator('#atlasProject').evaluate(el => el === document.activeElement));
     }
