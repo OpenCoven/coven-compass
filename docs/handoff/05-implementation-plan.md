@@ -1,12 +1,39 @@
 # Implementation plan: from visual simulation to canonical orchestration
 
-## Status and scope
+## Current work and acceptance
 
-**Proposed production work.** The design input began with the v3 Site at revision `d7b6f1e655140036cca49f31687131352162de13`; the bundle also contains subsequent mobile/navigation work and the [scalable Atlas layout/crown refinement](15-scalable-atlas-layout.md). The latter is implemented and source-level verified. The buildless JavaScript/SVG interface, local event reducer, sample decisions, replay, and seal laboratory remain a presentation reference. They do not establish a daemon integration, production authorization, remote execution, or durable orchestration service. Record actual delivered source and packaging separately from historical baseline evidence.
+At the November 23 closeout, Compass main `5201943` serves a local simulation with typed map geometry and replay, explicit simulation and fixture projection sources, and a read-only recording viewer. Contributors can exercise Project selection, mission history and approvals from a local checkout. The first production integration proposed below is an authenticated Project read. Its prerequisites are tracked in [#2](https://github.com/OpenCoven/coven-compass/issues/2) and [#36](https://github.com/OpenCoven/coven-compass/issues/36).
 
-Paths such as `README.md`, `dist/index.html`, and `tests/presentation.test.cjs` are relative to the bundle root. Read the shared source ledger and `docs/handoff/source-context/user-architecture-instructions.md` before implementation. API names, repository locations, and supported protocol versions remain **TBD through canonical repository discovery**. “Coven Host,” “Compass” (formerly “Castles”), and “CLI” describe requested integration surfaces; their existing ownership and implementation must be verified.
+### Delivered foundations
 
-The intended result is one coherent path from a human-readable project and mission view to authoritative state, bounded work, and auditable outcomes. Keep the familiar identity distinct from its delegated agents. Preserve the visual grammar while replacing sample data with a constrained projection of canonical records.
+| Milestone | Merged revision | Acceptance and subsequent changes |
+| --- | --- | --- |
+| M1 · One verification command | [#7 · 0c12450](https://github.com/OpenCoven/coven-compass/pull/7) | Run `node scripts/verify-all.mjs --check` on a clean checkout. Val retired the historical hosted Actions run and artifact requirement for #13 on November 23. Actions remains disabled. The required merge check is Vercel. |
+| M2 · Generated evidence | [#8 · 5079373](https://github.com/OpenCoven/coven-compass/pull/8) | The verifier measures the suite and compares its output with [current.json](../../tests/evidence/current.json). Source checks guard against copying counts into other documents. |
+| M3 · Reproducible guide and manifest | [#9 · e344547](https://github.com/OpenCoven/coven-compass/pull/9) | The stale-guide negative control and build-only manifest qualified the former release format. [#63](https://github.com/OpenCoven/coven-compass/pull/63) subsequently retired the guide and download. Edit the handoff chapters in Git. |
+| M4 · Contributor entry points | [#10 · c1191b6](https://github.com/OpenCoven/coven-compass/pull/10) | [AGENTS.md](../../AGENTS.md) maps edits to checks, invariants and delivery steps. [CLAUDE.md](../../CLAUDE.md) points to that workflow. |
+| M5 · Discovery packet | [#11 · 3ddeafe](https://github.com/OpenCoven/coven-compass/pull/11) | Verify the pinned packet with `shasum -a 256 -c SHA256SUMS` in its [directory](../discovery/2026-11-19-d01-d04/). Val accepted the research. Nova retains decision routing in #2. |
+| M6 · Projection sources | [#12 · e556b08](https://github.com/OpenCoven/coven-compass/pull/12) | Simulation and fixture modes expose freshness and availability. [#34](https://github.com/OpenCoven/coven-compass/pull/34) hardened version, time and container handling. Run `node --test tests/projection-source.test.cjs`. |
+
+The keyboard and compact-label follow-ups landed through #43 and #47. The strictly 2D presentation in #48 superseded #32. Public entry-point qualification was delivered under #38. [#13](https://github.com/OpenCoven/coven-compass/issues/13) records the milestone history. The Projects drawer fix from #67 landed with #77. [#66](https://github.com/OpenCoven/coven-compass/issues/66) records the cold WebKit pointer and control journeys on the pre-#103 main and the drawer candidate. [#103](https://github.com/OpenCoven/coven-compass/pull/103) subsequently landed the responsive drawer and the shared regression for descendant activation and compact task captions.
+
+### Next decisions and delivery gates
+
+The roles below identify who can supply the next evidence. Existing claims and review threads govern implementation ownership.
+
+| Issue | Next action and owner | Evidence needed to finish |
+| --- | --- | --- |
+| [#2 · D01–D04](https://github.com/OpenCoven/coven-compass/issues/2) | Nova routes the remaining questions to Coven, Cave, Host, Psyche and SDK owners. Val selected Cave as pilot issuer and a stored, daemon-minted ID long term. [#105](https://github.com/OpenCoven/coven-compass/pull/105) is the open documentation PR at this checkpoint. | Link owner decisions on remaining identity and binding questions, folder registration, authorized reads, and pagination/version/gap recovery in the [decision register](11-open-decisions.md). Preserve the accepted Sage packet at its original revision. |
+| [#20 · Castle reference](https://github.com/OpenCoven/coven-compass/issues/20) | Cody and the Castles steward reconcile #105, the inspection-v1 disposition and Cody’s claim at a pinned base before advancing the optional reference drafts, including [#26](https://github.com/OpenCoven/coven-compass/pull/26). | Link the Host compatibility and upgrade evidence, Castles seam response and tolerance checks, exact issuer/ref join tests, and steward disposition. The issuer decision alone clears only one prerequisite once recorded. |
+| [#36 · First real Project read](https://github.com/OpenCoven/coven-compass/issues/36) | SDK, the canonical read-surface owner and Compass can map the Project-only consumer now. Select one approved principal-scoped read. Optional Castle association can follow. | Pin producer, SDK and consumer. Demonstrate a packed or deployed read with bounded pagination, provenance, revocation, unsupported versions, stale cursors and gap recovery. Keep the browser free of daemon credentials and mutation paths. |
+| [#35 · Brief success policy](https://github.com/OpenCoven/coven-compass/issues/35) | Compass, Psyche and Coven owners review the policy mapping and synthetic two-attempt fixture in [#44](https://github.com/OpenCoven/coven-compass/pull/44). Identify who evaluates, authorizes another attempt and commits acceptance. | Retain candidate/policy provenance, cumulative limits and unresolved effects across retries. Close after steward review and a real integration with authoritative adoption and evidence receipts. |
+| [#37 · Outcome targets](https://github.com/OpenCoven/coven-compass/issues/37) | After #35’s policy profile, Psyche, Compass, Coven and one observation-source owner specify one metric, attribution rule, unit, settlement window and correction policy. | Exercise duplicates, partial/stale evidence, refunds and corrections in fixtures, then retain redacted authenticated source receipts and the separate authoritative acceptance transition. |
+| [#39 · Physical accessibility](https://github.com/OpenCoven/coven-compass/issues/39) | Val and the device reviewer select supported combinations and run the remaining [device matrix](../../MOBILE_READINESS.md) against an identified served artifact. Val deferred fresh VoiceOver independently of release. | Record actual viewports, hardware, IME, multi-touch, rotation, focus return, visual preferences and human acceptance per combination. Keep earlier spoken observations tied to their original build. |
+| [#40 · Map performance](https://github.com/OpenCoven/coven-compass/issues/40) | Compass performance maintainer and Val recheck the [reference workload and budget](../map-performance.md) on the selected integrated revision. #55, #58 and #62 delivered the baseline and optimizations. A later desktop run on `64ad9db` exceeded the dense overview budget; recovery candidate `c710b30` was qualified separately. | Compare current main and the owned recovery candidate on the named hardware, retain raw profiles and repeated matrices, and record Val’s disposition. Keep the budget scoped to the measured hardware, viewport, workload and interaction. |
+
+## Proposed production phases
+
+W01–W14 below describe proposed production work. Use the issue table above to locate delivered evidence and current dependencies. Repository paths are relative to the checkout. Consult the [source ledger](12-source-ledger.md) and [owner architecture instructions](source-context/user-architecture-instructions.md) when resolving a contract with its steward.
 
 ## Ownership to confirm
 
@@ -112,7 +139,7 @@ These boundaries are design constraints, not evidence that every component alrea
 
 ### W13 · Produce a reproducible review package
 
-**Owner:** release/package owner and integration lead. **Dependencies:** relevant client work and contract compatibility decisions. **Discover:** current release policy, artifact signing/checksums, supported platforms, upgrade behavior, and CI gates. Keep the Site handoff ZIP distinct from a production release.
+**Owner:** release/package owner and integration lead. **Dependencies:** relevant client work and contract compatibility decisions. **Discover:** current release policy, artifact signing/checksums, supported platforms, upgrade behavior, and CI gates. Identify the production artifact and its release owner. The former Site handoff ZIP was retired in #63.
 
 **Acceptance:** the exported source verifies without Git history, contains accurate provenance, excludes secrets/runtime data, and exposes known limitations. Production packages meet their existing gates. **Evidence:** checksums, clean extraction validation, packaged-client results, and exact command logs.
 
