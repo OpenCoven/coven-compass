@@ -1502,3 +1502,59 @@ body.atlas-enhanced #atlasProjects { display: grid; gap: 2px; max-height: none; 
   body.atlas-enhanced #atlasSidebar[hidden] { display: none; }
   .atlas-directory-results, .atlas-layout-simulation { overflow: visible; }
 }
+
+/* Trace keeps the switcher in reach while each view owns its scroll area. */
+#traceBody {
+  --trace-type: calc(13px * var(--fs, 1) * var(--fsl, 1));
+  font-size: var(--trace-type); background: var(--card); border: 1px solid var(--border-strong);
+  overflow: hidden; gap: 0; padding: 0; border-radius: 10px;
+}
+.trace-heading, .trace-nav { flex: none; }
+.trace-heading { display: flex; align-items: center; gap: 8px; padding: 13px 14px 9px; }
+.trace-heading svg, .trace-kind svg, #traceDrop svg { display: block; width: 16px; height: 16px; color: var(--primary-hi); }
+.trace-heading h2 { font-size: 1.15em; font-weight: 600; }
+#traceChip { margin-inline-start: auto; color: var(--muted-foreground); background: var(--card-raised); border: 1px solid var(--border); border-radius: 20px; padding: 2px 9px; font-size: .9em; }
+.trace-nav { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 2px; padding: 3px; margin: 0 12px 9px; background: var(--well); border: 1px solid var(--border); border-radius: 8px; }
+.trace-nav button { min-height: 32px; min-width: 0; color: var(--muted-foreground); border-radius: 5px; }
+.trace-nav button[aria-pressed="true"] { color: var(--primary-hi); background: var(--primary-soft); font-weight: 600; }
+.trace-scroll { min-height: 0; overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; border-top: 1px solid var(--border); }
+.trace-page { display: grid; gap: 10px; padding: 14px; min-width: 0; }
+.trace-page h3, .trace-caption label { font-size: 1em; font-weight: 600; }
+.trace-caption { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 5px 8px; }
+.trace-chart { padding: 10px; background: var(--well); border: 1px solid var(--border); border-radius: 8px; }
+.trace-chart .density { margin: 10px 0 5px; height: 40px; }
+#traceSaved:empty { display: none; }
+#traceInfo, .trace-hint, #traceEmpty { color: var(--muted-foreground); font-size: .94em; }
+#traceLegend { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(120px,100%),1fr)); gap: 6px; margin-top: 8px; }
+#traceLegend .trace-kind { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 6px; padding: 8px 9px; text-align: start; border: 1px solid var(--border); background: var(--card-raised); border-radius: 7px; }
+#traceLegend .trace-kind:hover, #traceDrop:hover { border-color: var(--primary); }
+.trace-kind strong { font-variant-numeric: tabular-nums; }
+.trace-meter { grid-column: 1 / -1; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.trace-meter::before { content: ""; display: block; width: var(--share); height: 100%; background: var(--primary); }
+.trace-kind[data-kind="Gates"] .trace-meter::before { background: var(--attention); }
+#traceFilter { min-height: 34px; max-width: 100%; border: 1px solid var(--border-strong); border-radius: 6px; padding: 0 6px; font: inherit; color: var(--foreground); background: var(--card-raised); }
+#traceEv .ev + .ev { border-top: 1px solid var(--border); }
+#traceEv summary { min-height: 44px; margin: 0; padding: 4px; gap: 8px; }
+.trace-event-copy { min-width: 0; flex: 1; display: grid; overflow-wrap: anywhere; }
+.trace-event-copy strong { font-weight: 500; }
+.trace-event-copy > span, #traceEv time { color: var(--muted-foreground); font-size: .88em; }
+#traceEv .q .trace-event-copy strong { color: var(--attention); }
+#traceDrop { min-height: 60px; gap: 6px; flex-wrap: wrap; background: var(--primary-soft); border-color: var(--border-strong); }
+#traceDrop strong { color: var(--primary-hi); }
+#traceDrop:focus-within { outline: 2px solid var(--ring); outline-offset: 1px; }
+#traceDrop.over { border-color: var(--primary); }
+#traceSample { max-width: 100%; min-width: 0; margin: 0; }
+#traceReset { justify-self: start; }
+@media (pointer: coarse), (max-width: 600px) {
+  .trace-nav button, .trace-kind, #traceFilter, #traceLoad button { min-height: 44px; }
+}
+@media (max-height: 450px) {
+  #traceBody { display: block; overflow: auto; }
+  .trace-scroll { overflow: visible; }
+}
+
+#traceBody:popover-open { position: fixed; inset: auto; margin: 0; color: var(--foreground); }
+#traceBody:not(:popover-open)[popover] { display: none; }
+#traceClose { flex: none; width: 32px; height: 32px; border-radius: 6px; font: inherit; font-size: 1.3em; color: var(--muted-foreground); }
+#traceBody button + button::before { display: none; }
+@media (pointer: coarse) { #traceClose { width: 44px; height: 44px; } }
