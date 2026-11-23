@@ -19,7 +19,7 @@ Commit any regenerated `tests/evidence/current.json`. GitHub Actions is disabled
 
 ## Where to make a change
 
-The table comes from #6. Run its focused check while you work, then `verify-all` before you commit.
+Choose an issue from the [contributor entry point](START_HERE.md#next-contributor-task). Run the focused check for the editable source below, then run `verify-all` before committing.
 
 | Change | Edit | Focused check |
 | --- | --- | --- |
@@ -27,6 +27,7 @@ The table comes from #6. Run its focused check while you work, then `verify-all`
 | Routes and mission browser | `dist/mission-navigation.js`, `dist/atlas-ui.js`, and their bindings in `dist/index.html` | `node --test tests/navigation.test.cjs tests/navigation-notice.test.cjs tests/mission-interactions.test.cjs` |
 | Coven Needs review queue and shared Psyche confirmation | `dist/review-queue.js`, `dist/review-queue-ui.js`, `requestConfirmation` in `dist/index.html` | `node --test tests/review-queue.test.cjs`. Run `scripts/review-queue-qa.mjs` and `scripts/inbox-event-qa.mjs` from the external Playwright install with the preview URL and engine (`chromium` or `webkit`). |
 | Map and camera | `src/atlas-layout.ts`, `src/atlas-viewport.ts` | `node --test tests/atlas-layout.test.cjs tests/atlas-viewport.test.cjs` |
+| Projects drawer and Trace | `dist/atlas-ui.js`, `dist/atlas.css`, Trace in `dist/index.html` | Run `scripts/project-drawer-qa.mjs` and `scripts/trace-panel-qa.mjs` beside external Playwright with the preview URL and engine (`chromium` or `webkit`). For row activation, run `scripts/project-selection-qa.mjs` with the URL, engine and `pointer` or `controls`. |
 | Mobile controls and focus | `dist/mobile-ui.js`, `dist/mobile-interactions.js`, `dist/atlas.css` | `node --test tests/mobile-*.test.cjs` |
 | Map keyboard focus (one Tab stop, arrow keys inside) | `dist/map-focus.js`, `atlasFocusable` in `dist/index.html` | `node --test tests/map-focus.test.cjs`, then Tab through the map in a browser |
 | Simulation fold (what an event does to the world) | `src/simulation-model.ts` | `node --test tests/simulation-model.test.cjs tests/replay-*.test.cjs tests/approval-replay.test.cjs` |
@@ -57,12 +58,12 @@ Keep `tests/fixtures/` (the pinned baseline) and the dated audits in `tests/evid
 
 | Path | What it is |
 | --- | --- |
-| `dist/index.html` | ~5.5k lines: sample traces, `seek`/`emit` (selection, camera, effects), scene build/sync/projection, seal renderer, replay loop. The main monolith. |
+| `dist/index.html` | Sample traces, `seek`/`emit` (selection, camera, effects), scene build/sync/projection, seal renderer, replay loop. The main application entry point. |
 | `src/simulation-model.ts` | The simulation model: a pure fold over a trace (`newWorld`, `apply`, `advance`, `append`, `summarize`). No DOM or timers; the page injects its constants. |
 | `dist/atlas-ui.js`, `dist/atlas.css` | Header, project search and sample presets, mission browser, drawer, familiar chips |
 | `src/atlas-layout.ts` | Pure geometry: paired project placement, corridors, gates, bounded mission packing |
 | `src/atlas-viewport.ts` | Measured safe-area fit |
-| `dist/atlas-crown.js` | Canonical flat Psyche crown and aperture |
+| `src/atlas-crown.ts` | Canonical flat Psyche crown and aperture. Build its classic script for the browser. |
 | `dist/mission-navigation.js` | Route codec (`#/project/<name>[/mission/<id>…]`), replay selection reconciliation |
 | `dist/projection-source.js`, `dist/fixtures/` | **The projection seam.** `?source=simulation` (the default) or `?source=fixture&scenario=…`. Every source implements `read() → Projection`. Add a live adapter here, never inside the simulation. |
 | `dist/mobile-ui.js`, `dist/mobile-interactions.js` | Adaptive dock, portals, focus, gestures, visual viewport |

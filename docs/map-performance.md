@@ -2,6 +2,22 @@
 
 Run the browser workload from an external Playwright installation. The runner uses the local simulation and opens a new Chromium context for every trial. It verifies every served file against the supplied Git revision before loading Compass. The checkout in which you invoke Node must contain that revision and its verifier. Choose a new output directory for each run.
 
+## November 23 integrated drawer
+
+Two complete matrices exercised the merged Projects drawer and Trace at `520194322c4d8e8491fb7026e1024012a7714471`, served locally with verified `dist/` tree `7a7834343a0ca870e3c3ccdb91b8344ce30660c3`. Each cell gives the first and repeat warmed median in milliseconds over five fresh browser contexts per run. The budget is 100 ms per cell.
+
+| Projects | Desktop 1440 × 900 | Narrow 390 × 844 |
+| ---: | ---: | ---: |
+| 4 | 32.0 / 40.6 | 38.8 / 41.6 |
+| 32 | 74.5 / 55.2 | 54.3 / 42.8 |
+| 128 | 115.1 / 102.9 | 86.2 / 75.7 |
+
+Only the 128-Project desktop return exceeded the budget in both runs. The other five cells met it twice. On the dense desktop return, the separate profiles recorded 49.9 and 42.2 ms in layout, 16.4 and 17.9 ms updating the layout tree and 1.0 and 1.0 ms in paint. Compare the label measurement and overview fit before changing the renderer. The existing recovery candidate `c710b30` has measurements on an earlier base. Requalify its changes against the integrated drawer under [#40](https://github.com/OpenCoven/coven-compass/issues/40).
+
+Both runs used Chromium 130.0.6723.31, Playwright 1.48.2 and Node 24.22.0 on the Mac17,6 Apple M5 Max with 18 logical CPUs, 128 GiB RAM and macOS 27.2.1. The narrow viewport uses mobile emulation. Physical devices, Safari timing and a new long-duration soak remain unmeasured on this revision. Each archive includes all journeys, served-file checksums, frame and long-task observations, DOM and heap checkpoints, and the dense desktop and narrow profiles. [First raw matrix](../tests/evidence/map-performance-2026-11-23/matrix.tar.gz) · [Repeat raw matrix](../tests/evidence/map-performance-2026-11-23/repeat.tar.gz)
+
+The budget checker accepts the original runner and the updated drawer runner by exact SHA-256. Their only difference is the selector that opens the preset chooser before the timed interaction. To check either receipt, extract it to an empty directory and run `python3 scripts/check-overview-budget.py <directory>`. Use the [reproduction commands](#reproduction) to collect a fresh matrix.
+
 ## November 20 baseline and decision
 
 Returning from a Project to the Coven overview is the first interaction to investigate. At 128 Projects its warmed median was 116–128 ms across both runs and viewports, compared with 66–79 ms at 32 Projects. All 60 matrix journeys used fresh Chromium contexts and completed both their first and warmed passes. All recorded input samples in the two matrices were trusted browser events. [Primary measurements](../tests/evidence/map-performance-2026-11-20/main-matrix.json) · [Clean reproduction](../tests/evidence/map-performance-2026-11-20/repro-matrix.json)
@@ -98,6 +114,7 @@ cp scripts/map-performance.mjs "$scratch/tools"/
 revision=$(git rev-parse HEAD)
 base=http://127.0.0.1:18742/
 node "$scratch/tools/map-performance.mjs" "$base" "$revision" "$scratch/matrix" matrix
+python3 scripts/check-overview-budget.py "$scratch/matrix"
 node "$scratch/tools/map-performance.mjs" "$base" "$revision" "$scratch/soak" soak
 python3 scripts/summarize-map-performance.py "$scratch/matrix" > "$scratch/matrix-summary.json"
 python3 scripts/summarize-map-performance.py "$scratch/soak" > "$scratch/soak-summary.json"
