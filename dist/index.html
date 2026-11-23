@@ -1543,20 +1543,38 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
           <div class="ctl">
           <details class="pill" id="traceBox">
             <summary class="btn"><span class="spark" id="traceSpark" aria-hidden="true"></span><span class="sr">Trace</span><span class="m" id="traceKind"></span><svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
-            <div class="pill-body glass" id="traceBody">
-              <div class="hd"><span class="hd-i" data-i="pulse"></span><span class="hd-t">Trace</span><span class="hd-m" id="traceInfo"></span><span class="hd-s" id="traceChip"></span></div>
-              <div class="tr-chart" id="traceChart"><div class="density" id="traceDensity" aria-hidden="true"></div><div class="tr-axis"><span id="traceT0"></span><span class="k" id="traceKey">ask</span><span id="traceT1"></span></div></div>
-              <p class="pc-note" id="traceEmpty" hidden>Nothing recorded yet. Open a mission and its events appear here.</p>
-              <div class="rows">
-                <details class="dr" id="traceKinds"><summary><span class="dr-i" data-i="kinds"></span><span class="dr-k">Events by kind</span><span class="dr-v" id="traceSum"></span><svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></summary><div class="dr-b"><ul id="traceLegend"></ul></div></details>
-                <details class="dr" id="traceEvents"><summary><span class="dr-i" data-i="braces"></span><span class="dr-k">Recent events</span><span class="dr-v" id="traceEvN"></span><svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></summary><div class="dr-b flush"><p class="dr-note" id="traceEvNote">Open one to read or change its JSON.</p><div class="evs" id="traceEv"></div></div></details>
-                <details class="dr" id="traceLoad"><summary><span class="dr-i" data-i="upload"></span><span class="dr-k">Load a recording</span><span class="dr-v">JSON Lines</span><svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></summary><div class="dr-b flush">
-                  <label class="drop file" id="traceDrop"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 9.5V2.5M4.2 5.2 7 2.4l2.8 2.8M2.5 9.5v1.3c0 .6.5 1.1 1.1 1.1h6.8c.6 0 1.1-.5 1.1-1.1V9.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Drop a file or <u>choose one</u></span><input class="sr" id="traceFile" type="file" accept=".jsonl,.ndjson,.json,.txt"></label>
+            <div class="pill-body glass" id="traceBody" popover="manual">
+              <div class="trace-heading"><span data-i="pulse"></span><h2>Trace</h2><span id="traceChip"></span><button type="button" id="traceClose" aria-label="Close trace" title="Close trace">×</button></div>
+              <div class="trace-nav" role="group" aria-label="Trace view">
+                <button type="button" data-trace-view="traceOverview" aria-controls="traceOverview" aria-pressed="true">Overview</button>
+                <button type="button" data-trace-view="traceEvents" aria-controls="traceEvents" aria-pressed="false">Events</button>
+                <button type="button" id="traceImport" data-trace-view="traceLoad" aria-controls="traceLoad" aria-pressed="false">Import</button>
+              </div>
+              <div class="trace-scroll">
+                <section class="trace-page" id="traceOverview" aria-label="Trace overview">
+                  <div class="trace-chart" id="traceChart">
+                    <div class="trace-caption"><h3>Activity</h3><span id="traceInfo"></span></div>
+                    <div class="density" id="traceDensity" aria-hidden="true"></div>
+                    <div class="tr-axis"><span><span class="sr">Start </span><span id="traceT0"></span></span><span class="k" id="traceKey"></span><span><span class="sr">End </span><span id="traceT1"></span></span></div>
+                  </div>
+                  <p id="traceEmpty" hidden>No events yet. Project activity will appear here, or you can import a recording.</p>
+                  <p class="trace-hint" id="traceSkipped" hidden></p>
+                  <section id="traceKinds"><h3>Events by kind</h3><div id="traceLegend"></div></section>
+                </section>
+                <section class="trace-page" id="traceEvents" aria-label="Recent events" hidden>
+                  <div class="trace-caption"><label for="traceFilter">Recent events</label><select id="traceFilter"><option value="">All kinds</option></select></div>
+                  <p class="trace-hint" id="traceEvNote"></p><p class="trace-hint" id="traceSaved" role="status"></p><div class="evs" id="traceEv"></div>
+                </section>
+                <section class="trace-page" id="traceLoad" aria-label="Import recording" hidden>
+                  <h3>Import recording</h3>
+                  <p class="trace-hint">Replace this project’s timeline with a local JSON Lines file, up to 5 MB.</p>
+                  <label class="drop file" id="traceDrop"><span data-i="upload"></span><strong>Choose file</strong><span>or drop it here</span><input class="sr" id="traceFile" aria-label="Choose recording file" type="file" accept=".jsonl,.ndjson,.json,.txt"></label>
                   <p class="small err" id="traceErr" role="alert" hidden></p>
-                  <p class="dr-note">One event per line, each with a time and a type:</p>
-                  <pre class="code" id="traceSample"></pre>
-                  <div class="dr-acts"><button class="btn sm" type="button" id="traceCopy">Copy example</button><button class="btn sm ghost" id="traceReset" type="button" hidden>Back to the sample</button></div>
-                </div></details>
+                  <div class="trace-caption"><h3>File format</h3><button class="btn sm" type="button" id="traceCopy">Copy example</button></div>
+                  <p class="trace-hint">One event per line with a timestamp (<code>t</code>) and an event <code>type</code>.</p>
+                  <pre class="code" id="traceSample" tabindex="0" aria-label="Example JSON Lines"></pre>
+                  <button class="btn sm" id="traceReset" type="button" hidden>Restore sample</button>
+                </section>
               </div>
             </div>
           </details>
@@ -3592,15 +3610,27 @@ function drawMissions() {
 function placePill(d) {
   const body = d.querySelector('.pill-body'), head = d.closest('.plan-head'), anchor = d.closest('.workspace-utilities') || head;
   const control = d.querySelector('summary').getBoundingClientRect(), origin = anchor.getBoundingClientRect();
+  if (d.id === 'traceBox' && body.showPopover) {
+    const width = Math.min(400 * (+getComputedStyle(document.documentElement).getPropertyValue('--fs') || 1), innerWidth - 20);
+    const below = innerHeight - control.bottom - 16;
+    const top = below < 220 ? 6 : control.bottom + 6;
+    body.style.width = width + 'px';
+    body.style.left = clamp(control.right - width, 10, innerWidth - width - 10) + 'px';
+    body.style.top = top + 'px';
+    body.style.maxHeight = (innerHeight - top - 8) + 'px';
+    return;
+  }
   const top = control.bottom - origin.top + 6;
   const w = Math.min((d.id === 'traceBox' || d.id === 'ward' ? 360 : 304) * (+getComputedStyle(document.documentElement).getPropertyValue('--fs') || 1), anchor.clientWidth - 12);
   body.style.width = w + 'px'; body.style.top = top + 'px';
   body.style.left = clamp(control.left - origin.left, 4, Math.max(4, anchor.clientWidth - w - 4)) + 'px';
-  body.style.maxHeight = Math.max(180, head.parentElement.clientHeight - top - 12) + 'px';
+  body.style.maxHeight = d.id === 'traceBox'
+    ? Math.max(0, Math.min(head.parentElement.getBoundingClientRect().bottom, window.innerHeight) - control.bottom - 14) + 'px'
+    : Math.max(180, head.parentElement.clientHeight - top - 12) + 'px';
 }
 document.querySelectorAll('details.pill').forEach(d => d.firstElementChild.addEventListener('click', () => {
   if (d.open) return;
-  if (d.id === 'proj') drawProjects(); if (d.id === 'mis') drawMissions(); if (d.id === 'traceBox' && $('traceEvents').open) drawEvents();
+  if (d.id === 'proj') drawProjects(); if (d.id === 'mis') drawMissions();
   placePill(d);
 }));
 function liveTip() { const sum = $('summary').title, t = (live ? 'Live' : 'Replaying. Click to go live') + (sum ? ' · ' + sum : ''); $('live').title = t; $('live').setAttribute('aria-label', t); }
@@ -4541,27 +4571,86 @@ function drawWard() {
   box.querySelector('.ward-status').textContent = pending ? pending + (pending === 1 ? ' pending request' : ' pending requests') : 'No pending requests';
 }
 const FAMILY = [['Missions', ['mission.opened', 'council.seated', 'task.opened', 'task.lead.added', 'mission.briefed', 'mission.progress', 'artifact.state', 'mission.paused', 'mission.resumed', 'mission.renamed', 'mission.closed', 'project.founded', 'project.moved', 'project.renamed', 'project.stopped', 'project.resumed']], ['Agents', ['agent.spawned', 'agent.state', 'agent.assigned', 'agent.retired']], ['Messages', ['you.said', 'psyche.said', 'psyche.routed', 'familiar.report', 'round.closed']], ['Gates', ['gate.requested', 'gate.resolved']]];
+let tracePanelProject;
+$('traceBox').addEventListener('toggle', () => {
+  const body = $('traceBody');
+  if (!$('traceBox').open) { body.hidePopover?.(); return; }
+  if (tracePanelProject !== cur()) {
+    tracePanelProject = cur(); traceFilter.value = '';
+    showTraceView('traceOverview');
+    $('traceErr').hidden = true;
+  }
+  placePill($('traceBox'));
+  body.showPopover?.();
+  if (!$('traceEvents').hidden) drawEvents();
+});
+$('traceClose').addEventListener('click', () => {
+  $('traceBox').open = false;
+  $('traceBox').firstElementChild.focus();
+});
+const traceIcons = {Missions: 'flag', Agents: 'role', Messages: 'speak', Gates: 'gate'};
+const traceNav = $('traceBody').querySelector('.trace-nav');
+const traceFilter = $('traceFilter');
+for (const [name] of FAMILY) {
+  traceFilter.add(new Option(name, name));
+  const button = html('button', 'trace-kind');
+  button.type = 'button';
+  button.dataset.kind = name;
+  const icon = html('span', 'trace-icon');
+  icon.innerHTML = ICON[traceIcons[name]];
+  button.append(icon, html('span', null, name), html('strong'), html('i', 'trace-meter'));
+  button.addEventListener('click', () => {
+    traceFilter.value = name;
+    showTraceView('traceEvents');
+    traceFilter.focus();
+  });
+  $('traceLegend').appendChild(button);
+}
+function showTraceView(id) {
+  for (const button of traceNav.querySelectorAll('button')) {
+    const selected = button.dataset.traceView === id;
+    button.setAttribute('aria-pressed', String(selected));
+    $(button.dataset.traceView).hidden = !selected;
+  }
+  $('traceSaved').textContent = '';
+  $('traceBody').scrollTop = 0;
+  $('traceBody').querySelector('.trace-scroll').scrollTop = 0;
+  if (id === 'traceEvents') drawEvents();
+}
+traceNav.addEventListener('click', ev => {
+  const button = ev.target.closest('[data-trace-view]');
+  if (button) showTraceView(button.dataset.traceView);
+});
+traceFilter.addEventListener('change', () => { $('traceSaved').textContent = ''; drawEvents(); });
 function drawTrace() {
   const c = cur(), tr = c.trace, t0 = tStart(c), t1 = tEnd(c), span = Math.max(1, t1 - t0);
   const mark = $('traceNow'); if (mark) mark.style.left = (clamp((cursor - t0) / span, 0, 1) * 100).toFixed(2) + '%';
   const sig = active + '|' + tr.length + '|' + c.recorded + '|' + Math.round(span / 15000);
   if (sig === traceSig) return; traceSig = sig;
-  const den = $('traceDensity'), leg = $('traceLegend'); den.textContent = leg.textContent = '';
+  const den = $('traceDensity'); den.textContent = '';
   const count = types => tr.filter(e => types.includes(e.type)).length, asks = count(['gate.requested']);
   { const sp = $('traceSpark'), n = 12, bs = Array.from({length: n}, () => ({n: 0, q: false})); sp.textContent = '';
     tr.forEach(e => { const b2 = bs[clamp(Math.floor((e.t - t0) / span * n), 0, n - 1)]; b2.n++; if (e.type === 'gate.requested') b2.q = true; });
     const mx = Math.max(1, ...bs.map(b2 => b2.n)); bs.forEach(b2 => { const i = html('i', b2.q ? 'q' : null); i.style.height = (b2.n ? 3 + 10 * Math.sqrt(b2.n / mx) : 2) + 'px'; sp.appendChild(i); }); }
-  $('traceChart').hidden = $('traceKinds').hidden = $('traceEvents').hidden = !tr.length; $('traceEmpty').hidden = tr.length > 0;
-  $('traceEvN').textContent = tr.length ? 'JSON' : '';
-  if (!tr.length) { $('traceLoad').open = true; return; }
-  $('traceT0').textContent = hm(t0); $('traceT1').textContent = hm(t1); $('traceKey').textContent = plural(asks, 'ask'); $('traceKey').hidden = !asks;
-  $('traceSum').textContent = String(tr.length);
+  const skipped = $('traceSkipped');
+  skipped.hidden = !c.skippedEvents;
+  if (c.skippedEvents) skipped.textContent = plural(c.skippedEvents, 'unrecognized line') + ' skipped during import.';
+  $('traceChart').hidden = $('traceKinds').hidden = !tr.length;
+  $('traceEmpty').hidden = !!tr.length;
+  if (!tr.length) return;
+  $('traceT0').textContent = hm(t0); $('traceT1').textContent = hm(t1);
+  $('traceKey').textContent = plural(asks, 'decision request'); $('traceKey').hidden = !asks;
   const N = 44, bins = Array.from({length: N}, () => ({n: 0, q: false}));
   tr.forEach(e => { const b = bins[clamp(Math.floor((e.t - t0) / span * N), 0, N - 1)]; b.n++; if (e.type === 'gate.requested') b.q = true; });
   const max = Math.max(1, ...bins.map(b => b.n));
   bins.forEach(b => { const i = html('i', b.q ? 'q' : null); i.style.height = (b.n ? 12 + 88 * Math.sqrt(b.n / max) : 0) + '%'; den.appendChild(i); });
   const now = html('u'); now.id = 'traceNow'; now.style.left = (clamp((cursor - t0) / span, 0, 1) * 100).toFixed(2) + '%'; den.appendChild(now);
-  FAMILY.forEach(([name, types]) => { const li = html('li', null, name); li.appendChild(html('span', null, String(count(types)))); leg.appendChild(li); });
+  FAMILY.forEach(([name, types], index) => {
+    const button = $('traceLegend').children[index], total = count(types);
+    button.querySelector('strong').textContent = String(total);
+    button.style.setProperty('--share', (total / tr.length * 100) + '%');
+    button.setAttribute('aria-label', name + ', ' + plural(total, 'event') + '. Show recent events');
+  });
 }
 const escH = x => x.replace(/[&<>]/g, ch => ({'&': '&amp;', '<': '&lt;', '>': '&gt;'}[ch]));
 const hlLine = ln => escH(ln).replace(/("(?:\\.|[^"\\])*")(\s*:)?|\b(true|false|null)\b|(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)/g, (m, str, colon, lit, num) => str ? `<span class="${colon ? 'j-k' : 'j-s'}">${str}</span>${colon || ''}` : lit ? `<span class="j-l">${lit}</span>` : `<span class="j-n">${num}</span>`);
@@ -4606,16 +4695,34 @@ function retrace(tr) {
   leadSig = needsSig = streamSig = marksSig = lcSig = wardSig = traceSig = ''; insp.sig = '';
   buildScene(); refresh(); atlasQueueFit(); atlasWriteRoute(true);
 }
-let evNote = '';
+let traceListProject, traceListApplied, traceListFilter;
 function drawEvents() {
-  const c = cur(), box = $('traceEv'), n = c.applied, from = Math.max(0, n - 12); box.textContent = '';
-  for (let i = n - 1; i >= from; i--) box.appendChild(eventRow(c, c.trace[i]));
-  $('traceEvNote').textContent = evNote || (n ? `The ${n - from} most recent${live ? '' : ' before ' + hm(cursor)}. Open one to read or change its JSON.` : 'No events before this moment.');
-  $('traceEvNote').className = 'dr-note' + (evNote ? ' ok' : ''); evNote = '';
+  const c = cur(), box = $('traceEv'), filter = traceFilter.value, n = c.applied;
+  const same = traceListProject === c && traceListFilter === filter;
+  // Keep the current rows while a reader or editor is using them.
+  const held = same && traceListApplied !== n && (box.contains(document.activeElement) || !!box.querySelector('details[open]'));
+  if (!same || (traceListApplied !== n && !held)) {
+    traceListProject = c; traceListApplied = n; traceListFilter = filter;
+    const types = FAMILY.find(([name]) => name === filter)?.[1];
+    const rows = [];
+    for (let i = n - 1; i >= 0 && rows.length < 12; i--) {
+      if (!types || types.includes(c.trace[i].type)) rows.push(eventRow(c, c.trace[i]));
+    }
+    box.replaceChildren(...rows);
+  }
+  const count = box.childElementCount;
+  let note = count ? plural(count, 'event') + ' · newest first' : 'No matching events at this point in the timeline.';
+  if (held) note += ' · List paused for inspection';
+  else if (count && !live) note += ' · through ' + hm(cursor);
+  if ($('traceEvNote').textContent !== note) $('traceEvNote').textContent = note;
 }
 function eventRow(c, e) {
-  const d = html('details', 'ev' + (e.type.indexOf('gate.') === 0 ? ' q' : '')), sm = html('summary');
-  sm.append(html('span', 'ev-t', hms(e.t)), html('span', 'ev-k', e.type), html('span', 'ev-w', String(e.agent || (e.familiar && fam(e.familiar).name) || e.mission || e.ask || '')));
+  const d = html('details', 'ev' + (e.type.startsWith('gate.') ? ' q' : '')), sm = html('summary');
+  const subject = e.agent || (e.familiar && fam(e.familiar).name) || c.world.missions.get(e.mission)?.name || e.mission || e.task || e.ask;
+  const copy = html('span', 'trace-event-copy');
+  copy.appendChild(html('strong', null, missionHistory.eventTitle(e)));
+  if (subject) copy.appendChild(html('span', null, String(subject)));
+  sm.append(copy, html('time', 'ev-t', hms(e.t)));
   sm.insertAdjacentHTML('beforeend', ICON.chev); d.appendChild(sm);
   d.addEventListener('toggle', () => { if (d.open && !d.querySelector('.je-w')) d.appendChild(jsonEditor(c, e)); });
   return d;
@@ -4637,21 +4744,21 @@ function jsonEditor(c, e) {
   ta.addEventListener('input', lint);
   ta.addEventListener('keydown', ev => {
     if (composingInput(ev)) return;
-    if (ev.key === 'Tab' && !ev.shiftKey && !ev.altKey && !ev.ctrlKey && !ev.metaKey) { ev.preventDefault(); ta.setRangeText('  ', ta.selectionStart, ta.selectionEnd, 'end'); lint(); }
     if (ev.key === 's' && (ev.metaKey || ev.ctrlKey)) { ev.preventDefault(); save.click(); }
-    if (ev.key === 'Escape') { ev.stopPropagation(); ta.blur(); }
+    if (ev.key === 'Escape') { ev.stopPropagation(); wrap.parentElement.querySelector('summary').focus(); }
   });
   fmt.addEventListener('click', () => { try { ta.value = JSON.stringify(JSON.parse(ta.value), null, 2); } catch (err) {} lint(); });
   save.addEventListener('click', () => {
     lint(); if (res.error) return ta.focus();                      // linted again on save; nothing invalid gets through
     const i = c.trace.indexOf(e); if (i < 0 || c !== cur()) { msg.textContent = 'This event has moved. Reopen it.'; msg.className = 'je-msg bad'; return; }
     const tr = c.trace.slice(); tr[i] = res.obj; tr.sort((a, b) => a.t - b.t);
-    evNote = `Saved ${res.obj.type}. The project was replayed with the change.`; retrace(tr); drawEvents();
+    retrace(tr); tracePanelProject = cur(); drawEvents(); traceFilter.focus();
+    $('traceSaved').textContent = 'Saved ' + res.obj.type + '. The project was replayed.';
   });
   box.append(pre, ta); bar.append(msg, fmt, save); wrap.append(box, bar); lint();
   return wrap;
 }
-$('traceEvents').addEventListener('toggle', () => { if ($('traceEvents').open) drawEvents(); });
+
 const TRACE_EXAMPLE = ['{"t":"2026-11-18T06:20:00Z","type":"mission.opened","mission":"m-1","name":"Review readiness"}',
   '{"t":"2026-11-18T06:20:05Z","type":"council.seated","mission":"m-1","familiar":"cody"}',
   '{"t":"2026-11-18T06:20:06Z","type":"task.opened","task":"k-1","mission":"m-1","familiar":"cody","name":"Unit tests"}',
@@ -4699,8 +4806,10 @@ async function loadTrace(file, feedback = $('traceErr'), bookmark = null) {
   const err = $('traceErr');
   err.hidden = !res.bad; if (res.bad) err.textContent = `${plural(res.bad, 'line')} skipped as unrecognized.`;
   project.layoutDemo = target.layoutDemo;
+  const fromPanel = $('traceBox').open;
   projects[key] = project;
   enter(); atlasQueueFit(); atlasWriteRoute(true);
+  if (fromPanel) $('traceBox').firstElementChild.focus();
   return true;
 }
 {
@@ -5986,11 +6095,13 @@ function timelineUI() {
   }
   $('traceKind').textContent = !has ? 'empty' : c.recorded ? 'loaded' : live ? 'live' : 'replay'; plan.classList.toggle('live', live && has); plan.classList.toggle('map-running', has && (live || playing));
   { const sp = $('traceSpark'), cut = Math.ceil(p * sp.children.length); sp.classList.toggle('live', live && has); for (let i = 0; i < sp.children.length; i++) sp.children[i].classList.toggle('off', !has || (!live && i >= cut)); }
-  $('traceInfo').textContent = has ? `${plural(c.trace.length, 'event')} · ${Math.max(1, Math.round((c.trace[c.trace.length - 1].t - c.trace[0].t) / 60000))} min` : '';
-  const chip = $('traceChip'); chip.textContent = !has ? 'Empty' : c.recorded ? 'Loaded' : 'Sample'; chip.className = 'hd-s ' + (!has ? 'off' : c.recorded ? '' : 'on');
+  const minutes = has ? Math.round((c.trace[c.trace.length - 1].t - c.trace[0].t) / 60000) : 0;
+  $('traceInfo').textContent = has ? plural(c.trace.length, 'event') + ' · ' + (minutes ? minutes + ' min' : 'under 1 min') : '';
+  const chip = $('traceChip'); chip.textContent = !has ? 'Empty' : c.recorded ? 'Recording' : c.sample ? 'Sample' : 'Local'; chip.className = 'hd-s ' + (!has ? 'off' : c.recorded ? '' : 'on');
   $('footClock').textContent = !replayable ? '' : live ? 'Live' : hms(cursor);
   $('traceReset').hidden = !c.recorded;
   drawTrace();
+  if ($('traceBox').open && !$('traceEvents').hidden) drawEvents();
 }
 function goLive() { const c = cur(); if (c.recorded) return; live = true; playing = false; cursor = Date.now(); seekTimeline(cursor); refresh(); }
 $('scrub').addEventListener('input', () => {
@@ -6542,7 +6653,7 @@ function atlasSnapshot(includeMissions) {
       previewNames.push(mission.name);
       if (previewNames.length === 2) break;
     }
-    ps.push({key: k, missions: w.missions.size, agents: w.agents.size, needs: q, previewNames});
+    ps.push({key: k, layoutDemo: !!projects[k].layoutDemo, missions: w.missions.size, agents: w.agents.size, needs: q, previewNames});
     if (showMissions) w.missions.forEach(M => {
       const seal = sealOf(w, M);
       const pending = requests.filter(q => q.mission === M.id);
@@ -6617,7 +6728,7 @@ if (window.CovenMobileUI) window.CovenMobileUI.mount({
   close: {
     inspect: () => { if (cur().pick) clearPick(); else if (cur().fam) select(cur().sel, null, 'side'); else closeMissionDetails(); },
     psyche: () => setMode('closed'), empty: closeNew, projectForm: closeProjectForm,
-    atlasMissionBrowser: () => window.CovenAtlas.closeMissions(true), atlasSidebar: () => window.CovenAtlas.closeBrowse(true),
+    atlasMissionBrowser: () => window.CovenAtlas.closeMissions(true), atlasSidebar: () => window.CovenAtlas.dismissBrowse(),
     keyModal: closeKey, cpModal: closeWheel,
   },
   fallbackFocus: () => atlasFocusSelection(true),

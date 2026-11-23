@@ -22,7 +22,7 @@ for (const [width, height] of [[1440, 900], [390, 844], [844, 390]]) {
     try {
       await page.goto(new URL('#/coven', base).href);
       await activate(page.locator('#atlasBrowse'));
-      await activate(page.locator('.atlas-layout-simulation > summary'));
+      await activate(page.locator('#atlasOpenLayout'));
       await page.locator('#atlasCustomCount').fill('8');
       await activate(page.getByRole('button', {name: 'Set total'}));
       const entry = page.locator('#needBtn'), rows = page.locator('#queueList button');
@@ -81,7 +81,7 @@ test('playing a recording retires the exact request and returns focus to the emp
     await page.goto(new URL('#/project/psyche-build', base).href);
     await page.locator('#workspaceTools > summary').click();
     await page.locator('#traceBox > summary').click();
-    await page.locator('#traceLoad > summary').click();
+    await page.locator('#traceImport').click();
     const events = [
       {t:'2020-01-01T00:00:00Z', type:'mission.opened', name:'Recorded survey'},
       {t:'2020-01-01T00:00:05Z', type:'gate.requested', ask:'q-1', familiar:'astra', title:'Review recorded sources'},
@@ -108,7 +108,7 @@ test('dense queue agrees with the Project and mission browsers and restores a sc
   try {
     await page.goto(new URL('#/coven', base).href);
     await page.locator('#atlasBrowse').click();
-    await page.locator('.atlas-layout-simulation > summary').click();
+    await page.locator('#atlasOpenLayout').click();
     await page.locator('#atlasCustomCount').fill('32');
     await page.getByRole('button', {name:'Set total'}).press('Enter');
     await page.locator('#atlasSidebar').waitFor({state:'hidden'});

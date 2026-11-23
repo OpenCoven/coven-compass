@@ -9,7 +9,7 @@
 //   cp <repo>/scripts/browser-qa.mjs . && node browser-qa.mjs http://127.0.0.1:18433/ ./shots ./qa.json $(git -C <repo> rev-parse HEAD)
 //
 // Append --keyboard-only for mission discovery, inspector return, route reload and the compact-label control.
-// The desktop compact check imports eight mission.opened JSON Lines via Trace > Load a recording.
+// The desktop compact check imports eight mission.opened JSON Lines via Trace > Import.
 // Its negative control removes the keyboard-focus visibility selector from the disposable page.
 // It checks simulation mode (default and ?source=simulation) at 1440x900, 390x844 and 844x390,
 // and every ?source=fixture scenario plus ?source=live. It writes a JSON report and screenshots.
@@ -203,7 +203,7 @@ async function compactMissionLabel() {
     await page.locator('.atlas-project[data-project="psyche-build"]').click();
     await page.locator('#workspaceTools > summary').click();
     await page.locator('#traceBox > summary').click();
-    await page.locator('#traceLoad > summary').click();
+    await page.locator('#traceImport').click();
     const fileChoice = page.waitForEvent('filechooser');
     await page.locator('#traceDrop').click();
     const recording = Array.from({length: 8}, (_, i) => JSON.stringify({
