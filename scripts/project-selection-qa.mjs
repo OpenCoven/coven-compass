@@ -65,9 +65,15 @@ async function run(input) {
       const trays = page.locator('#plan .mission-tasks:visible');
       await trays.first().waitFor();
       const labels = await trays.evaluateAll(els => els.map(el => el.getAttribute('aria-label')));
-      result.missions = labels.map(label => label.match(/^\d+ tasks? on (.+?):/)?.[1]).sort();
+      // Compact layouts can move a tray's action into its visible mission caption.
+      const captions = page.locator('#missionCaptions button[data-tasks="true"]:visible > span');
+      const trayNames = labels.map(label => label.match(/^\d+ tasks? on (.+?):/)?.[1]);
+      result.missions = trayNames.concat(await captions.allTextContents()).sort();
       assert.deepEqual(result.missions, missions);
       if (input === 'pointer' || touch) {
+        const down = await page.evaluate(() => window.selectionEvents.find(event => event.type === 'pointerdown'));
+        assert.equal(down?.target, 'psyche-build');
+        assert.notEqual(down.tag, 'BUTTON', 'pointer starts on a descendant of the Project button');
         const clicks = await page.evaluate(() => window.selectionEvents.filter(event => event.type === 'click'));
         assert.deepEqual(clicks.map(click => [click.target, click.hidden]), [['psyche-build', false]]);
       }
