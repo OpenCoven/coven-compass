@@ -8,6 +8,8 @@ During a separately assigned implementation task, the team can inspect repositor
 
 Record a decision as **proposed**, **accepted by owner**, **implemented**, and **verified** separately. A checked-in proposal is not an owner decision; a merged patch is not proof of packaged or remote behavior. Superseded proposals remain linked to the decision that replaced them.
 
+The [Project-only pilot exercise](https://github.com/OpenCoven/coven-compass/issues/36#issuecomment-7151283426) gives D03 and D04 owners a concrete scope decision. One registry credential returned every synthetic Project across the continuation. Cave and Coven must decide whether a dedicated registry meets the pilot principal boundary. SDK and Cave own the packed pair and revocation/reconnect evidence. D01’s pilot issuer decision is recorded below.
+
 ## Decision register
 
 | ID | Decision and owner | Recommended starting proposal | What must be resolved before acceptance |
