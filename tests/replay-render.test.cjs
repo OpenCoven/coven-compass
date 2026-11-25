@@ -111,7 +111,7 @@ function fixture(trace = []) {
     ...require('../dist/atlas-presentation.js'),
     clamp: (n, min, max) => Math.min(max, Math.max(min, n)),
     atlasFocusable() {}, sigil: () => '', SIGIL: { mission: '' },
-    drawNew() {}, syncCoven() {}, applySel() {}, fxFor() {},
+    drawNew() {}, syncCovenLayer() {}, applySel() {}, fxFor() {},
     $: id => { if (!elements.has(id)) elements.set(id, new Element()); return elements.get(id); },
   });
   const constants = source.slice(source.indexOf('const TARGET_ROLES ='), source.indexOf('function sealOf('));
