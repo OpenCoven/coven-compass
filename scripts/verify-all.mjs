@@ -42,6 +42,7 @@ function run(name, command, args) {
   return result;
 }
 
+run('typescript', node, ['src/check-generated.mjs']);
 run('site', python, ['scripts/scan-secrets.py', 'site', 'dist']);
 run('source', node, ['scripts/check-source.mjs']);
 run('tests', node, ['--test', ...testFiles(root)]);

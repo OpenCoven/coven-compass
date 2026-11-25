@@ -167,3 +167,15 @@ test('the same implementation exposes the browser API without CommonJS', () => {
   assert.equal(typeof window.CovenMissionNavigation.normalizeSelection, 'function');
   assert.equal(window.CovenMissionNavigation.parse('#/project/ui').project, 'ui');
 });
+
+test('recording bookmarks encode the file digest and exact mission and event positions', () => {
+  const digest = '9f'.repeat(32);
+  const hash = '#/recording/' + digest + '/mission/1/event/5';
+  const bookmark = {scope: 'recording', digest, missionPosition: 1, position: 5};
+  assert.equal(navigation.format(bookmark), hash);
+  assert.deepEqual(navigation.parse(hash), bookmark);
+  for (const invalid of [hash + '?x=1', hash.replace('/1/', '/0/'), hash.replace('event/5', 'event/05'),
+    hash.slice(0, -1) + '9007199254740992', hash.replace(digest, 'file.jsonl')]) {
+    assert.equal(navigation.parse(invalid), null);
+  }
+});

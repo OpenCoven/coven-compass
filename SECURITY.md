@@ -1,10 +1,12 @@
 # Security and publication
 
-Report suspected credentials to a repository administrator through a private channel. Include the commit or deployment, affected service and location. Keep credential values out of issues, PRs, screenshots and scan reports. The credential owner should revoke or rotate an exposed value and check its use. Coordinate history changes with the maintainers after containment. Existing downloads, forks, clones and caches can retain old copies.
+## Report a vulnerability
+
+Sign in to GitHub, open the repository’s **Security** tab, and choose **Report a vulnerability**. You can also go directly to the [private reporting form](https://github.com/OpenCoven/coven-compass/security/advisories/new). Include the commit or deployment, affected service and location. Keep credential values out of issues, PRs, screenshots and scan reports. The credential owner should revoke or rotate an exposed value and check its use. Coordinate history changes with the maintainers after containment. Existing downloads, forks, clones and caches can retain old copies.
 
 ## Before contributing
 
-Install Gitleaks 8.30.1 and run the following from a checkout. Run the installer again after the guard changes. It installs local copies of the scanners in this clone’s Git hooks directory, shared by its linked worktrees. It preserves unrelated hooks and stops if a named hook already exists.
+Install the matching binary for your system from the [Gitleaks 8.30.1 release](https://github.com/gitleaks/gitleaks/releases/tag/v8.30.1), put `gitleaks` on your PATH, and confirm `gitleaks version` prints `8.30.1`. From the repository root, run the commands below. Run the installer again after the guard changes. It installs local copies of the scanners in this clone’s Git hooks directory, shared by its linked worktrees. It preserves unrelated hooks and stops if a named hook already exists.
 
 ```sh
 python3 scripts/install-secret-hooks.py
@@ -22,10 +24,10 @@ Run `python3 scripts/scan-secrets.py history` in a full mirror to examine all lo
 
 The Vercel build checks the static `dist/` tree for credential filenames, secret values, private paths, stale Handoff files and archives. A checksum-pinned Gitleaks scan of the source and site must also pass before publication. The source scan excludes the top-level Git and Vercel working directories.
 
-A read-only GitHub Actions workflow can run the full Git scan and regression tests when Actions is enabled. Repository push rules can reject credential filenames before accepting new Git objects. Push rules match paths. A successful scan is evidence about the supplied bytes, rule set and revision. Encrypted archives, unsupported credential formats, external attachments, deleted remote refs and clones outside this repository require separate assessment.
+## Public repository protections
 
-## Public release checks
+GitHub secret scanning covers the public repository’s history. Push protection checks incoming pushes for supported credential patterns. The former filename push rule is disabled. The local hooks check credential filenames before commits and pushes, and the Vercel build checks the publishing tree.
 
-Build from the approved release snapshot. The private development history includes material intentionally omitted from that snapshot. Keep this history private and publish only a repository initialized from the reviewed files. Obtain Val’s approval before changing visibility or publishing a repository.
+Changes to `main` go through a pull request. GitHub requires the branch to be up to date and the Vercel GitHub App’s `Vercel` check to pass. These protections apply to administrators. Force pushes and branch deletion are blocked.
 
-Changing a private repository to public disables its push rulesets. At publication, verify branch protection and required checks, enable repository secret scanning and push protection for supported credential patterns, and check bypass privileges. Local hooks and the public site scan also check credential filenames. An ordinary filename cannot be blocked across every public push by the current private-repository path rule. [GitHub visibility changes](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/managing-repository-settings/setting-repository-visibility) · [Repository security settings](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-security-and-analysis-settings-for-your-repository)
+GitHub Actions is disabled for this repository. Contributors run the Node suite and hook regression tests locally. The Vercel build runs the site and secret checks described above. To inspect their exact commands, see [vercel.json](vercel.json).

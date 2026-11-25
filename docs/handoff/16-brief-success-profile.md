@@ -94,6 +94,14 @@ As in #42, every condition the editor adds can be revised within the attempt lim
 
 #42 also had other parts, which were left out on purpose. Its inspector buttons for candidate A/B and "reveal evidence", and its *Simulate cancelled / denied / expired / revoked / uncertain* holds, graded attempts inside the live simulation. So did the `brief.fixture` and `brief.hold` events behind them. Those parts contradict the rule that the simulation records no attempts. The synthetic `?source=fixture&scenario=brief-*` cases cover the same outcomes.
 
+## Reload and replay
+
+Creating or editing a success policy saves its local Project trace in this tab’s session storage. Reloading the tab restores its mission history and original event times. A storage warning identifies an unavailable checkpoint. Imported recordings retain their existing read-only workflow. Use History to revisit the opening event and compare its policy revision with an edited Brief.
+
+The labeled fixtures retain each evaluation’s own policy revision, candidate digest, attempt, evaluator and evidence digests. The local simulation records no protected acceptance receipt.
+
+Serve the checkout and copy `scripts/browser-qa.mjs` beside the external Playwright installation. Run `node browser-qa.mjs <url> <shots-directory> <report.json> <tested-sha> --brief-only`. Run it again with separate output paths and `--webkit`. Each engine exercises desktop, narrow portrait and short landscape, including field validation, focus return, historic policy replay and evidence provenance.
+
 ## Not in this slice
 
 - No owner has reviewed the mapping, so the first acceptance box of #35 stays open.

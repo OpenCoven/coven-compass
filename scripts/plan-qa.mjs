@@ -83,11 +83,11 @@ async function touchGesture(session, center, pinch) {
 }
 
 for (const [name, width, height, mobile] of [['desktop', 1440, 900, false], ['phone', 390, 844, true]]) {
-  test(name + ' switches the Psyche marker across scopes and remembers it on reload', async () => {
+  test(name + ' keeps the crown across scopes and reload with a legacy preference', async () => {
     const page = await browser.newPage({viewport: {width, height}, reducedMotion: 'reduce', isMobile: mobile, hasTouch: mobile});
     try {
+      await page.addInitScript(value => localStorage.setItem('coven-compass-psyche-marker', JSON.stringify(value)), mobile ? 'labeled' : 'point');
       await page.goto(url);
-      const select = page.getByRole('combobox', {name: 'Psyche marker'});
       if (mobile) await page.locator('#atlasMobileView').click();
       const hub = page.locator('.atlas-local-psyche');
       const crown = hub.locator('.coord-crown');
@@ -98,29 +98,21 @@ for (const [name, width, height, mobile] of [['desktop', 1440, 900, false], ['ph
         assert.ok(Math.abs(size - average) < 2, 'Psyche bands match the average mission disc');
         assert.match(await hub.getAttribute('aria-label'), /Inner band: \d+ of \d+ agents working/);
       };
-      assert.equal(await select.inputValue(), 'crown');
+      assert.equal(await page.locator('#atlasCameraDock select').count(), 0);
+      await crown.waitFor();
       await verifyBandSize();
+      const before = await readView(page);
       await page.locator('#atlasZoomIn').click();
-      const camera = await readView(page);
+      assert.ok((await readView(page)).width < before.width);
       await verifyBandSize();
-      await select.selectOption('point');
-      assert.equal(await hub.locator('.coord-artwork').evaluate(el => getComputedStyle(el).display), 'none');
-      assert.equal(Math.round((await hub.locator('.coord-point').boundingBox()).width), 16);
-      assert.equal(Math.round((await hub.locator('.atlas-map-hit').boundingBox()).width), 44);
-      assert.deepEqual(await readView(page), camera);
-      await select.selectOption('labeled');
-      assert.notEqual(await hub.locator('.coord-artwork').evaluate(el => getComputedStyle(el).display), 'none');
-      assert.equal(await crown.isVisible(), true);
-      assert.equal(await hub.locator('.coord-name').isVisible(), true);
+      assert.ok((await hub.locator('.atlas-map-hit').boundingBox()).width >= 43.9);
       await page.goto(new URL('#/coven', base).href);
       const overview = page.locator('.hub');
-      await overview.locator('.coord-name').waitFor();
+      await overview.locator('.coord-crown').waitFor();
       await page.reload();
-      await overview.locator('.coord-name').waitFor();
+      await overview.locator('.coord-crown').waitFor();
       await page.waitForFunction(() => document.querySelector('.hub .coord-artwork')?.hasAttribute('transform'));
       assert.ok((await overview.locator('.coord-attention').boundingBox()).width > 0);
-      if (mobile && !(await select.isVisible())) await page.locator('#atlasMobileView').click();
-      assert.equal(await select.inputValue(), 'labeled');
       await overview.focus();
       await page.keyboard.press('Enter');
       assert.equal(await page.locator('#psyche').isVisible(), true);
@@ -137,8 +129,13 @@ for (const [name, width, height, mobile] of [['desktop', 1440, 900, false], ['ph
       await page.goto(url);
       await page.locator('.atlas-project-detail .lead-node[transform]').first().waitFor({state: 'visible'});
       await verifyGeometry(page);
-      const names = await page.locator('.atlas-project-detail .lead-name').evaluateAll(els => els.filter(el => el.checkVisibility({opacityProperty: true, visibilityProperty: true})).map(el => el.textContent));
-      assert.equal(names.length, 4, 'all four sample mission names are visible in the fitted Project');
+      const names = await page.evaluate(() => {
+        const visible = el => el.checkVisibility({opacityProperty: true, visibilityProperty: true});
+        const onMap = [...document.querySelectorAll('.atlas-project-detail .lead-name')].filter(visible).map(el => el.textContent);
+        const captions = [...document.querySelectorAll('#missionCaptions > button')].filter(visible).map(el => el.children[1].textContent);
+        return [...onMap, ...captions].map(name => name.replace(/\s+/g, '')).sort();
+      });
+      assert.deepEqual(names, ['Configrefactor', 'Releasenote', 'Reviewreadiness', 'Sourcesurvey'], 'each mission is named on its seal or its visible linked caption');
       const storage = await page.evaluate(key => JSON.parse(localStorage.getItem(key)), viewKey);
       assert.deepEqual(Object.keys(storage).sort(), ['locked', 'px', 'py', 'zoom']);
       assert.equal(storage.locked, true);
@@ -232,7 +229,7 @@ test('custom Coven totals retain every Project, static route, and searchable key
   try {
     await page.goto(base);
     await page.locator('#atlasBrowse').click();
-    await page.locator('.atlas-layout-simulation > summary').click();
+    await page.locator('#atlasOpenLayout').click();
     await page.locator('#atlasCustomCount').fill('513');
     await page.locator('#atlasCustomCount').press('Enter');
     await page.waitForFunction(() => document.querySelector('#atlasSidebar').hidden &&
@@ -259,5 +256,42 @@ test('custom Coven totals retain every Project, static route, and searchable key
     assert.equal(new URL(page.url()).hash, '#/project/' + encodeURIComponent(last));
   } finally {
     await page.close();
+  }
+});
+
+test('familiar identities and task controls remain distinct at Project fit', async () => {
+  for (const [width, height, minimumDisc] of [[1440, 900, 38], [390, 844, 26], [844, 390, 22], [320, 568, 16], [667, 375, 19]]) {
+    const page = await browser.newPage({viewport: {width, height}, reducedMotion: 'reduce', hasTouch: width < 1000});
+    try {
+      await page.goto(url);
+      await page.locator('.atlas-project-detail .seat[transform]').first().waitFor();
+      await readView(page);
+      const observed = await page.evaluate(() => {
+        const bounds = selector => [...document.querySelectorAll('.atlas-project-detail ' + selector)]
+          .map(el => el.getBoundingClientRect()).filter(r => r.width > 0 && r.height > 0);
+        const trays = bounds('.task-tray-hit');
+        for (const action of document.querySelectorAll('#missionCaptions [data-tasks="true"]')) {
+          const rect = action.getBoundingClientRect();
+          if (rect.width && rect.height) trays.push(rect);
+        }
+        const controls = [...bounds('.atlas-project-decision rect:not(.atlas-map-hit)'), ...bounds('.atlas-local-psyche')];
+        const intersects = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+        return {
+          discs: bounds('.familiar-disc').map(r => r.width),
+          glyphs: bounds('.seat .sig').map(r => Math.max(r.width, r.height)),
+          seals: bounds('.se-face').map(r => r.width),
+          trays: trays.length, controls: controls.length,
+          crowded: trays.some((tray, i) => [...trays.slice(i + 1), ...controls].some(other => intersects(tray, other))),
+        };
+      });
+      assert.ok(observed.discs.length && observed.glyphs.length === observed.discs.length);
+      assert.ok(Math.min(...observed.discs) >= minimumDisc, width + 'px familiar discs');
+      assert.ok(Math.min(...observed.glyphs) >= minimumDisc / 2, width + 'px identity glyphs');
+      assert.ok(Math.max(...observed.discs) < Math.min(...observed.seals), 'missions retain their higher level');
+      assert.ok(observed.trays === 4 && observed.controls >= 2);
+      assert.equal(observed.crowded, false, width + 'px trays, decisions and Psyche have separate space');
+    } finally {
+      await page.close();
+    }
   }
 });

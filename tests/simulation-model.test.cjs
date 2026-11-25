@@ -81,6 +81,49 @@ test('index.html loads the model before its inline script and no longer defines 
     assert.equal(index.includes(gone), false, `${gone} moved to simulation-model.js`);
   }
   assert.match(index, /const SimModel = window\.CovenSimulationModel\.create\(\{normBrief, ART, KIND, GATE_NAME, CAP, fam\}\);/);
-  assert.match(index, /function seek\(c, t, quiet\) \{\n {2}const \{changed, reset, fresh\} = SimModel\.advance\(c, t\);/);
+  assert.match(index, /function seek\(c, t, quiet, through\) \{\n {2}const \{changed, reset, fresh\} = SimModel\.advance\(c, t, through\);/);
   assert.match(index, /function emit\(c, e\) \{\n {2}SimModel\.append\(c, e, Date\.now\(\)\);/);
+});
+
+test('append and same-time replay preserve event identity and order', () => {
+  const {m, c} = project([]);
+  const first = {type: 'you.said', text: 'one'};
+  const second = {type: 'future.event', t: -1};
+  for (const event of [first, second]) {
+    assert.strictEqual(m.append(c, event, 7), event);
+    assert.strictEqual(c.trace.at(-1), event);
+    assert.equal(event.t, 7);
+  }
+  assert.strictEqual(m.advance(c, 7, 1).fresh[0], first);
+  const world = c.world;
+  assert.strictEqual(m.advance(c, 7, 2).fresh[0], second);
+  assert.strictEqual(c.world, world);
+  assert.equal(world.items.length, 1);
+  const rewind = m.advance(c, 7, 1);
+  assert.equal(rewind.reset, true);
+  assert.strictEqual(rewind.fresh[0], first);
+  assert.notStrictEqual(c.world, world);
+  assert.deepEqual(c.world, world);
+  assert.ok(Object.isFrozen(m) && Object.isFrozen(M));
+});
+
+test('sparse recordings retain orphan tasks, first openings and routed target identity', () => {
+  const {m, c} = project([]);
+  const w = c.world;
+  const fold = event => m.apply(w, {t: 1, ...event});
+  fold({type: 'task.opened', task: 'orphan'});
+  assert.equal(w.tasks.get('orphan').mission, undefined);
+  assert.deepEqual(w.tasks.get('orphan').leads, []);
+  fold({type: 'agent.spawned', mission: 'missing', agent: 'ghost'});
+  assert.equal(w.agents.size, 0);
+  fold({type: 'mission.opened', mission: 'm'});
+  const mission = w.missions.get('m');
+  fold({type: 'mission.opened', mission: 'm', name: 'second'});
+  assert.strictEqual(w.missions.get('m'), mission);
+  assert.equal(mission.name, 'm');
+  const target = {mission: 'm', familiar: 'astra'};
+  fold({type: 'psyche.routed', round: 'r', targets: [null, {mission: 'missing'}, target]});
+  assert.strictEqual(w.rounds.get('r').targets[0], target);
+  assert.equal(m.routeLabel(w, w.rounds.get('r')), 'the m council');
+  assert.equal(m.seatId('m', 'astra'), 'm/astra');
 });

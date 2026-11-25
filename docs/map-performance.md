@@ -2,6 +2,55 @@
 
 Run the browser workload from an external Playwright installation. The runner uses the local simulation and opens a new Chromium context for every trial. It verifies every served file against the supplied Git revision before loading Compass. The checkout in which you invoke Node must contain that revision and its verifier. Choose a new output directory for each run.
 
+## November 24 dense overview recovery
+
+The comparison served main `53bfea01d79082b32b8384c52d1f874f51208b29`, the earlier recovery `c710b307ffca1d09117574882e887d13981d4c7f`, and the integrated recovery `da9734e67669974cd143dec10cf7588060338003`. The integration applies the earlier recovery's net renderer patch to current main and keeps its Projects drawer and Trace. Each pair gives the two warmed medians in milliseconds. Each median uses five fresh contexts on the reference Mac17,6 Apple M5 Max with macOS 27.2.1, Node 24.22.0, Playwright 1.48.2 and Chromium 130.0.6723.31.
+
+| Viewport | Projects | Main | Earlier recovery | Integrated recovery |
+| --- | ---: | ---: | ---: | ---: |
+| Desktop | 4 | 32.0 / 29.2 | 23.8 / 22.9 | 22.3 / 22.9 |
+| Desktop | 32 | 46.0 / 40.8 | 32.0 / 47.5 | 33.1 / 36.1 |
+| Desktop | 128 | 119.6 / 113.7 | 83.1 / 90.0 | 88.5 / 90.4 |
+| Narrow | 4 | 31.4 / 30.9 | 21.7 / 20.9 | 20.3 / 20.8 |
+| Narrow | 32 | 53.6 / 47.2 | 19.6 / 20.0 | 19.2 / 19.4 |
+| Narrow | 128 | 91.4 / 79.1 | 42.1 / 43.2 | 57.8 / 60.7 |
+
+Main exceeded the 100 ms budget on the 128-Project desktop cell in both runs. The integrated recovery passed every cell twice. Its dense desktop medians had 11.5 and 9.6 ms of margin. The highest individual warmed return in that cell was 96.4 ms. All six matrices completed the journeys for Project selection, mission counts, focus, task inspection and replay. The earlier recovery uses the original preset selector. Main and the integration use the updated Projects drawer selector before the timed journey.
+
+The separate dense desktop profiles recorded 18 Layout events in each main run and 13 in each integrated run. Time updating the layout tree went from 31.24 / 28.15 ms on main to 5.85 / 6.28 ms in the integration. Time in Layout was 66.03 / 57.17 ms on main and 57.39 / 62.34 ms in the integration. Each profile covers one additional return. Use the unprofiled medians for the budget.
+
+Each archive contains the run metadata, served-file digests, input samples, frame records and dense renderer profiles. The [reproduction commands](#reproduction) apply to each revision. The narrow runs use emulation. Safari timing, physical-device timing and a new long-duration soak remain unmeasured. [Main first](../tests/evidence/map-performance-2026-11-24/main-1.tar.gz) · [Main repeat](../tests/evidence/map-performance-2026-11-24/main-2.tar.gz) · [Earlier recovery first](../tests/evidence/map-performance-2026-11-24/recovery-1.tar.gz) · [Earlier recovery repeat](../tests/evidence/map-performance-2026-11-24/recovery-2.tar.gz) · [Integrated first](../tests/evidence/map-performance-2026-11-24/matrix-1.tar.gz) · [Integrated repeat](../tests/evidence/map-performance-2026-11-24/matrix-2.tar.gz) · [SHA-256 checksums](../tests/evidence/map-performance-2026-11-24/SHA256SUMS)
+
+On the integrated recovery, Chromium and Playwright WebKit passed Project selection by pointer, keyboard and narrow touch, with desktop focus verified after switching Projects. WebKit opened Config refactor from its compact caption and matched all three tasks. The Trace replay and import journeys passed in both engines. [Project selection observations](../tests/evidence/map-performance-2026-11-24/project-selection.json)
+
+### Merged revision
+
+[PR #109](https://github.com/OpenCoven/coven-compass/pull/109) merged at `a3603e03d28746e559053fc8b7b973819dacaf4d`. Its `dist/` tree `d4df7a8aeeb62bbab42449e01adeaf8bbb939eb7` matches the qualified candidate. A fresh six-cell matrix checked the served files against that merge and repeated every journey on the reference host. All six merged medians met the 100 ms budget. The additional pre-merge baseline below used `53bfea0` and overlapped functional browser QA at the start. The two original main matrices above provide independent comparisons.
+
+| Projects | Desktop baseline → merged (ms) | Narrow baseline → merged (ms) |
+| ---: | ---: | ---: |
+| 4 | 29.3 → 22.5 | 18.6 → 21.3 |
+| 32 | 61.2 → 32.3 | 52.1 → 19.6 |
+| 128 | 115.8 → 89.1 | 86.6 → 60.1 |
+
+The [additional baseline](../tests/evidence/map-performance-2026-11-24/review-main.tar.gz) and [merged matrix](../tests/evidence/map-performance-2026-11-24/merged.tar.gz) contain the unprofiled samples, dense renderer and CPU profiles, frame observations and served-file checksums. This result applies to the named Chromium runtime, sample data and viewports. Physical-device timing, Safari timing and a new soak on this merge remain unmeasured.
+
+## November 23 integrated drawer
+
+Two complete matrices exercised the merged Projects drawer and Trace at `520194322c4d8e8491fb7026e1024012a7714471`, served locally with verified `dist/` tree `7a7834343a0ca870e3c3ccdb91b8344ce30660c3`. Each cell gives the first and repeat warmed median in milliseconds over five fresh browser contexts per run. The budget is 100 ms per cell.
+
+| Projects | Desktop 1440 × 900 | Narrow 390 × 844 |
+| ---: | ---: | ---: |
+| 4 | 32.0 / 40.6 | 38.8 / 41.6 |
+| 32 | 74.5 / 55.2 | 54.3 / 42.8 |
+| 128 | 115.1 / 102.9 | 86.2 / 75.7 |
+
+Only the 128-Project desktop return exceeded the budget in both runs. The other five cells met it twice. On the dense desktop return, the separate profiles recorded 49.9 and 42.2 ms in layout, 16.4 and 17.9 ms updating the layout tree and 1.0 and 1.0 ms in paint. Compare the label measurement and overview fit before changing the renderer. The existing recovery candidate `c710b30` has measurements on an earlier base. Requalify its changes against the integrated drawer under [#40](https://github.com/OpenCoven/coven-compass/issues/40).
+
+Both runs used Chromium 130.0.6723.31, Playwright 1.48.2 and Node 24.22.0 on the Mac17,6 Apple M5 Max with 18 logical CPUs, 128 GiB RAM and macOS 27.2.1. The narrow viewport uses mobile emulation. Physical devices, Safari timing and a new long-duration soak remain unmeasured on this revision. Each archive includes all journeys, served-file checksums, frame and long-task observations, DOM and heap checkpoints, and the dense desktop and narrow profiles. [First raw matrix](../tests/evidence/map-performance-2026-11-23/matrix.tar.gz) · [Repeat raw matrix](../tests/evidence/map-performance-2026-11-23/repeat.tar.gz)
+
+The budget checker accepts the original runner and the updated drawer runner by exact SHA-256. Their only difference is the selector that opens the preset chooser before the timed interaction. To check either receipt, extract it to an empty directory and run `python3 scripts/check-overview-budget.py <directory>`. Use the [reproduction commands](#reproduction) to collect a fresh matrix.
+
 ## November 20 baseline and decision
 
 Returning from a Project to the Coven overview is the first interaction to investigate. At 128 Projects its warmed median was 116–128 ms across both runs and viewports, compared with 66–79 ms at 32 Projects. All 60 matrix journeys used fresh Chromium contexts and completed both their first and warmed passes. All recorded input samples in the two matrices were trusted browser events. [Primary measurements](../tests/evidence/map-performance-2026-11-20/main-matrix.json) · [Clean reproduction](../tests/evidence/map-performance-2026-11-20/repro-matrix.json)
@@ -98,6 +147,7 @@ cp scripts/map-performance.mjs "$scratch/tools"/
 revision=$(git rev-parse HEAD)
 base=http://127.0.0.1:18742/
 node "$scratch/tools/map-performance.mjs" "$base" "$revision" "$scratch/matrix" matrix
+python3 scripts/check-overview-budget.py "$scratch/matrix"
 node "$scratch/tools/map-performance.mjs" "$base" "$revision" "$scratch/soak" soak
 python3 scripts/summarize-map-performance.py "$scratch/matrix" > "$scratch/matrix-summary.json"
 python3 scripts/summarize-map-performance.py "$scratch/soak" > "$scratch/soak-summary.json"

@@ -66,22 +66,31 @@ test('seal labels use one-third design size, a screen-pixel floor and a caption 
       return span;
     },
   });
-  new vm.Script(['missionNameLines', 'prepareMissionLabel', 'measureMissionLabel', 'drawMissionLabel', 'labelMission'].map(extract).join('\n')).runInContext(ctx);
+  new vm.Script(['missionNameLines', 'prepareMissionLabel', 'measureMissionLabel', 'drawMissionLabel'].map(extract).join('\n')).runInContext(ctx);
   const s = {name: {style: {}, set textContent(_) { this.lines = []; }}};
-  ctx.labelMission(s, 'Source survey', 3, 2);
+  function labelMission(s, name, scale, reference, side = 1, maxWidth = 112) {
+    const run = ctx.prepareMissionLabel(s, name, scale, maxWidth);
+    if (run) ctx.measureMissionLabel(run);
+    ctx.drawMissionLabel(s, reference, side);
+  }
+  labelMission(s, 'Source survey', 3, 2);
   assert.ok(Math.abs(s.labelUnits - 13 / 3) < .1);
   assert.equal(s.name.lines[0].textContent, 'Source survey');
   assert.ok(s.name.lines[0].y - s.labelUnits > 43, 'caption clears the lower rim');
-  ctx.labelMission(s, 'Source survey', 3, 2, -1);
+  labelMission(s, 'Source survey', 3, 2, -1);
   assert.ok(s.name.lines[0].y + s.labelUnits / 2 < -43, 'changing sides clears the upper rim');
-  ctx.labelMission(s, 'x'.repeat(90), .85, 2);
+  labelMission(s, 'Source survey', 3, 2, -1, 24);
+  assert.ok(s.name.lines.length > 1 || s.needsCaption, 'narrow crown clearance reflows the previously cached label');
+  labelMission(s, 'Source survey', 3, 2, -1);
+  assert.equal(s.name.lines[0].textContent, 'Source survey', 'the normal label returns when clearance increases');
+  labelMission(s, 'x'.repeat(90), .85, 2);
   assert.ok(s.labelUnits * .85 >= 10.5);
   assert.equal(s.needsCaption, true);
   assert.equal(s.name.lines[0].textContent, '2');
-  ctx.labelMission(s, '👩🏽‍💻 ' + 'x'.repeat(90), .85, 2);
+  labelMission(s, '👩🏽‍💻 ' + 'x'.repeat(90), .85, 2);
   assert.equal(s.needsCaption, true);
   assert.equal(s.name.lines[0].textContent, '2');
-  ctx.labelMission(s, 'Review', .85, 2);
+  labelMission(s, 'Review', .85, 2);
   assert.equal(s.needsCaption, false);
   assert.equal(s.name.lines[0].textContent, 'Review');
 });
@@ -89,7 +98,7 @@ test('seal labels use one-third design size, a screen-pixel floor and a caption 
 test('external caption belongs to the interactive mission while its accessible name retains the full mission name and state', () => {
   assert.match(source, /s\.name = svgEl\('text', \{class: 'lead-name', 'aria-hidden': 'true'\}, s\.face\)/);
   assert.match(source, /ms\.node\.setAttribute\('aria-label', M2\.name \+ ', ' \+ stateName/);
-  assert.match(source, /labelMission\(s, mission\.name,/);
+  assert.match(source, /prepareMissionLabel\(s, mission\.name,/);
 });
 
 test('HTML name elements keep original text and render each whitespace-delimited token in a single box', () => {

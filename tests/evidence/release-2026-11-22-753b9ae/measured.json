@@ -1,0 +1,1396 @@
+{
+  "generated_utc": "2026-11-22T03:48:36.564Z",
+  "commit": "753b9ae9438128ddcd69ade2e64318b91386171f",
+  "browser": "chromium 130.0.6723.31",
+  "tool": "playwright 1.48.2",
+  "base": "https://coven-compass.vercel.app/",
+  "evidence_level": "browser (headless Chromium; not Safari, not a physical device)",
+  "screenshot_dir": "kept outside the repository; see the pull request",
+  "checks": [
+    {
+      "mode": "compact map",
+      "viewport": "desktop-1920x1080",
+      "name": "focused compact label visible and centered outside ring",
+      "pass": true,
+      "detail": "{\"name\":\"Mission 1\",\"centerError\":0,\"fontPixels\":10.50977245414507,\"outside\":true}"
+    },
+    {
+      "mode": "compact map",
+      "viewport": "desktop-1920x1080",
+      "name": "same focused label hidden without keyboard-focus rule",
+      "pass": true,
+      "detail": "Mission 1"
+    },
+    {
+      "mode": "compact map",
+      "viewport": "desktop-1920x1080",
+      "name": "no console errors",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "duo-inner-669x819",
+      "name": "Missions within five Tabs",
+      "pass": true,
+      "detail": "2 Tabs to #atlasMobileMissions"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "duo-inner-669x819",
+      "name": "reach Missions from overview",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMobileMissions\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":2}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "duo-inner-669x819",
+      "name": "search from the Missions entry",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":3}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "duo-inner-669x819",
+      "name": "find Board cards",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Board cards, coven-cave, Active, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":15}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "duo-inner-669x819",
+      "name": "inspect Board cards",
+      "pass": true,
+      "detail": "{\"element\":\"missionDetailTitle\",\"name\":\"Board cards\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/coven-cave/mission/m-1?view=brief&detail=side\",\"keys\":16}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "duo-inner-669x819",
+      "name": "return to matching row",
+      "pass": true,
+      "detail": "{\"element\":\"btn x\",\"name\":\"All missions\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/coven-cave/mission/m-1?view=brief&detail=side\",\"keys\":17}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "duo-inner-669x819",
+      "name": "return to matching row",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Board cards, coven-cave, Active, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":18}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "duo-inner-669x819",
+      "name": "recover from an empty search",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":45}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "duo-inner-669x819",
+      "name": "recover from an empty search",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":49}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "duo-inner-669x819",
+      "name": "find Source survey",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Source survey, psyche-build, Needs you, 16 agents, 1 pending. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":63}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "duo-inner-669x819",
+      "name": "inspect Source survey",
+      "pass": true,
+      "detail": "{\"element\":\"missionDetailTitle\",\"name\":\"Source survey\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/psyche-build/mission/m-2?view=brief&detail=side\",\"keys\":64}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "duo-inner-669x819",
+      "name": "close details and return to the invoking row",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Source survey, psyche-build, Needs you, 16 agents, 1 pending. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":69}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "duo-inner-669x819",
+      "name": "dismiss Missions and return to its launcher",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMobileMissions\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":70}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "duo-inner-669x819",
+      "name": "original overview restored",
+      "pass": true,
+      "detail": "https://coven-compass.vercel.app/#/coven"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "duo-inner-669x819",
+      "name": "reload mission permalink",
+      "pass": true,
+      "detail": "https://coven-compass.vercel.app/#/project/psyche-build/mission/m-2?view=brief&detail=side"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "duo-inner-669x819",
+      "name": "no console errors",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "duo-inner-669x819",
+      "name": "overview fit keeps every Project in the stage",
+      "pass": true,
+      "detail": "4 Project name labels; outside stage: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "duo-inner-669x819",
+      "name": "map renders",
+      "pass": true,
+      "detail": "1251 SVG nodes in #plan"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "duo-inner-669x819",
+      "name": "simulation source registered and labelled simulated",
+      "pass": true,
+      "detail": "4 projects, state simulated"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "duo-inner-669x819",
+      "name": "open a Project",
+      "pass": true,
+      "detail": "Projects drawer; hash #/project/psyche-build"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "duo-inner-669x819",
+      "name": "every sample mission name is readable outside its ring at Project fit",
+      "pass": true,
+      "detail": "4 of 4 centered names, smallest text 10.5px"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "duo-inner-669x819",
+      "name": "mission names clear the crown and each other",
+      "pass": true,
+      "detail": "4 names shown; over the crown: none; overlapping: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "duo-inner-669x819",
+      "name": "familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "10 familiar labels shown; overlapping: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "duo-inner-669x819",
+      "name": "open a mission",
+      "pass": true,
+      "detail": "via #atlasMobileMissions; hash #/project/psyche-build/mission/m-1?view=brief&detail=side; inspector visible true"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "duo-inner-669x819",
+      "name": "replay starts and moves",
+      "pass": true,
+      "detail": "clicked #play; scrub 1000 → 20; clock \"21:48:48\" → \"21:11:12\"; button \"Pause\""
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "duo-inner-669x819",
+      "name": "replay frame: mission names clear the crown and each other",
+      "pass": true,
+      "detail": "1 names shown; over the crown: none; overlapping: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "duo-inner-669x819",
+      "name": "replay frame: familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "0 familiar labels shown; overlapping: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "duo-inner-669x819",
+      "name": "Seal lab extends a familiar’s progress arc",
+      "pass": true,
+      "detail": "51.631 360 to 52.707 360"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "duo-inner-669x819",
+      "name": "Seal lab opens and closes",
+      "pass": true,
+      "detail": "open true"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "duo-inner-669x819",
+      "name": "mobile dock",
+      "pass": true,
+      "detail": "dock visible true; Map → hash \"#/coven\""
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "duo-inner-669x819",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "duo-inner-669x819",
+      "name": "overview fit keeps every Project in the stage",
+      "pass": true,
+      "detail": "4 Project name labels; outside stage: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "duo-inner-669x819",
+      "name": "map renders",
+      "pass": true,
+      "detail": "1251 SVG nodes in #plan"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "duo-inner-669x819",
+      "name": "simulation source registered and labelled simulated",
+      "pass": true,
+      "detail": "4 projects, state simulated"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "duo-inner-669x819",
+      "name": "open a Project",
+      "pass": true,
+      "detail": "Projects drawer; hash #/project/psyche-build"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "duo-inner-669x819",
+      "name": "every sample mission name is readable outside its ring at Project fit",
+      "pass": true,
+      "detail": "4 of 4 centered names, smallest text 10.5px"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "duo-inner-669x819",
+      "name": "mission names clear the crown and each other",
+      "pass": true,
+      "detail": "4 names shown; over the crown: none; overlapping: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "duo-inner-669x819",
+      "name": "familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "10 familiar labels shown; overlapping: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "duo-inner-669x819",
+      "name": "open a mission",
+      "pass": true,
+      "detail": "via #atlasMobileMissions; hash #/project/psyche-build/mission/m-1?view=brief&detail=side; inspector visible true"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "duo-inner-669x819",
+      "name": "replay starts and moves",
+      "pass": true,
+      "detail": "clicked #play; scrub 1000 → 20; clock \"21:49:01\" → \"21:11:24\"; button \"Pause\""
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "duo-inner-669x819",
+      "name": "replay frame: mission names clear the crown and each other",
+      "pass": true,
+      "detail": "1 names shown; over the crown: none; overlapping: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "duo-inner-669x819",
+      "name": "replay frame: familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "0 familiar labels shown; overlapping: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "duo-inner-669x819",
+      "name": "Seal lab extends a familiar’s progress arc",
+      "pass": true,
+      "detail": "51.631 360 to 52.707 360"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "duo-inner-669x819",
+      "name": "Seal lab opens and closes",
+      "pass": true,
+      "detail": "open true"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "duo-inner-669x819",
+      "name": "mobile dock",
+      "pass": true,
+      "detail": "dock visible true; Map → hash \"#/coven\""
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "duo-inner-669x819",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "duo-inner-669x819",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "duo-inner-669x819",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state fresh; label \"Fixture · fresh\""
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "duo-inner-669x819",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · freshObserved 5 s ago. This is static fixture data, not live Coven data.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "duo-inner-669x819",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden false; tr 4 (expected 4)"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "duo-inner-669x819",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "duo-inner-669x819",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "duo-inner-669x819",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "duo-inner-669x819",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "duo-inner-669x819",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state fresh; label \"Fixture · fresh\""
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "duo-inner-669x819",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · freshObserved 5 s ago. This is static fixture data, not live Coven data.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "duo-inner-669x819",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden false; tr 4 (expected 4)"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "duo-inner-669x819",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "duo-inner-669x819",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "duo-inner-669x819",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "duo-inner-669x819",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "duo-inner-669x819",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state stale; label \"Fixture · stale\""
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "duo-inner-669x819",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · staleLast observed 15 min ago, outside the 1 min freshness window. Shown as last known, not current.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "duo-inner-669x819",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden false; tr 2 (expected 2)"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "duo-inner-669x819",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "duo-inner-669x819",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "duo-inner-669x819",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "duo-inner-669x819",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "duo-inner-669x819",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state reconciling; label \"Fixture · reconciling\""
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "duo-inner-669x819",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · reconcilingA page cursor could not be followed, so this list is incomplete. 1 Project is shown; the total is unknown.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "duo-inner-669x819",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden false; tr 2 (expected 2)"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "duo-inner-669x819",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "duo-inner-669x819",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "duo-inner-669x819",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "duo-inner-669x819",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "duo-inner-669x819",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state unavailable; label \"Unavailable\""
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "duo-inner-669x819",
+      "name": "message",
+      "pass": true,
+      "detail": "UnavailableThe projection source is disconnected. No Projects are shown, and no sample data is substituted.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "duo-inner-669x819",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "duo-inner-669x819",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "duo-inner-669x819",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "duo-inner-669x819",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "duo-inner-669x819",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "duo-inner-669x819",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state unavailable; label \"Unavailable\""
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "duo-inner-669x819",
+      "name": "message",
+      "pass": true,
+      "detail": "UnavailableThe source reports an API version Compass does not support. Reported apiVersion \"2.0\"; supported major version 1.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "duo-inner-669x819",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "duo-inner-669x819",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "duo-inner-669x819",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "duo-inner-669x819",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "duo-inner-669x819",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "duo-inner-669x819",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state unavailable; label \"Unavailable\""
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "duo-inner-669x819",
+      "name": "message",
+      "pass": true,
+      "detail": "UnavailableUnknown projection source. Use ?source=simulation or ?source=fixture. Requested \"live\".No source (not authoritative)"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "duo-inner-669x819",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "duo-inner-669x819",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "duo-inner-669x819",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "duo-inner-669x819",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "historical-outer-373x580",
+      "name": "Missions within five Tabs",
+      "pass": true,
+      "detail": "2 Tabs to #atlasMobileMissions"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "historical-outer-373x580",
+      "name": "reach Missions from overview",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMobileMissions\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":2}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "historical-outer-373x580",
+      "name": "search from the Missions entry",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":3}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "historical-outer-373x580",
+      "name": "find Board cards",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Board cards, coven-cave, Active, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":15}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "historical-outer-373x580",
+      "name": "inspect Board cards",
+      "pass": true,
+      "detail": "{\"element\":\"missionDetailTitle\",\"name\":\"Board cards\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/coven-cave/mission/m-1?view=brief&detail=side\",\"keys\":16}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "historical-outer-373x580",
+      "name": "return to matching row",
+      "pass": true,
+      "detail": "{\"element\":\"btn x\",\"name\":\"All missions\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/coven-cave/mission/m-1?view=brief&detail=side\",\"keys\":17}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "historical-outer-373x580",
+      "name": "return to matching row",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Board cards, coven-cave, Active, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":18}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "historical-outer-373x580",
+      "name": "recover from an empty search",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":45}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "historical-outer-373x580",
+      "name": "recover from an empty search",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":49}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "historical-outer-373x580",
+      "name": "find Source survey",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Source survey, psyche-build, Needs you, 16 agents, 1 pending. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":63}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "historical-outer-373x580",
+      "name": "inspect Source survey",
+      "pass": true,
+      "detail": "{\"element\":\"missionDetailTitle\",\"name\":\"Source survey\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/psyche-build/mission/m-2?view=brief&detail=side\",\"keys\":64}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "historical-outer-373x580",
+      "name": "close details and return to the invoking row",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Source survey, psyche-build, Needs you, 16 agents, 1 pending. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":69}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "historical-outer-373x580",
+      "name": "dismiss Missions and return to its launcher",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMobileMissions\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":70}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "historical-outer-373x580",
+      "name": "original overview restored",
+      "pass": true,
+      "detail": "https://coven-compass.vercel.app/#/coven"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "historical-outer-373x580",
+      "name": "reload mission permalink",
+      "pass": true,
+      "detail": "https://coven-compass.vercel.app/#/project/psyche-build/mission/m-2?view=brief&detail=side"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "historical-outer-373x580",
+      "name": "no console errors",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "historical-outer-373x580",
+      "name": "overview fit keeps every Project in the stage",
+      "pass": true,
+      "detail": "4 Project name labels; outside stage: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "historical-outer-373x580",
+      "name": "map renders",
+      "pass": true,
+      "detail": "1251 SVG nodes in #plan"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "historical-outer-373x580",
+      "name": "simulation source registered and labelled simulated",
+      "pass": true,
+      "detail": "4 projects, state simulated"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "historical-outer-373x580",
+      "name": "open a Project",
+      "pass": true,
+      "detail": "Projects drawer; hash #/project/psyche-build"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "historical-outer-373x580",
+      "name": "every sample mission name is readable outside its ring at Project fit",
+      "pass": true,
+      "detail": "4 of 4 centered names, smallest text 10.5px"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "historical-outer-373x580",
+      "name": "mission names clear the crown and each other",
+      "pass": false,
+      "detail": "4 names shown; over the crown: Review readiness; overlapping: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "historical-outer-373x580",
+      "name": "familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "10 familiar labels shown; overlapping: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "historical-outer-373x580",
+      "name": "open a mission",
+      "pass": true,
+      "detail": "via #atlasMobileMissions; hash #/project/psyche-build/mission/m-1?view=brief&detail=side; inspector visible true"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "historical-outer-373x580",
+      "name": "replay starts and moves",
+      "pass": true,
+      "detail": "clicked #play; scrub 1000 → 20; clock \"21:49:18\" → \"21:11:42\"; button \"Pause\""
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "historical-outer-373x580",
+      "name": "replay frame: mission names clear the crown and each other",
+      "pass": true,
+      "detail": "1 names shown; over the crown: none; overlapping: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "historical-outer-373x580",
+      "name": "replay frame: familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "0 familiar labels shown; overlapping: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "historical-outer-373x580",
+      "name": "Seal lab extends a familiar’s progress arc",
+      "pass": true,
+      "detail": "51.631 360 to 52.707 360"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "historical-outer-373x580",
+      "name": "Seal lab opens and closes",
+      "pass": true,
+      "detail": "open true"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "historical-outer-373x580",
+      "name": "mobile dock",
+      "pass": true,
+      "detail": "dock visible true; Map → hash \"#/coven\""
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "historical-outer-373x580",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "historical-outer-373x580",
+      "name": "overview fit keeps every Project in the stage",
+      "pass": true,
+      "detail": "4 Project name labels; outside stage: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "historical-outer-373x580",
+      "name": "map renders",
+      "pass": true,
+      "detail": "1251 SVG nodes in #plan"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "historical-outer-373x580",
+      "name": "simulation source registered and labelled simulated",
+      "pass": true,
+      "detail": "4 projects, state simulated"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "historical-outer-373x580",
+      "name": "open a Project",
+      "pass": true,
+      "detail": "Projects drawer; hash #/project/psyche-build"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "historical-outer-373x580",
+      "name": "every sample mission name is readable outside its ring at Project fit",
+      "pass": true,
+      "detail": "4 of 4 centered names, smallest text 10.5px"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "historical-outer-373x580",
+      "name": "mission names clear the crown and each other",
+      "pass": false,
+      "detail": "4 names shown; over the crown: Review readiness; overlapping: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "historical-outer-373x580",
+      "name": "familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "10 familiar labels shown; overlapping: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "historical-outer-373x580",
+      "name": "open a mission",
+      "pass": true,
+      "detail": "via #atlasMobileMissions; hash #/project/psyche-build/mission/m-1?view=brief&detail=side; inspector visible true"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "historical-outer-373x580",
+      "name": "replay starts and moves",
+      "pass": true,
+      "detail": "clicked #play; scrub 1000 → 20; clock \"21:49:31\" → \"21:11:53\"; button \"Pause\""
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "historical-outer-373x580",
+      "name": "replay frame: mission names clear the crown and each other",
+      "pass": true,
+      "detail": "1 names shown; over the crown: none; overlapping: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "historical-outer-373x580",
+      "name": "replay frame: familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "0 familiar labels shown; overlapping: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "historical-outer-373x580",
+      "name": "Seal lab extends a familiar’s progress arc",
+      "pass": true,
+      "detail": "51.631 360 to 52.707 360"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "historical-outer-373x580",
+      "name": "Seal lab opens and closes",
+      "pass": true,
+      "detail": "open true"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "historical-outer-373x580",
+      "name": "mobile dock",
+      "pass": true,
+      "detail": "dock visible true; Map → hash \"#/coven\""
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "historical-outer-373x580",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "historical-outer-373x580",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "historical-outer-373x580",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state fresh; label \"Fixture · fresh\""
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "historical-outer-373x580",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · freshObserved 5 s ago. This is static fixture data, not live Coven data.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "historical-outer-373x580",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden false; tr 4 (expected 4)"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "historical-outer-373x580",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "historical-outer-373x580",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "historical-outer-373x580",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "historical-outer-373x580",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "historical-outer-373x580",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state fresh; label \"Fixture · fresh\""
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "historical-outer-373x580",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · freshObserved 5 s ago. This is static fixture data, not live Coven data.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "historical-outer-373x580",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden false; tr 4 (expected 4)"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "historical-outer-373x580",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "historical-outer-373x580",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "historical-outer-373x580",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "historical-outer-373x580",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "historical-outer-373x580",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state stale; label \"Fixture · stale\""
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "historical-outer-373x580",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · staleLast observed 15 min ago, outside the 1 min freshness window. Shown as last known, not current.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "historical-outer-373x580",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden false; tr 2 (expected 2)"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "historical-outer-373x580",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "historical-outer-373x580",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "historical-outer-373x580",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "historical-outer-373x580",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "historical-outer-373x580",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state reconciling; label \"Fixture · reconciling\""
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "historical-outer-373x580",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · reconcilingA page cursor could not be followed, so this list is incomplete. 1 Project is shown; the total is unknown.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "historical-outer-373x580",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden false; tr 2 (expected 2)"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "historical-outer-373x580",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "historical-outer-373x580",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "historical-outer-373x580",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "historical-outer-373x580",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "historical-outer-373x580",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state unavailable; label \"Unavailable\""
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "historical-outer-373x580",
+      "name": "message",
+      "pass": true,
+      "detail": "UnavailableThe projection source is disconnected. No Projects are shown, and no sample data is substituted.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "historical-outer-373x580",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "historical-outer-373x580",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "historical-outer-373x580",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "historical-outer-373x580",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "historical-outer-373x580",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "historical-outer-373x580",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state unavailable; label \"Unavailable\""
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "historical-outer-373x580",
+      "name": "message",
+      "pass": true,
+      "detail": "UnavailableThe source reports an API version Compass does not support. Reported apiVersion \"2.0\"; supported major version 1.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "historical-outer-373x580",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "historical-outer-373x580",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "historical-outer-373x580",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "historical-outer-373x580",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "historical-outer-373x580",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "historical-outer-373x580",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state unavailable; label \"Unavailable\""
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "historical-outer-373x580",
+      "name": "message",
+      "pass": true,
+      "detail": "UnavailableUnknown projection source. Use ?source=simulation or ?source=fixture. Requested \"live\".No source (not authoritative)"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "historical-outer-373x580",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "historical-outer-373x580",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "historical-outer-373x580",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "historical-outer-373x580",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    }
+  ],
+  "screenshots": [
+    "desktop-compact-keyboard-label.png",
+    "duo-inner-669x819-keyboard-m-1-coven-cave.png",
+    "duo-inner-669x819-keyboard-m-2-psyche-build.png",
+    "duo-inner-669x819-default-overview.png",
+    "duo-inner-669x819-default-mission.png",
+    "duo-inner-669x819-default-replay.png",
+    "duo-inner-669x819-default-seal-lab.png",
+    "duo-inner-669x819-_source_fixture_scenario_fresh.png",
+    "duo-inner-669x819-_source_fixture.png",
+    "duo-inner-669x819-_source_fixture_scenario_stale.png",
+    "duo-inner-669x819-_source_fixture_scenario_partial.png",
+    "duo-inner-669x819-_source_fixture_scenario_disconnected.png",
+    "duo-inner-669x819-_source_fixture_scenario_unsupported-version.png",
+    "duo-inner-669x819-_source_live.png",
+    "historical-outer-373x580-keyboard-m-1-coven-cave.png",
+    "historical-outer-373x580-keyboard-m-2-psyche-build.png",
+    "historical-outer-373x580-default-overview.png",
+    "historical-outer-373x580-default-mission.png",
+    "historical-outer-373x580-default-replay.png",
+    "historical-outer-373x580-default-seal-lab.png",
+    "historical-outer-373x580-_source_fixture_scenario_fresh.png",
+    "historical-outer-373x580-_source_fixture.png",
+    "historical-outer-373x580-_source_fixture_scenario_stale.png",
+    "historical-outer-373x580-_source_fixture_scenario_partial.png",
+    "historical-outer-373x580-_source_fixture_scenario_disconnected.png",
+    "historical-outer-373x580-_source_fixture_scenario_unsupported-version.png",
+    "historical-outer-373x580-_source_live.png"
+  ],
+  "summary": {
+    "checks": 193,
+    "passed": 191,
+    "failed": 2
+  }
+}

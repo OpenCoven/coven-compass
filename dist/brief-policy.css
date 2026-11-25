@@ -55,3 +55,5 @@
 .bp-editor textarea{width:100%;box-sizing:border-box;resize:vertical}
 .bp-editor-errors{margin:0;padding-left:1.2em;color:var(--attention,#b4572e)}
 .bp-editor-errors:empty{display:none}
+
+.brief-storage-warning { position: fixed; inset: auto 1rem 1rem; z-index: 100; padding: .75rem; background: var(--panel, #211f25); color: var(--ink, #fff); }

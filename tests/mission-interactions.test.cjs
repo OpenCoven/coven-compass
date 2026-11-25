@@ -137,7 +137,7 @@ function domFixture() {
 
 function formFixture() {
   const f = domFixture(), stage = f.add('div', 'stage'), form = f.add('form', 'empty');
-  for (const id of ['emptyX', 'nmLeadL', 'nmTitle', 'raise', 'nmLeadSec', 'emptyName', 'emptyState', 'nmFoot']) f.add('button', id, form);
+  for (const id of ['emptyX', 'nmLeadL', 'nmTitle', 'raise', 'nmLeadSec', 'emptyName', 'emptyState', 'nmFoot', 'nmPermissions', 'nmCustomize', 'nmPreview', 'nmBrief']) f.add('button', id, form);
   const input = f.add('input', 'nmName', form); input.value = 'Draft mission';
   const makeProject = () => ({world: {missions: new Map()}, layout: {ang: new Map()}, composing: false});
   let project = makeProject(), actionable = true;
@@ -152,7 +152,7 @@ function formFixture() {
       stage.inert = !form.hidden; form.inert = form.hidden;
     },
   };
-  const context = load(['setMissionName', 'drawNew', 'openNew', 'closeNew', 'successOk'], {
+  const context = load(['setMissionName', 'setBriefExpanded', 'drawNew', 'openNew', 'closeNew', 'successOk'], {
     ...f, stage, nm, cz, cur: () => project, active: 'brand', atlasScope: 'project',
     canAct: () => actionable,
     sc: {far: false}, select() {}, setView() {}, setLead() {}, drawBriefForm() {},

@@ -48,7 +48,7 @@ for (const [width, height] of [[1440, 900], [390, 844]]) {
       await page.reload();
       await page.locator('#workspaceTools > summary').click();
       await page.locator('#traceBox > summary').click();
-      await page.locator('#traceLoad > summary').click();
+      await page.locator('#traceImport').click();
       const names = ['Brief', 'Review', 'Copy', 'Layout', 'Polish'];
       const event = (type, props) => JSON.stringify({t:'2026-11-18T06:20:00Z', type, mission:'solo', ...props});
       const token = 'Release/candidate-'.repeat(26) + '👩🏽‍💻';
@@ -77,8 +77,8 @@ for (const [width, height] of [[1440, 900], [390, 844]]) {
         return getComputedStyle(el).whiteSpace === 'nowrap' && el.scrollLeft > 0 &&
           getComputedStyle(el).textOverflow !== 'ellipsis' && el.scrollLeft + el.clientWidth >= el.scrollWidth - 1;
       }), 'the last grapheme of an oversized word can be read without breaking it');
-      assert.equal(await unstaffed.locator('.task-cog').count(), 3);
-      assert.equal(await unstaffed.locator('.task-overflow').textContent(), '+2');
+      assert.equal(await unstaffed.locator('.task-cog').count(), 1);
+      assert.match(await unstaffed.getAttribute('aria-label'), /5 tasks.*Brief · Cody, Review · Cody, Copy · Cody, and 2 more/);
       // Start from the overview again, this time with a Project containing only unstaffed tasks.
       await page.locator(width < 500 ? '#atlasMobileMap' : '#atlasOverview').click();
       await project.locator('.preview-mission').first().waitFor();
@@ -153,7 +153,8 @@ test('mission browsing leaves space for the selected seal and the open Inbox rev
     const row = drawer.getByRole('button', {name: /^Source survey, psyche-build,/});
     await launcher.click();
     assert.equal(await row.locator('.atlas-mission-project').isVisible(), false);
-    assert.match(await row.locator('.atlas-mission-meta').innerText(), /Needs you · 1/);
+    assert.equal(await row.locator('.atlas-mission-meta').innerText(), 'Needs you');
+    assert.equal(await row.locator('.atlas-pending').innerText(), '1 pending request');
     await page.locator('#atlasMissionProject').selectOption('');
     assert.equal(await row.locator('.atlas-mission-project').innerText(), 'psyche-build');
     await row.click();
@@ -171,10 +172,14 @@ test('mission browsing leaves space for the selected seal and the open Inbox rev
       }
       assert.equal(await task.locator('.i-task-summary').innerText(), parts.join(' · '));
     }
-    const note = page.locator('.ask-note');
-    await note.click();
+    const review = page.locator('#inspect [data-focus="review-request"]');
+    await review.click();
+    await page.getByRole('button', {name: 'Inspect opening event'}).waitFor();
+    assert.equal(await page.locator('#queueDetail').getByRole('button', {name: 'Allow once'}).count(), 0);
+    await page.locator('#queueClose').click();
+    await page.locator('#needBtn').click();
+    await page.locator('#notif .nrow').filter({hasText: 'Source survey'}).first().click();
     await page.locator('#notif .cf').waitFor();
-    await note.waitFor({state: 'hidden'});
     assert.equal(await page.getByRole('button', {name: 'Allow once', exact: true}).isVisible(), true);
     await launcher.click();
     await page.waitForFunction(() => {
@@ -185,9 +190,86 @@ test('mission browsing leaves space for the selected seal and the open Inbox rev
     });
     await page.keyboard.press('Escape');
     await page.locator('#tabChat').click();
-    await note.waitFor({state: 'visible'});
+    await review.waitFor({state: 'visible'});
   } finally {
     await page.close();
+  }
+});
+
+test('Review readiness lets the keyboard switch familiar groups and return to the mission', async () => {
+  const page = await browser.newPage({viewport: {width: 1440, height: 900}, reducedMotion: 'reduce'});
+  try {
+    await page.goto(new URL('#/project/psyche-build', base).href);
+    const mission = page.getByRole('button', {name: /^Review readiness,.*Show its agents and tasks$/});
+    const group = name => page.getByRole('button', {name: `Focus ${name} group on Review readiness`, exact: true});
+    const cody = group('Cody'), astra = group('Astra');
+    const tabStop = page.locator('#plan [data-map-item][tabindex="0"]');
+    const focused = locator => locator.evaluate(el => el === document.activeElement);
+
+    await mission.focus();
+    await page.keyboard.press('Enter');
+    const bounds = await cody.boundingBox();
+    assert.ok(bounds, 'the selected mission exposes Cody’s group');
+    await cody.click({position: {x: bounds.width / 2, y: 3}});
+    assert.ok(await focused(cody));
+    assert.equal(await cody.getAttribute('aria-pressed'), 'true');
+    assert.equal(await astra.getAttribute('aria-pressed'), 'false');
+
+    // Walk the same map items a keyboard visitor encounters, including individual agents.
+    const itemCount = await page.locator('#plan [data-map-item]').count();
+    for (let step = 0; !(await focused(astra)); step++) {
+      assert.equal(await tabStop.count(), 1);
+      assert.ok(await focused(tabStop), 'arrow navigation keeps focus on the map’s single Tab stop');
+      const name = await tabStop.getAttribute('aria-label');
+      assert.equal(await page.getByRole('button', {name, exact: true}).and(tabStop).count(), 1, 'focused map button is exposed by name');
+      assert.ok(step < itemCount, 'Astra was unreachable from ' + name);
+      await page.keyboard.press('ArrowLeft');
+    }
+    assert.equal(await tabStop.count(), 1);
+    assert.ok(await focused(tabStop));
+    await page.keyboard.press('Space');
+    assert.ok(await focused(astra));
+    assert.equal(await astra.getAttribute('aria-pressed'), 'true');
+    assert.equal(await cody.getAttribute('aria-pressed'), 'false');
+
+    await page.keyboard.press('Escape');
+    const summary = page.getByRole('heading', {name: 'Review readiness', exact: true});
+    assert.ok(await focused(summary));
+    assert.equal(await astra.getAttribute('aria-pressed'), 'false');
+    await page.keyboard.press('Escape');
+    assert.ok(await focused(mission));
+    assert.equal(await tabStop.count(), 1);
+    assert.ok(await focused(tabStop));
+    assert.equal(await astra.count(), 0, 'closed mission group leaves the accessibility tree');
+  } finally {
+    await page.close();
+  }
+});
+
+test('selected mission captions pair status with an actionable task count at desktop and phone widths', async () => {
+  for (const [width, height] of [[1440,900], [390,844], [320,568]]) {
+    const page = await browser.newPage({viewport: {width, height}, reducedMotion: 'reduce', hasTouch: width < 500});
+    try {
+      await page.goto(new URL('#/project/ui/mission/m-1?detail=card', base).href);
+      const group = page.locator('.atlas-mission-group.atlas-mission-current');
+      const state = group.locator('.atlas-mission-state'), tasks = group.locator('.mission-tasks');
+      assert.equal(await state.textContent(), 'In progress');
+      assert.match(await tasks.getAttribute('aria-label'), /3 tasks on Rebuild UI specimens: Build examples · Cody, Build registry · Cody, Run visual checks · Charm/);
+      await page.waitForFunction(() => {
+        const group = document.querySelector('.atlas-mission-group.atlas-mission-current');
+        const box = sel => group.querySelector(sel).getBoundingClientRect();
+        const title = box('.lead-name'), state = box('.atlas-mission-state'), tasks = box('.task-tray-hit');
+        return title.bottom <= Math.min(state.top, tasks.top) && state.right <= tasks.left &&
+          Math.abs(state.top + state.height / 2 - tasks.top - tasks.height / 2) < 2;
+      });
+      if (width < 500) {
+        const box = await group.locator('.task-tray-hit').boundingBox();
+        assert.ok(box.width >= 43.9 && box.height >= 43.9);
+        await tasks.tap();
+      } else { await tasks.focus(); await page.keyboard.press('Enter'); }
+      await page.getByRole('tab', {name:'Tasks', selected:true}).waitFor();
+      assert.deepEqual(await page.locator('#inspect .tname').allTextContents(), ['Build examples', 'Build registry', 'Run visual checks']);
+    } finally { await page.close(); }
   }
 });
 
@@ -204,7 +286,25 @@ test('mission focus traces the seal and reveals the planes for its agents', asyn
     await page.keyboard.press('Enter');
     await page.locator('#plan.atlas-selected').waitFor();
     const selected = page.locator('.atlas-mission-group.atlas-mission-current');
-    await selected.locator('.task-tray-well').waitFor({state: 'visible'});
+    await selected.locator('.task-disclosure').waitFor({state: 'visible'});
+    const hierarchy = await selected.evaluate(group => {
+      const title = group.querySelector('.lead-name'), status = group.querySelector('.atlas-mission-state');
+      const pixels = text => parseFloat(getComputedStyle(text).fontSize) * text.getScreenCTM().a;
+      const bounds = node => node.getBoundingClientRect();
+      const tray = group.querySelector('.task-tray-bg');
+      return {title: pixels(title), status: pixels(status), warning: status.textContent,
+        count: group.querySelector('.mission-tasks .task-caption').textContent,
+        rowsClear: bounds(title).bottom <= bounds(status).top && bounds(status).bottom <= bounds(tray).top,
+        gatesClear: [...document.querySelectorAll('.atlas-project-decision .gate-l.on')].every(label => {
+          if (getComputedStyle(label).visibility === 'hidden') return true;
+          const a = bounds(label), b = bounds(tray);
+          return a.right <= b.left || a.left >= b.right || a.bottom <= b.top || a.top >= b.bottom;
+        })};
+    });
+    assert.ok(hierarchy.title >= 14 && hierarchy.title > hierarchy.status);
+    assert.match(hierarchy.warning, /Needs you · Tokens \d+%/);
+    assert.equal(hierarchy.count, '3 tasks');
+    assert.ok(hierarchy.rowsClear && hierarchy.gatesClear);
     const planes = page.locator('.atlas-squad:not(.dim) .squad-plane:visible');
     assert.ok(await planes.evaluateAll(items => items.some(plane => getComputedStyle(plane).display !== 'none')));
     assert.ok(await page.locator('.atlas-squad.dim .squad-plane').evaluateAll(planes =>
@@ -224,8 +324,16 @@ test('mission focus traces the seal and reveals the planes for its agents', asyn
     const bounds = await floor.boundingBox();
     await floor.click({position: {x: bounds.width / 2, y: 3}});
     await page.locator('.squad-plane rect[aria-pressed="true"]').waitFor();
-    const otherName = await page.locator('.atlas-squad.dim .squad-plane:visible rect').first().getAttribute('aria-label');
-    const other = page.getByRole('button', {name: otherName, exact: true});
+    // Moving past an unselected mission's task tray must skip its hidden group floors.
+    const reviewTray = page.getByRole('button', {name: /tasks on Review readiness:.*Open task list/});
+    await reviewTray.focus();
+    await page.keyboard.press('ArrowRight');
+    assert.equal(await page.evaluate(() => {
+      const active = document.activeElement;
+      return active?.hasAttribute('data-map-item') && !active.closest('.mission-tasks') &&
+        active.matches('[tabindex="0"]') && !active.closest('.squad-plane');
+    }), true);
+    const other = page.getByRole('button', {name: 'Focus Charm group on Source survey', exact: true});
     await other.focus();
     await other.press('Space');
     assert.equal(await other.getAttribute('aria-pressed'), 'true');
@@ -332,13 +440,13 @@ test('one top bar contains navigation and project actions at desktop and phone w
       }
       const brand = bar.getByRole('img', {name: 'Compass', exact: true});
       assert.equal(await brand.textContent(), '');
-      assert.equal(await brand.locator('svg').count(), 1);
+      assert.equal(await brand.evaluate(async img => { await img.decode(); return img.naturalWidth; }), 96);
       const scope = bar.getByRole('navigation', {name: 'Workspace scope'});
       if (await scope.isVisible()) {
         const coven = scope.locator('#atlasOverview'), project = scope.locator('#atlasProject');
         assert.deepEqual(await scope.getByRole('button').allTextContents(), ['Coven', 'Project']);
         const left = await coven.boundingBox(), right = await project.boundingBox();
-        const mark = await brand.boundingBox();
+        const mark = await bar.locator('.atlas-brand').boundingBox();
         assert.equal(left.width, right.width);
         assert.equal(left.y, mark.y);
         assert.equal(left.height, mark.height);
@@ -366,7 +474,7 @@ test('one top bar contains navigation and project actions at desktop and phone w
       await lock.click();
       assert.equal(await page.locator('#atlasZoomIn').isVisible(), false);
       assert.equal(await page.locator('#atlasFit').isVisible(), false);
-      assert.ok(await page.getByRole('combobox', {name: 'Psyche marker'}).isVisible());
+      assert.ok(await lock.isVisible());
       await lock.click();
       assert.ok(await page.locator('#atlasZoomIn').isEnabled());
       assert.ok(await page.locator('#atlasFit').isVisible());
@@ -392,6 +500,7 @@ test('inspector actions open the brief and conversation and desktop title rows a
       }
       const a = await edit.boundingBox(), b = await ask.boundingBox();
       assert.equal(a.height, b.height);
+      assert.equal(a.y, b.y, 'the three brief actions share a row');
       assert.ok(a.height >= (width < 500 ? 44 : 36));
       await edit.click();
       await page.locator('#empty').waitFor();
@@ -420,7 +529,9 @@ test('inspector actions open the brief and conversation and desktop title rows a
       assert.ok(await page.evaluate(() => document.activeElement.matches('#comp button:focus-visible') &&
         getComputedStyle(document.activeElement).outlineStyle !== 'none'));
       if (width > 1100) {
-        await page.locator('#dockBtn').click();
+        assert.ok(await page.locator('#app.docked').count(), 'Ask Psyche opens the dock by default');
+        await page.getByRole('button', {name: 'Float Psyche as a chat window'}).click();
+        await page.getByRole('button', {name: 'Dock Psyche as a side panel'}).click();
         const bar = await page.locator('#workspaceBar').boundingBox();
         const title = await page.locator('.psyche .p-h').boundingBox();
         assert.equal(bar.height, title.height);
@@ -460,9 +571,8 @@ test('camera icons share the familiar key row on the workspace surface', async (
         assert.ok(await control.getAttribute('aria-label'));
         assert.ok(await control.getAttribute('title'));
       }
-      const picker = dock.getByRole('combobox', {name: 'Psyche marker'});
-      await picker.selectOption('point');
-      assert.match(await picker.getAttribute('title'), /Point/);
+      assert.equal(await dock.getByRole('combobox').count(), 0);
+      assert.equal(await dock.getByRole('button').count(), 5);
       const lock = dock.getByRole('button', {name: 'Lock the map'});
       await lock.click();
       assert.equal(await dock.getByRole('button').count(), 1);
@@ -510,6 +620,28 @@ test('map key topics fit desktop, tablet, phone and short landscape screens', as
   }
 });
 
+test('mission details and the selected task plane share the resized stage', async () => {
+  const page = await browser.newPage({viewport: {width: 1720, height: 960}, reducedMotion: 'reduce'});
+  try {
+    await page.goto(new URL('#/project/psyche-build/mission/m-2?familiar=astra', base).href);
+    let previousWidth = Infinity;
+    for (const width of [1720, 1260]) {
+      await page.setViewportSize({width, height: 960});
+      const manifest = page.locator('#notes .manifest');
+      await manifest.waitFor();
+      await page.waitForFunction(() => {
+        const stage = document.querySelector('#stage').getBoundingClientRect();
+        const cards = document.querySelector('#notes .manifest').getBoundingClientRect();
+        const group = document.querySelector('.atlas-squad[data-m="m-2"][data-fam="astra"] .squad-plane rect')?.getBoundingClientRect();
+        return group && group.width > 0 && group.left >= cards.right && group.right <= stage.right && group.top >= stage.top && group.bottom <= stage.bottom;
+      });
+      const cardWidth = (await manifest.boundingBox()).width;
+      assert.ok(cardWidth < previousWidth, 'the detail rail adapts as the stage narrows');
+      previousWidth = cardWidth;
+    }
+  } finally { await page.close(); }
+});
+
 test('familiar card connector meets the painted group and stays attached on zoom', async () => {
   const page = await browser.newPage({viewport: {width: 1440, height: 900}, reducedMotion: 'reduce'});
   try {
@@ -540,7 +672,7 @@ test('task areas follow replayed assignments, reservations and retirement', asyn
     await page.goto(new URL('#/project/psyche-build', base).href);
     await page.locator('#workspaceTools > summary').click();
     await page.locator('#traceBox > summary').click();
-    await page.locator('#traceLoad > summary').click();
+    await page.locator('#traceImport').click();
     const records = [];
     const add = (sec, type, properties) => records.push({t: 1800000000000 + sec * 1000, type, mission: 'sizing', familiar: 'astra', ...properties});
     add(0, 'mission.opened', {name: 'Layout'});
@@ -673,6 +805,7 @@ test('a narrow overview return fits the settled stage without rebuilding for the
     await page.waitForFunction(() => document.body.dataset.atlasScope === 'coven');
     await page.evaluate(async () => { for (let i = 0; i < 6; i++) await new Promise(requestAnimationFrame); });
     const overviewHeight = await page.locator('#stage').evaluate(el => el.clientHeight);
+    const initialTile = await tile.boundingBox();
     await tile.tap();
     await page.locator('.mission-tasks').first().waitFor();
     await page.waitForFunction(height => document.body.dataset.atlasScope === 'project' && document.getElementById('stage').clientHeight < height, overviewHeight);
@@ -693,6 +826,365 @@ test('a narrow overview return fits the settled stage without rebuilding for the
       return {height: document.getElementById('stage').clientHeight, builds: window.overviewBuilds};
     });
     assert.ok(after.height > before, 'stage height should expand from ' + before + ' to the overview, observed ' + after.height);
+    const returnedTile = await tile.boundingBox();
+    for (const coordinate of ['x', 'y', 'width', 'height']) {
+      assert.ok(Math.abs(returnedTile[coordinate] - initialTile[coordinate]) < 1, 'overview tile should return to its settled ' + coordinate);
+    }
     assert.ok(after.builds <= 1, 'overview rebuilt ' + after.builds + ' times during one scope change');
+  } finally { await page.close(); }
+});
+
+test('Psyche remembers rail and corner choices separately from the open panel', async () => {
+  for (const [width, height] of [[1440, 900], [390, 844], [844, 390]]) {
+    const mobile = width < 1100;
+    const page = await browser.newPage({viewport: {width, height}, hasTouch: mobile, reducedMotion: 'reduce'});
+    try {
+      await page.goto(base);
+      const launcher = page.getByRole('button', {name: 'Open Psyche', exact: true});
+      const panel = page.locator('#psyche');
+      await launcher.waitFor();
+      const edge = await page.locator('.plan-body').boundingBox(), rail = await launcher.boundingBox();
+      assert.equal(await launcher.getAttribute('data-placement'), 'rail');
+      assert.ok(Math.abs(edge.x + edge.width - rail.x - rail.width) < 1, 'tab meets the right edge');
+      assert.ok(await panel.isHidden());
+      if (mobile) assert.ok(rail.width >= 44 && rail.height >= 44);
+      await launcher.focus(); await page.keyboard.press('Enter');
+      assert.equal(await page.locator('#app.docked').count(), mobile ? 0 : 1);
+      await page.locator('#say').fill('Keep this draft');
+      await page.getByRole('button', {name: 'Minimize to corner'}).click();
+      const corner = await launcher.boundingBox();
+      assert.ok(corner.y > rail.y && corner.height < rail.height);
+      assert.equal(await launcher.getAttribute('data-placement'), 'corner');
+      assert.ok(await launcher.evaluate(el => el === document.activeElement));
+      await launcher.click();
+      assert.equal(await page.locator('#say').inputValue(), 'Keep this draft');
+      await page.keyboard.press('Escape');
+      assert.ok(await panel.isHidden());
+      await page.reload();
+      await launcher.waitFor();
+      assert.equal(await launcher.getAttribute('data-placement'), 'corner');
+      await launcher.click();
+      await page.getByRole('button', {name: 'Collapse to rail'}).click();
+      await page.reload(); await launcher.waitFor();
+      assert.equal(await launcher.getAttribute('data-placement'), 'rail');
+      if (mobile) {
+        const activity = page.locator('#atlasMobileActivity');
+        await activity.focus(); await page.keyboard.press('Enter');
+        await page.keyboard.press('Escape');
+        assert.ok(await activity.evaluate(el => el === document.activeElement), 'Escape returns to the opening control');
+      } else {
+        await launcher.click();
+        await page.getByRole('button', {name: 'Float Psyche as a chat window'}).click();
+        await page.getByRole('button', {name: 'Collapse to rail'}).click();
+        await page.reload(); await launcher.click();
+        assert.equal(await page.locator('#app.docked').count(), 0, 'floating preference survives closure');
+        await page.getByRole('button', {name: 'Dock Psyche as a side panel'}).click();
+        await page.setViewportSize({width: 390, height: 844});
+        await page.locator('#app:not(.docked)').waitFor();
+        await page.setViewportSize({width, height});
+        await page.locator('#app.docked').waitFor();
+      }
+    } finally { await page.close(); }
+  }
+});
+
+test('older Psyche settings keep a saved floating panel and its size', async () => {
+  const page = await browser.newPage({viewport: {width: 1440, height: 900}});
+  try {
+    await page.addInitScript(() => localStorage.setItem('coven-compass-psyche', JSON.stringify({mode: 'float', w: 460, fw: 430, fh: 580})));
+    await page.goto(base);
+    const panel = page.locator('#psyche');
+    await panel.waitFor();
+    assert.equal(await page.locator('#app.docked').count(), 0);
+    await page.waitForFunction(() => Math.round(document.getElementById('psyche').getBoundingClientRect().width) === 430);
+    await page.getByRole('button', {name: 'Collapse to rail'}).click();
+    await page.locator('#launcher').click();
+    assert.equal(await page.locator('#app.docked').count(), 0);
+    await page.waitForFunction(() => Math.round(document.getElementById('psyche').getBoundingClientRect().width) === 430);
+  } finally { await page.close(); }
+});
+
+test('Board cards captions and the Tasks target clear familiar badges and task groups across viewport changes', async () => {
+  const page = await browser.newPage({viewport: {width: 1440, height: 900}, reducedMotion: 'reduce'});
+  const mission = page.locator('.atlas-mission-current[data-m="m-1"]');
+  const caption = page.locator('#missionCaptions .mission-caption').filter({hasText: 'Board cards'});
+  try {
+    for (const [width, height] of [[1440, 900], [1024, 768], [390, 844], [844, 390], [320, 568]]) {
+      await page.setViewportSize({width, height});
+      await page.goto(new URL('#/project/coven-cave/mission/m-1?detail=card', base).href);
+      await mission.waitFor();
+      for (const deltaY of [0, -230, 330]) {
+        const seal = await mission.locator('.se-face').boundingBox();
+        if (deltaY) await page.locator('#plan').dispatchEvent('wheel', {ctrlKey: true, deltaY, clientX: seal.x + seal.width / 2, clientY: seal.y + seal.height / 2});
+        await page.evaluate(async () => { for (let i = 0; i < 8; i++) await new Promise(requestAnimationFrame); });
+        const fallback = await mission.evaluate(el => el.classList.contains('caption-in-list'));
+        if (fallback) {
+          assert.match(await caption.innerText(), /3 tasks/);
+          continue;
+        }
+        const collisions = await mission.evaluate(group => {
+          const controls = ['.lead-name', '.atlas-mission-state', '.task-tray-hit'].map(selector => group.querySelector(selector));
+          const shapes = document.querySelectorAll('.atlas-project-detail .seat .familiar-disc, .squad-plane > rect');
+          const result = [];
+          for (const control of controls) {
+            const a = control.getBoundingClientRect();
+            if (!a.width || getComputedStyle(control).visibility === 'hidden') continue;
+            for (const shape of shapes) {
+              const b = shape.getBoundingClientRect();
+              if (b.width && a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top) result.push(control.getAttribute('class'));
+            }
+          }
+          return result;
+        });
+        assert.ok(await mission.locator('.task-tray-hit').isVisible());
+        assert.deepEqual(collisions, [], width + '×' + height + ' wheel ' + deltaY);
+      }
+    }
+  } finally { await page.close(); }
+});
+
+test('a crowded map transfers its Tasks action and keyboard focus to the caption list and back', async () => {
+  const page = await browser.newPage({viewport: {width: 1440, height: 900}, reducedMotion: 'reduce'});
+  try {
+    await page.goto(new URL('#/project/coven-cave/mission/m-1?detail=card', base).href);
+    const tray = page.locator('.atlas-mission-current .mission-tasks');
+    const caption = page.locator('#missionCaptions .mission-caption').filter({hasText: 'Board cards'});
+    await tray.focus();
+    // Cover the available label space using a measured toolbar, independently of the sample's geometry.
+    const coverMap = () => page.addStyleTag({content: '#atlasCameraDock {position:fixed!important; inset:0!important; width:auto!important; height:auto!important; pointer-events:none}'});
+    const redraw = () => page.evaluate(() => window.dispatchEvent(new Event('resize')));
+    const trayName = await tray.getAttribute('aria-label');
+    const other = page.locator('#atlasBrowse');
+    for (const moveAway of [false, true, false]) {
+      await tray.focus();
+      const cover = await coverMap();
+      await redraw();
+      await caption.waitFor();
+      assert.equal(await caption.getAttribute('data-key'), JSON.stringify(['coven-cave', 'm-1']));
+      assert.match(await caption.innerText(), /3 tasks/);
+      assert.ok(await caption.evaluate(el => el === document.activeElement));
+      if (moveAway) await other.focus();
+      await cover.evaluate(el => el.remove());
+      await redraw();
+      // Resize schedules the label pass. Caption removal signals that it reconciled this mission.
+      await caption.waitFor({state: 'detached'});
+      await tray.waitFor();
+      assert.equal(await tray.getAttribute('aria-label'), trayName);
+      assert.ok(await (moveAway ? other : tray).evaluate(el => el === document.activeElement));
+      assert.equal(await page.locator('#plan [data-map-item][tabindex="0"]').count(), 1);
+    }
+    await coverMap();
+    await redraw();
+    await caption.waitFor();
+    await page.keyboard.press('Enter');
+    await page.locator('#inspect [role="tab"][aria-selected="true"]').filter({hasText: 'Tasks'}).waitFor();
+    assert.match(page.url(), /#\/project\/coven-cave\/mission\/m-1(?:[?]|$)/);
+  } finally { await page.close(); }
+});
+
+for (const [width, height] of [[1440, 900], [390, 844]]) {
+  test(`mission formation on Project and Coven maps at ${width}×${height}`, async () => {
+    const page = await browser.newPage({viewport: {width, height}, reducedMotion: 'reduce', hasTouch: width < 500});
+    try {
+      const grid = page.getByRole('button', {name: 'Mission grid'});
+      const showControls = async () => {
+        if (!(await grid.isVisible())) await page.locator('#atlasMobileView').click();
+      };
+      await page.goto(new URL('#/project/psyche-build', base).href);
+      await showControls();
+      const missions = page.locator('.atlas-project-detail .lead-node');
+      const positions = async (marks = missions) => {
+        await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+        return marks.evaluateAll(nodes => nodes.map(n => n.getAttribute('transform')));
+      };
+      await missions.first().waitFor();
+      const ring = await positions();
+      await grid.focus();
+      await grid.press('Space');
+      assert.equal(await grid.getAttribute('aria-pressed'), 'true');
+      assert.notDeepEqual(await positions(), ring);
+      assert.equal(await missions.count(), ring.length);
+      const layout = await positions();
+      await page.locator('#scrub').fill('0');
+      await page.locator('#scrub').fill('1000');
+      await missions.first().waitFor();
+      assert.deepEqual(await positions(), layout);
+      await page.reload();
+      await showControls();
+      assert.equal(await grid.getAttribute('aria-pressed'), 'true');
+      assert.deepEqual(await positions(), layout);
+      if (width > 500) {
+        await page.goto(new URL('#/project/psyche-build/mission/m-3?view=tasks&detail=side', base).href);
+        const title = page.locator('#missionDetailTitle');
+        const name = await title.innerText(), route = page.url();
+        await grid.click();
+        assert.equal(await title.innerText(), name);
+        assert.equal(await page.locator('#mission-tab-tasks').getAttribute('aria-selected'), 'true');
+        assert.equal(page.url(), route);
+        assert.deepEqual(await positions(), ring);
+        const seal = await page.locator('.lead-node.sel .se-face').boundingBox();
+        const inspector = await page.locator('#inspect').boundingBox();
+        assert.ok(seal.x >= inspector.x + inspector.width && seal.x + seal.width <= width);
+        await grid.click();
+      }
+      await page.locator(width < 500 ? '#atlasMobileMap' : '#atlasOverview').click();
+      await showControls();
+      const project = page.locator('.ghostfort[aria-label^="psyche-build,"]');
+      const preview = project.locator('.preview-mission');
+      await preview.first().waitFor();
+      const gridPreview = await positions(preview);
+      await grid.click();
+      assert.notDeepEqual(await positions(preview), gridPreview);
+      await project.focus();
+      await project.press('Enter');
+      await missions.first().waitFor();
+      assert.deepEqual(await positions(), ring);
+      await page.locator(width < 500 ? '#atlasMobileMap' : '#atlasOverview').click();
+      await showControls();
+      await grid.click();
+      const other = page.locator('.ghostfort[aria-label^="coven-cave,"]');
+      await other.focus();
+      await other.press('Enter');
+      await missions.first().waitFor();
+      assert.deepEqual(await positions(), ['translate(0.0,-320.0)', 'translate(0.0,320.0)']);
+    } finally { await page.close(); }
+  });
+}
+
+for (const [width, height] of [[1440, 900], [390, 844], [844, 390]]) {
+  test(`review drawers at ${width}×${height}`, async () => {
+    const mobile = width < 1100;
+    const page = await browser.newPage({viewport: {width, height}, reducedMotion: 'reduce', hasTouch: mobile});
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    try {
+      await page.goto(new URL('#/project/psyche-build', base).href);
+      await page.locator('#atlasBrowse').click();
+      const search = page.locator('#atlasProjectSearch');
+      const results = page.locator('#atlasProjects button:visible');
+      await search.fill('config refactor'); // Outside the default two-mission preview.
+      assert.equal(await results.count(), 1);
+      assert.equal(await results.locator('.atlas-project-preview-names').innerText(), 'Config refactor');
+      assert.match(await results.getAttribute('aria-label'), /Matching mission: Config refactor/);
+      assert.equal(await page.locator('#atlasProjectCount').innerText(), '1 of 4 Projects');
+      await search.press('ArrowDown');
+      assert.ok(await results.evaluate(row => row === document.activeElement));
+      await search.fill('unmatched name');
+      assert.ok(await page.locator('#atlasProjectEmpty').isVisible());
+      await page.locator('#atlasProjectClear').click();
+      assert.ok(await search.evaluate(input => input === document.activeElement));
+      assert.equal(await results.count(), 4);
+      await search.press('ArrowDown');
+      await page.keyboard.press('End');
+      assert.ok(await results.last().evaluate(row => row === document.activeElement));
+      await page.keyboard.press('Home');
+      assert.ok(await results.first().evaluate(row => row === document.activeElement));
+      await page.locator('#atlasNewProject').click();
+      await page.locator('#projectForm').waitFor();
+      await page.locator('#czX').click();
+
+      await page.locator(mobile ? '#atlasMobileMissions' : '#atlasMissions').click();
+      const missionSearch = page.locator('#atlasMissionSearch');
+      const missions = page.locator('#atlasMissionList button:visible');
+      await missionSearch.fill('unmatched name');
+      assert.match(await page.locator('#atlasMissionEmpty').innerText(), /No matching missions/);
+      await missionSearch.fill('cody readiness');
+      assert.equal(await missions.count(), 1);
+      assert.match(await missions.getAttribute('aria-label'), /Review readiness.*2 pending requests/);
+      assert.equal(await page.locator('#atlasMissionCount').innerText(), '1 of 4 missions in psyche-build');
+      const reset = page.locator('#atlasMissionReset');
+      const action = await reset.boundingBox(), result = await missions.boundingBox();
+      assert.ok(action.y + action.height <= result.y);
+      if (mobile) assert.ok(action.height >= 44);
+      await reset.click();
+      assert.ok(await missionSearch.evaluate(input => input === document.activeElement));
+      await page.locator('#atlasMissionProject').selectOption('brand');
+      assert.match(await page.locator('#atlasMissionEmpty').innerText(), /Project has no missions/);
+      await page.locator('#atlasMissionProject').selectOption('psyche-build');
+      await page.locator('#atlasMissionState').selectOption('requests');
+      assert.equal(await missions.count(), 2);
+      assert.equal(await missions.locator('.atlas-pending:visible').count(), 2);
+      await missions.first().click();
+      await page.locator('#inspect .target-met').first().waitFor();
+      assert.match(await page.locator('#inspect .limit-state').first().innerText(), /Near limit · 96%/);
+      assert.ok(await page.getByRole('group', {name: 'Mission 1 of 2', exact: true}).isVisible());
+      assert.deepEqual(errors, []);
+    } finally { await page.close(); }
+  });
+}
+
+for (const [width, height] of [[1440, 900], [390, 844], [844, 390]]) {
+  test(`create a mission from the browser at ${width}×${height}`, async () => {
+    const page = await browser.newPage({viewport: {width, height}, hasTouch: width < 1000, reducedMotion: 'reduce'});
+    const control = id => page.locator('#' + id);
+    const entry = control(width < 1000 ? 'atlasMobileMissions' : 'atlasMissions');
+    const add = control('atlasMissionCreate');
+    try {
+      await page.goto(new URL('#/coven', base).href);
+      await entry.click();
+      await add.click();
+      assert.ok(await control('atlasMissionProject').evaluate(el => el === document.activeElement));
+      await control('atlasMissionProject').selectOption('brand');
+      await control('atlasMissionSearch').fill('test filter');
+      await add.click();
+      await control('nmName').waitFor();
+      assert.equal(await control('emptyName').innerText(), 'brand');
+      await page.locator('#nmName:focus').waitFor();
+      assert.equal(await control('nmName').inputValue(), '');
+      assert.ok(await control('raise').isDisabled());
+      assert.ok(await control('nmBrief').isHidden());
+      await control('nmCustomize').click();
+      assert.ok(await control('nmBrief').isVisible());
+      await control('nmCustomize').click();
+      await control('emptyX').click();
+      assert.equal(await control('atlasMissionSearch').inputValue(), 'test filter');
+      assert.ok(await add.evaluate(el => el === document.activeElement));
+      await add.press('Enter');
+      await control('nmName').fill('Review the field report');
+      await control('raise').click();
+      await page.waitForURL(/project\/brand\/mission\//);
+      await control('inspect').waitFor();
+      assert.ok((await control('inspect').innerText()).includes('Review the field report'));
+      if (width < 1000) await page.locator('#inspect [data-focus="mission-back"]').click();
+      else await entry.click();
+      await control('atlasMissionSearch').fill('field report');
+      const matching = page.locator('.atlas-mission-row:visible');
+      assert.equal(await matching.count(), 1);
+      assert.equal(await matching.getAttribute('data-project'), 'brand');
+      assert.equal(await matching.locator('.atlas-mission-title').innerText(), 'Review the field report');
+      await control('atlasMissionClose').click();
+      await control('traceFile').setInputFiles({name:'recording.jsonl', mimeType:'text/plain',
+        buffer:Buffer.from(JSON.stringify({t:1700000000,type:'mission.opened',mission:'test',name:'Recording'}))});
+      await control('traceKind').filter({hasText:'loaded'}).waitFor({state:'attached'});
+      await entry.click();
+      assert.ok(await add.isDisabled());
+      assert.equal(await control('atlasMissionCreateHint').innerText(), 'Imported recordings are read-only.');
+    } finally { await page.close(); }
+  });
+}
+
+test('a request in the mission browser leads to the brief with the breached limit first', async () => {
+  const page = await browser.newPage({viewport: {width: 390, height: 844}, hasTouch: true});
+  try {
+    const events = [
+      {type: 'mission.opened', mission: 'specimens', name: 'Specimens', brief: {atMost: {tokens: 250000, usd: 3}}},
+      {type: 'council.seated', mission: 'specimens', familiar: 'cody'},
+      {type: 'mission.progress', mission: 'specimens', tokens: 247000, usd: 3.08},
+      {type: 'gate.requested', mission: 'specimens', familiar: 'cody', gate: 'N', ask: 'budget', title: 'Approve additional budget'},
+    ];
+    await page.goto(new URL('#/project/ui', base).href);
+    await page.locator('#traceFile').setInputFiles({name: 'specimens.jsonl', mimeType: 'text/plain',
+      buffer: Buffer.from(events.map((event, i) => JSON.stringify({...event, t: 1700000000 + i})).join('\n'))});
+    await page.locator('#traceKind').filter({hasText: 'loaded'}).waitFor({state: 'attached'});
+    await page.locator('#atlasMobileMissions').tap();
+    await page.locator('#atlasMissionSearch').fill('additional budget');
+    const result = page.locator('.atlas-mission-row:visible');
+    assert.equal(await result.locator('.atlas-request-preview').innerText(), 'Cody · Approve additional budget');
+    await result.tap();
+    assert.equal(await page.locator('#inspect .mission-stepper:visible').count(), 0);
+    const first = page.locator('#mission-section .brief-card').first();
+    assert.equal(await first.locator('h3').innerText(), 'Resource limits');
+    assert.match(await first.locator('.bfl').first().innerText(), /Budget.*Over limit · 103%/s);
+    assert.match(await first.locator('.bfl').nth(1).innerText(), /Tokens.*Near limit · 99%/s);
   } finally { await page.close(); }
 });

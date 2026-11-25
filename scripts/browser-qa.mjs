@@ -8,14 +8,15 @@
 //   python3 -m http.server 18433 --bind 127.0.0.1 --directory <repo>/dist   # any free port except 8765
 //   cp <repo>/scripts/browser-qa.mjs . && node browser-qa.mjs http://127.0.0.1:18433/ ./shots ./qa.json $(git -C <repo> rev-parse HEAD)
 //
+// Append --brief-only to exercise Brief authoring, replay and fixtures. Add --webkit for Playwright WebKit.
 // Append --keyboard-only for mission discovery, inspector return, route reload and the compact-label control.
-// The desktop compact check imports eight mission.opened JSON Lines via Trace > Load a recording.
+// The desktop compact check imports eight mission.opened JSON Lines via Trace > Import.
 // Its negative control removes the keyboard-focus visibility selector from the disposable page.
 // It checks simulation mode (default and ?source=simulation) at 1440x900, 390x844 and 844x390,
 // and every ?source=fixture scenario plus ?source=live. At each viewport it also exercises the success criteria
 // editor in New mission and Edit brief. It writes a JSON report and screenshots.
 // Keep screenshots out of the repository; commit the dated JSON to tests/evidence/.
-import { chromium } from 'playwright';
+import { chromium, webkit } from 'playwright';
 import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
@@ -52,7 +53,7 @@ const missionNameClashes = () => {
   const shown = el => { const st = getComputedStyle(el); return el.getClientRects().length && st.display !== 'none' && st.visibility !== 'hidden' && +st.opacity > 0.05; };
   const hit = (a, b) => a.x < b.x2 - 1 && b.x < a.x2 - 1 && a.y < b.y2 - 1 && b.y < a.y2 - 1;
   const psy = document.querySelector('#plan .atlas-local-psyche');
-  const crownParts = psy ? [...psy.querySelectorAll('.coord-face, .coord-point, .coord-name')].filter(shown).map(box) : [];
+  const crownParts = psy ? [...psy.querySelectorAll('.coord-face')].filter(shown).map(box) : [];
   const trays = [...document.querySelectorAll('#plan .mission-tasks .task-tray-bg')].filter(shown).map(box);
   const labels = [...document.querySelectorAll('#plan .atlas-mission-group .lead-name')];
   const names = labels.filter(shown).map(el => {
@@ -75,9 +76,11 @@ const missionNameClashes = () => {
   return { total: labels.length, shown: names.length, centers: names.filter(n => n.centered && n.outside).length, smallestFont: Math.min(...names.map(n => n.pixels)), crown, pairs, squads: squads.length, squadPairs };
 };
 
-const browser = await chromium.launch();
-const report = { generated_utc: new Date().toISOString(), commit, browser: `chromium ${browser.version()}`,
-  tool: 'playwright ' + createRequire(import.meta.url)('playwright/package.json').version, base, evidence_level: 'browser (headless Chromium; not Safari, not a physical device)',
+const briefOnly = process.argv.includes('--brief-only');
+const engine = process.argv.includes('--webkit') ? webkit : chromium;
+const browser = await engine.launch();
+const report = { generated_utc: new Date().toISOString(), commit, browser: `${engine.name()} ${browser.version()}`,
+  tool: 'playwright ' + createRequire(import.meta.url)('playwright/package.json').version, base, evidence_level: 'browser (headless ' + engine.name() + ')',
   screenshot_dir: 'kept outside the repository; see the pull request', checks: [], screenshots: [] };
 const check = (mode, viewport, name, pass, detail = '') => report.checks.push({ mode, viewport, name, pass: Boolean(pass), detail: String(detail) });
 
@@ -118,7 +121,10 @@ async function keyboardJourney(vp) {
   async function observe(selector, role, name) {
     const target = page.locator(selector);
     const named = page.getByRole(role, { name });
-    const indicator = await target.evaluate(el => {
+    // Resolve the element and measure it in one browser task. Replay can replace an inspector heading between protocol calls.
+    const indicator = await page.evaluate(selector => {
+      const el = document.querySelector(selector);
+      if (!el) throw new Error('Keyboard target is missing: ' + selector);
       const style = getComputedStyle(el), rect = el.getBoundingClientRect();
       const name = el.getAttribute('aria-label') || el.labels?.[0]?.innerText || el.innerText;
       return { element: el.id || el.className, name: name.trim(), focused: el === document.activeElement,
@@ -126,7 +132,7 @@ async function keyboardJourney(vp) {
           rect.right > 0 && rect.left < innerWidth && style.outlineStyle !== 'none' &&
           parseFloat(style.outlineWidth) > 0 && style.outlineColor !== 'rgba(0, 0, 0, 0)',
         outline: style.outline, route: location.hash };
-    });
+    }, selector);
     const pass = indicator.focused && indicator.visible && await named.and(target).count() === 1;
     check(mode, vp.name, step, pass, JSON.stringify({...indicator, keys}));
     if (!pass) throw new Error('Expected visible keyboard focus and accessible name at ' + selector);
@@ -208,7 +214,7 @@ async function compactMissionLabel() {
     await page.locator('.atlas-project[data-project="psyche-build"]').click();
     await page.locator('#workspaceTools > summary').click();
     await page.locator('#traceBox > summary').click();
-    await page.locator('#traceLoad > summary').click();
+    await page.locator('#traceImport').click();
     const fileChoice = page.waitForEvent('filechooser');
     await page.locator('#traceDrop').click();
     const recording = Array.from({length: 8}, (_, i) => JSON.stringify({
@@ -280,17 +286,22 @@ async function briefEditor(vp) {
   const panel = () => page.evaluate(() => { const bp = document.querySelector('#inspect .bp'); return bp && { text: bp.textContent.replace(/\s+/g, ' '),
     rev: (bp.textContent.match(/sim-[0-9a-f]{8}/) || [])[0], next: bp.querySelector('.bp-action')?.textContent, accepted: bp.querySelectorAll('.bp-step')[3]?.textContent }; });
   try {
-    await page.waitForTimeout(1200);
-    await page.locator('#plan .atlas-local-psyche').click();
-    await page.getByRole('tab', {name: 'Project', exact: true}).click();
-    await page.locator('#castPane [data-id="cs-new"]').click();
+    page.setDefaultTimeout(7000);
+    const opener = vp.mobile && await visible(page, '#atlasMobileMissions') ? '#atlasMobileMissions' : '#atlasMissions';
+    await page.locator(opener).click();
+    await page.locator('#atlasMissionProject').selectOption('psyche-build');
+    await page.locator('#atlasMissionCreate').click();
+    await page.locator('#nmName').fill('Criteria check');
+    await page.locator('#nmCustomize').click();
     await page.locator('[data-id="bp-add"]').click();
     const added = await done();
     check(mode, vp.name, 'adding success criteria previews the completion rule before Save',
       /all 4 required conditions pass/.test(added) && /at least 80 of 100/.test(added) && /3 attempts/.test(added) && /acceptance is a separate, authorized step/.test(added), added);
+    check(mode, vp.name, 'valid criteria and a name enable Create mission', !(await page.locator('#raise').isDisabled()));
     await page.locator('[data-id="bp-min"]').fill('101');
     const blocked = await page.locator('#raise').isDisabled(), why = await page.locator('#nmSuccessErrors').textContent();
     check(mode, vp.name, 'invalid criteria block Open mission and say why', blocked && /minimum weighted score/.test(why) && /incomplete/.test(await done()), why);
+    await page.locator('[data-id="bp-custom"]').fill('Signed review attached');
     await page.locator('[data-id="bp-min"]').fill('85');
     await page.locator('[data-id="bp-attempts"]').fill('4');
     await page.locator('#nmName').fill('Criteria check');
@@ -319,6 +330,10 @@ async function briefEditor(vp) {
       first && /at least 85 of 100/.test(first.text) && /4 attempts/.test(first.text) && first.next === 'Wait for evidence' && /Not recorded/.test(first.accepted) && !!first.rev,
       first ? `${first.rev}; next "${first.next}"` : 'no .bp panel');
     await page.locator('#inspect [data-focus="edit-brief"]').click();
+    await page.keyboard.press('Escape');
+    const edit = page.locator('#inspect [data-focus="edit-brief"]');
+    check(mode, vp.name, 'dismissing the editor returns keyboard focus', await edit.evaluate(el => el === document.activeElement));
+    await edit.press('Enter');
     const kept = await page.locator('[data-id="bp-attempts"]').inputValue();
     await page.locator('[data-id="bp-attempts"]').fill('6');
     const preview = await done();
@@ -329,6 +344,41 @@ async function briefEditor(vp) {
     check(mode, vp.name, 'Edit brief keeps the criteria, previews the edit, and saving derives a new revision',
       kept === '4' && /6 attempts/.test(preview) && second && /6 attempts/.test(second.text) && second.rev && first && second.rev !== first.rev && /Not recorded/.test(second.accepted),
       `kept ${kept}; ${first && first.rev} → ${second && second.rev}`);
+    await page.reload();
+    await page.locator('#inspect .bp').waitFor();
+    const restored = await panel();
+    check(mode, vp.name, 'reload restores edited policy, required evidence and acceptance state',
+      second.rev === restored.rev && restored.text.includes('Signed review attached') && /Not recorded/.test(restored.accepted));
+    await page.getByRole('button', {name: 'History', exact: true}).click();
+    const firstEvent = page.locator('.history-event').filter({hasText: 'Mission opened'}).first();
+    await firstEvent.click();
+    const jump = page.getByRole('button', {name: /Show event .* on map/});
+    await jump.click();
+    await page.locator('#historyReturn').waitFor();
+    check(mode, vp.name, 'replay selects the opening event and leaves live mode',
+      /mission.opened/.test(await page.locator('#historyMapNote').innerText()) && await page.locator('#live').getAttribute('aria-pressed') === 'false');
+    if (!await visible(page, '#inspect .bp')) await page.locator('[data-focus="open-details"]:visible').click();
+    const replayed = await panel();
+    check(mode, vp.name, 'the opening event restores the original policy revision', replayed.rev === first.rev && /4 attempts/.test(replayed.text) && replayed.accepted.includes('Not recorded'));
+    // The mobile inspector owns keyboard focus until the user dismisses it.
+    if (vp.mobile) await page.getByRole('button', {name: 'Close details', exact: true}).click();
+    await page.getByRole('button', {name: 'Return to History'}).press('Enter');
+    check(mode, vp.name, 'returning from replay restores the event control focus', await jump.evaluate(el => el === document.activeElement));
+    const fixture = async name => {
+      await page.goto(new URL('?source=fixture&scenario=brief-' + name, base).href);
+      await page.locator('.bp').waitFor();
+      await page.locator('.bp-evals summary').click();
+      return page.locator('.bp').innerText();
+    };
+    const missing = await fixture('missing-evidence');
+    check(mode, vp.name, 'passing rubric cannot substitute for missing evidence', missing.includes('4 of 5') && missing.includes('Unknown') && missing.includes('Wait for evidence') && missing.includes('Not recorded'));
+    const failed = await fixture('rubric-fail');
+    check(mode, vp.name, 'first failed grade proposes a bounded retry', failed.includes('Request a bounded revision') && failed.includes('1 of 3') && failed.includes('$3 of $12'));
+    const stale = await fixture('stale-evaluation');
+    check(mode, vp.name, 'second attempt retains spending and excludes old grades', stale.includes('2 of 3') && stale.includes('$5 of $12') && stale.includes('45 min of 90 min') && stale.includes('another policy revision') && stale.includes('candidate') && stale.includes('Wait for evidence'));
+    await page.reload();
+    await page.locator('.bp-evals summary').click();
+    check(mode, vp.name, 'reload preserves both evaluation records and their provenance', stale === await page.locator('.bp').innerText() && stale.includes('pol-report-r1') && stale.includes('evi_3') && stale.includes('reviewer-sage'));
     check(mode, vp.name, 'no console errors', !errors.length, errors.join(' | '));
   } catch (error) {
     check(mode, vp.name, 'brief editor journey', false, error.message.split('\n')[0]);
@@ -336,11 +386,12 @@ async function briefEditor(vp) {
   } finally { await context.close(); }
 }
 
-await compactMissionLabel();
+if (!briefOnly) await compactMissionLabel();
 for (const vp of VIEWPORTS) {
-  await keyboardJourney(vp);
+  if (!briefOnly) await keyboardJourney(vp);
   if (process.argv.includes('--keyboard-only')) continue;
   await briefEditor(vp);
+  if (briefOnly) continue;
   for (const query of ['', '?source=simulation']) {
     const mode = query ? 'simulation (?source=simulation)' : 'simulation (default)';
     const { context, page, errors } = await open(vp, query);
@@ -453,6 +504,23 @@ for (const vp of VIEWPORTS) {
         const after = await progress.getAttribute('stroke-dasharray');
         check(mode, vp.name, 'Seal lab extends a familiar’s progress arc', parseFloat(after) > parseFloat(before),
           `${before} to ${after}`);
+        await page.getByRole('button', {name: 'Familiar rings', exact: true}).click();
+        const face = page.locator('.csl-face');
+        await page.getByRole('button', {name: 'Charm', exact: true}).last().click();
+        const arc = face.locator('.fam-progress');
+        const charmBefore = await arc.getAttribute('stroke-dasharray');
+        await page.locator('#cslProgress3').press('ArrowRight');
+        check(mode, vp.name, 'Charm preview updates its ring from the visible member controls',
+          parseFloat(await arc.getAttribute('stroke-dasharray')) > parseFloat(charmBefore) && await page.locator('.csl-familiar:visible').count() === 1,
+          await face.getAttribute('aria-label'));
+        await page.locator('.csl-state-btn[data-state="needsYou"]').click();
+        check(mode, vp.name, 'the familiar requesting review shows a distinct rim and accessible state',
+          await face.locator('.fam-state').getAttribute('data-state') === 'Needs you' && /Echo.*Needs you/.test(await face.getAttribute('aria-label')),
+          await face.getAttribute('aria-label'));
+        await page.locator('.csl-state-btn[data-state="broken"]').click();
+        check(mode, vp.name, 'a stopped familiar uses the blocked rim',
+          await face.locator('.fam-state').getAttribute('data-state') === 'Blocked', await face.getAttribute('aria-label'));
+        await page.getByRole('button', {name: 'Mission seal', exact: true}).click();
         if (!query) await shot(page, `${tag}-seal-lab`);
         await page.keyboard.press('Escape');
         await page.waitForTimeout(300);

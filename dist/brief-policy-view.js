@@ -112,9 +112,10 @@ function render(doc, input) {
       const d = el('div', 'bp-eval is-' + e.status);
       d.append(el('b', null, e.id + ' · ' + (e.status === 'current' ? 'counted' : 'not counted: ' + e.why)));
       const facts = [];
+      if (e.policyRevision) facts.push('policy ' + e.policyRevision);
       if (e.evaluator) facts.push('by ' + (e.evaluator.id || '?') + (e.evaluator.method ? ' (' + e.evaluator.method + ')' : ''));
       if (e.candidate) facts.push('candidate ' + e.candidate.digest + ' / ' + e.candidate.attempt);
-      facts.push(e.evidence.length ? 'evidence ' + e.evidence.map(x => x && x.id).join(', ') : 'no evidence cited');
+      facts.push(e.evidence.length ? 'evidence ' + e.evidence.filter(Boolean).map(x => [x.id, x.digest].filter(Boolean).join(' / ')).join(', ') : 'no evidence cited');
       d.appendChild(el('span', 'bp-fine', facts.join(' · ')));
       ev.appendChild(d);
     });

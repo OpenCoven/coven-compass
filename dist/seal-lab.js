@@ -8,6 +8,7 @@
     { key: 'astra', agents: 7 },
     { key: 'cody', agents: 10 },
     { key: 'echo', agents: 6 },
+    { key: 'charm', agents: 4 },
   ];
   const COPY = {
     planned: ['Planned', 'The dashed outline marks a new mission. Before assignment, council members have equal segments.'],
@@ -18,18 +19,19 @@
     broken: ['Broken', 'The alternating short and long dashes mark a mission stopped at a limit.'],
   };
   const PRESETS = {
-    planned: { progress: [0, 0, 0], working: [0, 0, 0], limit: 0 },
-    active: { progress: [48, 82, 30], working: [5, 8, 3], limit: 57 },
-    needsYou: { progress: [62, 92, 50], working: [5, 8, 0], limit: 72 },
-    stalled: { progress: [62, 92, 50], working: [5, 8, 3], limit: 87 },
-    sealed: { progress: [100, 100, 100], working: [0, 0, 0], limit: 72 },
-    broken: { progress: [62, 92, 50], working: [0, 0, 0], limit: 100 },
+    planned: { progress: [0, 0, 0, 0], working: [0, 0, 0, 0], limit: 0 },
+    active: { progress: [48, 82, 30, 25], working: [5, 8, 3, 2], limit: 57 },
+    needsYou: { progress: [62, 92, 50, 40], working: [5, 8, 0, 2], limit: 72 },
+    stalled: { progress: [62, 92, 50, 40], working: [5, 8, 3, 2], limit: 87 },
+    sealed: { progress: [100, 100, 100, 100], working: [0, 0, 0, 0], limit: 72 },
+    broken: { progress: [62, 92, 50, 40], working: [0, 0, 0, 0], limit: 100 },
   };
   const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, Number.isFinite(+n) ? +n : lo));
   let api = null;
   let dialog = null;
   let returnFocus = null;
-  let state = 'stalled';
+  let state = 'active';
+  let memberIndex = 0, familiarView = false;
   let values = null;
   let seal = null;
   const ui = {};
@@ -77,6 +79,8 @@
         progress: values.progress[i] / 100,
         live: values.working[i],
         agents: counts[i],
+        asking: state === 'needsYou' && member.key === 'echo',
+        blocked: state === 'broken' && counts[i] > 0,
         a0: start,
         a1: angle,
       };
@@ -90,11 +94,29 @@
   }
 
   function refresh() {
+    const specimen = data(), member = COUNCIL[memberIndex], identity = api.fam(member.key);
+    const facts = specimen.wedges[memberIndex];
+    const description = api.drawFamiliarRings(ui.rings, facts);
+    ui.face.style.setProperty('--hue', identity.hue);
+    if (ui.glyph.dataset.key !== member.key) {
+      ui.glyph.innerHTML = api.sigil(member.key);
+      ui.glyph.dataset.key = member.key;
+    }
+    ui.face.style.display = familiarView ? '' : 'none';
+    ui.scene.style.display = familiarView ? 'none' : '';
+    ui.face.setAttribute('aria-label', identity.name + '. ' + description + '. ' + facts.live + ' of ' + facts.agents + ' agents working.');
+    dialog.dataset.view = familiarView ? 'familiar' : 'mission';
+    ui.caption.textContent = familiarView ? identity.name : MISSION_NAME;
+    ui.missionKey.hidden = familiarView;
+    ui.familiarKey.hidden = !familiarView;
+    ui.limitBlock.hidden = familiarView;
+    ui.views.forEach((btn, i) => btn.setAttribute('aria-pressed', String(Boolean(i) === familiarView)));
+    ui.members.forEach((btn, i) => btn.setAttribute('aria-pressed', String(i === memberIndex)));
     const warning = values.limit / 100 >= api.WARN_AT;
     const frozen = ['planned', 'sealed', 'broken'].includes(state);
     ui.stateButtons.forEach((node, i) => node.setAttribute('aria-pressed', String(ORDER[i] === state)));
-    const stateName = COPY[state][0];
-    const stateCopy = state === 'stalled' && warning
+    const stateName = familiarView ? description : COPY[state][0];
+    const stateCopy = familiarView ? facts.live + ' of ' + facts.agents + ' assigned agents working on ' + MISSION_NAME + '.' : state === 'stalled' && warning
       ? 'The coral arc shows how much of the token limit is used.'
       : COPY[state][1];
     if (ui.stateName.textContent !== stateName) ui.stateName.textContent = stateName;
@@ -104,7 +126,7 @@
       const assigned = state === 'planned' ? 0 : member.agents;
       return `${api.fam(member.key).name}, ${assigned} assigned, ${values.working[i]} working, ${values.progress[i]}% target progress`;
     });
-    ui.scene.setAttribute('aria-label', [`${MISSION_NAME}. Mission state ${stateName}`, ...council, `${values.limit}% of token limit used`].join('. '));
+    ui.scene.setAttribute('aria-label', [`${MISSION_NAME}. Mission state ${COPY[state][0]}`, ...council, `${values.limit}% of token limit used`].join('. '));
     ui.limit.value = values.limit;
     ui.limit.disabled = frozen;
     ui.limitValue.textContent = `${values.limit}%`;
@@ -117,6 +139,7 @@
         ? 'Echo’s Inbox request keeps the mission in Needs you.'
         : `Stalls at ${threshold}% or when no agents are working.`;
     rows.forEach((row, i) => {
+      row.card.hidden = i !== memberIndex;
       const n = state === 'planned' ? 0 : COUNCIL[i].agents;
       row.count.textContent = `${n} assigned`;
       row.progress.value = values.progress[i];
@@ -128,11 +151,12 @@
       row.plus.disabled = frozen || values.working[i] === n || (state === 'needsYou' && i === 2);
       row.progress.style.setProperty('--csl-progress', String(values.progress[i] / 100));
     });
-    api.drawSeal(seal, data());
+    api.drawSeal(seal, specimen);
   }
 
   function chooseState(next) {
     preset(next);
+    if (familiarView && next === 'needsYou') memberIndex = COUNCIL.findIndex(m => m.key === 'echo');
     refresh();
   }
 
@@ -145,13 +169,21 @@
     const titleBlock = el('div');
     const title = el('h2', '', 'Seal lab');
     title.id = 'cslTitle';
-    const subtitle = el('p', 'csl-subtitle', 'Inspect a simulated mission seal.');
+    const subtitle = el('p', 'csl-subtitle', 'Mission progress and familiar activity.');
     subtitle.id = 'cslSubtitle';
     titleBlock.append(title, subtitle);
     const close = button('csl-close', '×', () => dialog.close());
     close.setAttribute('aria-label', 'Close Seal lab');
     header.append(titleBlock, close);
 
+    const views = el('div', 'csl-views');
+    views.setAttribute('role', 'group');
+    views.setAttribute('aria-label', 'Preview symbol');
+    ui.views = ['Mission seal', 'Familiar rings'].map((name, i) => {
+      const btn = button('', name, () => { familiarView = Boolean(i); refresh(); });
+      views.append(btn);
+      return btn;
+    });
     const stateNav = el('div', 'csl-states');
     stateNav.setAttribute('role', 'group');
     stateNav.setAttribute('aria-labelledby', 'cslStatesLabel');
@@ -176,7 +208,12 @@
     ui.scene = api.svgEl('svg', { class: 'csl-scene', viewBox: '-50 -50 100 100', role: 'img' });
     seal = { g: api.svgEl('g', {}, ui.scene) };
     api.buildSeal(seal, data());
-    specimen.append(ui.scene, el('figcaption', 'csl-mission-name', MISSION_NAME));
+    ui.face = api.svgEl('svg', {class: 'csl-scene csl-face', viewBox: '-27 -27 54 54', role: 'img'});
+    api.svgEl('circle', {r: 20, class: 'csl-face-base'}, ui.face);
+    ui.rings = api.buildFamiliarRings(ui.face);
+    ui.glyph = api.svgEl('g', {class: 'csl-face-glyph', transform: 'scale(1.25)'}, ui.face);
+    ui.caption = el('figcaption', 'csl-mission-name');
+    specimen.append(ui.scene, ui.face, ui.caption);
     preview.append(specimen);
 
     ui.stateCard = el('div', 'csl-state-card');
@@ -198,16 +235,34 @@
       row.append(el('dt', '', term), el('dd', '', meaning));
       anatomy.append(row);
     });
-    preview.append(anatomy);
+    ui.missionKey = anatomy;
+    ui.familiarKey = el('dl', 'csl-anatomy');
+    for (const [term, meaning] of [['Inner arc', 'Target progress, clockwise from the top'], ['Glyph and hue', 'Identify the familiar in every state'], ['Outer rim', 'Solid while working, dotted when idle, faint dashes when unassigned'], ['Attention', 'Coral dashes mean blocked. Paired pale marks mean a request needs you.']]) {
+      const row = el('div');
+      row.append(el('dt', '', term), el('dd', '', meaning));
+      ui.familiarKey.append(row);
+    }
+    preview.append(anatomy, ui.familiarKey);
 
     const controls = el('section', 'csl-controls');
     controls.setAttribute('aria-labelledby', 'cslCouncilTitle');
     const councilHead = el('div', 'csl-control-heading');
-    const councilTitle = el('h3', '', 'Council');
+    const councilTitle = el('h3', '', 'Council member');
     councilTitle.id = 'cslCouncilTitle';
     const reset = button('csl-reset', 'Reset values', () => chooseState(state));
     councilHead.append(councilTitle, reset);
     controls.append(councilHead);
+    const picker = el('div', 'csl-members');
+    picker.setAttribute('role', 'group');
+    picker.setAttribute('aria-labelledby', councilTitle.id);
+    ui.members = COUNCIL.map((member, i) => {
+      const identity = api.fam(member.key);
+      const btn = button('', identity.name, () => { memberIndex = i; refresh(); });
+      btn.style.setProperty('--csl-hue', identity.hue);
+      picker.append(btn);
+      return btn;
+    });
+    controls.append(picker);
     COUNCIL.forEach((member, i) => {
       const f = api.fam(member.key);
       const card = el('div', 'csl-familiar');
@@ -251,7 +306,7 @@
       fields.append(range, workingGroup);
       card.append(top, fields);
       controls.append(card);
-      rows.push({ count, progress, percent, working, minus, plus });
+      rows.push({ card, count, progress, percent, working, minus, plus });
     });
     ui.limitBlock = el('div', 'csl-limit');
     const limitHead = el('div', 'csl-limit-head');
@@ -274,7 +329,7 @@
     ui.limitBlock.append(limitHead, limitScale, ui.limitNote);
     controls.append(ui.limitBlock);
     body.append(preview, controls);
-    dialog.append(header, stateNav, body);
+    dialog.append(header, views, stateNav, body);
     document.body.append(dialog);
     // The workspace also handles Escape; native dialog dismissal must stay local.
     dialog.addEventListener('keydown', event => {
@@ -295,11 +350,11 @@
 
   function mount(renderer) {
     if (dialog) return;
-    for (const key of ['svgEl', 'fam', 'buildSeal', 'drawSeal']) {
+    for (const key of ['svgEl', 'fam', 'sigil', 'buildSeal', 'drawSeal', 'buildFamiliarRings', 'drawFamiliarRings']) {
       if (typeof renderer[key] !== 'function') throw new Error(`Mission seal explorer needs renderer.${key}`);
     }
     api = renderer;
-    preset('stalled');
+    preset('active');
     build();
   }
 

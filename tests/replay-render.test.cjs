@@ -111,14 +111,15 @@ function fixture(trace = []) {
     ...require('../dist/atlas-presentation.js'),
     clamp: (n, min, max) => Math.min(max, Math.max(min, n)),
     atlasFocusable() {}, sigil: () => '', SIGIL: { mission: '' },
-    drawNew() {}, syncCoven() {}, applySel() {}, fxFor() {},
+    drawNew() {}, syncCovenLayer() {}, applySel() {}, fxFor() {},
     $: id => { if (!elements.has(id)) elements.set(id, new Element()); return elements.get(id); },
   });
   const constants = source.slice(source.indexOf('const TARGET_ROLES ='), source.indexOf('function sealOf('));
   context.SimModel = loadSimulationModel({ normBrief: () => null, fam: context.fam });
-  const names = ['seek', 'sync', 'syncTaskPlane', 'syncTaskTray', 'sealOf', 'buildSeal', 'drawSeal',
+  const names = ['seek', 'sync', 'syncTaskPlane', 'syncTaskTray', 'sealOf', 'buildSeal', 'drawSeal', 'buildFamiliarRings', 'drawFamiliarRings',
     'atlasProjectGhost'];
-  new vm.Script(`${constants}\n${names.map(extract).join('\n')}`, {
+  const mapSizes = source.slice(source.indexOf('const FAMILIAR_RADIUS'), source.indexOf('const S = 280'));
+  new vm.Script(`${mapSizes}\n${constants}\n${names.map(extract).join('\n')}`, {
     filename: 'actual-replay-render-functions.js',
   }).runInContext(context);
   const P = (x, y) => [x, y];

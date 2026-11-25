@@ -272,6 +272,7 @@ function evaluate(policyInput, recordInput, now) {
   const unknown = conditions.some(c => c.state === 'unknown') || rubric.state === 'unknown' || targets.state === 'unknown';
   const qualification = failed ? 'not-met' : unknown ? 'unknown' : 'met';
   const shown = evaluations.map(e => ({id: e.id, status: e.status, reason: e.reason, why: e.reason ? EVALUATION_REASONS[e.reason] : null,
+    policyRevision: isRecord(e.evaluation) ? e.evaluation.policyRevision : null,
     evaluator: isRecord(e.evaluation) && isRecord(e.evaluation.evaluator) ? e.evaluation.evaluator : null,
     candidate: isRecord(e.evaluation) && isRecord(e.evaluation.candidate) ? e.evaluation.candidate : null,
     evidence: isRecord(e.evaluation) && Array.isArray(e.evaluation.evidence) ? e.evaluation.evidence.slice() : []}));

@@ -32,7 +32,8 @@ function extract(name) {
 
 function load(names, globals = {}, prelude = '') {
   const context = vm.createContext({...globals});
-  new vm.Script(`${prelude}\n${names.map(extract).join('\n')}`, {
+  const mapSizes = source.slice(source.indexOf('const FAMILIAR_RADIUS'), source.indexOf('const S = 280'));
+  new vm.Script(`${mapSizes}\n${prelude}\n${names.map(extract).join('\n')}`, {
     filename: 'actual-site-atlas-integration.js',
   }).runInContext(context);
   return context;
@@ -102,7 +103,7 @@ function scopeFixture() {
     countOf: (world, predicate) => [...world.agents.values()].filter(predicate).length,
     sealOf: () => ({state: 'planned'}), SEAL_STATE: {planned: ['Planned']}, sealSvg: () => '<svg></svg>',
     $: () => null, sc: {hl: null, g: 1}, cam: {zoom: 1, locked: false}, camT: {zoom: 1},
-    atlasScope: 'coven', panelView: 'agents',
+    atlasScope: 'coven', missionFormation: 'ring', panelView: 'agents',
     atlasNavigationReady: true, atlasRestoringRoute: false, atlasLastRoute: null,
     window: {CovenMissionNavigation: navigation}, history, location,
   });
@@ -169,8 +170,8 @@ test('overview keeps an exact accessible mission total across preview densities'
 
 test('miniatures retain Project-scoped mission, council and task identities as replay changes', () => {
   const fam = k => ({name: k, hue: k === 'astra' ? '#9cc2f2' : '#e8c99a', roles: []});
-  const fixture = load(['createProjectPreview', 'syncProjectPreview', 'updateVisibleProjectPreviews', 'sealOf', 'buildSeal', 'drawSeal'], {
-    window: {CovenAtlasLayout: layout}, svgEl, fam, MAX_WEDGES: 8, MIN_WEDGE: 12, WARN_AT: .85,
+  const fixture = load(['createProjectPreview', 'syncProjectPreview', 'updateVisibleProjectPreviews', 'sealOf', 'buildSeal', 'drawSeal', 'buildFamiliarRings', 'drawFamiliarRings'], {
+    missionFormation: 'ring', window: {CovenAtlasLayout: layout}, svgEl, fam, sigil: key => `<path data-symbol="${key}"/>`, MAX_WEDGES: 8, MIN_WEDGE: 12, WARN_AT: .85,
     pol: (r, a) => [r * Math.cos(a * Math.PI / 180), r * Math.sin(a * Math.PI / 180)],
     countOf: (w, pred) => [...w.agents.values()].filter(pred).length, openAsks: w => [...w.asks.values()],
   });
@@ -193,6 +194,7 @@ test('miniatures retain Project-scoped mission, council and task identities as r
   assert.equal(item.node.getAttribute('data-preview-mission'), 'm1');
   assert.deepEqual([...item.members.keys()], ['astra', 'cody']);
   const astra = item.members.get('astra');
+  assert.match(astra.glyph.innerHTML, /data-symbol="astra"/);
   assert.equal(astra.task.style.display, '');
   assert.equal(item.members.get('cody').task.style.display, 'none');
   world.asks.set('gate', {mission: 'm1', fam: 'cody'});
@@ -342,8 +344,8 @@ function fitFixture(width, height, count) {
     camT: {zoom: 1, px: 0, py: 0}, sc: null,
     clamp, RAD: Math.PI / 180, ZMIN: 0.00001,
     saveView() { calls.save++; }, kick() { calls.kick++; },
-    buildScene() { calls.build++; context.sc.layoutSignature = context.atlasLayoutCache.signature; },
-    sync() { calls.sync++; },
+    buildCovenLayer(layout) { calls.build++; context.sc.layoutSignature = layout.signature; },
+    syncCovenLayer() { calls.sync++; },
   }, worldOf);
   return {...f, context, calls, projects};
 }
@@ -382,7 +384,7 @@ test('Project fit frames actual content for empty, single-mission, and dense pro
     for (let i = 0; i < count; i++) {
       const x = i % 8 * 170, y = Math.floor(i / 8) * 195;
       missions.set(i, {x, y}); points.push([x - 43, y - 43], [x + 43, y + 60]);
-      seats.set(i, {bx: x + 74, by: y - 78}); points.push([x + 48, y - 93], [x + 100, y - 46]);
+      seats.set(i, {bx: x + 74, by: y - 78}); points.push([x + 42, y - 103], [x + 106, y - 37]);
     }
     const gateL = [{x: 180, y: 0, asks: count ? [{}] : []}, {x: 9e4, y: 8e4, asks: []}];
     if (count) points.push([166, -14], [194, 14]);
@@ -461,8 +463,15 @@ test('selected-mission fit remains centered in its asymmetric safe frame after t
     project.fam = familiar;
     const fitted = context.fitTarget(project);
     const center = projectToScreen(anchor, [0, 0], fitted, f.stage);
-    near(center[0], frame.cx, 'selected item stays horizontally centered with an off-center squad');
-    near(center[1], frame.cy, 'selected item stays vertically centered with an off-center squad');
+    const left = projectToScreen([position.x - 43, position.y], [0, 0], fitted, f.stage)[0];
+    const right = projectToScreen([seat.x + seat.R + 6, seat.y], [0, 0], fitted, f.stage)[0];
+    assert.ok(left >= frame.x && right <= frame.x + frame.width, 'the entire squad stays in the visible frame');
+    if (familiar) near(center[0], frame.cx, 'the familiar stays centered when the squad fits around it');
+    else assert.ok((right - left) / frame.width > .75, 'the asymmetric mission uses the available width');
+    const top = projectToScreen([seat.x, seat.y - seat.R - 6], [0, 0], fitted, f.stage)[1];
+    const bottom = projectToScreen([position.x, position.y + 43], [0, 0], fitted, f.stage)[1];
+    assert.ok(top >= frame.y && bottom <= frame.y + frame.height, 'all vertical extents stay in view');
+    if (familiar) near(center[1], frame.cy, 'the familiar uses spare vertical space to stay centered');
   }
   seat.id = project.focusGroup = 'm1/astra';
   seat.slots = {left: 330, right: 400, top: -190, bottom: -140};
