@@ -1,0 +1,1373 @@
+{
+  "revision": "da9734e67669974cd143dec10cf7588060338003",
+  "runs": [
+    {
+      "engine": "chromium",
+      "suite": "pointer",
+      "results": [
+        {
+          "input": "pointer",
+          "version": "156.0.8078.4",
+          "errors": [],
+          "missions": [
+            "Config refactor",
+            "Release note",
+            "Review readiness",
+            "Source survey"
+          ],
+          "passed": true,
+          "route": "#/project/psyche-build",
+          "events": [
+            {
+              "type": "pointerdown",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "mousedown",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "pointerup",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "mouseup",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "click",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusout",
+              "target": "psyche-build",
+              "tag": "BUTTON",
+              "focus": "BODY",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "focusin",
+              "target": "atlasProject",
+              "tag": "BUTTON",
+              "focus": "atlasProject",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "drawer visibility",
+              "target": "atlasSidebar",
+              "tag": "ASIDE",
+              "focus": "atlasProject",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            }
+          ]
+        },
+        {
+          "input": "pointer",
+          "version": "156.0.8078.4",
+          "errors": [],
+          "missions": [
+            "Config refactor",
+            "Release note",
+            "Review readiness",
+            "Source survey"
+          ],
+          "passed": true,
+          "route": "#/project/psyche-build",
+          "events": [
+            {
+              "type": "pointerdown",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "mousedown",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "pointerup",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "mouseup",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "click",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusout",
+              "target": "psyche-build",
+              "tag": "BUTTON",
+              "focus": "BODY",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "focusin",
+              "target": "atlasProject",
+              "tag": "BUTTON",
+              "focus": "atlasProject",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "drawer visibility",
+              "target": "atlasSidebar",
+              "tag": "ASIDE",
+              "focus": "atlasProject",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            }
+          ]
+        },
+        {
+          "input": "pointer",
+          "version": "156.0.8078.4",
+          "errors": [],
+          "missions": [
+            "Config refactor",
+            "Release note",
+            "Review readiness",
+            "Source survey"
+          ],
+          "passed": true,
+          "route": "#/project/psyche-build",
+          "events": [
+            {
+              "type": "pointerdown",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "mousedown",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "pointerup",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "mouseup",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "click",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusout",
+              "target": "psyche-build",
+              "tag": "BUTTON",
+              "focus": "BODY",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "focusin",
+              "target": "atlasProject",
+              "tag": "BUTTON",
+              "focus": "atlasProject",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "drawer visibility",
+              "target": "atlasSidebar",
+              "tag": "ASIDE",
+              "focus": "atlasProject",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            }
+          ]
+        },
+        {
+          "input": "pointer",
+          "version": "156.0.8078.4",
+          "errors": [],
+          "missions": [
+            "Config refactor",
+            "Release note",
+            "Review readiness",
+            "Source survey"
+          ],
+          "passed": true,
+          "route": "#/project/psyche-build",
+          "events": [
+            {
+              "type": "pointerdown",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "mousedown",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "pointerup",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "mouseup",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "click",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusout",
+              "target": "psyche-build",
+              "tag": "BUTTON",
+              "focus": "BODY",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "focusin",
+              "target": "atlasProject",
+              "tag": "BUTTON",
+              "focus": "atlasProject",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "drawer visibility",
+              "target": "atlasSidebar",
+              "tag": "ASIDE",
+              "focus": "atlasProject",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            }
+          ]
+        },
+        {
+          "input": "pointer",
+          "version": "156.0.8078.4",
+          "errors": [],
+          "missions": [
+            "Config refactor",
+            "Release note",
+            "Review readiness",
+            "Source survey"
+          ],
+          "passed": true,
+          "route": "#/project/psyche-build",
+          "events": [
+            {
+              "type": "pointerdown",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "mousedown",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "pointerup",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "mouseup",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "click",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusout",
+              "target": "psyche-build",
+              "tag": "BUTTON",
+              "focus": "BODY",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "focusin",
+              "target": "atlasProject",
+              "tag": "BUTTON",
+              "focus": "atlasProject",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "drawer visibility",
+              "target": "atlasSidebar",
+              "tag": "ASIDE",
+              "focus": "atlasProject",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "engine": "chromium",
+      "suite": "controls",
+      "results": [
+        {
+          "input": "keyboard",
+          "version": "156.0.8078.4",
+          "errors": [],
+          "missions": [
+            "Config refactor",
+            "Release note",
+            "Review readiness",
+            "Source survey"
+          ],
+          "passed": true,
+          "route": "#/project/psyche-build",
+          "events": [
+            {
+              "type": "click",
+              "target": "psyche-build",
+              "tag": "BUTTON",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusout",
+              "target": "psyche-build",
+              "tag": "BUTTON",
+              "focus": "BODY",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "focusin",
+              "target": "atlasProject",
+              "tag": "BUTTON",
+              "focus": "atlasProject",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "drawer visibility",
+              "target": "atlasSidebar",
+              "tag": "ASIDE",
+              "focus": "atlasProject",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            }
+          ]
+        },
+        {
+          "input": "outside",
+          "version": "156.0.8078.4",
+          "errors": [],
+          "passed": true,
+          "route": "#/coven",
+          "events": [
+            {
+              "type": "pointerdown",
+              "target": "plan",
+              "tag": "svg",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "drawer visibility",
+              "target": "atlasSidebar",
+              "tag": "ASIDE",
+              "focus": "psyche-build",
+              "hidden": true,
+              "route": "#/coven"
+            },
+            {
+              "type": "mousedown",
+              "target": "plan",
+              "tag": "svg",
+              "focus": "psyche-build",
+              "hidden": true,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusout",
+              "target": "psyche-build",
+              "tag": "BUTTON",
+              "focus": "BODY",
+              "hidden": true,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusin",
+              "target": "plan",
+              "tag": "svg",
+              "focus": "plan",
+              "hidden": true,
+              "route": "#/coven"
+            },
+            {
+              "type": "pointerup",
+              "target": "plan",
+              "tag": "svg",
+              "focus": "plan",
+              "hidden": true,
+              "route": "#/coven"
+            },
+            {
+              "type": "mouseup",
+              "target": "plan",
+              "tag": "svg",
+              "focus": "plan",
+              "hidden": true,
+              "route": "#/coven"
+            },
+            {
+              "type": "click",
+              "target": "plan",
+              "tag": "svg",
+              "focus": "plan",
+              "hidden": true,
+              "route": "#/coven"
+            }
+          ]
+        },
+        {
+          "input": "touch",
+          "version": "156.0.8078.4",
+          "errors": [],
+          "missions": [
+            "Config refactor",
+            "Release note",
+            "Review readiness",
+            "Source survey"
+          ],
+          "passed": true,
+          "route": "#/project/psyche-build",
+          "events": [
+            {
+              "type": "pointerdown",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "pointerup",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "mousedown",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "mouseup",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "click",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusout",
+              "target": "psyche-build",
+              "tag": "BUTTON",
+              "focus": "BODY",
+              "hidden": true,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusin",
+              "target": "atlasBrowse",
+              "tag": "BUTTON",
+              "focus": "atlasBrowse",
+              "hidden": true,
+              "route": "#/coven"
+            },
+            {
+              "type": "drawer visibility",
+              "target": "atlasSidebar",
+              "tag": "ASIDE",
+              "focus": "atlasBrowse",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "engine": "webkit",
+      "suite": "pointer",
+      "results": [
+        {
+          "input": "pointer",
+          "version": "27.2",
+          "errors": [],
+          "missions": [
+            "Config refactor",
+            "Release note",
+            "Review readiness",
+            "Source survey"
+          ],
+          "passed": true,
+          "route": "#/project/psyche-build",
+          "events": [
+            {
+              "type": "pointerdown",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "mousedown",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusout",
+              "target": "psyche-build",
+              "tag": "BUTTON",
+              "focus": "BODY",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusin",
+              "target": "atlasSidebar",
+              "tag": "ASIDE",
+              "focus": "atlasSidebar",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "pointerup",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "atlasSidebar",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "mouseup",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "atlasSidebar",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "click",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "atlasSidebar",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusout",
+              "target": "atlasSidebar",
+              "tag": "ASIDE",
+              "focus": "BODY",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "focusin",
+              "target": "atlasProject",
+              "tag": "BUTTON",
+              "focus": "atlasProject",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "drawer visibility",
+              "target": "atlasSidebar",
+              "tag": "ASIDE",
+              "focus": "atlasProject",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            }
+          ]
+        },
+        {
+          "input": "pointer",
+          "version": "27.2",
+          "errors": [],
+          "missions": [
+            "Config refactor",
+            "Release note",
+            "Review readiness",
+            "Source survey"
+          ],
+          "passed": true,
+          "route": "#/project/psyche-build",
+          "events": [
+            {
+              "type": "pointerdown",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "mousedown",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusout",
+              "target": "psyche-build",
+              "tag": "BUTTON",
+              "focus": "BODY",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusin",
+              "target": "atlasSidebar",
+              "tag": "ASIDE",
+              "focus": "atlasSidebar",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "pointerup",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "atlasSidebar",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "mouseup",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "atlasSidebar",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "click",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "atlasSidebar",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusout",
+              "target": "atlasSidebar",
+              "tag": "ASIDE",
+              "focus": "BODY",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "focusin",
+              "target": "atlasProject",
+              "tag": "BUTTON",
+              "focus": "atlasProject",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "drawer visibility",
+              "target": "atlasSidebar",
+              "tag": "ASIDE",
+              "focus": "atlasProject",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            }
+          ]
+        },
+        {
+          "input": "pointer",
+          "version": "27.2",
+          "errors": [],
+          "missions": [
+            "Config refactor",
+            "Release note",
+            "Review readiness",
+            "Source survey"
+          ],
+          "passed": true,
+          "route": "#/project/psyche-build",
+          "events": [
+            {
+              "type": "pointerdown",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "mousedown",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusout",
+              "target": "psyche-build",
+              "tag": "BUTTON",
+              "focus": "BODY",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusin",
+              "target": "atlasSidebar",
+              "tag": "ASIDE",
+              "focus": "atlasSidebar",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "pointerup",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "atlasSidebar",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "mouseup",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "atlasSidebar",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "click",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "atlasSidebar",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusout",
+              "target": "atlasSidebar",
+              "tag": "ASIDE",
+              "focus": "BODY",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "focusin",
+              "target": "atlasProject",
+              "tag": "BUTTON",
+              "focus": "atlasProject",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "drawer visibility",
+              "target": "atlasSidebar",
+              "tag": "ASIDE",
+              "focus": "atlasProject",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            }
+          ]
+        },
+        {
+          "input": "pointer",
+          "version": "27.2",
+          "errors": [],
+          "missions": [
+            "Config refactor",
+            "Release note",
+            "Review readiness",
+            "Source survey"
+          ],
+          "passed": true,
+          "route": "#/project/psyche-build",
+          "events": [
+            {
+              "type": "pointerdown",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "mousedown",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusout",
+              "target": "psyche-build",
+              "tag": "BUTTON",
+              "focus": "BODY",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusin",
+              "target": "atlasSidebar",
+              "tag": "ASIDE",
+              "focus": "atlasSidebar",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "pointerup",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "atlasSidebar",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "mouseup",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "atlasSidebar",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "click",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "atlasSidebar",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusout",
+              "target": "atlasSidebar",
+              "tag": "ASIDE",
+              "focus": "BODY",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "focusin",
+              "target": "atlasProject",
+              "tag": "BUTTON",
+              "focus": "atlasProject",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "drawer visibility",
+              "target": "atlasSidebar",
+              "tag": "ASIDE",
+              "focus": "atlasProject",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            }
+          ]
+        },
+        {
+          "input": "pointer",
+          "version": "27.2",
+          "errors": [],
+          "missions": [
+            "Config refactor",
+            "Release note",
+            "Review readiness",
+            "Source survey"
+          ],
+          "passed": true,
+          "route": "#/project/psyche-build",
+          "events": [
+            {
+              "type": "pointerdown",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "mousedown",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusout",
+              "target": "psyche-build",
+              "tag": "BUTTON",
+              "focus": "BODY",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusin",
+              "target": "atlasSidebar",
+              "tag": "ASIDE",
+              "focus": "atlasSidebar",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "pointerup",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "atlasSidebar",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "mouseup",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "atlasSidebar",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "click",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "atlasSidebar",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusout",
+              "target": "atlasSidebar",
+              "tag": "ASIDE",
+              "focus": "BODY",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "focusin",
+              "target": "atlasProject",
+              "tag": "BUTTON",
+              "focus": "atlasProject",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "drawer visibility",
+              "target": "atlasSidebar",
+              "tag": "ASIDE",
+              "focus": "atlasProject",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "engine": "webkit",
+      "suite": "controls",
+      "results": [
+        {
+          "input": "keyboard",
+          "version": "27.2",
+          "errors": [],
+          "missions": [
+            "Config refactor",
+            "Release note",
+            "Review readiness",
+            "Source survey"
+          ],
+          "passed": true,
+          "route": "#/project/psyche-build",
+          "events": [
+            {
+              "type": "click",
+              "target": "psyche-build",
+              "tag": "BUTTON",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusout",
+              "target": "psyche-build",
+              "tag": "BUTTON",
+              "focus": "BODY",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "focusin",
+              "target": "atlasProject",
+              "tag": "BUTTON",
+              "focus": "atlasProject",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "drawer visibility",
+              "target": "atlasSidebar",
+              "tag": "ASIDE",
+              "focus": "atlasProject",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            }
+          ]
+        },
+        {
+          "input": "outside",
+          "version": "27.2",
+          "errors": [],
+          "passed": true,
+          "route": "#/coven",
+          "events": [
+            {
+              "type": "pointerdown",
+              "target": "plan",
+              "tag": "svg",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "drawer visibility",
+              "target": "atlasSidebar",
+              "tag": "ASIDE",
+              "focus": "psyche-build",
+              "hidden": true,
+              "route": "#/coven"
+            },
+            {
+              "type": "mousedown",
+              "target": "plan",
+              "tag": "svg",
+              "focus": "psyche-build",
+              "hidden": true,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusout",
+              "target": "psyche-build",
+              "tag": "BUTTON",
+              "focus": "BODY",
+              "hidden": true,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusin",
+              "target": "plan",
+              "tag": "svg",
+              "focus": "plan",
+              "hidden": true,
+              "route": "#/coven"
+            },
+            {
+              "type": "pointerup",
+              "target": "plan",
+              "tag": "svg",
+              "focus": "plan",
+              "hidden": true,
+              "route": "#/coven"
+            },
+            {
+              "type": "mouseup",
+              "target": "plan",
+              "tag": "svg",
+              "focus": "plan",
+              "hidden": true,
+              "route": "#/coven"
+            },
+            {
+              "type": "click",
+              "target": "plan",
+              "tag": "svg",
+              "focus": "plan",
+              "hidden": true,
+              "route": "#/coven"
+            }
+          ]
+        },
+        {
+          "input": "touch",
+          "version": "27.2",
+          "errors": [],
+          "missions": [
+            "Config refactor",
+            "Release note",
+            "Review readiness",
+            "Source survey"
+          ],
+          "captionTasks": {
+            "name": "Config refactor",
+            "count": 3
+          },
+          "passed": true,
+          "route": "#/project/psyche-build/mission/m-3?view=tasks&detail=side",
+          "events": [
+            {
+              "type": "pointerdown",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "pointerup",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "mousedown",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "psyche-build",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusout",
+              "target": "psyche-build",
+              "tag": "BUTTON",
+              "focus": "BODY",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusin",
+              "target": "atlasSidebar",
+              "tag": "ASIDE",
+              "focus": "atlasSidebar",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "mouseup",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "atlasSidebar",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "click",
+              "target": "psyche-build",
+              "tag": "path",
+              "focus": "atlasSidebar",
+              "hidden": false,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusout",
+              "target": "atlasSidebar",
+              "tag": "ASIDE",
+              "focus": "BODY",
+              "hidden": true,
+              "route": "#/coven"
+            },
+            {
+              "type": "focusin",
+              "target": "BODY",
+              "tag": "BODY",
+              "focus": "BODY",
+              "hidden": true,
+              "route": "#/coven"
+            },
+            {
+              "type": "drawer visibility",
+              "target": "atlasSidebar",
+              "tag": "ASIDE",
+              "focus": "BODY",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "pointerdown",
+              "target": "BUTTON",
+              "tag": "BUTTON",
+              "focus": "BODY",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "pointerup",
+              "target": "BUTTON",
+              "tag": "BUTTON",
+              "focus": "BODY",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "mousedown",
+              "target": "BUTTON",
+              "tag": "BUTTON",
+              "focus": "BODY",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "mouseup",
+              "target": "BUTTON",
+              "tag": "BUTTON",
+              "focus": "BODY",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "click",
+              "target": "BUTTON",
+              "tag": "BUTTON",
+              "focus": "BODY",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "focusout",
+              "target": "BODY",
+              "tag": "BODY",
+              "focus": "BODY",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            },
+            {
+              "type": "focusin",
+              "target": "missionDetailTitle",
+              "tag": "H2",
+              "focus": "missionDetailTitle",
+              "hidden": true,
+              "route": "#/project/psyche-build"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

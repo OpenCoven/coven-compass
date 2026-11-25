@@ -2376,7 +2376,10 @@ function atlasFitScene(remeasure) {
     const layout = atlasWorldLayout(remeasure, frame), origin = worldOf(active, layout);
     // The viewport supplies the outer margin. Fit the occupied geometry to keep narrow Project labels legible.
     bounds = window.CovenAtlasViewport.projectedBounds([layout.contentBounds], {originX: origin[0], originY: origin[1]});
-    if (sc && sc.layoutSignature !== layout.signature) { buildScene(); sync(); frame = atlasViewportFrame(false); }
+    if (sc && sc.layoutSignature !== layout.signature) {
+      buildCovenLayer(layout);
+      syncCovenLayer(); // Only the SVG layer changed. The measured controls still define the frame.
+    }
   } else if (cur().sel) {
     const target = fitTarget(cur()); if (target) Object.assign(camT, target);
     atlasAutoFit = true; saveView(); kick(); return;
@@ -2423,15 +2426,11 @@ let atlasMapFocusInstance = null;
 function coordinationMarker(parent) {
   return window.CovenAtlasCrown.create(parent, svgEl);
 }
-function buildScene() {
-  const current = cur();
-  if (current.layout.formation !== missionFormation) current.layout = layoutOf(current.trace, missionFormation);
-  plan.textContent = '';
-  const highlight = sc && sc.hl;
-  sc = {missions: new Map(), seats: new Map(), agents: new Map(), colinks: new Map(), hl: highlight || null};
-  { const L0 = cur().layout; sc.n = L0.n; sc.g = L0.g; }
-  sc.world = svgEl('g', {class: 'atlas-overview'}, plan);
-  const layout = atlasWorldLayout(), here = worldOf(active, layout); sc.layoutSignature = layout.signature;
+function buildCovenLayer(layout) {
+  const previous = sc.world;
+  sc.world = svgEl('g', {class: 'atlas-overview'});
+  const here = worldOf(active, layout);
+  sc.layoutSignature = layout.signature;
   // Every project has the same overview representation. Position expresses containment and coordination.
   const cv = sc.cov = {x: -here[0], y: -here[1], links: []};
   cv.roadG = svgEl('g', {class: 'atlas-roads'}, sc.world); cv.laneG = svgEl('g', {class: 'atlas-lanes'}, sc.world);
@@ -2477,6 +2476,17 @@ function buildScene() {
     atlasFocusable(L.decision, 'Review pending decisions in ' + L.k, review);
     L.decision.addEventListener('click', ev => { ev.stopPropagation(); review(); });
   });
+  if (previous) previous.replaceWith(sc.world);
+  else plan.append(sc.world);
+}
+function buildScene() {
+  const current = cur();
+  if (current.layout.formation !== missionFormation) current.layout = layoutOf(current.trace, missionFormation);
+  plan.textContent = '';
+  const highlight = sc && sc.hl;
+  sc = {missions: new Map(), seats: new Map(), agents: new Map(), colinks: new Map(), hl: highlight || null};
+  { const L0 = cur().layout; sc.n = L0.n; sc.g = L0.g; }
+  buildCovenLayer(atlasWorldLayout());
   const detail = sc.detail = svgEl('g', {class: 'atlas-project-detail'}, plan);
   sc.gateL = Object.keys(COMPASS).map(l => {
     const k = nearestGate(sc.n, COMPASS[l]), [x, y] = pol(cur().layout.lead, gateAng(sc.n, k));
@@ -2769,6 +2779,10 @@ function sync() {
   $('ward').hidden = w.missions.size === 0;
   { const hot = new Set(openAsks(w).map(q => nearestGate(sc.n, COMPASS[q.gate] != null ? COMPASS[q.gate] : -90)));
     sc.gateL.forEach(g => g.t.classList.toggle('on', hot.has(g.k))); }
+  syncCovenLayer();
+  applySel();
+}
+function syncCovenLayer() {
   syncCoven();
   sc.ghosts.forEach(gh => {
     const project = projects[gh.k], w = project.world;
@@ -2784,7 +2798,6 @@ function sync() {
     const title = 'Open ' + gh.k + (count ? ' · ' + names.join(', ') : ' · No missions');
     if (gh.title.textContent !== title) gh.title.textContent = title;
   });
-  applySel();
 }
 // a selected mission lights its council; a selected familiar lights every seat it holds, across councils
 // the Coven's own figures: who works where and how much, and which projects are waiting on you
@@ -2923,12 +2936,6 @@ function drawMissionLabel(s, reference, side) {
   });
   s.reference = reference; s.labelSide = side;
 }
-function labelMission(s, name, scale, reference, side = 1, maxWidth = 112) {
-  const run = prepareMissionLabel(s, name, scale, maxWidth);
-  if (run) measureMissionLabel(run);
-  drawMissionLabel(s, reference, side);
-}
-
 // A caption stays readable when its ring has room only for a reference number.
 function showMissionCaptions(entries) {
   const list = $('missionCaptions');
@@ -3035,7 +3042,9 @@ function project() {
   if (packets.length) positionPackets(P, f);
   if (far) {
     if (overviewChanged || cv.px !== cam.px || cv.py !== cam.py || cv.width !== width || cv.height !== height) {
-      showMissionCaptions(updateVisibleProjectPreviews(sc.ghosts, cam, screenScale, width, height, previewScale));
+      // A fit should not build a detailed miniature that the destination scale immediately discards.
+      const fitScale = atlasAutoFit ? screenScale * Math.min(1, camT.zoom / cam.zoom) : screenScale;
+      showMissionCaptions(updateVisibleProjectPreviews(sc.ghosts, cam, screenScale, width, height, previewScale, fitScale));
       let totalRadius = 0, count = 0;
       for (const gh of sc.ghosts) {
         if (!gh.preview?.missions.size) continue;
@@ -3088,9 +3097,8 @@ function project() {
   sc.psy.sx = pc[0]; sc.psy.sy = pc[1];
   const captions = [];
   const lowWideMap = height < 440 && width >= 2 * height && sc.missions.size <= 4;
-  let missionNumber = 0;
-  sc.missions.forEach(s => {
-    missionNumber++;
+  const missionPositions = [];
+  for (const s of sc.missions.values()) {
     const q = P(s.x, s.y);
     const mission = cur().world.missions.get(s.id);
     s.seal.g.style.opacity = sc.hl && mission && !mission.seats.includes(sc.hl) ? '.76' : '1';
@@ -3107,13 +3115,24 @@ function project() {
     const side = s.emphasized || s.y <= 0 ? 1 : -1;
     const captionScale = s.readable ? faceScale : reveal;
     const lateral = lowWideMap && s.readable && Math.abs(q[1]) * screenScale < s.diameter / 2 + 45 && Math.abs(q[0]) > radius;
+    let labelRun = null;
     if (mission) {
       // Wrap inward-facing text before its centered line can reach the crown.
       const hub = hubRadius / screenScale;
       const nearCrown = Math.abs(q[1] - pc[1]) <= hub + (radius + 55) * captionScale;
       const clearance = 2 * (Math.abs(q[0] - pc[0]) - hub) / captionScale;
       const maxWidth = nearCrown && s.readable && !lateral ? clamp(Math.floor(clearance - 2), 1, 112) : 112;
-      labelMission(s, mission.name, screenScale * captionScale, missionNumber, lateral ? 0 : side, maxWidth);
+      labelRun = prepareMissionLabel(s, mission.name, screenScale * captionScale, maxWidth);
+    }
+    missionPositions.push({s, q, mission, selected, side, captionScale, lateral, labelRun});
+  }
+  // Measure all prepared text before drawing labels and their dependent geometry.
+  for (const {labelRun} of missionPositions) if (labelRun) measureMissionLabel(labelRun);
+  let missionNumber = 0;
+  for (const {s, q, mission, selected, side, captionScale, lateral} of missionPositions) {
+    missionNumber++;
+    if (mission) {
+      drawMissionLabel(s, missionNumber, lateral ? 0 : side);
       if (s.needsCaption || !s.readable) {
         s.referenceMark.textContent = String(missionNumber);
         captions.push([active, s.id, mission.name, missionNumber]);
@@ -3166,7 +3185,7 @@ function project() {
     const a = pc, b = q, [nx, ny] = unit(-(b[1] - a[1]), b[0] - a[0]);
     seg(s.thread, a, b); seg(s.out, a, b); seg(s.inn, a, b, -nx * 2.2, -ny * 2.2);   // instructions go out on one lane, reports come back on the other
     s.sx = q[0]; s.sy = q[1];
-  });
+  }
   const cc = cur();
   // Give identities extra weight at fit zoom while keeping dense councils separated.
   const badgeRadius = clamp(14 / screenScale, FAMILIAR_RADIUS, MAX_FAMILIAR_RADIUS);
@@ -6388,18 +6407,18 @@ function syncProjectPreview(preview, project, compact = false, formation = 'ring
   }
 }
 
-function updateVisibleProjectPreviews(ghosts, camera, scale, width, height, previewScale = scale) {
+function updateVisibleProjectPreviews(ghosts, camera, scale, width, height, previewScale = scale, detailScale = scale) {
   const labels = [];
   const halfWidth = width / (2 * scale) + 280, halfHeight = height / (2 * scale) + 280;
   for (const gh of ghosts) {
-    const visible = 560 * scale >= 20 && Math.abs(gh.ox - camera.px) <= halfWidth && Math.abs(gh.oy - camera.py) <= halfHeight;
+    const visible = 560 * detailScale >= 20 && Math.abs(gh.ox - camera.px) <= halfWidth && Math.abs(gh.oy - camera.py) <= halfHeight;
     if (!visible) {
       if (gh.preview) { gh.preview.group.remove(); gh.preview = null; }
       continue;
     }
     if (!gh.preview) gh.preview = createProjectPreview(gh);
-    syncProjectPreview(gh.preview, projects[gh.k], 560 * scale < 40, missionFormation);
-    if (560 * scale >= 320) {
+    syncProjectPreview(gh.preview, projects[gh.k], 560 * detailScale < 40, missionFormation);
+    if (560 * detailScale >= 320) {
       for (const [id, item] of gh.preview.missions) {
         labels.push({project: gh.k, id, item});
       }
