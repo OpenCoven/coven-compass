@@ -344,8 +344,8 @@ function fitFixture(width, height, count) {
     camT: {zoom: 1, px: 0, py: 0}, sc: null,
     clamp, RAD: Math.PI / 180, ZMIN: 0.00001,
     saveView() { calls.save++; }, kick() { calls.kick++; },
-    buildScene() { calls.build++; context.sc.layoutSignature = context.atlasLayoutCache.signature; },
-    sync() { calls.sync++; },
+    buildCovenLayer(layout) { calls.build++; context.sc.layoutSignature = layout.signature; },
+    syncCovenLayer() { calls.sync++; },
   }, worldOf);
   return {...f, context, calls, projects};
 }

@@ -10,8 +10,13 @@ from pathlib import Path
 BUDGET_MS = 100
 REFERENCE = {
     "mode": "matrix", "model": "Mac17,6", "cpu": "Apple M5 Max", "ramBytes": 128 * 1024**3,
-    "runnerSha256": "a75e5a455ca9117a530b2b1b91ec7507fbeb4235ff6b61cd1676894583f05816",
     "logicalCpus": 18, "node": "v24.22.0", "macOS": "27.2.1", "browser": "130.0.6723.31", "playwright": "1.48.2",
+}
+# The updated Projects drawer changed only how the runner opens the preset chooser,
+# before any timed input. Keep exact pins for historical and current receipts.
+QUALIFIED_RUNNERS = {
+    "a75e5a455ca9117a530b2b1b91ec7507fbeb4235ff6b61cd1676894583f05816",
+    "f93a6b8bbae4ddd6d8d373b9f1f715766be5805aabf23c32e7b2fd92925f3247",
 }
 WORKLOADS = {4: (7, 23, 114), 32: (56, 184, 912), 128: (224, 736, 3648)}
 VIEWPORTS = {"desktop": (1440, 900), "narrow": (390, 844)}
@@ -42,6 +47,9 @@ def check(directory):
     meta = json.loads((directory / "run.json").read_text())
     if not isinstance(meta, dict):
         raise ValueError("Expected matrix metadata in run.json")
+    digest = meta.get("runnerSha256")
+    if not isinstance(digest, str) or digest not in QUALIFIED_RUNNERS:
+        raise ValueError(f"Unrecognized runnerSha256: {digest!r}")
     for key, expected in REFERENCE.items():
         if meta.get(key) != expected:
             raise ValueError(f"{key}: budget applies to {expected!r}, observed {meta.get(key)!r}")

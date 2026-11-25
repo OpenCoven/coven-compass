@@ -34,6 +34,6 @@ GitHub Actions is disabled for this repository. Contributors run the Node suite 
 
 ## Accepted dependency alerts
 
-| Alert | Package | Decision | Re-check when |
-| --- | --- | --- | --- |
-| [Dependabot #1](https://github.com/OpenCoven/coven-compass/security/dependabot/1), GHSA-wrw7-89jp-8q8g (medium) | `glib` 0.18.5 in `src-tauri/Cargo.lock`. The fix is in 0.20.0 | Dismissed as tolerable risk by Val on 2026-11-22. The dependency chain is `tauri` 2.12.7 → `wry` 0.57.3 → `webkit2gtk` 2.0.2 / `gtk` 0.18. Those are Linux-only crates. No upgrade is possible: gtk3-rs ends at 0.18.2, and glib 0.20 belongs to gtk4-rs. The bundle target is a macOS `.app` only, so `glib` isn't compiled. Compass code doesn't use `VariantStrIter`. Coven Cave dismissed the same advisory, and its reachability analysis is in [coven-cave `docs/dependency-advisories.md`](https://github.com/OpenCoven/coven-cave/blob/main/docs/dependency-advisories.md): only `Variant::iter_str()` builds `VariantStrIter`, and no crate in Cave's tree calls it. That analysis was done for Cave and has not been re-run for this tree. | Before any Linux build or release, or when Tauri moves off GTK3. Either one reopens this decision. |
+Val dismissed [Dependabot alert #1](https://github.com/OpenCoven/coven-compass/security/dependabot/1) for `glib` 0.18.5 as tolerable risk on 2026-11-22. The locked Linux desktop dependency tree includes `glib` through GTK and WebKitGTK. The documented macOS app build has no dependency on that crate. The advisory is fixed in `glib` 0.20.0. [GHSA-wrw7-89jp-8q8g](https://github.com/advisories/GHSA-wrw7-89jp-8q8g)
+
+Reassess before supporting Linux desktop builds or when the Tauri GTK dependencies change. To reproduce the platform comparison, run `cargo tree --locked --manifest-path src-tauri/Cargo.toml --target aarch64-apple-darwin -i glib` and repeat with `--target x86_64-unknown-linux-gnu`.

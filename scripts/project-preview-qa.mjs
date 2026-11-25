@@ -48,7 +48,7 @@ for (const [width, height] of [[1440, 900], [390, 844]]) {
       await page.reload();
       await page.locator('#workspaceTools > summary').click();
       await page.locator('#traceBox > summary').click();
-      await page.locator('#traceLoad > summary').click();
+      await page.locator('#traceImport').click();
       const names = ['Brief', 'Review', 'Copy', 'Layout', 'Polish'];
       const event = (type, props) => JSON.stringify({t:'2026-11-18T06:20:00Z', type, mission:'solo', ...props});
       const token = 'Release/candidate-'.repeat(26) + '👩🏽‍💻';
@@ -672,7 +672,7 @@ test('task areas follow replayed assignments, reservations and retirement', asyn
     await page.goto(new URL('#/project/psyche-build', base).href);
     await page.locator('#workspaceTools > summary').click();
     await page.locator('#traceBox > summary').click();
-    await page.locator('#traceLoad > summary').click();
+    await page.locator('#traceImport').click();
     const records = [];
     const add = (sec, type, properties) => records.push({t: 1800000000000 + sec * 1000, type, mission: 'sizing', familiar: 'astra', ...properties});
     add(0, 'mission.opened', {name: 'Layout'});

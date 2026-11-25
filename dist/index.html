@@ -1507,7 +1507,9 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
 <link rel="stylesheet" href="atlas.css">
 <link rel="stylesheet" href="seal-lab.css">
 <link rel="stylesheet" href="semantic-map.css">
+<link rel="stylesheet" href="brief-policy.css">
 </head><body>
+<p id="briefStorageWarning" class="brief-storage-warning" role="alert" hidden></p>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="crown" viewBox="409 391 1232 1137"><path fill-rule="evenodd" clip-rule="evenodd" d="M 1024.7 392.6 C 1024.4 393.6 1022.3 401.4 1020 410 C 1015.9 425.4 1005.1 459.1 997.9 479 C 986.7 510.2 966.1 559.5 950.7 592.5 C 937.5 620.4 915.2 664.7 902.3 688.1 C 879 730.8 861.5 760.8 838.8 797.5 C 817.5 831.8 799.4 859.4 767.9 905.5 C 750 931.6 727 963 725.7 963 C 725.2 963 719.7 959 713.6 954.1 C 692 936.9 672.2 922.5 646.5 905.5 C 574 857.4 513 827 434.6 800.1 C 424.8 796.7 415.7 794 414.4 794 C 413 794 411.5 794.8 410.8 796.2 C 408.9 799.7 408.6 817.6 409.9 851 C 412.2 913.6 416.7 959.7 426 1017.9 C 431.5 1052.4 435.5 1072.2 444.5 1110.5 C 449.9 1133.3 451.7 1139.9 457.5 1159.5 C 471.6 1206.9 490.8 1257.6 508.5 1294.6 C 512.2 1302.2 516.2 1310.7 517.4 1313.5 C 525.2 1330.6 551 1375.6 572.7 1410 C 581 1423 596.9 1446.2 608.5 1462.1 C 620.4 1478.4 643.3 1507.5 653.2 1519 L 660.5 1527.5 L 673.7 1527.4 C 681 1527.4 724.4 1527.3 770.1 1527.2 L 853.2 1527 L 852.5 1522.2 C 851.1 1512.3 845.6 1492 840.8 1479 C 834.2 1461.3 825.6 1443.7 817.8 1432 C 810.3 1420.8 796.6 1405.3 787.2 1397.3 C 777.9 1389.4 765.8 1381.7 753.7 1376 C 748.1 1373.3 736.5 1369 728 1366.4 C 698.5 1357.6 675.9 1344.6 655.7 1325 C 636.8 1306.8 625.8 1292.8 611.7 1269.5 C 597.6 1246.1 582.4 1214.3 573 1188.5 C 566.5 1170.7 558.7 1146.7 555 1133.5 C 548.5 1110.1 540.1 1072.5 535.5 1046.5 C 531.9 1025.9 528.7 1002.1 529.5 1000.9 C 529.8 1000.4 530.9 1000 532 1000 C 536 1000 575.8 1021.6 602 1037.9 C 619.9 1049.2 643.6 1066.7 665 1084.4 C 692.3 1107.1 727.1 1142.1 751.1 1171 C 792.9 1221.1 826.5 1278.5 848.9 1337.5 C 863.8 1376.8 872.9 1413.1 880.4 1463 C 882.5 1477.4 884.2 1493.1 886.5 1518.7 C 886.9 1522.6 887.7 1526.3 888.4 1526.9 C 889.2 1527.6 934.6 1527.8 1025 1527.5 C 1099.5 1527.3 1161 1527.1 1161.6 1527.1 C 1163 1526.9 1163.4 1524.1 1164.9 1505 C 1166.9 1480.2 1172 1443.6 1176.1 1425 C 1179.8 1407.7 1186.9 1380.5 1190.5 1369.4 C 1200.6 1338.6 1212.3 1310 1225.5 1284 C 1255.3 1225.2 1292.4 1174.6 1343 1123.9 C 1354.2 1112.6 1370.2 1097.5 1378.5 1090.5 C 1395.3 1076.2 1422.2 1055.7 1438 1045.2 C 1465.6 1026.9 1513.8 1000 1519.1 1000 L 1521.2 1000 L 1520.6 1008.7 C 1519.1 1030.3 1510.6 1074.6 1501.4 1109.3 C 1492.3 1143.5 1484.8 1166.7 1473 1197 C 1457.5 1236.6 1436 1275.6 1415 1301.8 C 1403.6 1316.1 1386.3 1333.1 1375 1341.2 C 1362.1 1350.3 1343.7 1359.2 1324.5 1365.5 C 1289.7 1376.9 1270.6 1388 1251.5 1408.1 C 1228.4 1432.2 1212.7 1462.1 1202.1 1502 C 1199.2 1512.8 1196.7 1526 1197.4 1526.7 C 1198.3 1527.6 1387.9 1527.1 1389.4 1526.2 C 1393.7 1523.6 1432.3 1474.4 1453.3 1444.8 C 1465.4 1427.6 1481.6 1402.6 1495.1 1380 C 1507.7 1359 1509.9 1355.1 1518.4 1338.9 C 1545.4 1287.9 1560.7 1252.7 1578.9 1200 C 1589 1170.8 1596 1147.1 1603 1118.4 C 1616.1 1064.5 1622.4 1032.5 1627.9 991 C 1636 930.4 1640.9 864.7 1640.9 815.8 C 1641 793.2 1640.7 792.4 1634.2 794.1 C 1626.5 796.2 1591.9 808.4 1576.1 814.6 C 1541.5 828.1 1508.7 843.7 1473.5 863.4 C 1424.6 890.8 1387.8 915.2 1340.8 951.6 C 1332.7 957.8 1325.9 963 1325.6 963 C 1325.1 963 1307.2 938.4 1292.4 917.5 C 1287 909.8 1280.1 899.9 1277 895.5 C 1268.1 882.8 1234.2 831.8 1224.7 817 C 1204.4 784.9 1185.4 753 1166.4 719.5 C 1120.9 638.7 1083.5 559.8 1056 486.5 C 1047.4 463.3 1036.1 428.1 1030.4 406.5 C 1028.3 398.8 1026.4 392.1 1025.9 391.6 C 1025.5 391.2 1025 391.6 1024.7 392.6 Z M 1033.3 772.5 C 1047.3 806.5 1061.9 837.3 1079.3 869.3 C 1084.1 878 1088 885.3 1088 885.6 C 1088 886.5 1113.9 929.9 1121.9 942.5 C 1126.2 949.1 1132 958.3 1134.9 963 C 1146.6 981.6 1181.7 1031.9 1200.6 1057.3 L 1211 1071.1 L 1196.7 1086.8 C 1159.4 1127.6 1129.9 1167.1 1101.9 1213.5 C 1090.3 1232.8 1070.7 1272 1059.6 1298.2 C 1051.4 1317.2 1045.2 1334.1 1034 1368 C 1030.1 1379.8 1026.6 1390.1 1026.3 1391 C 1025.9 1392.3 1025.7 1392.3 1025 1391 C 1024.6 1390.1 1021.9 1381.8 1019 1372.5 C 1004.6 1325.4 981.9 1271.8 958 1228.2 C 946.6 1207.4 922.5 1170 908.6 1151.5 C 890.7 1127.7 868.2 1100.7 849.8 1081 C 844.3 1075.2 841.3 1071.2 841.8 1070.5 C 848.9 1061.3 870.8 1031.3 878.1 1021 C 903.1 985.4 928.7 945.7 948.6 911.5 C 967.6 878.9 990.1 836.1 1002 809.9 C 1008.3 795.9 1018 773.2 1022.1 762.6 C 1023.8 758.3 1025.5 755.1 1025.9 755.6 C 1026.3 756.1 1029.6 763.7 1033.3 772.5 Z"/></symbol></defs></svg>
 <div class="app" id="app">
@@ -1543,20 +1545,38 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
           <div class="ctl">
           <details class="pill" id="traceBox">
             <summary class="btn"><span class="spark" id="traceSpark" aria-hidden="true"></span><span class="sr">Trace</span><span class="m" id="traceKind"></span><svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
-            <div class="pill-body glass" id="traceBody">
-              <div class="hd"><span class="hd-i" data-i="pulse"></span><span class="hd-t">Trace</span><span class="hd-m" id="traceInfo"></span><span class="hd-s" id="traceChip"></span></div>
-              <div class="tr-chart" id="traceChart"><div class="density" id="traceDensity" aria-hidden="true"></div><div class="tr-axis"><span id="traceT0"></span><span class="k" id="traceKey">ask</span><span id="traceT1"></span></div></div>
-              <p class="pc-note" id="traceEmpty" hidden>Nothing recorded yet. Open a mission and its events appear here.</p>
-              <div class="rows">
-                <details class="dr" id="traceKinds"><summary><span class="dr-i" data-i="kinds"></span><span class="dr-k">Events by kind</span><span class="dr-v" id="traceSum"></span><svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></summary><div class="dr-b"><ul id="traceLegend"></ul></div></details>
-                <details class="dr" id="traceEvents"><summary><span class="dr-i" data-i="braces"></span><span class="dr-k">Recent events</span><span class="dr-v" id="traceEvN"></span><svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></summary><div class="dr-b flush"><p class="dr-note" id="traceEvNote">Open one to read or change its JSON.</p><div class="evs" id="traceEv"></div></div></details>
-                <details class="dr" id="traceLoad"><summary><span class="dr-i" data-i="upload"></span><span class="dr-k">Load a recording</span><span class="dr-v">JSON Lines</span><svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></summary><div class="dr-b flush">
-                  <label class="drop file" id="traceDrop"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 9.5V2.5M4.2 5.2 7 2.4l2.8 2.8M2.5 9.5v1.3c0 .6.5 1.1 1.1 1.1h6.8c.6 0 1.1-.5 1.1-1.1V9.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Drop a file or <u>choose one</u></span><input class="sr" id="traceFile" type="file" accept=".jsonl,.ndjson,.json,.txt"></label>
+            <div class="pill-body glass" id="traceBody" popover="manual">
+              <div class="trace-heading"><span data-i="pulse"></span><h2>Trace</h2><span id="traceChip"></span><button type="button" id="traceClose" aria-label="Close trace" title="Close trace">×</button></div>
+              <div class="trace-nav" role="group" aria-label="Trace view">
+                <button type="button" data-trace-view="traceOverview" aria-controls="traceOverview" aria-pressed="true">Overview</button>
+                <button type="button" data-trace-view="traceEvents" aria-controls="traceEvents" aria-pressed="false">Events</button>
+                <button type="button" id="traceImport" data-trace-view="traceLoad" aria-controls="traceLoad" aria-pressed="false">Import</button>
+              </div>
+              <div class="trace-scroll">
+                <section class="trace-page" id="traceOverview" aria-label="Trace overview">
+                  <div class="trace-chart" id="traceChart">
+                    <div class="trace-caption"><h3>Activity</h3><span id="traceInfo"></span></div>
+                    <div class="density" id="traceDensity" aria-hidden="true"></div>
+                    <div class="tr-axis"><span><span class="sr">Start </span><span id="traceT0"></span></span><span class="k" id="traceKey"></span><span><span class="sr">End </span><span id="traceT1"></span></span></div>
+                  </div>
+                  <p id="traceEmpty" hidden>No events yet. Project activity will appear here, or you can import a recording.</p>
+                  <p class="trace-hint" id="traceSkipped" hidden></p>
+                  <section id="traceKinds"><h3>Events by kind</h3><div id="traceLegend"></div></section>
+                </section>
+                <section class="trace-page" id="traceEvents" aria-label="Recent events" hidden>
+                  <div class="trace-caption"><label for="traceFilter">Recent events</label><select id="traceFilter"><option value="">All kinds</option></select></div>
+                  <p class="trace-hint" id="traceEvNote"></p><p class="trace-hint" id="traceSaved" role="status"></p><div class="evs" id="traceEv"></div>
+                </section>
+                <section class="trace-page" id="traceLoad" aria-label="Import recording" hidden>
+                  <h3>Import recording</h3>
+                  <p class="trace-hint">Replace this project’s timeline with a local JSON Lines file, up to 5 MB.</p>
+                  <label class="drop file" id="traceDrop"><span data-i="upload"></span><strong>Choose file</strong><span>or drop it here</span><input class="sr" id="traceFile" aria-label="Choose recording file" type="file" accept=".jsonl,.ndjson,.json,.txt"></label>
                   <p class="small err" id="traceErr" role="alert" hidden></p>
-                  <p class="dr-note">One event per line, each with a time and a type:</p>
-                  <pre class="code" id="traceSample"></pre>
-                  <div class="dr-acts"><button class="btn sm" type="button" id="traceCopy">Copy example</button><button class="btn sm ghost" id="traceReset" type="button" hidden>Back to the sample</button></div>
-                </div></details>
+                  <div class="trace-caption"><h3>File format</h3><button class="btn sm" type="button" id="traceCopy">Copy example</button></div>
+                  <p class="trace-hint">One event per line with a timestamp (<code>t</code>) and an event <code>type</code>.</p>
+                  <pre class="code" id="traceSample" tabindex="0" aria-label="Example JSON Lines"></pre>
+                  <button class="btn sm" id="traceReset" type="button" hidden>Restore sample</button>
+                </section>
               </div>
             </div>
           </details>
@@ -1811,6 +1831,9 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
 <script src="simulation-model.js"></script>
 <script src="mission-history.js"></script>
 <script src="mission-history-ui.js"></script>
+<script src="brief-policy.js"></script>
+<script src="brief-policy-view.js"></script>
+<script src="brief-policy-editor.js"></script>
 <script src="projection-source.js"></script>
 <script>
 (() => {
@@ -2038,7 +2061,11 @@ function normBrief(b) {
   if (!b || typeof b !== 'object') return null;
   const pos = (o, keys) => { const r = {}; keys.forEach(k => { const v = o && o[k]; if (typeof v === 'number' && isFinite(v) && v > 0) r[k] = v; }); return r; };
   const strs = a => (Array.isArray(a) ? a : []).map(x => String(x).slice(0, 16)).slice(0, 6);
-  return closeBrief({deliver: (Array.isArray(b.deliver) ? b.deliver : []).filter(a => a && KIND[a.kind]).map(a => ({kind: a.kind, formats: strs(a.formats), langs: strs(a.langs)})),
+  // Success criteria from the editor (#35) are kept when they validate. Anything else is kept as invalid, so the
+  // derived policy fails closed rather than silently dropping a gate.
+  const policyApi = window.CovenBriefPolicy, sc = b.success === undefined ? null : policyApi && policyApi.normalizeSuccess(b.success);
+  return closeBrief({...(sc ? {success: sc.ok ? sc.success : {invalid: true}} : b.success !== undefined ? {success: {invalid: true}} : {}),
+    deliver: (Array.isArray(b.deliver) ? b.deliver : []).filter(a => a && KIND[a.kind]).map(a => ({kind: a.kind, formats: strs(a.formats), langs: strs(a.langs)})),
     atLeast: pos(b.atLeast, Object.keys(FLOOR)), atMost: pos(b.atMost, Object.keys(CAP)), measure: (Array.isArray(b.measure) ? b.measure : []).filter(k => MEASURE[k])});
 }
 // Some choices bring others with them, and every brief is kept in one standard form: a website is built from a codebase,
@@ -2249,6 +2276,42 @@ function seek(c, t, quiet, through) {
 }
 const projects = {};
 Object.keys(SAMPLES).forEach(k => { projects[k] = makeProject(k, sampleTrace(k, Date.now()), false); projects[k].sample = true; seek(projects[k], Date.now(), true); });
+// Keep the original trace timestamps so reloading an authored Brief can replay its revisions.
+const briefSessionKey = 'coven-compass-brief-session-v1';
+function showBriefStorageError(message) {
+  const warning = $('briefStorageWarning');
+  warning.textContent = message;
+  warning.hidden = false;
+}
+function saveBriefSession() {
+  const entries = Object.values(projects).filter(c => c.keepBrief && !c.recorded)
+    .map(c => ({key: c.key, trace: c.trace, sample: !!c.sample, layoutDemo: !!c.layoutDemo}));
+  try {
+    if (entries.length) sessionStorage.setItem(briefSessionKey, JSON.stringify(entries));
+    else sessionStorage.removeItem(briefSessionKey);
+  } catch {
+    if (entries.length) showBriefStorageError('This tab could not save your latest Brief for reload.');
+  }
+}
+try {
+  const raw = sessionStorage.getItem(briefSessionKey);
+  if (raw) {
+    const entries = JSON.parse(raw);
+    if (!Array.isArray(entries)) throw Error();
+    const restored = entries.map(entry => {
+      if (!entry || typeof entry.key !== 'string' || !entry.key || entry.key in Object.prototype ||
+          !Array.isArray(entry.trace) || !entry.trace.every(e => e && KNOWN.has(e.type) && Number.isFinite(e.t))) throw Error();
+      const project = makeProject(entry.key, entry.trace, false);
+      Object.assign(project, {keepBrief: true, sample: entry.sample === true, layoutDemo: entry.layoutDemo === true});
+      seek(project, Date.now(), true);
+      return project;
+    });
+    for (const project of restored) projects[project.key] = project;
+  }
+} catch {
+  showBriefStorageError('Saved Brief history is unavailable in this tab.');
+}
+window.addEventListener('pagehide', saveBriefSession);
 const fromHash = () => { const route = window.CovenMissionNavigation && window.CovenMissionNavigation.parse(location.hash); return route && projects[route.project] ? route.project : null; };
 let active = fromHash() || 'psyche-build';
 const cur = () => projects[active];
@@ -2278,6 +2341,9 @@ function seekTimeline(t, quiet, through) {
 }
 function emit(c, e) {
   SimModel.append(c, e, Date.now());
+  if ((e.type === 'mission.opened' || e.type === 'mission.briefed') && (e.brief?.success || c.keepBrief)) {
+    c.keepBrief = true; saveBriefSession();
+  }
   if (STRUCT.has(e.type)) { const n0 = c.layout.n; c.layout = layoutOf(c.trace, missionFormation); if (c.layout.n !== n0 && c === cur()) { buildScene(); if (atlasAutoFit) atlasQueueFit(); } }
   if (live) { cursor = e.t; seekTimeline(cursor); refresh(); }
 }
@@ -2319,7 +2385,7 @@ function atlasViewportFrame(selection) {
     reserve($('atlasSidebar'), 'side');
   }
   if (selection) {
-    reserve($('historyReturn'), 'bottom');
+    reserve($('historyReturn'), mobile ? 'top' : 'bottom');
     const manifest = document.querySelector('#notes .manifest'), hud = document.querySelector(mobile ? '#notes .hud' : '#notes > .hud');
     reserve(manifest, 'side'); reserve(hud, mobile ? 'bottom' : 'top');
     const inspect = $('inspect');
@@ -2358,7 +2424,10 @@ function atlasFitScene(remeasure) {
     const layout = atlasWorldLayout(remeasure, frame), origin = worldOf(active, layout);
     // The viewport supplies the outer margin. Fit the occupied geometry to keep narrow Project labels legible.
     bounds = window.CovenAtlasViewport.projectedBounds([layout.contentBounds], {originX: origin[0], originY: origin[1]});
-    if (sc && sc.layoutSignature !== layout.signature) { buildScene(); sync(); frame = atlasViewportFrame(false); }
+    if (sc && sc.layoutSignature !== layout.signature) {
+      buildCovenLayer(layout);
+      syncCovenLayer(); // Only the SVG layer changed. The measured controls still define the frame.
+    }
   } else if (cur().sel) {
     const target = fitTarget(cur()); if (target) Object.assign(camT, target);
     atlasAutoFit = true; saveView(); kick(); return;
@@ -2405,15 +2474,11 @@ let atlasMapFocusInstance = null;
 function coordinationMarker(parent) {
   return window.CovenAtlasCrown.create(parent, svgEl);
 }
-function buildScene() {
-  const current = cur();
-  if (current.layout.formation !== missionFormation) current.layout = layoutOf(current.trace, missionFormation);
-  plan.textContent = '';
-  const highlight = sc && sc.hl;
-  sc = {missions: new Map(), seats: new Map(), agents: new Map(), colinks: new Map(), hl: highlight || null};
-  { const L0 = cur().layout; sc.n = L0.n; sc.g = L0.g; }
-  sc.world = svgEl('g', {class: 'atlas-overview'}, plan);
-  const layout = atlasWorldLayout(), here = worldOf(active, layout); sc.layoutSignature = layout.signature;
+function buildCovenLayer(layout) {
+  const previous = sc.world;
+  sc.world = svgEl('g', {class: 'atlas-overview'});
+  const here = worldOf(active, layout);
+  sc.layoutSignature = layout.signature;
   // Every project has the same overview representation. Position expresses containment and coordination.
   const cv = sc.cov = {x: -here[0], y: -here[1], links: []};
   cv.roadG = svgEl('g', {class: 'atlas-roads'}, sc.world); cv.laneG = svgEl('g', {class: 'atlas-lanes'}, sc.world);
@@ -2459,6 +2524,17 @@ function buildScene() {
     atlasFocusable(L.decision, 'Review pending decisions in ' + L.k, review);
     L.decision.addEventListener('click', ev => { ev.stopPropagation(); review(); });
   });
+  if (previous) previous.replaceWith(sc.world);
+  else plan.append(sc.world);
+}
+function buildScene() {
+  const current = cur();
+  if (current.layout.formation !== missionFormation) current.layout = layoutOf(current.trace, missionFormation);
+  plan.textContent = '';
+  const highlight = sc && sc.hl;
+  sc = {missions: new Map(), seats: new Map(), agents: new Map(), colinks: new Map(), hl: highlight || null};
+  { const L0 = cur().layout; sc.n = L0.n; sc.g = L0.g; }
+  buildCovenLayer(atlasWorldLayout());
   const detail = sc.detail = svgEl('g', {class: 'atlas-project-detail'}, plan);
   sc.gateL = Object.keys(COMPASS).map(l => {
     const k = nearestGate(sc.n, COMPASS[l]), [x, y] = pol(cur().layout.lead, gateAng(sc.n, k));
@@ -2751,6 +2827,10 @@ function sync() {
   $('ward').hidden = w.missions.size === 0;
   { const hot = new Set(openAsks(w).map(q => nearestGate(sc.n, COMPASS[q.gate] != null ? COMPASS[q.gate] : -90)));
     sc.gateL.forEach(g => g.t.classList.toggle('on', hot.has(g.k))); }
+  syncCovenLayer();
+  applySel();
+}
+function syncCovenLayer() {
   syncCoven();
   sc.ghosts.forEach(gh => {
     const project = projects[gh.k], w = project.world;
@@ -2766,7 +2846,6 @@ function sync() {
     const title = 'Open ' + gh.k + (count ? ' · ' + names.join(', ') : ' · No missions');
     if (gh.title.textContent !== title) gh.title.textContent = title;
   });
-  applySel();
 }
 // a selected mission lights its council; a selected familiar lights every seat it holds, across councils
 // the Coven's own figures: who works where and how much, and which projects are waiting on you
@@ -2905,12 +2984,6 @@ function drawMissionLabel(s, reference, side) {
   });
   s.reference = reference; s.labelSide = side;
 }
-function labelMission(s, name, scale, reference, side = 1, maxWidth = 112) {
-  const run = prepareMissionLabel(s, name, scale, maxWidth);
-  if (run) measureMissionLabel(run);
-  drawMissionLabel(s, reference, side);
-}
-
 // A caption stays readable when its ring has room only for a reference number.
 function showMissionCaptions(entries) {
   const list = $('missionCaptions');
@@ -3017,7 +3090,9 @@ function project() {
   if (packets.length) positionPackets(P, f);
   if (far) {
     if (overviewChanged || cv.px !== cam.px || cv.py !== cam.py || cv.width !== width || cv.height !== height) {
-      showMissionCaptions(updateVisibleProjectPreviews(sc.ghosts, cam, screenScale, width, height, previewScale));
+      // A fit should not build a detailed miniature that the destination scale immediately discards.
+      const fitScale = atlasAutoFit ? screenScale * Math.min(1, camT.zoom / cam.zoom) : screenScale;
+      showMissionCaptions(updateVisibleProjectPreviews(sc.ghosts, cam, screenScale, width, height, previewScale, fitScale));
       let totalRadius = 0, count = 0;
       for (const gh of sc.ghosts) {
         if (!gh.preview?.missions.size) continue;
@@ -3070,9 +3145,8 @@ function project() {
   sc.psy.sx = pc[0]; sc.psy.sy = pc[1];
   const captions = [];
   const lowWideMap = height < 440 && width >= 2 * height && sc.missions.size <= 4;
-  let missionNumber = 0;
-  sc.missions.forEach(s => {
-    missionNumber++;
+  const missionPositions = [];
+  for (const s of sc.missions.values()) {
     const q = P(s.x, s.y);
     const mission = cur().world.missions.get(s.id);
     s.seal.g.style.opacity = sc.hl && mission && !mission.seats.includes(sc.hl) ? '.76' : '1';
@@ -3089,13 +3163,24 @@ function project() {
     const side = s.emphasized || s.y <= 0 ? 1 : -1;
     const captionScale = s.readable ? faceScale : reveal;
     const lateral = lowWideMap && s.readable && Math.abs(q[1]) * screenScale < s.diameter / 2 + 45 && Math.abs(q[0]) > radius;
+    let labelRun = null;
     if (mission) {
       // Wrap inward-facing text before its centered line can reach the crown.
       const hub = hubRadius / screenScale;
       const nearCrown = Math.abs(q[1] - pc[1]) <= hub + (radius + 55) * captionScale;
       const clearance = 2 * (Math.abs(q[0] - pc[0]) - hub) / captionScale;
       const maxWidth = nearCrown && s.readable && !lateral ? clamp(Math.floor(clearance - 2), 1, 112) : 112;
-      labelMission(s, mission.name, screenScale * captionScale, missionNumber, lateral ? 0 : side, maxWidth);
+      labelRun = prepareMissionLabel(s, mission.name, screenScale * captionScale, maxWidth);
+    }
+    missionPositions.push({s, q, mission, selected, side, captionScale, lateral, labelRun});
+  }
+  // Measure all prepared text before drawing labels and their dependent geometry.
+  for (const {labelRun} of missionPositions) if (labelRun) measureMissionLabel(labelRun);
+  let missionNumber = 0;
+  for (const {s, q, mission, selected, side, captionScale, lateral} of missionPositions) {
+    missionNumber++;
+    if (mission) {
+      drawMissionLabel(s, missionNumber, lateral ? 0 : side);
       if (s.needsCaption || !s.readable) {
         s.referenceMark.textContent = String(missionNumber);
         captions.push([active, s.id, mission.name, missionNumber]);
@@ -3148,7 +3233,7 @@ function project() {
     const a = pc, b = q, [nx, ny] = unit(-(b[1] - a[1]), b[0] - a[0]);
     seg(s.thread, a, b); seg(s.out, a, b); seg(s.inn, a, b, -nx * 2.2, -ny * 2.2);   // instructions go out on one lane, reports come back on the other
     s.sx = q[0]; s.sy = q[1];
-  });
+  }
   const cc = cur();
   // Give identities extra weight at fit zoom while keeping dense councils separated.
   const badgeRadius = clamp(14 / screenScale, FAMILIAR_RADIUS, MAX_FAMILIAR_RADIUS);
@@ -3592,15 +3677,27 @@ function drawMissions() {
 function placePill(d) {
   const body = d.querySelector('.pill-body'), head = d.closest('.plan-head'), anchor = d.closest('.workspace-utilities') || head;
   const control = d.querySelector('summary').getBoundingClientRect(), origin = anchor.getBoundingClientRect();
+  if (d.id === 'traceBox' && body.showPopover) {
+    const width = Math.min(400 * (+getComputedStyle(document.documentElement).getPropertyValue('--fs') || 1), innerWidth - 20);
+    const below = innerHeight - control.bottom - 16;
+    const top = below < 220 ? 6 : control.bottom + 6;
+    body.style.width = width + 'px';
+    body.style.left = clamp(control.right - width, 10, innerWidth - width - 10) + 'px';
+    body.style.top = top + 'px';
+    body.style.maxHeight = (innerHeight - top - 8) + 'px';
+    return;
+  }
   const top = control.bottom - origin.top + 6;
   const w = Math.min((d.id === 'traceBox' || d.id === 'ward' ? 360 : 304) * (+getComputedStyle(document.documentElement).getPropertyValue('--fs') || 1), anchor.clientWidth - 12);
   body.style.width = w + 'px'; body.style.top = top + 'px';
   body.style.left = clamp(control.left - origin.left, 4, Math.max(4, anchor.clientWidth - w - 4)) + 'px';
-  body.style.maxHeight = Math.max(180, head.parentElement.clientHeight - top - 12) + 'px';
+  body.style.maxHeight = d.id === 'traceBox'
+    ? Math.max(0, Math.min(head.parentElement.getBoundingClientRect().bottom, window.innerHeight) - control.bottom - 14) + 'px'
+    : Math.max(180, head.parentElement.clientHeight - top - 12) + 'px';
 }
 document.querySelectorAll('details.pill').forEach(d => d.firstElementChild.addEventListener('click', () => {
   if (d.open) return;
-  if (d.id === 'proj') drawProjects(); if (d.id === 'mis') drawMissions(); if (d.id === 'traceBox' && $('traceEvents').open) drawEvents();
+  if (d.id === 'proj') drawProjects(); if (d.id === 'mis') drawMissions();
   placePill(d);
 }));
 function liveTip() { const sum = $('summary').title, t = (live ? 'Live' : 'Replaying. Click to go live') + (sum ? ' · ' + sum : ''); $('live').title = t; $('live').setAttribute('aria-label', t); }
@@ -3836,7 +3933,7 @@ const xBtn = (label, fn) => { const x = html('button', 'btn x', '×'); x.type = 
 // with that familiar's tasks, each tied to its squad in the project by a leader line. Anything of the mission's waiting
 // at a gate is tagged where it stands. On a narrow stage the seats carry small tags instead.
 let lcSig = '', notes = [], hud = null;
-const briefSig = (st, M) => st ? (M && M.paused ? 'P' : '') + (M && M.tpl || '') + (M ? sealOf(cur().world, M).sig : '') + JSON.stringify([st.deliver.map(x => x.state), st.floors.map(x => [Math.round(x.have), x.need]), st.caps.map(x => [Math.round(x.used * (x.k === 'usd' ? 100 : 1)), x.max]), st.measures.map(x => x.k)]) : 'none';
+const briefSig = (st, M) => st ? (M && M.paused ? 'P' : '') + (M && M.tpl || '') + (M ? sealOf(cur().world, M).sig : '') + JSON.stringify([M && M.brief && M.brief.success || null, st.deliver.map(x => x.state), st.floors.map(x => [Math.round(x.have), x.need]), st.caps.map(x => [Math.round(x.used * (x.k === 'usd' ? 100 : 1)), x.max]), st.measures.map(x => x.k)]) : 'none';
 function fillHudBrief() {
   if (!hud || !hud.bf || !hud.bf.isConnected) return;
   const c = cur(), M = c.world.missions.get(hud.m), st = M && briefState(c.world, M), sig = briefSig(st, M);
@@ -4308,6 +4405,13 @@ function syncInspect(force) {
           g = group(section('Performance', 'gauge'));
           st.measures.forEach(x => line(g, x.label, x.value));
         }
+        // The success policy this Brief implies (#35 proposal). The simulation records no attempts or evaluations,
+        // so nothing here can become eligible, and nothing can become accepted.
+        if (window.CovenBriefPolicy && window.CovenBriefPolicyView) {
+          const BP = window.CovenBriefPolicy, pol = BP.fromBrief(M.brief, {deliver: artText, floor: floorText});
+          const res = BP.evaluate(pol, {candidate: null, attempts: [], evaluations: [], authorization: null, cancelled: false}, null);
+          sec.appendChild(window.CovenBriefPolicyView.render(document, {policy: pol, result: res, summary: BP.summarize(pol), origin: 'simulation'}));
+        }
       }
       if (editable) addAction('edit-brief', st ? 'Edit brief' : 'Set brief', ICON.doc, 'Deliverables and limits', () => {
         openNew(M.id); nm.fromInspector = true;
@@ -4541,27 +4645,86 @@ function drawWard() {
   box.querySelector('.ward-status').textContent = pending ? pending + (pending === 1 ? ' pending request' : ' pending requests') : 'No pending requests';
 }
 const FAMILY = [['Missions', ['mission.opened', 'council.seated', 'task.opened', 'task.lead.added', 'mission.briefed', 'mission.progress', 'artifact.state', 'mission.paused', 'mission.resumed', 'mission.renamed', 'mission.closed', 'project.founded', 'project.moved', 'project.renamed', 'project.stopped', 'project.resumed']], ['Agents', ['agent.spawned', 'agent.state', 'agent.assigned', 'agent.retired']], ['Messages', ['you.said', 'psyche.said', 'psyche.routed', 'familiar.report', 'round.closed']], ['Gates', ['gate.requested', 'gate.resolved']]];
+let tracePanelProject;
+$('traceBox').addEventListener('toggle', () => {
+  const body = $('traceBody');
+  if (!$('traceBox').open) { body.hidePopover?.(); return; }
+  if (tracePanelProject !== cur()) {
+    tracePanelProject = cur(); traceFilter.value = '';
+    showTraceView('traceOverview');
+    $('traceErr').hidden = true;
+  }
+  placePill($('traceBox'));
+  body.showPopover?.();
+  if (!$('traceEvents').hidden) drawEvents();
+});
+$('traceClose').addEventListener('click', () => {
+  $('traceBox').open = false;
+  $('traceBox').firstElementChild.focus();
+});
+const traceIcons = {Missions: 'flag', Agents: 'role', Messages: 'speak', Gates: 'gate'};
+const traceNav = $('traceBody').querySelector('.trace-nav');
+const traceFilter = $('traceFilter');
+for (const [name] of FAMILY) {
+  traceFilter.add(new Option(name, name));
+  const button = html('button', 'trace-kind');
+  button.type = 'button';
+  button.dataset.kind = name;
+  const icon = html('span', 'trace-icon');
+  icon.innerHTML = ICON[traceIcons[name]];
+  button.append(icon, html('span', null, name), html('strong'), html('i', 'trace-meter'));
+  button.addEventListener('click', () => {
+    traceFilter.value = name;
+    showTraceView('traceEvents');
+    traceFilter.focus();
+  });
+  $('traceLegend').appendChild(button);
+}
+function showTraceView(id) {
+  for (const button of traceNav.querySelectorAll('button')) {
+    const selected = button.dataset.traceView === id;
+    button.setAttribute('aria-pressed', String(selected));
+    $(button.dataset.traceView).hidden = !selected;
+  }
+  $('traceSaved').textContent = '';
+  $('traceBody').scrollTop = 0;
+  $('traceBody').querySelector('.trace-scroll').scrollTop = 0;
+  if (id === 'traceEvents') drawEvents();
+}
+traceNav.addEventListener('click', ev => {
+  const button = ev.target.closest('[data-trace-view]');
+  if (button) showTraceView(button.dataset.traceView);
+});
+traceFilter.addEventListener('change', () => { $('traceSaved').textContent = ''; drawEvents(); });
 function drawTrace() {
   const c = cur(), tr = c.trace, t0 = tStart(c), t1 = tEnd(c), span = Math.max(1, t1 - t0);
   const mark = $('traceNow'); if (mark) mark.style.left = (clamp((cursor - t0) / span, 0, 1) * 100).toFixed(2) + '%';
   const sig = active + '|' + tr.length + '|' + c.recorded + '|' + Math.round(span / 15000);
   if (sig === traceSig) return; traceSig = sig;
-  const den = $('traceDensity'), leg = $('traceLegend'); den.textContent = leg.textContent = '';
+  const den = $('traceDensity'); den.textContent = '';
   const count = types => tr.filter(e => types.includes(e.type)).length, asks = count(['gate.requested']);
   { const sp = $('traceSpark'), n = 12, bs = Array.from({length: n}, () => ({n: 0, q: false})); sp.textContent = '';
     tr.forEach(e => { const b2 = bs[clamp(Math.floor((e.t - t0) / span * n), 0, n - 1)]; b2.n++; if (e.type === 'gate.requested') b2.q = true; });
     const mx = Math.max(1, ...bs.map(b2 => b2.n)); bs.forEach(b2 => { const i = html('i', b2.q ? 'q' : null); i.style.height = (b2.n ? 3 + 10 * Math.sqrt(b2.n / mx) : 2) + 'px'; sp.appendChild(i); }); }
-  $('traceChart').hidden = $('traceKinds').hidden = $('traceEvents').hidden = !tr.length; $('traceEmpty').hidden = tr.length > 0;
-  $('traceEvN').textContent = tr.length ? 'JSON' : '';
-  if (!tr.length) { $('traceLoad').open = true; return; }
-  $('traceT0').textContent = hm(t0); $('traceT1').textContent = hm(t1); $('traceKey').textContent = plural(asks, 'ask'); $('traceKey').hidden = !asks;
-  $('traceSum').textContent = String(tr.length);
+  const skipped = $('traceSkipped');
+  skipped.hidden = !c.skippedEvents;
+  if (c.skippedEvents) skipped.textContent = plural(c.skippedEvents, 'unrecognized line') + ' skipped during import.';
+  $('traceChart').hidden = $('traceKinds').hidden = !tr.length;
+  $('traceEmpty').hidden = !!tr.length;
+  if (!tr.length) return;
+  $('traceT0').textContent = hm(t0); $('traceT1').textContent = hm(t1);
+  $('traceKey').textContent = plural(asks, 'decision request'); $('traceKey').hidden = !asks;
   const N = 44, bins = Array.from({length: N}, () => ({n: 0, q: false}));
   tr.forEach(e => { const b = bins[clamp(Math.floor((e.t - t0) / span * N), 0, N - 1)]; b.n++; if (e.type === 'gate.requested') b.q = true; });
   const max = Math.max(1, ...bins.map(b => b.n));
   bins.forEach(b => { const i = html('i', b.q ? 'q' : null); i.style.height = (b.n ? 12 + 88 * Math.sqrt(b.n / max) : 0) + '%'; den.appendChild(i); });
   const now = html('u'); now.id = 'traceNow'; now.style.left = (clamp((cursor - t0) / span, 0, 1) * 100).toFixed(2) + '%'; den.appendChild(now);
-  FAMILY.forEach(([name, types]) => { const li = html('li', null, name); li.appendChild(html('span', null, String(count(types)))); leg.appendChild(li); });
+  FAMILY.forEach(([name, types], index) => {
+    const button = $('traceLegend').children[index], total = count(types);
+    button.querySelector('strong').textContent = String(total);
+    button.style.setProperty('--share', (total / tr.length * 100) + '%');
+    button.setAttribute('aria-label', name + ', ' + plural(total, 'event') + '. Show recent events');
+  });
 }
 const escH = x => x.replace(/[&<>]/g, ch => ({'&': '&amp;', '<': '&lt;', '>': '&gt;'}[ch]));
 const hlLine = ln => escH(ln).replace(/("(?:\\.|[^"\\])*")(\s*:)?|\b(true|false|null)\b|(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)/g, (m, str, colon, lit, num) => str ? `<span class="${colon ? 'j-k' : 'j-s'}">${str}</span>${colon || ''}` : lit ? `<span class="j-l">${lit}</span>` : `<span class="j-n">${num}</span>`);
@@ -4602,20 +4765,38 @@ function retrace(tr) {
   if (live) cursor = Date.now();
   seekTimeline(cursor, true);
   if (o.sel && n.world.missions.has(o.sel)) { n.sel = o.sel; n.fam = o.fam && n.world.missions.get(o.sel).seats.includes(o.fam) ? o.fam : null; n.detail = o.detail; n.camBack = o.camBack; }
-  n.ackN = o.ackN; n.votes = o.votes; n.noticed = o.noticed; n.sample = o.sample; n.skippedEvents = o.skippedEvents; n.layoutDemo = o.layoutDemo; n.dlg = o.dlg; n.sent = o.sent;
+  n.keepBrief = o.keepBrief; n.ackN = o.ackN; n.votes = o.votes; n.noticed = o.noticed; n.sample = o.sample; n.skippedEvents = o.skippedEvents; n.layoutDemo = o.layoutDemo; n.dlg = o.dlg; n.sent = o.sent;
   leadSig = needsSig = streamSig = marksSig = lcSig = wardSig = traceSig = ''; insp.sig = '';
   buildScene(); refresh(); atlasQueueFit(); atlasWriteRoute(true);
 }
-let evNote = '';
+let traceListProject, traceListApplied, traceListFilter;
 function drawEvents() {
-  const c = cur(), box = $('traceEv'), n = c.applied, from = Math.max(0, n - 12); box.textContent = '';
-  for (let i = n - 1; i >= from; i--) box.appendChild(eventRow(c, c.trace[i]));
-  $('traceEvNote').textContent = evNote || (n ? `The ${n - from} most recent${live ? '' : ' before ' + hm(cursor)}. Open one to read or change its JSON.` : 'No events before this moment.');
-  $('traceEvNote').className = 'dr-note' + (evNote ? ' ok' : ''); evNote = '';
+  const c = cur(), box = $('traceEv'), filter = traceFilter.value, n = c.applied;
+  const same = traceListProject === c && traceListFilter === filter;
+  // Keep the current rows while a reader or editor is using them.
+  const held = same && traceListApplied !== n && (box.contains(document.activeElement) || !!box.querySelector('details[open]'));
+  if (!same || (traceListApplied !== n && !held)) {
+    traceListProject = c; traceListApplied = n; traceListFilter = filter;
+    const types = FAMILY.find(([name]) => name === filter)?.[1];
+    const rows = [];
+    for (let i = n - 1; i >= 0 && rows.length < 12; i--) {
+      if (!types || types.includes(c.trace[i].type)) rows.push(eventRow(c, c.trace[i]));
+    }
+    box.replaceChildren(...rows);
+  }
+  const count = box.childElementCount;
+  let note = count ? plural(count, 'event') + ' · newest first' : 'No matching events at this point in the timeline.';
+  if (held) note += ' · List paused for inspection';
+  else if (count && !live) note += ' · through ' + hm(cursor);
+  if ($('traceEvNote').textContent !== note) $('traceEvNote').textContent = note;
 }
 function eventRow(c, e) {
-  const d = html('details', 'ev' + (e.type.indexOf('gate.') === 0 ? ' q' : '')), sm = html('summary');
-  sm.append(html('span', 'ev-t', hms(e.t)), html('span', 'ev-k', e.type), html('span', 'ev-w', String(e.agent || (e.familiar && fam(e.familiar).name) || e.mission || e.ask || '')));
+  const d = html('details', 'ev' + (e.type.startsWith('gate.') ? ' q' : '')), sm = html('summary');
+  const subject = e.agent || (e.familiar && fam(e.familiar).name) || c.world.missions.get(e.mission)?.name || e.mission || e.task || e.ask;
+  const copy = html('span', 'trace-event-copy');
+  copy.appendChild(html('strong', null, missionHistory.eventTitle(e)));
+  if (subject) copy.appendChild(html('span', null, String(subject)));
+  sm.append(copy, html('time', 'ev-t', hms(e.t)));
   sm.insertAdjacentHTML('beforeend', ICON.chev); d.appendChild(sm);
   d.addEventListener('toggle', () => { if (d.open && !d.querySelector('.je-w')) d.appendChild(jsonEditor(c, e)); });
   return d;
@@ -4637,21 +4818,21 @@ function jsonEditor(c, e) {
   ta.addEventListener('input', lint);
   ta.addEventListener('keydown', ev => {
     if (composingInput(ev)) return;
-    if (ev.key === 'Tab' && !ev.shiftKey && !ev.altKey && !ev.ctrlKey && !ev.metaKey) { ev.preventDefault(); ta.setRangeText('  ', ta.selectionStart, ta.selectionEnd, 'end'); lint(); }
     if (ev.key === 's' && (ev.metaKey || ev.ctrlKey)) { ev.preventDefault(); save.click(); }
-    if (ev.key === 'Escape') { ev.stopPropagation(); ta.blur(); }
+    if (ev.key === 'Escape') { ev.stopPropagation(); wrap.parentElement.querySelector('summary').focus(); }
   });
   fmt.addEventListener('click', () => { try { ta.value = JSON.stringify(JSON.parse(ta.value), null, 2); } catch (err) {} lint(); });
   save.addEventListener('click', () => {
     lint(); if (res.error) return ta.focus();                      // linted again on save; nothing invalid gets through
     const i = c.trace.indexOf(e); if (i < 0 || c !== cur()) { msg.textContent = 'This event has moved. Reopen it.'; msg.className = 'je-msg bad'; return; }
     const tr = c.trace.slice(); tr[i] = res.obj; tr.sort((a, b) => a.t - b.t);
-    evNote = `Saved ${res.obj.type}. The project was replayed with the change.`; retrace(tr); drawEvents();
+    retrace(tr); tracePanelProject = cur(); drawEvents(); traceFilter.focus();
+    $('traceSaved').textContent = 'Saved ' + res.obj.type + '. The project was replayed.';
   });
   box.append(pre, ta); bar.append(msg, fmt, save); wrap.append(box, bar); lint();
   return wrap;
 }
-$('traceEvents').addEventListener('toggle', () => { if ($('traceEvents').open) drawEvents(); });
+
 const TRACE_EXAMPLE = ['{"t":"2026-11-18T06:20:00Z","type":"mission.opened","mission":"m-1","name":"Review readiness"}',
   '{"t":"2026-11-18T06:20:05Z","type":"council.seated","mission":"m-1","familiar":"cody"}',
   '{"t":"2026-11-18T06:20:06Z","type":"task.opened","task":"k-1","mission":"m-1","familiar":"cody","name":"Unit tests"}',
@@ -4699,8 +4880,10 @@ async function loadTrace(file, feedback = $('traceErr'), bookmark = null) {
   const err = $('traceErr');
   err.hidden = !res.bad; if (res.bad) err.textContent = `${plural(res.bad, 'line')} skipped as unrecognized.`;
   project.layoutDemo = target.layoutDemo;
+  const fromPanel = $('traceBox').open;
   projects[key] = project;
   enter(); atlasQueueFit(); atlasWriteRoute(true);
+  if (fromPanel) $('traceBox').firstElementChild.focus();
   return true;
 }
 {
@@ -5292,7 +5475,7 @@ function drawBriefForm(focusId) {
       x.addEventListener('click', () => { userTpl = userTpl.filter(u => u !== t); saveTpl(); if (nm.tpl === t.id) nm.tpl = null; drawBriefForm(); drawNew(); }); return x; });
     if (owns.length) body.push(tgs('Delete', owns));
     const sv = html('div', 'tp-save'), inp = html('input'), sb = html('button', 'btn sm', 'Save as template'); inp.type = 'text'; inp.maxLength = 28; inp.placeholder = 'Name this brief'; inp.setAttribute('aria-label', 'Template name'); inp.dataset.id = 'tp-name'; sb.type = 'button';
-    const full = userTpl.length >= TPL_MAX, okName = () => { const v = inp.value.trim(); return v.length >= 2 && !allTpl().some(t => t.name.toLowerCase() === v.toLowerCase()); };
+    const full = userTpl.length >= TPL_MAX, okName = () => { const v = inp.value.trim(); return successOk(nm.brief) && v.length >= 2 && !allTpl().some(t => t.name.toLowerCase() === v.toLowerCase()); };
     sb.disabled = true; inp.disabled = full; if (full) inp.placeholder = `You have ${TPL_MAX} templates. Delete one first.`;
     inp.addEventListener('input', () => { sb.disabled = full || !okName(); }); inp.addEventListener('keydown', ev => { if (composingInput(ev)) return; if (ev.key === 'Enter') { ev.preventDefault(); sb.click(); } });
     sb.addEventListener('click', () => { if (full || !okName()) return; const name = inp.value.trim(), t = {id: 'u-' + Date.now().toString(36), name, brief: normBrief(clone(nm.brief)), own: true};
@@ -5316,8 +5499,18 @@ function drawBriefForm(focusId) {
   row('measure', 'gauge', '', 'Success measures', b.measure.length ? b.measure.map(k => MEASURE[k].toLowerCase()).join(', ') : 'Nothing', [tgs('', Object.keys(MEASURE).map(k => tog('m-' + k, MEASURE[k], b.measure.includes(k), () => flip(b.measure, k))))]);
   $('nmOutput').textContent = b.deliver.map(artText).join(' · ') || 'No deliverables set';
   $('nmLimits').textContent = [tplLabel() || 'Custom brief', ...['minutes', 'usd'].filter(key => b.atMost[key]).map(key => capText(key, b.atMost[key]))].join(' · ');
+  // Success criteria (#35, the editor ported from #42), then the plain-language completion rule this Brief
+  // implies, shown before it is saved. Editing a criterion refreshes only the rule and the Save state.
+  if (window.CovenBriefPolicyEditor) box.appendChild(window.CovenBriefPolicyEditor.render(document, b, () => { nm.briefTouched = true; nm.tplEdited = true; drawDone(); drawNew(); }));
+  if (window.CovenBriefPolicy) { const done = html('p', 'bp-form-summary'); done.id = 'nmDone'; done.setAttribute('aria-live', 'polite'); box.appendChild(done); drawDone(); }
   if (focusId) { const el = box.querySelector(`[data-id="${focusId}"]`); if (el && !el.disabled) el.focus(); }
 }
+function drawDone() {
+  const done = $('nmDone'), BP = window.CovenBriefPolicy; if (!done || !BP) return;
+  done.textContent = ''; done.append(html('b', null, 'When is it done? '), BP.summarize(BP.fromBrief(nm.brief, {deliver: artText, floor: floorText})));
+}
+// Criteria the editor can't validate block Save, Open mission and Save as template.
+function successOk(b) { return !b || b.success === undefined || !window.CovenBriefPolicy || window.CovenBriefPolicy.normalizeSuccess(b.success).ok; }
 function setLead(k, focus) {
   nm.lead = k;
   $('nmLeads').querySelectorAll('.nm-lead').forEach(b => { const on = b.dataset.k === k; b.setAttribute('aria-checked', String(on)); b.tabIndex = on ? 0 : -1; if (on && focus) b.focus(); });
@@ -5350,7 +5543,7 @@ function drawNew() {
   $('emptyX').hidden = false;
   $('nmFoot').textContent = !ok ? (c.recorded ? 'Imported recording · read-only' : 'Go live to make changes.') : EM ? 'Applies to this mission.' : $('nmName').value.trim() ? 'Local simulation · 6 starting agents' : 'Enter a mission name to continue.';
   $('empty').setAttribute('aria-label', EM ? 'Edit brief' : 'New mission');
-  $('raise').disabled = !ok || !$('nmName').value.trim(); $('nmName').disabled = !ok || !!EM;
+  $('raise').disabled = !ok || !$('nmName').value.trim() || !successOk(nm.brief); $('nmName').disabled = !ok || !!EM;
 }
 function openNew(editId, onCancel) {
   nm.onCancel = onCancel;
@@ -5414,14 +5607,18 @@ $('empty').addEventListener('submit', ev => {
   ev.preventDefault();
   if (composingText.has(document.activeElement)) return;
   const c = cur(), w = c.world, name = $('nmName').value.trim().slice(0, 60), k = nm.lead, f = fam(k), brief = normBrief(nm.brief);
+  if (!successOk(nm.brief)) return;
   if (nm.edit) {                                    // a changed brief is said to Psyche, who tells the council
     const M = w.missions.get(nm.edit); if (!M || !canAct()) return;
     c.composing = false; $('nmName').value = nm.draftName || ''; nm.edit = null; nm.briefTouched = false; nm.open = null;
     emit(c, {type: 'you.said', text: `Change the brief for ${M.name}.`, mission: M.id});
     const tname = tplLabel();
-    setTimeout(() => { rebrief(c, M, brief, tname);
-      emit(c, {type: 'psyche.said', text: `${M.name} has a new brief. ${briefSentence(brief)}`}); if (cur() === c) { panelView = 'brief'; select(M.id, null, 'side'); } }, 450);
-    return setLead(k);
+    rebrief(c, M, brief, tname);
+    emit(c, {type: 'psyche.said', text: `${M.name} has a new brief. ${briefSentence(brief)}`});
+    panelView = 'brief'; select(M.id, null, 'side');
+    setLead(k);
+    $('inspect').querySelector('[data-focus="edit-brief"]')?.focus({preventScroll: true});
+    return;
   }
   if (!name || !canAct() || $('empty').hidden) return;
   nm.onCancel = null;
@@ -5986,11 +6183,13 @@ function timelineUI() {
   }
   $('traceKind').textContent = !has ? 'empty' : c.recorded ? 'loaded' : live ? 'live' : 'replay'; plan.classList.toggle('live', live && has); plan.classList.toggle('map-running', has && (live || playing));
   { const sp = $('traceSpark'), cut = Math.ceil(p * sp.children.length); sp.classList.toggle('live', live && has); for (let i = 0; i < sp.children.length; i++) sp.children[i].classList.toggle('off', !has || (!live && i >= cut)); }
-  $('traceInfo').textContent = has ? `${plural(c.trace.length, 'event')} · ${Math.max(1, Math.round((c.trace[c.trace.length - 1].t - c.trace[0].t) / 60000))} min` : '';
-  const chip = $('traceChip'); chip.textContent = !has ? 'Empty' : c.recorded ? 'Loaded' : 'Sample'; chip.className = 'hd-s ' + (!has ? 'off' : c.recorded ? '' : 'on');
+  const minutes = has ? Math.round((c.trace[c.trace.length - 1].t - c.trace[0].t) / 60000) : 0;
+  $('traceInfo').textContent = has ? plural(c.trace.length, 'event') + ' · ' + (minutes ? minutes + ' min' : 'under 1 min') : '';
+  const chip = $('traceChip'); chip.textContent = !has ? 'Empty' : c.recorded ? 'Recording' : c.sample ? 'Sample' : 'Local'; chip.className = 'hd-s ' + (!has ? 'off' : c.recorded ? '' : 'on');
   $('footClock').textContent = !replayable ? '' : live ? 'Live' : hms(cursor);
   $('traceReset').hidden = !c.recorded;
   drawTrace();
+  if ($('traceBox').open && !$('traceEvents').hidden) drawEvents();
 }
 function goLive() { const c = cur(); if (c.recorded) return; live = true; playing = false; cursor = Date.now(); seekTimeline(cursor); refresh(); }
 $('scrub').addEventListener('input', () => {
@@ -6277,18 +6476,18 @@ function syncProjectPreview(preview, project, compact = false, formation = 'ring
   }
 }
 
-function updateVisibleProjectPreviews(ghosts, camera, scale, width, height, previewScale = scale) {
+function updateVisibleProjectPreviews(ghosts, camera, scale, width, height, previewScale = scale, detailScale = scale) {
   const labels = [];
   const halfWidth = width / (2 * scale) + 280, halfHeight = height / (2 * scale) + 280;
   for (const gh of ghosts) {
-    const visible = 560 * scale >= 20 && Math.abs(gh.ox - camera.px) <= halfWidth && Math.abs(gh.oy - camera.py) <= halfHeight;
+    const visible = 560 * detailScale >= 20 && Math.abs(gh.ox - camera.px) <= halfWidth && Math.abs(gh.oy - camera.py) <= halfHeight;
     if (!visible) {
       if (gh.preview) { gh.preview.group.remove(); gh.preview = null; }
       continue;
     }
     if (!gh.preview) gh.preview = createProjectPreview(gh);
-    syncProjectPreview(gh.preview, projects[gh.k], 560 * scale < 40, missionFormation);
-    if (560 * scale >= 320) {
+    syncProjectPreview(gh.preview, projects[gh.k], 560 * detailScale < 40, missionFormation);
+    if (560 * detailScale >= 320) {
       for (const [id, item] of gh.preview.missions) {
         labels.push({project: gh.k, id, item});
       }
@@ -6542,7 +6741,7 @@ function atlasSnapshot(includeMissions) {
       previewNames.push(mission.name);
       if (previewNames.length === 2) break;
     }
-    ps.push({key: k, missions: w.missions.size, agents: w.agents.size, needs: q, previewNames});
+    ps.push({key: k, layoutDemo: !!projects[k].layoutDemo, missions: w.missions.size, agents: w.agents.size, needs: q, previewNames});
     if (showMissions) w.missions.forEach(M => {
       const seal = sealOf(w, M);
       const pending = requests.filter(q => q.mission === M.id);
@@ -6617,7 +6816,7 @@ if (window.CovenMobileUI) window.CovenMobileUI.mount({
   close: {
     inspect: () => { if (cur().pick) clearPick(); else if (cur().fam) select(cur().sel, null, 'side'); else closeMissionDetails(); },
     psyche: () => setMode('closed'), empty: closeNew, projectForm: closeProjectForm,
-    atlasMissionBrowser: () => window.CovenAtlas.closeMissions(true), atlasSidebar: () => window.CovenAtlas.closeBrowse(true),
+    atlasMissionBrowser: () => window.CovenAtlas.closeMissions(true), atlasSidebar: () => window.CovenAtlas.dismissBrowse(),
     keyModal: closeKey, cpModal: closeWheel,
   },
   fallbackFocus: () => atlasFocusSelection(true),

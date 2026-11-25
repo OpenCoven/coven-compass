@@ -19,7 +19,7 @@ Commit any regenerated `tests/evidence/current.json`. GitHub Actions is disabled
 
 ## Where to make a change
 
-The table comes from #6. Run its focused check while you work, then `verify-all` before you commit.
+Choose an issue from the [contributor entry point](START_HERE.md#next-contributor-task). Run the focused check for the editable source below, then run `verify-all` before committing.
 
 | Change | Edit | Focused check |
 | --- | --- | --- |
@@ -27,10 +27,12 @@ The table comes from #6. Run its focused check while you work, then `verify-all`
 | Routes and mission browser | `dist/mission-navigation.js`, `dist/atlas-ui.js`, and their bindings in `dist/index.html` | `node --test tests/navigation.test.cjs tests/navigation-notice.test.cjs tests/mission-interactions.test.cjs` |
 | Coven Needs review queue and shared Psyche confirmation | `dist/review-queue.js`, `dist/review-queue-ui.js`, `requestConfirmation` in `dist/index.html` | `node --test tests/review-queue.test.cjs`. Run `scripts/review-queue-qa.mjs` and `scripts/inbox-event-qa.mjs` from the external Playwright install with the preview URL and engine (`chromium` or `webkit`). |
 | Map and camera | `src/atlas-layout.ts`, `src/atlas-viewport.ts` | `node --test tests/atlas-layout.test.cjs tests/atlas-viewport.test.cjs` |
+| Projects drawer and Trace | `dist/atlas-ui.js`, `dist/atlas.css`, Trace in `dist/index.html` | Run `scripts/project-drawer-qa.mjs` and `scripts/trace-panel-qa.mjs` beside external Playwright with the preview URL and engine (`chromium` or `webkit`). For row activation, run `scripts/project-selection-qa.mjs` with the URL, engine and `pointer` or `controls`. |
 | Mobile controls and focus | `dist/mobile-ui.js`, `dist/mobile-interactions.js`, `dist/atlas.css` | `node --test tests/mobile-*.test.cjs` |
 | Map keyboard focus (one Tab stop, arrow keys inside) | `dist/map-focus.js`, `atlasFocusable` in `dist/index.html` | `node --test tests/map-focus.test.cjs`, then Tab through the map in a browser |
 | Simulation fold (what an event does to the world) | `src/simulation-model.ts` | `node --test tests/simulation-model.test.cjs tests/replay-*.test.cjs tests/approval-replay.test.cjs` |
 | Projection sources (`?source=`) | `dist/projection-source.js`, `dist/fixtures/`, the guard at the top of the inline script in `dist/index.html` | `node --test tests/projection-source.test.cjs` |
+| Brief success policy (proposal, #35) | `dist/brief-policy.js` (model), `dist/brief-policy-view.js` and `dist/brief-policy.css` (panel in the inspector's Brief tab and in `?source=fixture&scenario=brief-…`), `dist/brief-policy-editor.js` (success criteria in New mission and Edit brief), `dist/fixtures/brief-policy-cases.json`, [chapter 16](docs/handoff/16-brief-success-profile.md) | `node --test tests/brief-policy.test.cjs tests/brief-fixtures.test.cjs tests/brief-policy-view.test.cjs tests/brief-policy-editor.test.cjs` |
 
 Keep `tests/fixtures/` (the pinned baseline) and the dated audits in `tests/evidence/` as historical evidence.
 
@@ -41,7 +43,7 @@ Keep `tests/fixtures/` (the pinned baseline) and the dated audits in `tests/evid
 3. **No live daemon transport.** D03 is unresolved: the daemon's loopback TCP listener is unauthenticated and sends no CORS headers, so a static page can't safely reach it.
 4. **No outward actions without explicit authorization.** That means no deploys or Site publishes, no edits to other OpenCoven repos, and no messages outside GitHub. Linked issues are how you reach other repos.
 5. **Report evidence exactly:** command, exit code, and counts. List skipped checks as skipped. Don't loosen a test or gate just to get to green.
-6. **Vocabulary:** *Projects contain Castles.* The map's enclosure is a **Project**. A **Castle** is a bounded, hosted place where a Project's work runs and its results come back, with exactly one execution owner (Val's definition, 2026-11-19, recorded in [D01](docs/handoff/11-open-decisions.md)). `coven-host` provides a Castle's folder surface and `coven-castles` checks whether a sandbox is fit to back one. A Project has zero or more Castles. A Castle is never the Project and keeps its own ID, so don't reintroduce "Castle" for the enclosure, and don't treat a Castle's folder path or `castle.json` as a Project identity. Which object backs a Project is still open (D01 ownership).
+6. **Vocabulary:** *Projects contain Castles.* The map's enclosure is a **Project**. A **Castle** is a bounded, hosted place where a Project's work runs and its results come back, with exactly one execution owner (Val's definition, 2026-11-19, recorded in [D01](docs/handoff/11-open-decisions.md)). `coven-host` provides a Castle's folder surface and `coven-castles` checks whether a sandbox is fit to back one. A Project has zero or more Castles. A Castle is never the Project and keeps its own ID, so don't reintroduce "Castle" for the enclosure, and don't treat a Castle's folder path or `castle.json` as a Project identity. Project IDs: in the long term the Coven daemon issues them; for the pilot, Cave's registry does, as `{ source: "cave", ref }` (Val, 2026-11-22, [D01](docs/handoff/11-open-decisions.md)). Multi-root Projects and cross-Project missions are still open.
 
 7. **Compass is strictly 2D.** The map, Seal lab, icons, previews and responsive views share an upright drawing plane. Use position, size, outlines, fill, arcs and labels to encode meaning. Pan and zoom are the only camera movements. Adding perspective, orbit, tilt, extrusion, depth shading or a 3D renderer requires Val’s explicit override of this restriction in the issue or PR before implementation. Cite that decision when changing this invariant and its source check. There is no runtime override.
 
@@ -57,14 +59,17 @@ Keep `tests/fixtures/` (the pinned baseline) and the dated audits in `tests/evid
 
 | Path | What it is |
 | --- | --- |
-| `dist/index.html` | ~5.5k lines: sample traces, `seek`/`emit` (selection, camera, effects), scene build/sync/projection, seal renderer, replay loop. The main monolith. |
+| `dist/index.html` | Sample traces, `seek`/`emit` (selection, camera, effects), scene build/sync/projection, seal renderer, replay loop. The main application entry point. |
 | `src/simulation-model.ts` | The simulation model: a pure fold over a trace (`newWorld`, `apply`, `advance`, `append`, `summarize`). No DOM or timers; the page injects its constants. |
 | `dist/atlas-ui.js`, `dist/atlas.css` | Header, project search and sample presets, mission browser, drawer, familiar chips |
 | `src/atlas-layout.ts` | Pure geometry: paired project placement, corridors, gates, bounded mission packing |
 | `src/atlas-viewport.ts` | Measured safe-area fit |
-| `dist/atlas-crown.js` | Canonical flat Psyche crown and aperture |
+| `src/atlas-crown.ts` | Canonical flat Psyche crown and aperture. Build its classic script for the browser. |
 | `dist/mission-navigation.js` | Route codec (`#/project/<name>[/mission/<id>…]`), replay selection reconciliation |
 | `dist/projection-source.js`, `dist/fixtures/` | **The projection seam.** `?source=simulation` (the default) or `?source=fixture&scenario=…`. Every source implements `read() → Projection`. Add a live adapter here, never inside the simulation. |
+| `dist/brief-policy.js` | **Proposal model for #35.** A pure evaluation of a Brief's success policy (required conditions, rubric, cumulative limits) against evidence-bound evaluations. It returns the next permitted action and never "accepted". |
+| `dist/brief-policy-editor.js` | The success criteria editor in New mission and Edit brief. It edits `brief.success` only; Save stays with the page and is blocked while the criteria don't validate. |
+| `dist/brief-policy-view.js`, `dist/brief-policy.css` | The success policy panel, shared by the inspector and the synthetic fixture view. It keeps proposal, execution, quality qualification and accepted completion apart. |
 | `dist/mobile-ui.js`, `dist/mobile-interactions.js` | Adaptive dock, portals, focus, gestures, visual viewport |
 | `dist/map-focus.js` | Roving tabindex for map items: the map is one Tab stop, and arrow keys, Home and End move between Projects, gates, familiars, missions and agents |
 | `dist/seal-lab.js`, `dist/semantic-map.css` | Isolated seal explorer; scope-specific scene visibility |

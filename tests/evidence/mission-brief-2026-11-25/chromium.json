@@ -1,0 +1,357 @@
+{
+  "generated_utc": "2026-11-25T08:38:05.067Z",
+  "commit": "68e55a3f75f4d19a959b95f81a213b03c8ef96b2",
+  "browser": "chromium 156.0.8078.4",
+  "tool": "playwright 1.64.1",
+  "base": "http://127.0.0.1:19385/",
+  "evidence_level": "browser (headless chromium)",
+  "screenshot_dir": "kept outside the repository; see the pull request",
+  "checks": [
+    {
+      "mode": "brief editor",
+      "viewport": "desktop-1440x900",
+      "name": "adding success criteria previews the completion rule before Save",
+      "pass": true,
+      "detail": "When is it done? Eligible for acceptance only when all 4 required conditions pass and the quality rubric scores at least 80 of 100, with no criterion below its floor, each shown by current evidence for the same candidate. All attempts together may use at most 3 attempts, $2, 30 minutes, 150,000 tokens. When a limit runs out: stop and escalate. Unknown evidence never counts as met. Meeting every gate makes the mission eligible; acceptance is a separate, authorized step."
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "desktop-1440x900",
+      "name": "valid criteria and a name enable Create mission",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "desktop-1440x900",
+      "name": "invalid criteria block Open mission and say why",
+      "pass": true,
+      "detail": "The minimum weighted score must be a whole percentage from 0 to 100."
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "desktop-1440x900",
+      "name": "valid criteria re-enable Open mission, and the editor fits",
+      "pass": true,
+      "detail": "{\"width\":304,\"right\":351,\"viewport\":1440,\"scroll\":334,\"client\":334}"
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "desktop-1440x900",
+      "name": "the saved criteria reach the inspector, waiting for evidence, not accepted",
+      "pass": true,
+      "detail": "sim-3983b086; next \"Wait for evidence\""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "desktop-1440x900",
+      "name": "dismissing the editor returns keyboard focus",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "desktop-1440x900",
+      "name": "Edit brief keeps the criteria, previews the edit, and saving derives a new revision",
+      "pass": true,
+      "detail": "kept 4; sim-3983b086 → sim-1b57ab6c"
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "desktop-1440x900",
+      "name": "reload restores edited policy, required evidence and acceptance state",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "desktop-1440x900",
+      "name": "replay selects the opening event and leaves live mode",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "desktop-1440x900",
+      "name": "the opening event restores the original policy revision",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "desktop-1440x900",
+      "name": "returning from replay restores the event control focus",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "desktop-1440x900",
+      "name": "passing rubric cannot substitute for missing evidence",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "desktop-1440x900",
+      "name": "first failed grade proposes a bounded retry",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "desktop-1440x900",
+      "name": "second attempt retains spending and excludes old grades",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "desktop-1440x900",
+      "name": "reload preserves both evaluation records and their provenance",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "desktop-1440x900",
+      "name": "no console errors",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-390x844",
+      "name": "adding success criteria previews the completion rule before Save",
+      "pass": true,
+      "detail": "When is it done? Eligible for acceptance only when all 4 required conditions pass and the quality rubric scores at least 80 of 100, with no criterion below its floor, each shown by current evidence for the same candidate. All attempts together may use at most 3 attempts, $2, 30 minutes, 150,000 tokens. When a limit runs out: stop and escalate. Unknown evidence never counts as met. Meeting every gate makes the mission eligible; acceptance is a separate, authorized step."
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-390x844",
+      "name": "valid criteria and a name enable Create mission",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-390x844",
+      "name": "invalid criteria block Open mission and say why",
+      "pass": true,
+      "detail": "The minimum weighted score must be a whole percentage from 0 to 100."
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-390x844",
+      "name": "valid criteria re-enable Open mission, and the editor fits",
+      "pass": true,
+      "detail": "{\"width\":338,\"right\":364,\"viewport\":390,\"scroll\":368,\"client\":368}"
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-390x844",
+      "name": "the saved criteria reach the inspector, waiting for evidence, not accepted",
+      "pass": true,
+      "detail": "sim-3983b086; next \"Wait for evidence\""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-390x844",
+      "name": "dismissing the editor returns keyboard focus",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-390x844",
+      "name": "Edit brief keeps the criteria, previews the edit, and saving derives a new revision",
+      "pass": true,
+      "detail": "kept 4; sim-3983b086 → sim-1b57ab6c"
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-390x844",
+      "name": "reload restores edited policy, required evidence and acceptance state",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-390x844",
+      "name": "replay selects the opening event and leaves live mode",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-390x844",
+      "name": "the opening event restores the original policy revision",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-390x844",
+      "name": "returning from replay restores the event control focus",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-390x844",
+      "name": "passing rubric cannot substitute for missing evidence",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-390x844",
+      "name": "first failed grade proposes a bounded retry",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-390x844",
+      "name": "second attempt retains spending and excludes old grades",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-390x844",
+      "name": "reload preserves both evaluation records and their provenance",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-390x844",
+      "name": "no console errors",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-landscape-844x390",
+      "name": "adding success criteria previews the completion rule before Save",
+      "pass": true,
+      "detail": "When is it done? Eligible for acceptance only when all 4 required conditions pass and the quality rubric scores at least 80 of 100, with no criterion below its floor, each shown by current evidence for the same candidate. All attempts together may use at most 3 attempts, $2, 30 minutes, 150,000 tokens. When a limit runs out: stop and escalate. Unknown evidence never counts as met. Meeting every gate makes the mission eligible; acceptance is a separate, authorized step."
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-landscape-844x390",
+      "name": "valid criteria and a name enable Create mission",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-landscape-844x390",
+      "name": "invalid criteria block Open mission and say why",
+      "pass": true,
+      "detail": "The minimum weighted score must be a whole percentage from 0 to 100."
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-landscape-844x390",
+      "name": "valid criteria re-enable Open mission, and the editor fits",
+      "pass": true,
+      "detail": "{\"width\":568,\"right\":706,\"viewport\":844,\"scroll\":598,\"client\":598}"
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-landscape-844x390",
+      "name": "the saved criteria reach the inspector, waiting for evidence, not accepted",
+      "pass": true,
+      "detail": "sim-3983b086; next \"Wait for evidence\""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-landscape-844x390",
+      "name": "dismissing the editor returns keyboard focus",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-landscape-844x390",
+      "name": "Edit brief keeps the criteria, previews the edit, and saving derives a new revision",
+      "pass": true,
+      "detail": "kept 4; sim-3983b086 → sim-1b57ab6c"
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-landscape-844x390",
+      "name": "reload restores edited policy, required evidence and acceptance state",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-landscape-844x390",
+      "name": "replay selects the opening event and leaves live mode",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-landscape-844x390",
+      "name": "the opening event restores the original policy revision",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-landscape-844x390",
+      "name": "returning from replay restores the event control focus",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-landscape-844x390",
+      "name": "passing rubric cannot substitute for missing evidence",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-landscape-844x390",
+      "name": "first failed grade proposes a bounded retry",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-landscape-844x390",
+      "name": "second attempt retains spending and excludes old grades",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-landscape-844x390",
+      "name": "reload preserves both evaluation records and their provenance",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-landscape-844x390",
+      "name": "no console errors",
+      "pass": true,
+      "detail": ""
+    }
+  ],
+  "screenshots": [
+    "desktop-1440x900-brief-editor.png",
+    "phone-390x844-brief-editor.png",
+    "phone-landscape-844x390-brief-editor.png"
+  ],
+  "summary": {
+    "checks": 48,
+    "passed": 48,
+    "failed": 0
+  }
+}
