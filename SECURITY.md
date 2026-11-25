@@ -31,3 +31,9 @@ GitHub secret scanning covers the public repository’s history. Push protection
 Changes to `main` go through a pull request. GitHub requires the branch to be up to date and the Vercel GitHub App’s `Vercel` check to pass. These protections apply to administrators. Force pushes and branch deletion are blocked.
 
 GitHub Actions is disabled for this repository. Contributors run the Node suite and hook regression tests locally. The Vercel build runs the site and secret checks described above. To inspect their exact commands, see [vercel.json](vercel.json).
+
+## Accepted dependency alerts
+
+Val dismissed [Dependabot alert #1](https://github.com/OpenCoven/coven-compass/security/dependabot/1) for `glib` 0.18.5 as tolerable risk on 2026-11-22. The locked Linux desktop dependency tree includes `glib` through GTK and WebKitGTK. The documented macOS app build has no dependency on that crate. The advisory is fixed in `glib` 0.20.0. [GHSA-wrw7-89jp-8q8g](https://github.com/advisories/GHSA-wrw7-89jp-8q8g)
+
+Reassess before supporting Linux desktop builds or when the Tauri GTK dependencies change. To reproduce the platform comparison, run `cargo tree --locked --manifest-path src-tauri/Cargo.toml --target aarch64-apple-darwin -i glib` and repeat with `--target x86_64-unknown-linux-gnu`.
