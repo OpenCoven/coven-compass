@@ -23,6 +23,18 @@ Each archive contains the run metadata, served-file digests, input samples, fram
 
 On the integrated recovery, Chromium and Playwright WebKit passed Project selection by pointer, keyboard and narrow touch, with desktop focus verified after switching Projects. WebKit opened Config refactor from its compact caption and matched all three tasks. The Trace replay and import journeys passed in both engines. [Project selection observations](../tests/evidence/map-performance-2026-11-24/project-selection.json)
 
+### Merged revision
+
+[PR #109](https://github.com/OpenCoven/coven-compass/pull/109) merged at `a3603e03d28746e559053fc8b7b973819dacaf4d`. Its `dist/` tree `d4df7a8aeeb62bbab42449e01adeaf8bbb939eb7` matches the qualified candidate. A fresh six-cell matrix checked the served files against that merge and repeated every journey on the reference host. All six merged medians met the 100 ms budget. The additional pre-merge baseline below used `53bfea0` and overlapped functional browser QA at the start. The two original main matrices above provide independent comparisons.
+
+| Projects | Desktop baseline → merged (ms) | Narrow baseline → merged (ms) |
+| ---: | ---: | ---: |
+| 4 | 29.3 → 22.5 | 18.6 → 21.3 |
+| 32 | 61.2 → 32.3 | 52.1 → 19.6 |
+| 128 | 115.8 → 89.1 | 86.6 → 60.1 |
+
+The [additional baseline](../tests/evidence/map-performance-2026-11-24/review-main.tar.gz) and [merged matrix](../tests/evidence/map-performance-2026-11-24/merged.tar.gz) contain the unprofiled samples, dense renderer and CPU profiles, frame observations and served-file checksums. This result applies to the named Chromium runtime, sample data and viewports. Physical-device timing, Safari timing and a new soak on this merge remain unmeasured.
+
 ## November 23 integrated drawer
 
 Two complete matrices exercised the merged Projects drawer and Trace at `520194322c4d8e8491fb7026e1024012a7714471`, served locally with verified `dist/` tree `7a7834343a0ca870e3c3ccdb91b8344ce30660c3`. Each cell gives the first and repeat warmed median in milliseconds over five fresh browser contexts per run. The budget is 100 ms per cell.

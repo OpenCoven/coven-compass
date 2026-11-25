@@ -4,11 +4,10 @@ See the [README](README.md) to run the map locally and [AGENTS.md](AGENTS.md) fo
 
 ## Next contributor task
 
-Returning from a Project to a Coven with 128 Projects exceeded the [100 ms desktop budget](docs/map-performance.md#november-23-integrated-drawer). Take this work on [#40](https://github.com/OpenCoven/coven-compass/issues/40).
+Review how a mission Brief records success under [#35](https://github.com/OpenCoven/coven-compass/issues/35). Nova coordinates the existing [draft PR #44](https://github.com/OpenCoven/coven-compass/pull/44). Val owns the Compass inspector fields, Psyche owns evaluation policy, and Coven owns retry and acceptance authority.
 
-1. **Reproduce.** Start from current main in a separate worktree. Run the [six-cell browser workload](docs/map-performance.md#reproduction), then `python3 scripts/check-overview-budget.py <matrix-directory>`. Retain the first failed cell and its renderer profile.
-2. **Compare.** The maintainer’s local candidate `c710b307ffca1d09117574882e887d13981d4c7f` batches label measurements and reuses the overview fit in `dist/index.html`. Compare it with its original base `64ad9db` and port the measured changes. If the candidate is absent from your clone, use the new baseline to identify the slow path and request the patch on #40.
-3. **Qualify.** Run two complete candidate matrices. Check Project selection, keyboard focus, compact task captions and Trace replay in Chromium and WebKit. Link the revisions, ranges and profiles on #40 before requesting merge.
+1. In a separate worktree at the draft head, run `node --test tests/brief-*.test.cjs`. Follow one candidate through a failed first attempt, a retry and a changed candidate. Check that cumulative limits carry forward and that a stale grade or an uncertain prior effect prevents acceptance.
+2. Record the exact draft revision and the field or receipt for each transition on [the existing review thread](https://github.com/OpenCoven/coven-compass/pull/44#issuecomment-7151241388). The next acceptance step is for each owner to link their adopted fields and source revision. Nova can then reconcile the draft with current main and test those bindings against the owner’s receipt.
 
 For a different lane, use the [implementation plan’s issue and owner table](docs/handoff/05-implementation-plan.md#current-work-and-acceptance). For a code change, find the editable source below, run its focused check, then run `node scripts/verify-all.mjs` and `node scripts/verify-all.mjs --check`. Serve `dist/` and exercise the changed interaction in a browser.
 
