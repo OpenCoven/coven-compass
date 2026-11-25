@@ -12,7 +12,7 @@ cd coven-compass
 python3 -m http.server 8000 --bind 127.0.0.1 --directory dist
 ```
 
-Open `http://127.0.0.1:8000/` and choose **Projects** to explore the map. Stop the server with Ctrl+C, then run `node scripts/verify-all.mjs --check` from the same directory.
+Open `http://127.0.0.1:8000/` and choose **Projects** to explore the map. Stop the server with Ctrl+C. To verify a fresh checkout, run `npm --prefix src ci` once to install the pinned verification compiler, then `node scripts/verify-all.mjs --check` from the repository root.
 
 ## Contribute a change
 
