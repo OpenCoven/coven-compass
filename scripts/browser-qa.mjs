@@ -8,13 +8,15 @@
 //   python3 -m http.server 18433 --bind 127.0.0.1 --directory <repo>/dist   # any free port except 8765
 //   cp <repo>/scripts/browser-qa.mjs . && node browser-qa.mjs http://127.0.0.1:18433/ ./shots ./qa.json $(git -C <repo> rev-parse HEAD)
 //
+// Append --brief-only to exercise Brief authoring, replay and fixtures. Add --webkit for Playwright WebKit.
 // Append --keyboard-only for mission discovery, inspector return, route reload and the compact-label control.
 // The desktop compact check imports eight mission.opened JSON Lines via Trace > Import.
 // Its negative control removes the keyboard-focus visibility selector from the disposable page.
 // It checks simulation mode (default and ?source=simulation) at 1440x900, 390x844 and 844x390,
-// and every ?source=fixture scenario plus ?source=live. It writes a JSON report and screenshots.
+// and every ?source=fixture scenario plus ?source=live. At each viewport it also exercises the success criteria
+// editor in New mission and Edit brief. It writes a JSON report and screenshots.
 // Keep screenshots out of the repository; commit the dated JSON to tests/evidence/.
-import { chromium } from 'playwright';
+import { chromium, webkit } from 'playwright';
 import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
@@ -34,6 +36,13 @@ const SCENARIOS = [
   { query: '?source=fixture&scenario=disconnected', state: 'unavailable', label: 'Unavailable', rows: 0, message: /disconnected/ },
   { query: '?source=fixture&scenario=unsupported-version', state: 'unavailable', label: 'Unavailable', rows: 0, message: /"2\.0"/ },
   { query: '?source=live', state: 'unavailable', label: 'Unavailable', rows: 0, message: /Requested "live"/ },
+  // Synthetic Brief success policy cases (#35 proposal): no Projects, one policy panel each.
+  ...[['rubric-pass', 'request-authorized-acceptance'], ['rubric-fail', 'request-bounded-revision'], ['hard-failure', 'stop-escalate'],
+    ['missing-evidence', 'wait-for-evidence'], ['stale-evaluation', 'wait-for-evidence'], ['remediable-failure', 'request-bounded-revision'],
+    ['budget-exhausted', 'stop-escalate'], ['cancelled', 'stop-escalate'], ['unresolved-effects', 'stop-escalate'],
+    ['authorization-expired', 'stop-escalate']].map(([name, action]) => ({ query: '?source=fixture&scenario=brief-' + name,
+    state: 'synthetic', label: 'Fixture · synthetic', rows: 0, message: /not Coven data/, brief: action })),
+  { query: '?source=fixture&scenario=brief-nope', state: 'unavailable', label: 'Unavailable', rows: 0, message: /Known Brief cases/ },
 ];
 
 
@@ -67,9 +76,11 @@ const missionNameClashes = () => {
   return { total: labels.length, shown: names.length, centers: names.filter(n => n.centered && n.outside).length, smallestFont: Math.min(...names.map(n => n.pixels)), crown, pairs, squads: squads.length, squadPairs };
 };
 
-const browser = await chromium.launch();
-const report = { generated_utc: new Date().toISOString(), commit, browser: `chromium ${browser.version()}`,
-  tool: 'playwright ' + createRequire(import.meta.url)('playwright/package.json').version, base, evidence_level: 'browser (headless Chromium; not Safari, not a physical device)',
+const briefOnly = process.argv.includes('--brief-only');
+const engine = process.argv.includes('--webkit') ? webkit : chromium;
+const browser = await engine.launch();
+const report = { generated_utc: new Date().toISOString(), commit, browser: `${engine.name()} ${browser.version()}`,
+  tool: 'playwright ' + createRequire(import.meta.url)('playwright/package.json').version, base, evidence_level: 'browser (headless ' + engine.name() + ')',
   screenshot_dir: 'kept outside the repository; see the pull request', checks: [], screenshots: [] };
 const check = (mode, viewport, name, pass, detail = '') => report.checks.push({ mode, viewport, name, pass: Boolean(pass), detail: String(detail) });
 
@@ -266,10 +277,121 @@ async function compactMissionLabel() {
   } finally { await context.close(); }
 }
 
-await compactMissionLabel();
+// The success criteria editor in New mission and Edit brief (#35, ported from #42): it previews the rule before
+// Save, blocks Save while the criteria are invalid, and an edit derives a new policy revision. Nothing is accepted.
+async function briefEditor(vp) {
+  const mode = 'brief editor';
+  const { context, page, errors } = await open(vp, '#/project/psyche-build');
+  const done = () => page.locator('#nmDone').textContent();
+  const panel = () => page.evaluate(() => { const bp = document.querySelector('#inspect .bp'); return bp && { text: bp.textContent.replace(/\s+/g, ' '),
+    rev: (bp.textContent.match(/sim-[0-9a-f]{8}/) || [])[0], next: bp.querySelector('.bp-action')?.textContent, accepted: bp.querySelectorAll('.bp-step')[3]?.textContent }; });
+  try {
+    page.setDefaultTimeout(7000);
+    const opener = vp.mobile && await visible(page, '#atlasMobileMissions') ? '#atlasMobileMissions' : '#atlasMissions';
+    await page.locator(opener).click();
+    await page.locator('#atlasMissionProject').selectOption('psyche-build');
+    await page.locator('#atlasMissionCreate').click();
+    await page.locator('#nmName').fill('Criteria check');
+    await page.locator('#nmCustomize').click();
+    await page.locator('[data-id="bp-add"]').click();
+    const added = await done();
+    check(mode, vp.name, 'adding success criteria previews the completion rule before Save',
+      /all 4 required conditions pass/.test(added) && /at least 80 of 100/.test(added) && /3 attempts/.test(added) && /acceptance is a separate, authorized step/.test(added), added);
+    check(mode, vp.name, 'valid criteria and a name enable Create mission', !(await page.locator('#raise').isDisabled()));
+    await page.locator('[data-id="bp-min"]').fill('101');
+    const blocked = await page.locator('#raise').isDisabled(), why = await page.locator('#nmSuccessErrors').textContent();
+    check(mode, vp.name, 'invalid criteria block Open mission and say why', blocked && /minimum weighted score/.test(why) && /incomplete/.test(await done()), why);
+    await page.locator('[data-id="bp-custom"]').fill('Signed review attached');
+    await page.locator('[data-id="bp-min"]').fill('85');
+    await page.locator('[data-id="bp-attempts"]').fill('4');
+    await page.locator('#nmName').fill('Criteria check');
+    // Measure the editor where the user can see it after the sheet settles.
+    await page.locator('.bp-editor').scrollIntoViewIfNeeded();
+    const fit = await page.evaluate(() => { const e = document.querySelector('.bp-editor').getBoundingClientRect(), f = document.getElementById('empty');
+      return { width: e.width, right: e.right, viewport: innerWidth, scroll: f.scrollWidth, client: f.clientWidth }; });
+    const fits = fit.width > 0 && fit.right <= fit.viewport + 1 && fit.scroll <= fit.client + 1;
+    check(mode, vp.name, 'valid criteria re-enable Open mission, and the editor fits', !(await page.locator('#raise').isDisabled()) && fits, JSON.stringify(fit));
+    await shot(page, `${vp.name}-brief-editor`);
+    // After Save the page selects the mission; on a phone it opens its details. Otherwise open it from Missions.
+    const reopen = async () => {
+      if (!(await visible(page, '#mission-tab-brief'))) {
+        await page.click(vp.mobile && await visible(page, '#atlasMobileMissions') ? '#atlasMobileMissions' : '#atlasMissions');
+        await page.locator('.atlas-mission-row:not([hidden])', { hasText: 'Criteria check' }).first().click();
+        await page.waitForTimeout(800);
+      }
+      await page.click('#mission-tab-brief');
+      await page.waitForTimeout(400);
+    };
+    await page.locator('#raise').click();
+    await page.waitForTimeout(2600);
+    await reopen();
+    const first = await panel();
+    check(mode, vp.name, 'the saved criteria reach the inspector, waiting for evidence, not accepted',
+      first && /at least 85 of 100/.test(first.text) && /4 attempts/.test(first.text) && first.next === 'Wait for evidence' && /Not recorded/.test(first.accepted) && !!first.rev,
+      first ? `${first.rev}; next "${first.next}"` : 'no .bp panel');
+    await page.locator('#inspect [data-focus="edit-brief"]').click();
+    await page.keyboard.press('Escape');
+    const edit = page.locator('#inspect [data-focus="edit-brief"]');
+    check(mode, vp.name, 'dismissing the editor returns keyboard focus', await edit.evaluate(el => el === document.activeElement));
+    await edit.press('Enter');
+    const kept = await page.locator('[data-id="bp-attempts"]').inputValue();
+    await page.locator('[data-id="bp-attempts"]').fill('6');
+    const preview = await done();
+    await page.locator('#raise').click();
+    await page.waitForTimeout(1800);
+    await reopen();
+    const second = await panel();
+    check(mode, vp.name, 'Edit brief keeps the criteria, previews the edit, and saving derives a new revision',
+      kept === '4' && /6 attempts/.test(preview) && second && /6 attempts/.test(second.text) && second.rev && first && second.rev !== first.rev && /Not recorded/.test(second.accepted),
+      `kept ${kept}; ${first && first.rev} → ${second && second.rev}`);
+    await page.reload();
+    await page.locator('#inspect .bp').waitFor();
+    const restored = await panel();
+    check(mode, vp.name, 'reload restores edited policy, required evidence and acceptance state',
+      second.rev === restored.rev && restored.text.includes('Signed review attached') && /Not recorded/.test(restored.accepted));
+    await page.getByRole('button', {name: 'History', exact: true}).click();
+    const firstEvent = page.locator('.history-event').filter({hasText: 'Mission opened'}).first();
+    await firstEvent.click();
+    const jump = page.getByRole('button', {name: /Show event .* on map/});
+    await jump.click();
+    await page.locator('#historyReturn').waitFor();
+    check(mode, vp.name, 'replay selects the opening event and leaves live mode',
+      /mission.opened/.test(await page.locator('#historyMapNote').innerText()) && await page.locator('#live').getAttribute('aria-pressed') === 'false');
+    if (!await visible(page, '#inspect .bp')) await page.locator('[data-focus="open-details"]:visible').click();
+    const replayed = await panel();
+    check(mode, vp.name, 'the opening event restores the original policy revision', replayed.rev === first.rev && /4 attempts/.test(replayed.text) && replayed.accepted.includes('Not recorded'));
+    // The mobile inspector owns keyboard focus until the user dismisses it.
+    if (vp.mobile) await page.getByRole('button', {name: 'Close details', exact: true}).click();
+    await page.getByRole('button', {name: 'Return to History'}).press('Enter');
+    check(mode, vp.name, 'returning from replay restores the event control focus', await jump.evaluate(el => el === document.activeElement));
+    const fixture = async name => {
+      await page.goto(new URL('?source=fixture&scenario=brief-' + name, base).href);
+      await page.locator('.bp').waitFor();
+      await page.locator('.bp-evals summary').click();
+      return page.locator('.bp').innerText();
+    };
+    const missing = await fixture('missing-evidence');
+    check(mode, vp.name, 'passing rubric cannot substitute for missing evidence', missing.includes('4 of 5') && missing.includes('Unknown') && missing.includes('Wait for evidence') && missing.includes('Not recorded'));
+    const failed = await fixture('rubric-fail');
+    check(mode, vp.name, 'first failed grade proposes a bounded retry', failed.includes('Request a bounded revision') && failed.includes('1 of 3') && failed.includes('$3 of $12'));
+    const stale = await fixture('stale-evaluation');
+    check(mode, vp.name, 'second attempt retains spending and excludes old grades', stale.includes('2 of 3') && stale.includes('$5 of $12') && stale.includes('45 min of 90 min') && stale.includes('another policy revision') && stale.includes('candidate') && stale.includes('Wait for evidence'));
+    await page.reload();
+    await page.locator('.bp-evals summary').click();
+    check(mode, vp.name, 'reload preserves both evaluation records and their provenance', stale === await page.locator('.bp').innerText() && stale.includes('pol-report-r1') && stale.includes('evi_3') && stale.includes('reviewer-sage'));
+    check(mode, vp.name, 'no console errors', !errors.length, errors.join(' | '));
+  } catch (error) {
+    check(mode, vp.name, 'brief editor journey', false, error.message.split('\n')[0]);
+    await shot(page, `${vp.name}-brief-editor-failure`);
+  } finally { await context.close(); }
+}
+
+if (!briefOnly) await compactMissionLabel();
 for (const vp of VIEWPORTS) {
-  await keyboardJourney(vp);
+  if (!briefOnly) await keyboardJourney(vp);
   if (process.argv.includes('--keyboard-only')) continue;
+  await briefEditor(vp);
+  if (briefOnly) continue;
   for (const query of ['', '?source=simulation']) {
     const mode = query ? 'simulation (?source=simulation)' : 'simulation (default)';
     const { context, page, errors } = await open(vp, query);
@@ -326,6 +448,29 @@ for (const vp of VIEWPORTS) {
       const inspector = await visible(page, '#inspect');
       check(mode, vp.name, 'open a mission', hash2.includes('/mission/') && inspector, `via ${opener}; hash ${hash2}; inspector visible ${inspector}`);
       if (!query) await shot(page, `${tag}-mission`);
+
+      // The Brief tab carries the success policy panel (#35 proposal), labeled simulation, never accepted.
+      if (inspector) {
+        await page.click('#mission-tab-brief');
+        await page.waitForTimeout(400);
+        const bp = await page.evaluate(() => {
+          const panel = document.querySelector('#inspect .bp'), box = document.getElementById('inspect');
+          if (!panel) return null;
+          const r = panel.getBoundingClientRect();
+          return { badge: panel.querySelector('.bp-badge').textContent, steps: [...panel.querySelectorAll('.bp-step dt')].map(d => d.textContent),
+            accepted: panel.querySelectorAll('.bp-step')[3].textContent, next: panel.querySelector('.bp-action').textContent,
+            sections: [...panel.querySelectorAll('.bp-sec h4')].map(h => h.textContent),
+            fits: r.width > 0 && box.scrollWidth <= box.clientWidth + 1 && r.right <= window.innerWidth + 1 };
+        });
+        check(mode, vp.name, 'Brief tab shows the success policy proposal apart from acceptance',
+          bp && /Simulation · proposal/.test(bp.badge) && bp.steps.join('|') === 'Proposal|Execution|Quality qualification|Accepted completion'
+            && /Not recorded/.test(bp.accepted) && bp.next === 'Wait for evidence' && bp.sections.length === 4 && bp.fits,
+          bp ? `badge "${bp.badge}"; steps ${bp.steps.join(' / ')}; next "${bp.next}"; sections ${bp.sections.join(' / ')}; fits ${bp.fits}` : 'no .bp panel in #inspect');
+        if (!query) {
+          await page.locator('#inspect .bp').scrollIntoViewIfNeeded().catch(() => {});
+          await shot(page, `${tag}-brief-policy`);
+        }
+      }
       await page.keyboard.press('Escape');
       await page.waitForTimeout(300);
 
@@ -436,6 +581,17 @@ for (const vp of VIEWPORTS) {
         `hidden ${r.tableHidden}; tr ${r.rows} (expected ${s.rows ? s.rows + 1 : 0})`);
       check(mode, vp.name, 'no horizontal page scroll', !r.overflowX, `scrollWidth > innerWidth: ${r.overflowX}`);
       check(mode, vp.name, 'table fits without clipping', !r.tableClipped, `table wider than its container: ${r.tableClipped}`);
+      if (s.brief) {
+        const bp = await page.evaluate(() => {
+          const panel = document.querySelector('.pv-brief .bp');
+          return panel && { badge: panel.querySelector('.bp-badge').textContent, next: panel.querySelector('.bp-next').className,
+            steps: panel.querySelectorAll('.bp-step').length, accepted: panel.querySelectorAll('.bp-step')[3].textContent,
+            cases: document.querySelectorAll('.pv-brief nav a').length, current: document.querySelector('.pv-brief nav a[aria-current="page"]')?.textContent };
+        });
+        check(mode, vp.name, 'synthetic Brief case: labeled, next action, acceptance not recorded',
+          bp && /Synthetic fixture/.test(bp.badge) && bp.next.includes('is-' + s.brief) && bp.steps === 4 && /Not recorded/.test(bp.accepted) && bp.cases >= 10 && !!bp.current,
+          bp ? `badge "${bp.badge}"; ${bp.next}; steps ${bp.steps}; links ${bp.cases}; current ${bp.current}` : 'no .bp panel');
+      }
       check(mode, vp.name, 'no console errors', errors.length === 0, errors.join(' | ') || 'none');
       await shot(page, `${vp.name}-${s.query.replace(/[?&=]/g, '_')}`);
     } catch (error) {

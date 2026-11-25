@@ -10,12 +10,15 @@
  *     schema: 'coven-compass.projection/1',
  *     source: {kind, label, authoritative: false},
  *     availability: {state, reason, message},
- *       state: 'simulated' | 'fresh' | 'stale' | 'reconciling' | 'unavailable'
+ *       state: 'simulated' | 'fresh' | 'stale' | 'reconciling' | 'synthetic' | 'unavailable'
  *     freshness: {observedAt, ageMs, staleAfterMs}   (null where not applicable)
  *     complete: boolean                              (every page was read)
  *     projects: [{id, name, root, missions, agents, needs}]
  *       id, name, and root stay separate (D01 proposal). A count the source can't supply is
  *       null (unknown), never 0.
+ *     brief                                          (only for ?source=fixture&scenario=brief-…)
+ *       {scenario, title, mission, summary, policy, policySummary, record, result}: one synthetic
+ *       Brief success policy case (#35) and its evaluation by CovenBriefPolicy. Never authoritative.
  *   }
  *
  * Rules: the mode is chosen explicitly (?source=simulation | fixture). A source that fails
@@ -37,6 +40,9 @@
   var SUPPORTED_API_MAJOR = 1;
   var CLIENT_VERSION = '0.0.1';
   var MAX_PAGES = 100;
+  var BRIEF_FIXTURE_URL = 'fixtures/brief-policy-cases.json';
+  var BRIEF_PREFIX = 'brief-';
+  var BRIEF_LABEL = 'Synthetic Brief policy cases (proposal for #35)';
 
   var REASONS = {
     invalid_mode: 'Unknown projection source. Use ?source=simulation or ?source=fixture.',
@@ -46,6 +52,8 @@
     incompatible_version: 'The source requires a newer Compass client.',
     fixture_unreadable: 'The fixture could not be loaded. No Projects are shown, and no sample data is substituted.',
     fixture_invalid: 'The fixture does not have the expected projects.list shape.',
+    brief_invalid: 'The Brief policy fixture does not have the expected synthetic shape.',
+    policy_model_missing: 'The Brief policy model (brief-policy.js) did not load. Nothing is shown, and no sample data is substituted.',
   };
 
   function selectMode(search) {
@@ -225,6 +233,58 @@
     };
   }
 
+  function isBriefScenario(scenario) { return typeof scenario === 'string' && scenario.indexOf(BRIEF_PREFIX) === 0; }
+
+  /**
+   * Reads one synthetic Brief success policy case (#35) into a Projection. Pure: the fixture and the
+   * policy model come from the caller, and "now" is the fixture's own asOf time, so a case always
+   * evaluates the same way. It carries no Projects and is never authoritative.
+   */
+  function fromBriefCases(fixture, scenario, model) {
+    if (!model || typeof model.evaluate !== 'function' || typeof model.summarize !== 'function') {
+      return unavailable('fixture', BRIEF_LABEL, 'policy_model_missing');
+    }
+    if (!isRecord(fixture) || fixture.synthetic !== true || !isRecord(fixture.cases) || !isRecord(fixture.policies)) {
+      return unavailable('fixture', BRIEF_LABEL, 'brief_invalid', 'Brief cases must be marked synthetic and have cases and policies.');
+    }
+    if (!hasOwn(fixture.cases, scenario)) {
+      return unavailable('fixture', BRIEF_LABEL, 'unknown_scenario', 'Known Brief cases: ' + Object.keys(fixture.cases).join(', ') + '.');
+    }
+    var asOf = typeof fixture.asOf === 'string' ? Date.parse(fixture.asOf) : NaN;
+    if (!validTime(asOf)) return unavailable('fixture', BRIEF_LABEL, 'brief_invalid', 'asOf must be an ISO date and time.');
+    var c = fixture.cases[scenario];
+    if (!isRecord(c) || typeof c.title !== 'string' || !hasOwn(fixture.policies, c.policy) || !isRecord(c.record)) {
+      return unavailable('fixture', BRIEF_LABEL, 'brief_invalid', 'Each case needs a title, a known policy, and a record.');
+    }
+    var policy = fixture.policies[c.policy];
+    var p = base('fixture', BRIEF_LABEL);
+    p.availability = {state: 'synthetic', reason: null, message: 'Synthetic Brief policy case, evaluated as of ' + fixture.asOf
+      + '. This is not Coven data, and nothing here is authoritative.'};
+    p.complete = true;
+    p.brief = {scenario: scenario, title: c.title, mission: typeof c.mission === 'string' ? c.mission : null,
+      summary: typeof c.summary === 'string' ? c.summary : '', policy: policy, policySummary: model.summarize(policy),
+      record: c.record, result: model.evaluate(policy, c.record, asOf), cases: Object.keys(fixture.cases)};
+    return p;
+  }
+
+  function createBriefFixtureSource(options) {
+    var o = options || {}, load = o.load, scenario = o.scenario;
+    if (typeof load !== 'function') throw new TypeError('createBriefFixtureSource needs a load function');
+    return {
+      kind: 'fixture',
+      scenario: scenario,
+      read: function () {
+        return Promise.resolve().then(load).then(function (fixture) {
+          return fromBriefCases(fixture, scenario, o.model);
+        }, function (error) {
+          return unavailable('fixture', BRIEF_LABEL, 'fixture_unreadable', error && error.message ? '(' + error.message + ')' : '');
+        }).catch(function (error) {
+          return unavailable('fixture', BRIEF_LABEL, 'brief_invalid', error && error.message ? '(' + error.message + ')' : '');
+        });
+      },
+    };
+  }
+
   function formatAge(ms) {
     if (ms < 1000) return 'under 1 s';
     if (ms < 60000) return Math.round(ms / 1000) + ' s';
@@ -233,7 +293,7 @@
   }
 
   var STATE_LABELS = {simulated: 'Simulation', fresh: 'Fixture · fresh', stale: 'Fixture · stale',
-    reconciling: 'Fixture · reconciling', unavailable: 'Unavailable'};
+    reconciling: 'Fixture · reconciling', synthetic: 'Fixture · synthetic', unavailable: 'Unavailable'};
 
   /** View model for a projection. Pure, and shared by the page and the tests. */
   function describe(projection) {
@@ -288,6 +348,26 @@
     return node;
   }
 
+  // One synthetic Brief case: what it shows, the shared policy panel, and links to the other cases.
+  function renderBrief(doc, slot, brief, view) {
+    slot.removeAttribute('hidden');
+    slot.appendChild(element(doc, 'div', {'class': 'bp-case'}, [
+      element(doc, 'h2', {text: 'Synthetic case: ' + brief.title}),
+      element(doc, 'p', {text: (brief.mission ? brief.mission + '. ' : '') + brief.summary}),
+    ]));
+    if (view && typeof view.render === 'function') {
+      slot.appendChild(view.render(doc, {policy: brief.policy, result: brief.result, summary: brief.policySummary, origin: 'synthetic',
+        note: 'Every id and digest in this case is a placeholder. It came from a synthetic fixture, not from Psyche or Coven.'}));
+    } else {
+      slot.appendChild(element(doc, 'p', {role: 'alert', text: 'The Brief policy view (brief-policy-view.js) did not load, so this case cannot be shown.'}));
+    }
+    slot.appendChild(element(doc, 'nav', {'aria-label': 'Synthetic Brief cases'}, (brief.cases || []).map(function (id) {
+      var link = element(doc, 'a', {href: '?source=fixture&scenario=' + encodeURIComponent(id), text: id.replace(BRIEF_PREFIX, '')});
+      if (id === brief.scenario) link.setAttribute('aria-current', 'page');
+      return link;
+    })));
+  }
+
   /** Browser only. Replaces the simulation UI with a projection view for a non-simulation mode. */
   function renderStandalone(doc, selection, options) {
     var o = options || {}, win = doc.defaultView;
@@ -299,19 +379,27 @@
       [element(doc, 'span', {'class': 'pv-badge', text: 'Loading'})]);
     var table = element(doc, 'table', {'class': 'pv-table', hidden: ''});
     var scroll = element(doc, 'div', {'class': 'pv-scroll'}, [table]);
+    var briefSlot = element(doc, 'div', {'class': 'pv-brief', hidden: ''});
     var view = element(doc, 'main', {'class': 'projection-view', 'aria-labelledby': 'projectionTitle'}, [
-      element(doc, 'h1', {id: 'projectionTitle', text: 'Coven Compass · Projects'}),
+      element(doc, 'h1', {id: 'projectionTitle', text: selection.mode === 'fixture' && isBriefScenario(selection.scenario) ? 'Coven Compass · Brief policy case' : 'Coven Compass · Projects'}),
       element(doc, 'p', {'class': 'pv-source', text: 'Projection source: ' + (selection.requested || selection.mode) + '. The simulation is not running in this mode.'}),
-      status, scroll,
+      status, briefSlot, scroll,
       element(doc, 'nav', {'aria-label': 'Projection sources'}, ['simulation', 'fixture&scenario=fresh', 'fixture&scenario=stale',
-        'fixture&scenario=partial', 'fixture&scenario=disconnected', 'fixture&scenario=unsupported-version'].map(function (q) {
+        'fixture&scenario=partial', 'fixture&scenario=disconnected', 'fixture&scenario=unsupported-version', 'fixture&scenario=brief-rubric-pass'].map(function (q) {
         return element(doc, 'a', {href: '?source=' + q, text: q.replace('fixture&scenario=', 'fixture: ')});
       })),
     ]);
     doc.body.appendChild(view);
 
-    var source;
-    if (selection.mode === 'fixture') {
+    var source, briefMode = selection.mode === 'fixture' && isBriefScenario(selection.scenario);
+    if (briefMode) {
+      source = createBriefFixtureSource({scenario: selection.scenario, model: o.model || win.CovenBriefPolicy, load: o.load || function () {
+        return win.fetch(BRIEF_FIXTURE_URL, {cache: 'no-store'}).then(function (r) {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.json();
+        });
+      }});
+    } else if (selection.mode === 'fixture') {
       source = createFixtureSource({scenario: selection.scenario, now: o.now, load: o.load || function () {
         return win.fetch(FIXTURE_URL, {cache: 'no-store'}).then(function (r) {
           if (!r.ok) throw new Error('HTTP ' + r.status);
@@ -331,6 +419,8 @@
       status.appendChild(element(doc, 'span', {'class': 'pv-badge', text: d.label}));
       status.appendChild(doc.createTextNode(d.message));
       status.appendChild(element(doc, 'div', {'class': 'pv-source', text: d.source}));
+      briefSlot.textContent = '';
+      if (projection.brief) renderBrief(doc, briefSlot, projection.brief, win && win.CovenBriefPolicyView);
       table.textContent = '';
       if (d.rows.length) {
         table.removeAttribute('hidden');
@@ -354,9 +444,10 @@
   }
 
   return Object.freeze({
-    SCHEMA: SCHEMA, MODES: MODES.slice(), FIXTURE_URL: FIXTURE_URL, CLIENT_VERSION: CLIENT_VERSION,
+    SCHEMA: SCHEMA, MODES: MODES.slice(), FIXTURE_URL: FIXTURE_URL, BRIEF_FIXTURE_URL: BRIEF_FIXTURE_URL, CLIENT_VERSION: CLIENT_VERSION,
     selectMode: selectMode, createSimulationSource: createSimulationSource, createFixtureSource: createFixtureSource,
-    fromProjectsList: fromProjectsList, describe: describe, register: register, current: current,
+    fromProjectsList: fromProjectsList, isBriefScenario: isBriefScenario, fromBriefCases: fromBriefCases,
+    createBriefFixtureSource: createBriefFixtureSource, describe: describe, register: register, current: current,
     renderStandalone: renderStandalone,
   });
 }));

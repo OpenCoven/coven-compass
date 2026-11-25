@@ -1,0 +1,4108 @@
+{
+  "generated_utc": "2026-11-20T09:49:20.624Z",
+  "commit": "3257a2ebf5639c1d74a0b76a2029a295342e87c5",
+  "browser": "chromium 158.0.8127.18",
+  "tool": "playwright 1.62.0",
+  "base": "http://127.0.0.1:61948/",
+  "evidence_level": "browser (headless Chromium; not Safari, not a physical device)",
+  "screenshot_dir": "kept outside the repository; see the pull request",
+  "checks": [
+    {
+      "mode": "compact map",
+      "viewport": "desktop-1920x1080",
+      "name": "focused compact label visible and centered outside ring",
+      "pass": true,
+      "detail": "{\"name\":\"Mission 1\",\"centerError\":0.000030517578125,\"fontPixels\":10.509954860376183,\"outside\":true}"
+    },
+    {
+      "mode": "compact map",
+      "viewport": "desktop-1920x1080",
+      "name": "same focused label hidden without keyboard-focus rule",
+      "pass": true,
+      "detail": "Mission 1"
+    },
+    {
+      "mode": "compact map",
+      "viewport": "desktop-1920x1080",
+      "name": "no console errors",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "Missions within five Tabs",
+      "pass": true,
+      "detail": "5 Tabs to #atlasMissions"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "reach Missions from overview",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMissions\",\"name\":\"Browse 7 missions\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":5}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "search from the Missions entry",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":6}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "find Board cards",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Board cards, coven-cave, Active, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":18}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "inspect Board cards",
+      "pass": true,
+      "detail": "{\"element\":\"missionDetailTitle\",\"name\":\"Board cards\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/coven-cave/mission/m-1?view=brief&detail=side\",\"keys\":19}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "return to matching row",
+      "pass": true,
+      "detail": "{\"element\":\"btn sm\",\"name\":\"← All missions\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/coven-cave/mission/m-1?view=brief&detail=side\",\"keys\":20}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "return to matching row",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Board cards, coven-cave, Active, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":21}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "recover from an empty search",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":48}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "recover from an empty search",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":52}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "find Source survey",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Source survey, psyche-build, Needs you, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":66}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "inspect Source survey",
+      "pass": true,
+      "detail": "{\"element\":\"missionDetailTitle\",\"name\":\"Source survey\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/psyche-build/mission/m-2?view=brief&detail=side\",\"keys\":67}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "close details and return to the invoking row",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Source survey, psyche-build, Needs you, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":70}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "dismiss Missions and return to its launcher",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMissions\",\"name\":\"Browse 7 missions\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":71}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "original overview restored",
+      "pass": true,
+      "detail": "http://127.0.0.1:61948/#/coven"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "reload mission permalink",
+      "pass": true,
+      "detail": "http://127.0.0.1:61948/#/project/psyche-build/mission/m-2?view=brief&detail=side"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "no console errors",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "desktop-1440x900",
+      "name": "adding success criteria previews the completion rule before Save",
+      "pass": true,
+      "detail": "When is it done? Eligible for acceptance only when all 4 required conditions pass and the quality rubric scores at least 80 of 100, with no criterion below its floor, each shown by current evidence for the same candidate. All attempts together may use at most 3 attempts, $2, 30 minutes, 150,000 tokens. When a limit runs out: stop and escalate. Unknown evidence never counts as met. Meeting every gate makes the mission eligible; acceptance is a separate, authorized step."
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "desktop-1440x900",
+      "name": "invalid criteria block Open mission and say why",
+      "pass": true,
+      "detail": "The minimum weighted score must be a whole percentage from 0 to 100."
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "desktop-1440x900",
+      "name": "valid criteria re-enable Open mission, and the editor fits",
+      "pass": true,
+      "detail": "{\"width\":304,\"right\":351,\"viewport\":1440,\"scroll\":334,\"client\":334}"
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "desktop-1440x900",
+      "name": "the saved criteria reach the inspector, waiting for evidence, not accepted",
+      "pass": true,
+      "detail": "sim-eb72f708; next \"Wait for evidence\""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "desktop-1440x900",
+      "name": "Edit brief keeps the criteria, previews the edit, and saving derives a new revision",
+      "pass": true,
+      "detail": "kept 4; sim-eb72f708 → sim-311c0f06"
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "desktop-1440x900",
+      "name": "no console errors",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "desktop-1440x900",
+      "name": "overview fit keeps every Project in the stage",
+      "pass": true,
+      "detail": "4 Project name labels; outside stage: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "desktop-1440x900",
+      "name": "map renders",
+      "pass": true,
+      "detail": "1088 SVG nodes in #plan"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "desktop-1440x900",
+      "name": "simulation source registered and labelled simulated",
+      "pass": true,
+      "detail": "4 projects, state simulated"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "desktop-1440x900",
+      "name": "open a Project",
+      "pass": true,
+      "detail": "Projects drawer; hash #/project/psyche-build"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "desktop-1440x900",
+      "name": "every sample mission name is readable outside its ring at Project fit",
+      "pass": true,
+      "detail": "4 of 4 centered names, smallest text 10.5px"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "desktop-1440x900",
+      "name": "mission names clear the crown and each other",
+      "pass": true,
+      "detail": "4 names shown; over the crown: none; overlapping: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "desktop-1440x900",
+      "name": "familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "10 familiar labels shown; overlapping: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "desktop-1440x900",
+      "name": "open a mission",
+      "pass": true,
+      "detail": "via #atlasMissions; hash #/project/psyche-build/mission/m-1?view=brief&detail=side; inspector visible true"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "desktop-1440x900",
+      "name": "Brief tab shows the success policy proposal apart from acceptance",
+      "pass": true,
+      "detail": "badge \"Simulation · proposal (#35)\"; steps Proposal / Execution / Quality qualification / Accepted completion; next \"Wait for evidence\"; sections Required conditions / Quality rubric / Iteration limits / Outcome targets; fits true"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "desktop-1440x900",
+      "name": "replay starts and moves",
+      "pass": true,
+      "detail": "clicked #play; scrub 1000 → 20; clock \"03:49:43\" → \"03:12:05\"; button \"Pause\""
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "desktop-1440x900",
+      "name": "replay frame: mission names clear the crown and each other",
+      "pass": true,
+      "detail": "1 names shown; over the crown: none; overlapping: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "desktop-1440x900",
+      "name": "replay frame: familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "0 familiar labels shown; overlapping: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "desktop-1440x900",
+      "name": "Seal lab extends a familiar’s progress arc",
+      "pass": true,
+      "detail": "51.631 360 to 52.707 360"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "desktop-1440x900",
+      "name": "Seal lab opens and closes",
+      "pass": true,
+      "detail": "open true"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "desktop-1440x900",
+      "name": "mobile dock hidden on desktop",
+      "pass": true,
+      "detail": "dock visible false"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "desktop-1440x900",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "desktop-1440x900",
+      "name": "overview fit keeps every Project in the stage",
+      "pass": true,
+      "detail": "4 Project name labels; outside stage: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "desktop-1440x900",
+      "name": "map renders",
+      "pass": true,
+      "detail": "1088 SVG nodes in #plan"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "desktop-1440x900",
+      "name": "simulation source registered and labelled simulated",
+      "pass": true,
+      "detail": "4 projects, state simulated"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "desktop-1440x900",
+      "name": "open a Project",
+      "pass": true,
+      "detail": "Projects drawer; hash #/project/psyche-build"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "desktop-1440x900",
+      "name": "every sample mission name is readable outside its ring at Project fit",
+      "pass": true,
+      "detail": "4 of 4 centered names, smallest text 10.5px"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "desktop-1440x900",
+      "name": "mission names clear the crown and each other",
+      "pass": true,
+      "detail": "4 names shown; over the crown: none; overlapping: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "desktop-1440x900",
+      "name": "familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "10 familiar labels shown; overlapping: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "desktop-1440x900",
+      "name": "open a mission",
+      "pass": true,
+      "detail": "via #atlasMissions; hash #/project/psyche-build/mission/m-1?view=brief&detail=side; inspector visible true"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "desktop-1440x900",
+      "name": "Brief tab shows the success policy proposal apart from acceptance",
+      "pass": true,
+      "detail": "badge \"Simulation · proposal (#35)\"; steps Proposal / Execution / Quality qualification / Accepted completion; next \"Wait for evidence\"; sections Required conditions / Quality rubric / Iteration limits / Outcome targets; fits true"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "desktop-1440x900",
+      "name": "replay starts and moves",
+      "pass": true,
+      "detail": "clicked #play; scrub 1000 → 20; clock \"03:49:54\" → \"03:12:17\"; button \"Pause\""
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "desktop-1440x900",
+      "name": "replay frame: mission names clear the crown and each other",
+      "pass": true,
+      "detail": "1 names shown; over the crown: none; overlapping: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "desktop-1440x900",
+      "name": "replay frame: familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "0 familiar labels shown; overlapping: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "desktop-1440x900",
+      "name": "Seal lab extends a familiar’s progress arc",
+      "pass": true,
+      "detail": "51.631 360 to 52.707 360"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "desktop-1440x900",
+      "name": "Seal lab opens and closes",
+      "pass": true,
+      "detail": "open true"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "desktop-1440x900",
+      "name": "mobile dock hidden on desktop",
+      "pass": true,
+      "detail": "dock visible false"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "desktop-1440x900",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "desktop-1440x900",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "desktop-1440x900",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state fresh; label \"Fixture · fresh\""
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "desktop-1440x900",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · freshObserved 5 s ago. This is static fixture data, not live Coven data.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "desktop-1440x900",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden false; tr 4 (expected 4)"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "desktop-1440x900",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "desktop-1440x900",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "desktop-1440x900",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "desktop-1440x900",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "desktop-1440x900",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state fresh; label \"Fixture · fresh\""
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "desktop-1440x900",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · freshObserved 5 s ago. This is static fixture data, not live Coven data.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "desktop-1440x900",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden false; tr 4 (expected 4)"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "desktop-1440x900",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "desktop-1440x900",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "desktop-1440x900",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "desktop-1440x900",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "desktop-1440x900",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state stale; label \"Fixture · stale\""
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "desktop-1440x900",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · staleLast observed 15 min ago, outside the 1 min freshness window. Shown as last known, not current.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "desktop-1440x900",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden false; tr 2 (expected 2)"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "desktop-1440x900",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "desktop-1440x900",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "desktop-1440x900",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "desktop-1440x900",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "desktop-1440x900",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state reconciling; label \"Fixture · reconciling\""
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "desktop-1440x900",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · reconcilingA page cursor could not be followed, so this list is incomplete. 1 Project is shown; the total is unknown.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "desktop-1440x900",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden false; tr 2 (expected 2)"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "desktop-1440x900",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "desktop-1440x900",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "desktop-1440x900",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "desktop-1440x900",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "desktop-1440x900",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state unavailable; label \"Unavailable\""
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "desktop-1440x900",
+      "name": "message",
+      "pass": true,
+      "detail": "UnavailableThe projection source is disconnected. No Projects are shown, and no sample data is substituted.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "desktop-1440x900",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "desktop-1440x900",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "desktop-1440x900",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "desktop-1440x900",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "desktop-1440x900",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "desktop-1440x900",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state unavailable; label \"Unavailable\""
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "desktop-1440x900",
+      "name": "message",
+      "pass": true,
+      "detail": "UnavailableThe source reports an API version Compass does not support. Reported apiVersion \"2.0\"; supported major version 1.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "desktop-1440x900",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "desktop-1440x900",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "desktop-1440x900",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "desktop-1440x900",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "desktop-1440x900",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "desktop-1440x900",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state unavailable; label \"Unavailable\""
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "desktop-1440x900",
+      "name": "message",
+      "pass": true,
+      "detail": "UnavailableUnknown projection source. Use ?source=simulation or ?source=fixture. Requested \"live\".No source (not authoritative)"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "desktop-1440x900",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "desktop-1440x900",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "desktop-1440x900",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "desktop-1440x900",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-pass",
+      "viewport": "desktop-1440x900",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-pass",
+      "viewport": "desktop-1440x900",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-pass",
+      "viewport": "desktop-1440x900",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-pass",
+      "viewport": "desktop-1440x900",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-pass",
+      "viewport": "desktop-1440x900",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-pass",
+      "viewport": "desktop-1440x900",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-pass",
+      "viewport": "desktop-1440x900",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-request-authorized-acceptance; steps 4; links 10; current rubric-pass"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-pass",
+      "viewport": "desktop-1440x900",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-fail",
+      "viewport": "desktop-1440x900",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-fail",
+      "viewport": "desktop-1440x900",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-fail",
+      "viewport": "desktop-1440x900",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-fail",
+      "viewport": "desktop-1440x900",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-fail",
+      "viewport": "desktop-1440x900",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-fail",
+      "viewport": "desktop-1440x900",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-fail",
+      "viewport": "desktop-1440x900",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-request-bounded-revision; steps 4; links 10; current rubric-fail"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-fail",
+      "viewport": "desktop-1440x900",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-hard-failure",
+      "viewport": "desktop-1440x900",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-hard-failure",
+      "viewport": "desktop-1440x900",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-hard-failure",
+      "viewport": "desktop-1440x900",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-hard-failure",
+      "viewport": "desktop-1440x900",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-hard-failure",
+      "viewport": "desktop-1440x900",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-hard-failure",
+      "viewport": "desktop-1440x900",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-hard-failure",
+      "viewport": "desktop-1440x900",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-stop-escalate; steps 4; links 10; current hard-failure"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-hard-failure",
+      "viewport": "desktop-1440x900",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-missing-evidence",
+      "viewport": "desktop-1440x900",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-missing-evidence",
+      "viewport": "desktop-1440x900",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-missing-evidence",
+      "viewport": "desktop-1440x900",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-missing-evidence",
+      "viewport": "desktop-1440x900",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-missing-evidence",
+      "viewport": "desktop-1440x900",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-missing-evidence",
+      "viewport": "desktop-1440x900",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-missing-evidence",
+      "viewport": "desktop-1440x900",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-wait-for-evidence; steps 4; links 10; current missing-evidence"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-missing-evidence",
+      "viewport": "desktop-1440x900",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-stale-evaluation",
+      "viewport": "desktop-1440x900",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-stale-evaluation",
+      "viewport": "desktop-1440x900",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-stale-evaluation",
+      "viewport": "desktop-1440x900",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-stale-evaluation",
+      "viewport": "desktop-1440x900",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-stale-evaluation",
+      "viewport": "desktop-1440x900",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-stale-evaluation",
+      "viewport": "desktop-1440x900",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-stale-evaluation",
+      "viewport": "desktop-1440x900",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-wait-for-evidence; steps 4; links 10; current stale-evaluation"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-stale-evaluation",
+      "viewport": "desktop-1440x900",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-remediable-failure",
+      "viewport": "desktop-1440x900",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-remediable-failure",
+      "viewport": "desktop-1440x900",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-remediable-failure",
+      "viewport": "desktop-1440x900",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-remediable-failure",
+      "viewport": "desktop-1440x900",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-remediable-failure",
+      "viewport": "desktop-1440x900",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-remediable-failure",
+      "viewport": "desktop-1440x900",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-remediable-failure",
+      "viewport": "desktop-1440x900",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-request-bounded-revision; steps 4; links 10; current remediable-failure"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-remediable-failure",
+      "viewport": "desktop-1440x900",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-budget-exhausted",
+      "viewport": "desktop-1440x900",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-budget-exhausted",
+      "viewport": "desktop-1440x900",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-budget-exhausted",
+      "viewport": "desktop-1440x900",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-budget-exhausted",
+      "viewport": "desktop-1440x900",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-budget-exhausted",
+      "viewport": "desktop-1440x900",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-budget-exhausted",
+      "viewport": "desktop-1440x900",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-budget-exhausted",
+      "viewport": "desktop-1440x900",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-stop-escalate; steps 4; links 10; current budget-exhausted"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-budget-exhausted",
+      "viewport": "desktop-1440x900",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-cancelled",
+      "viewport": "desktop-1440x900",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-cancelled",
+      "viewport": "desktop-1440x900",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-cancelled",
+      "viewport": "desktop-1440x900",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-cancelled",
+      "viewport": "desktop-1440x900",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-cancelled",
+      "viewport": "desktop-1440x900",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-cancelled",
+      "viewport": "desktop-1440x900",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-cancelled",
+      "viewport": "desktop-1440x900",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-stop-escalate; steps 4; links 10; current cancelled"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-cancelled",
+      "viewport": "desktop-1440x900",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-unresolved-effects",
+      "viewport": "desktop-1440x900",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-unresolved-effects",
+      "viewport": "desktop-1440x900",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-unresolved-effects",
+      "viewport": "desktop-1440x900",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-unresolved-effects",
+      "viewport": "desktop-1440x900",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-unresolved-effects",
+      "viewport": "desktop-1440x900",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-unresolved-effects",
+      "viewport": "desktop-1440x900",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-unresolved-effects",
+      "viewport": "desktop-1440x900",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-stop-escalate; steps 4; links 10; current unresolved-effects"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-unresolved-effects",
+      "viewport": "desktop-1440x900",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-authorization-expired",
+      "viewport": "desktop-1440x900",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-authorization-expired",
+      "viewport": "desktop-1440x900",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-authorization-expired",
+      "viewport": "desktop-1440x900",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-authorization-expired",
+      "viewport": "desktop-1440x900",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-authorization-expired",
+      "viewport": "desktop-1440x900",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-authorization-expired",
+      "viewport": "desktop-1440x900",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-authorization-expired",
+      "viewport": "desktop-1440x900",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-stop-escalate; steps 4; links 10; current authorization-expired"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-authorization-expired",
+      "viewport": "desktop-1440x900",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-nope",
+      "viewport": "desktop-1440x900",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-nope",
+      "viewport": "desktop-1440x900",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state unavailable; label \"Unavailable\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-nope",
+      "viewport": "desktop-1440x900",
+      "name": "message",
+      "pass": true,
+      "detail": "UnavailableThat fixture scenario does not exist. Known Brief cases: brief-rubric-pass, brief-rubric-fail, brief-hard-failure, brief-missing-evidence, brief-stale-evaluation, brief-remediable-failure, "
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-nope",
+      "viewport": "desktop-1440x900",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-nope",
+      "viewport": "desktop-1440x900",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-nope",
+      "viewport": "desktop-1440x900",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-nope",
+      "viewport": "desktop-1440x900",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "Missions within five Tabs",
+      "pass": true,
+      "detail": "2 Tabs to #atlasMobileMissions"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "reach Missions from overview",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMobileMissions\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":2}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "search from the Missions entry",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":3}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "find Board cards",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Board cards, coven-cave, Active, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":15}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "inspect Board cards",
+      "pass": true,
+      "detail": "{\"element\":\"missionDetailTitle\",\"name\":\"Board cards\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/coven-cave/mission/m-1?view=brief&detail=side\",\"keys\":16}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "return to matching row",
+      "pass": true,
+      "detail": "{\"element\":\"btn sm\",\"name\":\"← All missions\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/coven-cave/mission/m-1?view=brief&detail=side\",\"keys\":17}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "return to matching row",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Board cards, coven-cave, Active, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":18}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "recover from an empty search",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":45}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "recover from an empty search",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":49}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "find Source survey",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Source survey, psyche-build, Needs you, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":63}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "inspect Source survey",
+      "pass": true,
+      "detail": "{\"element\":\"missionDetailTitle\",\"name\":\"Source survey\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/psyche-build/mission/m-2?view=brief&detail=side\",\"keys\":64}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "close details and return to the invoking row",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Source survey, psyche-build, Needs you, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":68}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "dismiss Missions and return to its launcher",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMobileMissions\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":69}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "original overview restored",
+      "pass": true,
+      "detail": "http://127.0.0.1:61948/#/coven"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "reload mission permalink",
+      "pass": true,
+      "detail": "http://127.0.0.1:61948/#/project/psyche-build/mission/m-2?view=brief&detail=side"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "no console errors",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-390x844",
+      "name": "adding success criteria previews the completion rule before Save",
+      "pass": true,
+      "detail": "When is it done? Eligible for acceptance only when all 4 required conditions pass and the quality rubric scores at least 80 of 100, with no criterion below its floor, each shown by current evidence for the same candidate. All attempts together may use at most 3 attempts, $2, 30 minutes, 150,000 tokens. When a limit runs out: stop and escalate. Unknown evidence never counts as met. Meeting every gate makes the mission eligible; acceptance is a separate, authorized step."
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-390x844",
+      "name": "invalid criteria block Open mission and say why",
+      "pass": true,
+      "detail": "The minimum weighted score must be a whole percentage from 0 to 100."
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-390x844",
+      "name": "valid criteria re-enable Open mission, and the editor fits",
+      "pass": true,
+      "detail": "{\"width\":338,\"right\":364,\"viewport\":390,\"scroll\":368,\"client\":368}"
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-390x844",
+      "name": "the saved criteria reach the inspector, waiting for evidence, not accepted",
+      "pass": true,
+      "detail": "sim-eb72f708; next \"Wait for evidence\""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-390x844",
+      "name": "Edit brief keeps the criteria, previews the edit, and saving derives a new revision",
+      "pass": true,
+      "detail": "kept 4; sim-eb72f708 → sim-311c0f06"
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-390x844",
+      "name": "no console errors",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-390x844",
+      "name": "overview fit keeps every Project in the stage",
+      "pass": true,
+      "detail": "4 Project name labels; outside stage: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-390x844",
+      "name": "map renders",
+      "pass": true,
+      "detail": "1084 SVG nodes in #plan"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-390x844",
+      "name": "simulation source registered and labelled simulated",
+      "pass": true,
+      "detail": "4 projects, state simulated"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-390x844",
+      "name": "open a Project",
+      "pass": true,
+      "detail": "Projects drawer; hash #/project/psyche-build"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-390x844",
+      "name": "every sample mission name is readable outside its ring at Project fit",
+      "pass": true,
+      "detail": "4 of 4 centered names, smallest text 10.5px"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-390x844",
+      "name": "mission names clear the crown and each other",
+      "pass": true,
+      "detail": "4 names shown; over the crown: none; overlapping: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-390x844",
+      "name": "familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "10 familiar labels shown; overlapping: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-390x844",
+      "name": "open a mission",
+      "pass": true,
+      "detail": "via #atlasMobileMissions; hash #/project/psyche-build/mission/m-1?view=brief&detail=side; inspector visible true"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-390x844",
+      "name": "Brief tab shows the success policy proposal apart from acceptance",
+      "pass": true,
+      "detail": "badge \"Simulation · proposal (#35)\"; steps Proposal / Execution / Quality qualification / Accepted completion; next \"Wait for evidence\"; sections Required conditions / Quality rubric / Iteration limits / Outcome targets; fits true"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-390x844",
+      "name": "replay starts and moves",
+      "pass": true,
+      "detail": "clicked #play; scrub 1000 → 20; clock \"03:50:26\" → \"03:12:48\"; button \"Pause\""
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-390x844",
+      "name": "replay frame: mission names clear the crown and each other",
+      "pass": true,
+      "detail": "1 names shown; over the crown: none; overlapping: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-390x844",
+      "name": "replay frame: familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "0 familiar labels shown; overlapping: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-390x844",
+      "name": "Seal lab extends a familiar’s progress arc",
+      "pass": true,
+      "detail": "51.631 360 to 52.707 360"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-390x844",
+      "name": "Seal lab opens and closes",
+      "pass": true,
+      "detail": "open true"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-390x844",
+      "name": "mobile dock",
+      "pass": true,
+      "detail": "dock visible true; Map → hash \"#/coven\""
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-390x844",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-390x844",
+      "name": "overview fit keeps every Project in the stage",
+      "pass": true,
+      "detail": "4 Project name labels; outside stage: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-390x844",
+      "name": "map renders",
+      "pass": true,
+      "detail": "1084 SVG nodes in #plan"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-390x844",
+      "name": "simulation source registered and labelled simulated",
+      "pass": true,
+      "detail": "4 projects, state simulated"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-390x844",
+      "name": "open a Project",
+      "pass": true,
+      "detail": "Projects drawer; hash #/project/psyche-build"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-390x844",
+      "name": "every sample mission name is readable outside its ring at Project fit",
+      "pass": true,
+      "detail": "4 of 4 centered names, smallest text 10.5px"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-390x844",
+      "name": "mission names clear the crown and each other",
+      "pass": true,
+      "detail": "4 names shown; over the crown: none; overlapping: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-390x844",
+      "name": "familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "10 familiar labels shown; overlapping: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-390x844",
+      "name": "open a mission",
+      "pass": true,
+      "detail": "via #atlasMobileMissions; hash #/project/psyche-build/mission/m-1?view=brief&detail=side; inspector visible true"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-390x844",
+      "name": "Brief tab shows the success policy proposal apart from acceptance",
+      "pass": true,
+      "detail": "badge \"Simulation · proposal (#35)\"; steps Proposal / Execution / Quality qualification / Accepted completion; next \"Wait for evidence\"; sections Required conditions / Quality rubric / Iteration limits / Outcome targets; fits true"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-390x844",
+      "name": "replay starts and moves",
+      "pass": true,
+      "detail": "clicked #play; scrub 1000 → 20; clock \"03:50:38\" → \"03:13:00\"; button \"Pause\""
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-390x844",
+      "name": "replay frame: mission names clear the crown and each other",
+      "pass": true,
+      "detail": "1 names shown; over the crown: none; overlapping: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-390x844",
+      "name": "replay frame: familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "0 familiar labels shown; overlapping: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-390x844",
+      "name": "Seal lab extends a familiar’s progress arc",
+      "pass": true,
+      "detail": "51.631 360 to 52.707 360"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-390x844",
+      "name": "Seal lab opens and closes",
+      "pass": true,
+      "detail": "open true"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-390x844",
+      "name": "mobile dock",
+      "pass": true,
+      "detail": "dock visible true; Map → hash \"#/coven\""
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-390x844",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "phone-390x844",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "phone-390x844",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state fresh; label \"Fixture · fresh\""
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "phone-390x844",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · freshObserved 5 s ago. This is static fixture data, not live Coven data.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "phone-390x844",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden false; tr 4 (expected 4)"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "phone-390x844",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "phone-390x844",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "phone-390x844",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "phone-390x844",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "phone-390x844",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state fresh; label \"Fixture · fresh\""
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "phone-390x844",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · freshObserved 5 s ago. This is static fixture data, not live Coven data.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "phone-390x844",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden false; tr 4 (expected 4)"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "phone-390x844",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "phone-390x844",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "phone-390x844",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "phone-390x844",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "phone-390x844",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state stale; label \"Fixture · stale\""
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "phone-390x844",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · staleLast observed 15 min ago, outside the 1 min freshness window. Shown as last known, not current.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "phone-390x844",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden false; tr 2 (expected 2)"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "phone-390x844",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "phone-390x844",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "phone-390x844",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "phone-390x844",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "phone-390x844",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state reconciling; label \"Fixture · reconciling\""
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "phone-390x844",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · reconcilingA page cursor could not be followed, so this list is incomplete. 1 Project is shown; the total is unknown.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "phone-390x844",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden false; tr 2 (expected 2)"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "phone-390x844",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "phone-390x844",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "phone-390x844",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "phone-390x844",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "phone-390x844",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state unavailable; label \"Unavailable\""
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "phone-390x844",
+      "name": "message",
+      "pass": true,
+      "detail": "UnavailableThe projection source is disconnected. No Projects are shown, and no sample data is substituted.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "phone-390x844",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "phone-390x844",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "phone-390x844",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "phone-390x844",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "phone-390x844",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "phone-390x844",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state unavailable; label \"Unavailable\""
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "phone-390x844",
+      "name": "message",
+      "pass": true,
+      "detail": "UnavailableThe source reports an API version Compass does not support. Reported apiVersion \"2.0\"; supported major version 1.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "phone-390x844",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "phone-390x844",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "phone-390x844",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "phone-390x844",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "phone-390x844",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "phone-390x844",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state unavailable; label \"Unavailable\""
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "phone-390x844",
+      "name": "message",
+      "pass": true,
+      "detail": "UnavailableUnknown projection source. Use ?source=simulation or ?source=fixture. Requested \"live\".No source (not authoritative)"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "phone-390x844",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "phone-390x844",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "phone-390x844",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "phone-390x844",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-pass",
+      "viewport": "phone-390x844",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-pass",
+      "viewport": "phone-390x844",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-pass",
+      "viewport": "phone-390x844",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-pass",
+      "viewport": "phone-390x844",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-pass",
+      "viewport": "phone-390x844",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-pass",
+      "viewport": "phone-390x844",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-pass",
+      "viewport": "phone-390x844",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-request-authorized-acceptance; steps 4; links 10; current rubric-pass"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-pass",
+      "viewport": "phone-390x844",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-fail",
+      "viewport": "phone-390x844",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-fail",
+      "viewport": "phone-390x844",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-fail",
+      "viewport": "phone-390x844",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-fail",
+      "viewport": "phone-390x844",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-fail",
+      "viewport": "phone-390x844",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-fail",
+      "viewport": "phone-390x844",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-fail",
+      "viewport": "phone-390x844",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-request-bounded-revision; steps 4; links 10; current rubric-fail"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-fail",
+      "viewport": "phone-390x844",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-hard-failure",
+      "viewport": "phone-390x844",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-hard-failure",
+      "viewport": "phone-390x844",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-hard-failure",
+      "viewport": "phone-390x844",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-hard-failure",
+      "viewport": "phone-390x844",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-hard-failure",
+      "viewport": "phone-390x844",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-hard-failure",
+      "viewport": "phone-390x844",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-hard-failure",
+      "viewport": "phone-390x844",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-stop-escalate; steps 4; links 10; current hard-failure"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-hard-failure",
+      "viewport": "phone-390x844",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-missing-evidence",
+      "viewport": "phone-390x844",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-missing-evidence",
+      "viewport": "phone-390x844",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-missing-evidence",
+      "viewport": "phone-390x844",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-missing-evidence",
+      "viewport": "phone-390x844",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-missing-evidence",
+      "viewport": "phone-390x844",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-missing-evidence",
+      "viewport": "phone-390x844",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-missing-evidence",
+      "viewport": "phone-390x844",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-wait-for-evidence; steps 4; links 10; current missing-evidence"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-missing-evidence",
+      "viewport": "phone-390x844",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-stale-evaluation",
+      "viewport": "phone-390x844",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-stale-evaluation",
+      "viewport": "phone-390x844",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-stale-evaluation",
+      "viewport": "phone-390x844",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-stale-evaluation",
+      "viewport": "phone-390x844",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-stale-evaluation",
+      "viewport": "phone-390x844",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-stale-evaluation",
+      "viewport": "phone-390x844",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-stale-evaluation",
+      "viewport": "phone-390x844",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-wait-for-evidence; steps 4; links 10; current stale-evaluation"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-stale-evaluation",
+      "viewport": "phone-390x844",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-remediable-failure",
+      "viewport": "phone-390x844",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-remediable-failure",
+      "viewport": "phone-390x844",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-remediable-failure",
+      "viewport": "phone-390x844",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-remediable-failure",
+      "viewport": "phone-390x844",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-remediable-failure",
+      "viewport": "phone-390x844",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-remediable-failure",
+      "viewport": "phone-390x844",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-remediable-failure",
+      "viewport": "phone-390x844",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-request-bounded-revision; steps 4; links 10; current remediable-failure"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-remediable-failure",
+      "viewport": "phone-390x844",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-budget-exhausted",
+      "viewport": "phone-390x844",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-budget-exhausted",
+      "viewport": "phone-390x844",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-budget-exhausted",
+      "viewport": "phone-390x844",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-budget-exhausted",
+      "viewport": "phone-390x844",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-budget-exhausted",
+      "viewport": "phone-390x844",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-budget-exhausted",
+      "viewport": "phone-390x844",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-budget-exhausted",
+      "viewport": "phone-390x844",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-stop-escalate; steps 4; links 10; current budget-exhausted"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-budget-exhausted",
+      "viewport": "phone-390x844",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-cancelled",
+      "viewport": "phone-390x844",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-cancelled",
+      "viewport": "phone-390x844",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-cancelled",
+      "viewport": "phone-390x844",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-cancelled",
+      "viewport": "phone-390x844",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-cancelled",
+      "viewport": "phone-390x844",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-cancelled",
+      "viewport": "phone-390x844",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-cancelled",
+      "viewport": "phone-390x844",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-stop-escalate; steps 4; links 10; current cancelled"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-cancelled",
+      "viewport": "phone-390x844",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-unresolved-effects",
+      "viewport": "phone-390x844",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-unresolved-effects",
+      "viewport": "phone-390x844",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-unresolved-effects",
+      "viewport": "phone-390x844",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-unresolved-effects",
+      "viewport": "phone-390x844",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-unresolved-effects",
+      "viewport": "phone-390x844",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-unresolved-effects",
+      "viewport": "phone-390x844",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-unresolved-effects",
+      "viewport": "phone-390x844",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-stop-escalate; steps 4; links 10; current unresolved-effects"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-unresolved-effects",
+      "viewport": "phone-390x844",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-authorization-expired",
+      "viewport": "phone-390x844",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-authorization-expired",
+      "viewport": "phone-390x844",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-authorization-expired",
+      "viewport": "phone-390x844",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-authorization-expired",
+      "viewport": "phone-390x844",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-authorization-expired",
+      "viewport": "phone-390x844",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-authorization-expired",
+      "viewport": "phone-390x844",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-authorization-expired",
+      "viewport": "phone-390x844",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-stop-escalate; steps 4; links 10; current authorization-expired"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-authorization-expired",
+      "viewport": "phone-390x844",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-nope",
+      "viewport": "phone-390x844",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-nope",
+      "viewport": "phone-390x844",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state unavailable; label \"Unavailable\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-nope",
+      "viewport": "phone-390x844",
+      "name": "message",
+      "pass": true,
+      "detail": "UnavailableThat fixture scenario does not exist. Known Brief cases: brief-rubric-pass, brief-rubric-fail, brief-hard-failure, brief-missing-evidence, brief-stale-evaluation, brief-remediable-failure, "
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-nope",
+      "viewport": "phone-390x844",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-nope",
+      "viewport": "phone-390x844",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-nope",
+      "viewport": "phone-390x844",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-nope",
+      "viewport": "phone-390x844",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "Missions within five Tabs",
+      "pass": true,
+      "detail": "2 Tabs to #atlasMobileMissions"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "reach Missions from overview",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMobileMissions\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":2}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "search from the Missions entry",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":3}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "find Board cards",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Board cards, coven-cave, Active, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":15}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "inspect Board cards",
+      "pass": true,
+      "detail": "{\"element\":\"missionDetailTitle\",\"name\":\"Board cards\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/coven-cave/mission/m-1?view=brief&detail=side\",\"keys\":16}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "return to matching row",
+      "pass": true,
+      "detail": "{\"element\":\"btn sm\",\"name\":\"← All missions\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/coven-cave/mission/m-1?view=brief&detail=side\",\"keys\":17}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "return to matching row",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Board cards, coven-cave, Active, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":18}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "recover from an empty search",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":45}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "recover from an empty search",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":49}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "find Source survey",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Source survey, psyche-build, Needs you, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":63}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "inspect Source survey",
+      "pass": true,
+      "detail": "{\"element\":\"missionDetailTitle\",\"name\":\"Source survey\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/psyche-build/mission/m-2?view=brief&detail=side\",\"keys\":64}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "close details and return to the invoking row",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Source survey, psyche-build, Needs you, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":68}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "dismiss Missions and return to its launcher",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMobileMissions\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":69}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "original overview restored",
+      "pass": true,
+      "detail": "http://127.0.0.1:61948/#/coven"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "reload mission permalink",
+      "pass": true,
+      "detail": "http://127.0.0.1:61948/#/project/psyche-build/mission/m-2?view=brief&detail=side"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "no console errors",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-landscape-844x390",
+      "name": "adding success criteria previews the completion rule before Save",
+      "pass": true,
+      "detail": "When is it done? Eligible for acceptance only when all 4 required conditions pass and the quality rubric scores at least 80 of 100, with no criterion below its floor, each shown by current evidence for the same candidate. All attempts together may use at most 3 attempts, $2, 30 minutes, 150,000 tokens. When a limit runs out: stop and escalate. Unknown evidence never counts as met. Meeting every gate makes the mission eligible; acceptance is a separate, authorized step."
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-landscape-844x390",
+      "name": "invalid criteria block Open mission and say why",
+      "pass": true,
+      "detail": "The minimum weighted score must be a whole percentage from 0 to 100."
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-landscape-844x390",
+      "name": "valid criteria re-enable Open mission, and the editor fits",
+      "pass": true,
+      "detail": "{\"width\":568,\"right\":706,\"viewport\":844,\"scroll\":598,\"client\":598}"
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-landscape-844x390",
+      "name": "the saved criteria reach the inspector, waiting for evidence, not accepted",
+      "pass": true,
+      "detail": "sim-eb72f708; next \"Wait for evidence\""
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-landscape-844x390",
+      "name": "Edit brief keeps the criteria, previews the edit, and saving derives a new revision",
+      "pass": true,
+      "detail": "kept 4; sim-eb72f708 → sim-311c0f06"
+    },
+    {
+      "mode": "brief editor",
+      "viewport": "phone-landscape-844x390",
+      "name": "no console errors",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-landscape-844x390",
+      "name": "overview fit keeps every Project in the stage",
+      "pass": true,
+      "detail": "4 Project name labels; outside stage: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-landscape-844x390",
+      "name": "map renders",
+      "pass": true,
+      "detail": "1084 SVG nodes in #plan"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-landscape-844x390",
+      "name": "simulation source registered and labelled simulated",
+      "pass": true,
+      "detail": "4 projects, state simulated"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-landscape-844x390",
+      "name": "open a Project",
+      "pass": true,
+      "detail": "Projects drawer; hash #/project/psyche-build"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-landscape-844x390",
+      "name": "every sample mission name is readable outside its ring at Project fit",
+      "pass": true,
+      "detail": "4 of 4 centered names, smallest text 10.5px"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-landscape-844x390",
+      "name": "mission names clear the crown and each other",
+      "pass": true,
+      "detail": "4 names shown; over the crown: none; overlapping: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-landscape-844x390",
+      "name": "familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "10 familiar labels shown; overlapping: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-landscape-844x390",
+      "name": "open a mission",
+      "pass": true,
+      "detail": "via #atlasMobileMissions; hash #/project/psyche-build/mission/m-1?view=brief&detail=side; inspector visible true"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-landscape-844x390",
+      "name": "Brief tab shows the success policy proposal apart from acceptance",
+      "pass": true,
+      "detail": "badge \"Simulation · proposal (#35)\"; steps Proposal / Execution / Quality qualification / Accepted completion; next \"Wait for evidence\"; sections Required conditions / Quality rubric / Iteration limits / Outcome targets; fits true"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-landscape-844x390",
+      "name": "replay starts and moves",
+      "pass": true,
+      "detail": "clicked #play; scrub 1000 → 20; clock \"03:51:08\" → \"03:13:30\"; button \"Pause\""
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-landscape-844x390",
+      "name": "replay frame: mission names clear the crown and each other",
+      "pass": true,
+      "detail": "1 names shown; over the crown: none; overlapping: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-landscape-844x390",
+      "name": "replay frame: familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "0 familiar labels shown; overlapping: none"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-landscape-844x390",
+      "name": "Seal lab extends a familiar’s progress arc",
+      "pass": true,
+      "detail": "51.631 360 to 52.707 360"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-landscape-844x390",
+      "name": "Seal lab opens and closes",
+      "pass": true,
+      "detail": "open true"
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-landscape-844x390",
+      "name": "mobile dock",
+      "pass": true,
+      "detail": "dock visible true; Map → hash \"#/coven\""
+    },
+    {
+      "mode": "simulation (default)",
+      "viewport": "phone-landscape-844x390",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-landscape-844x390",
+      "name": "overview fit keeps every Project in the stage",
+      "pass": true,
+      "detail": "4 Project name labels; outside stage: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-landscape-844x390",
+      "name": "map renders",
+      "pass": true,
+      "detail": "1084 SVG nodes in #plan"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-landscape-844x390",
+      "name": "simulation source registered and labelled simulated",
+      "pass": true,
+      "detail": "4 projects, state simulated"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-landscape-844x390",
+      "name": "open a Project",
+      "pass": true,
+      "detail": "Projects drawer; hash #/project/psyche-build"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-landscape-844x390",
+      "name": "every sample mission name is readable outside its ring at Project fit",
+      "pass": true,
+      "detail": "4 of 4 centered names, smallest text 10.5px"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-landscape-844x390",
+      "name": "mission names clear the crown and each other",
+      "pass": true,
+      "detail": "4 names shown; over the crown: none; overlapping: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-landscape-844x390",
+      "name": "familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "10 familiar labels shown; overlapping: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-landscape-844x390",
+      "name": "open a mission",
+      "pass": true,
+      "detail": "via #atlasMobileMissions; hash #/project/psyche-build/mission/m-1?view=brief&detail=side; inspector visible true"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-landscape-844x390",
+      "name": "Brief tab shows the success policy proposal apart from acceptance",
+      "pass": true,
+      "detail": "badge \"Simulation · proposal (#35)\"; steps Proposal / Execution / Quality qualification / Accepted completion; next \"Wait for evidence\"; sections Required conditions / Quality rubric / Iteration limits / Outcome targets; fits true"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-landscape-844x390",
+      "name": "replay starts and moves",
+      "pass": true,
+      "detail": "clicked #play; scrub 1000 → 20; clock \"03:51:19\" → \"03:13:42\"; button \"Pause\""
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-landscape-844x390",
+      "name": "replay frame: mission names clear the crown and each other",
+      "pass": true,
+      "detail": "1 names shown; over the crown: none; overlapping: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-landscape-844x390",
+      "name": "replay frame: familiar labels clear each other and the mission names",
+      "pass": true,
+      "detail": "0 familiar labels shown; overlapping: none"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-landscape-844x390",
+      "name": "Seal lab extends a familiar’s progress arc",
+      "pass": true,
+      "detail": "51.631 360 to 52.707 360"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-landscape-844x390",
+      "name": "Seal lab opens and closes",
+      "pass": true,
+      "detail": "open true"
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-landscape-844x390",
+      "name": "mobile dock",
+      "pass": true,
+      "detail": "dock visible true; Map → hash \"#/coven\""
+    },
+    {
+      "mode": "simulation (?source=simulation)",
+      "viewport": "phone-landscape-844x390",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "phone-landscape-844x390",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "phone-landscape-844x390",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state fresh; label \"Fixture · fresh\""
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "phone-landscape-844x390",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · freshObserved 5 s ago. This is static fixture data, not live Coven data.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "phone-landscape-844x390",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden false; tr 4 (expected 4)"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "phone-landscape-844x390",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "phone-landscape-844x390",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=fresh",
+      "viewport": "phone-landscape-844x390",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "phone-landscape-844x390",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "phone-landscape-844x390",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state fresh; label \"Fixture · fresh\""
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "phone-landscape-844x390",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · freshObserved 5 s ago. This is static fixture data, not live Coven data.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "phone-landscape-844x390",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden false; tr 4 (expected 4)"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "phone-landscape-844x390",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "phone-landscape-844x390",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture",
+      "viewport": "phone-landscape-844x390",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "phone-landscape-844x390",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "phone-landscape-844x390",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state stale; label \"Fixture · stale\""
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "phone-landscape-844x390",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · staleLast observed 15 min ago, outside the 1 min freshness window. Shown as last known, not current.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "phone-landscape-844x390",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden false; tr 2 (expected 2)"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "phone-landscape-844x390",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "phone-landscape-844x390",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=stale",
+      "viewport": "phone-landscape-844x390",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "phone-landscape-844x390",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "phone-landscape-844x390",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state reconciling; label \"Fixture · reconciling\""
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "phone-landscape-844x390",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · reconcilingA page cursor could not be followed, so this list is incomplete. 1 Project is shown; the total is unknown.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "phone-landscape-844x390",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden false; tr 2 (expected 2)"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "phone-landscape-844x390",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "phone-landscape-844x390",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=partial",
+      "viewport": "phone-landscape-844x390",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "phone-landscape-844x390",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "phone-landscape-844x390",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state unavailable; label \"Unavailable\""
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "phone-landscape-844x390",
+      "name": "message",
+      "pass": true,
+      "detail": "UnavailableThe projection source is disconnected. No Projects are shown, and no sample data is substituted.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "phone-landscape-844x390",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "phone-landscape-844x390",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "phone-landscape-844x390",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=disconnected",
+      "viewport": "phone-landscape-844x390",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "phone-landscape-844x390",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "phone-landscape-844x390",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state unavailable; label \"Unavailable\""
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "phone-landscape-844x390",
+      "name": "message",
+      "pass": true,
+      "detail": "UnavailableThe source reports an API version Compass does not support. Reported apiVersion \"2.0\"; supported major version 1.Fixture shaped after Cave Client v1 projects.list (not authoritative)"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "phone-landscape-844x390",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "phone-landscape-844x390",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "phone-landscape-844x390",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=unsupported-version",
+      "viewport": "phone-landscape-844x390",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "phone-landscape-844x390",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "phone-landscape-844x390",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state unavailable; label \"Unavailable\""
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "phone-landscape-844x390",
+      "name": "message",
+      "pass": true,
+      "detail": "UnavailableUnknown projection source. Use ?source=simulation or ?source=fixture. Requested \"live\".No source (not authoritative)"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "phone-landscape-844x390",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "phone-landscape-844x390",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "phone-landscape-844x390",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=live",
+      "viewport": "phone-landscape-844x390",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-pass",
+      "viewport": "phone-landscape-844x390",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-pass",
+      "viewport": "phone-landscape-844x390",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-pass",
+      "viewport": "phone-landscape-844x390",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-pass",
+      "viewport": "phone-landscape-844x390",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-pass",
+      "viewport": "phone-landscape-844x390",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-pass",
+      "viewport": "phone-landscape-844x390",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-pass",
+      "viewport": "phone-landscape-844x390",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-request-authorized-acceptance; steps 4; links 10; current rubric-pass"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-pass",
+      "viewport": "phone-landscape-844x390",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-fail",
+      "viewport": "phone-landscape-844x390",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-fail",
+      "viewport": "phone-landscape-844x390",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-fail",
+      "viewport": "phone-landscape-844x390",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-fail",
+      "viewport": "phone-landscape-844x390",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-fail",
+      "viewport": "phone-landscape-844x390",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-fail",
+      "viewport": "phone-landscape-844x390",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-fail",
+      "viewport": "phone-landscape-844x390",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-request-bounded-revision; steps 4; links 10; current rubric-fail"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-rubric-fail",
+      "viewport": "phone-landscape-844x390",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-hard-failure",
+      "viewport": "phone-landscape-844x390",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-hard-failure",
+      "viewport": "phone-landscape-844x390",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-hard-failure",
+      "viewport": "phone-landscape-844x390",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-hard-failure",
+      "viewport": "phone-landscape-844x390",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-hard-failure",
+      "viewport": "phone-landscape-844x390",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-hard-failure",
+      "viewport": "phone-landscape-844x390",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-hard-failure",
+      "viewport": "phone-landscape-844x390",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-stop-escalate; steps 4; links 10; current hard-failure"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-hard-failure",
+      "viewport": "phone-landscape-844x390",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-missing-evidence",
+      "viewport": "phone-landscape-844x390",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-missing-evidence",
+      "viewport": "phone-landscape-844x390",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-missing-evidence",
+      "viewport": "phone-landscape-844x390",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-missing-evidence",
+      "viewport": "phone-landscape-844x390",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-missing-evidence",
+      "viewport": "phone-landscape-844x390",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-missing-evidence",
+      "viewport": "phone-landscape-844x390",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-missing-evidence",
+      "viewport": "phone-landscape-844x390",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-wait-for-evidence; steps 4; links 10; current missing-evidence"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-missing-evidence",
+      "viewport": "phone-landscape-844x390",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-stale-evaluation",
+      "viewport": "phone-landscape-844x390",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-stale-evaluation",
+      "viewport": "phone-landscape-844x390",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-stale-evaluation",
+      "viewport": "phone-landscape-844x390",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-stale-evaluation",
+      "viewport": "phone-landscape-844x390",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-stale-evaluation",
+      "viewport": "phone-landscape-844x390",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-stale-evaluation",
+      "viewport": "phone-landscape-844x390",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-stale-evaluation",
+      "viewport": "phone-landscape-844x390",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-wait-for-evidence; steps 4; links 10; current stale-evaluation"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-stale-evaluation",
+      "viewport": "phone-landscape-844x390",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-remediable-failure",
+      "viewport": "phone-landscape-844x390",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-remediable-failure",
+      "viewport": "phone-landscape-844x390",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-remediable-failure",
+      "viewport": "phone-landscape-844x390",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-remediable-failure",
+      "viewport": "phone-landscape-844x390",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-remediable-failure",
+      "viewport": "phone-landscape-844x390",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-remediable-failure",
+      "viewport": "phone-landscape-844x390",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-remediable-failure",
+      "viewport": "phone-landscape-844x390",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-request-bounded-revision; steps 4; links 10; current remediable-failure"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-remediable-failure",
+      "viewport": "phone-landscape-844x390",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-budget-exhausted",
+      "viewport": "phone-landscape-844x390",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-budget-exhausted",
+      "viewport": "phone-landscape-844x390",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-budget-exhausted",
+      "viewport": "phone-landscape-844x390",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-budget-exhausted",
+      "viewport": "phone-landscape-844x390",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-budget-exhausted",
+      "viewport": "phone-landscape-844x390",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-budget-exhausted",
+      "viewport": "phone-landscape-844x390",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-budget-exhausted",
+      "viewport": "phone-landscape-844x390",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-stop-escalate; steps 4; links 10; current budget-exhausted"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-budget-exhausted",
+      "viewport": "phone-landscape-844x390",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-cancelled",
+      "viewport": "phone-landscape-844x390",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-cancelled",
+      "viewport": "phone-landscape-844x390",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-cancelled",
+      "viewport": "phone-landscape-844x390",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-cancelled",
+      "viewport": "phone-landscape-844x390",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-cancelled",
+      "viewport": "phone-landscape-844x390",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-cancelled",
+      "viewport": "phone-landscape-844x390",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-cancelled",
+      "viewport": "phone-landscape-844x390",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-stop-escalate; steps 4; links 10; current cancelled"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-cancelled",
+      "viewport": "phone-landscape-844x390",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-unresolved-effects",
+      "viewport": "phone-landscape-844x390",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-unresolved-effects",
+      "viewport": "phone-landscape-844x390",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-unresolved-effects",
+      "viewport": "phone-landscape-844x390",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-unresolved-effects",
+      "viewport": "phone-landscape-844x390",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-unresolved-effects",
+      "viewport": "phone-landscape-844x390",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-unresolved-effects",
+      "viewport": "phone-landscape-844x390",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-unresolved-effects",
+      "viewport": "phone-landscape-844x390",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-stop-escalate; steps 4; links 10; current unresolved-effects"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-unresolved-effects",
+      "viewport": "phone-landscape-844x390",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-authorization-expired",
+      "viewport": "phone-landscape-844x390",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-authorization-expired",
+      "viewport": "phone-landscape-844x390",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state synthetic; label \"Fixture · synthetic\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-authorization-expired",
+      "viewport": "phone-landscape-844x390",
+      "name": "message",
+      "pass": true,
+      "detail": "Fixture · syntheticSynthetic Brief policy case, evaluated as of 2026-11-20T12:00:00Z. This is not Coven data, and nothing here is authoritative.Synthetic Brief policy cases (proposal for #35) (not aut"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-authorization-expired",
+      "viewport": "phone-landscape-844x390",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-authorization-expired",
+      "viewport": "phone-landscape-844x390",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-authorization-expired",
+      "viewport": "phone-landscape-844x390",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-authorization-expired",
+      "viewport": "phone-landscape-844x390",
+      "name": "synthetic Brief case: labeled, next action, acceptance not recorded",
+      "pass": true,
+      "detail": "badge \"Synthetic fixture · proposal (#35)\"; bp-next is-stop-escalate; steps 4; links 10; current authorization-expired"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-authorization-expired",
+      "viewport": "phone-landscape-844x390",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-nope",
+      "viewport": "phone-landscape-844x390",
+      "name": "simulation never boots",
+      "pass": true,
+      "detail": "#app hidden true; atlasHeader mounted false; plan SVG nodes 0"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-nope",
+      "viewport": "phone-landscape-844x390",
+      "name": "state and label",
+      "pass": true,
+      "detail": "state unavailable; label \"Unavailable\""
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-nope",
+      "viewport": "phone-landscape-844x390",
+      "name": "message",
+      "pass": true,
+      "detail": "UnavailableThat fixture scenario does not exist. Known Brief cases: brief-rubric-pass, brief-rubric-fail, brief-hard-failure, brief-missing-evidence, brief-stale-evaluation, brief-remediable-failure, "
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-nope",
+      "viewport": "phone-landscape-844x390",
+      "name": "table",
+      "pass": true,
+      "detail": "hidden true; tr 0 (expected 0)"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-nope",
+      "viewport": "phone-landscape-844x390",
+      "name": "no horizontal page scroll",
+      "pass": true,
+      "detail": "scrollWidth > innerWidth: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-nope",
+      "viewport": "phone-landscape-844x390",
+      "name": "table fits without clipping",
+      "pass": true,
+      "detail": "table wider than its container: false"
+    },
+    {
+      "mode": "?source=fixture&scenario=brief-nope",
+      "viewport": "phone-landscape-844x390",
+      "name": "no console errors",
+      "pass": true,
+      "detail": "none"
+    }
+  ],
+  "screenshots": [
+    "desktop-compact-keyboard-label.png",
+    "desktop-1440x900-keyboard-m-1-coven-cave.png",
+    "desktop-1440x900-keyboard-m-2-psyche-build.png",
+    "desktop-1440x900-brief-editor.png",
+    "desktop-1440x900-default-overview.png",
+    "desktop-1440x900-default-mission.png",
+    "desktop-1440x900-default-brief-policy.png",
+    "desktop-1440x900-default-replay.png",
+    "desktop-1440x900-default-seal-lab.png",
+    "desktop-1440x900-_source_fixture_scenario_fresh.png",
+    "desktop-1440x900-_source_fixture.png",
+    "desktop-1440x900-_source_fixture_scenario_stale.png",
+    "desktop-1440x900-_source_fixture_scenario_partial.png",
+    "desktop-1440x900-_source_fixture_scenario_disconnected.png",
+    "desktop-1440x900-_source_fixture_scenario_unsupported-version.png",
+    "desktop-1440x900-_source_live.png",
+    "desktop-1440x900-_source_fixture_scenario_brief-rubric-pass.png",
+    "desktop-1440x900-_source_fixture_scenario_brief-rubric-fail.png",
+    "desktop-1440x900-_source_fixture_scenario_brief-hard-failure.png",
+    "desktop-1440x900-_source_fixture_scenario_brief-missing-evidence.png",
+    "desktop-1440x900-_source_fixture_scenario_brief-stale-evaluation.png",
+    "desktop-1440x900-_source_fixture_scenario_brief-remediable-failure.png",
+    "desktop-1440x900-_source_fixture_scenario_brief-budget-exhausted.png",
+    "desktop-1440x900-_source_fixture_scenario_brief-cancelled.png",
+    "desktop-1440x900-_source_fixture_scenario_brief-unresolved-effects.png",
+    "desktop-1440x900-_source_fixture_scenario_brief-authorization-expired.png",
+    "desktop-1440x900-_source_fixture_scenario_brief-nope.png",
+    "phone-390x844-keyboard-m-1-coven-cave.png",
+    "phone-390x844-keyboard-m-2-psyche-build.png",
+    "phone-390x844-brief-editor.png",
+    "phone-390x844-default-overview.png",
+    "phone-390x844-default-mission.png",
+    "phone-390x844-default-brief-policy.png",
+    "phone-390x844-default-replay.png",
+    "phone-390x844-default-seal-lab.png",
+    "phone-390x844-_source_fixture_scenario_fresh.png",
+    "phone-390x844-_source_fixture.png",
+    "phone-390x844-_source_fixture_scenario_stale.png",
+    "phone-390x844-_source_fixture_scenario_partial.png",
+    "phone-390x844-_source_fixture_scenario_disconnected.png",
+    "phone-390x844-_source_fixture_scenario_unsupported-version.png",
+    "phone-390x844-_source_live.png",
+    "phone-390x844-_source_fixture_scenario_brief-rubric-pass.png",
+    "phone-390x844-_source_fixture_scenario_brief-rubric-fail.png",
+    "phone-390x844-_source_fixture_scenario_brief-hard-failure.png",
+    "phone-390x844-_source_fixture_scenario_brief-missing-evidence.png",
+    "phone-390x844-_source_fixture_scenario_brief-stale-evaluation.png",
+    "phone-390x844-_source_fixture_scenario_brief-remediable-failure.png",
+    "phone-390x844-_source_fixture_scenario_brief-budget-exhausted.png",
+    "phone-390x844-_source_fixture_scenario_brief-cancelled.png",
+    "phone-390x844-_source_fixture_scenario_brief-unresolved-effects.png",
+    "phone-390x844-_source_fixture_scenario_brief-authorization-expired.png",
+    "phone-390x844-_source_fixture_scenario_brief-nope.png",
+    "phone-landscape-844x390-keyboard-m-1-coven-cave.png",
+    "phone-landscape-844x390-keyboard-m-2-psyche-build.png",
+    "phone-landscape-844x390-brief-editor.png",
+    "phone-landscape-844x390-default-overview.png",
+    "phone-landscape-844x390-default-mission.png",
+    "phone-landscape-844x390-default-brief-policy.png",
+    "phone-landscape-844x390-default-replay.png",
+    "phone-landscape-844x390-default-seal-lab.png",
+    "phone-landscape-844x390-_source_fixture_scenario_fresh.png",
+    "phone-landscape-844x390-_source_fixture.png",
+    "phone-landscape-844x390-_source_fixture_scenario_stale.png",
+    "phone-landscape-844x390-_source_fixture_scenario_partial.png",
+    "phone-landscape-844x390-_source_fixture_scenario_disconnected.png",
+    "phone-landscape-844x390-_source_fixture_scenario_unsupported-version.png",
+    "phone-landscape-844x390-_source_live.png",
+    "phone-landscape-844x390-_source_fixture_scenario_brief-rubric-pass.png",
+    "phone-landscape-844x390-_source_fixture_scenario_brief-rubric-fail.png",
+    "phone-landscape-844x390-_source_fixture_scenario_brief-hard-failure.png",
+    "phone-landscape-844x390-_source_fixture_scenario_brief-missing-evidence.png",
+    "phone-landscape-844x390-_source_fixture_scenario_brief-stale-evaluation.png",
+    "phone-landscape-844x390-_source_fixture_scenario_brief-remediable-failure.png",
+    "phone-landscape-844x390-_source_fixture_scenario_brief-budget-exhausted.png",
+    "phone-landscape-844x390-_source_fixture_scenario_brief-cancelled.png",
+    "phone-landscape-844x390-_source_fixture_scenario_brief-unresolved-effects.png",
+    "phone-landscape-844x390-_source_fixture_scenario_brief-authorization-expired.png",
+    "phone-landscape-844x390-_source_fixture_scenario_brief-nope.png"
+  ],
+  "summary": {
+    "checks": 573,
+    "passed": 573,
+    "failed": 0
+  }
+}

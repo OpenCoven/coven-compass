@@ -1309,7 +1309,11 @@ body.atlas-enhanced #mission-section .bfl > b { white-space: normal; text-align:
   #historyTitle { font-size: 1.15em; margin: 0; }
 }
 #historyReturn { position: fixed; z-index: 45; bottom: max(76px, 12dvh); left: 50%; transform: translateX(-50%); width: max-content; max-width: 88vw; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; padding: 8px 12px; border: 1px solid var(--border-strong); background: var(--card); border-radius: 8px; }
-body.atlas-adaptive-mobile #historyReturn { bottom: calc(var(--mobile-chrome-height, 108px) + env(safe-area-inset-bottom, 0px) + 8px); }
+/* The selected mission card and playback dock already occupy the bottom edge. */
+body.atlas-adaptive-mobile #historyReturn {
+  top: calc(var(--workspace-title-height, 49px) + env(safe-area-inset-top, 0px) + 8px);
+  bottom: auto;
+}
 @media (max-width: 500px) { #historyResume { min-height: 44px; } }
 #historyMapNote { flex: 1 0 100%; overflow-wrap: anywhere; max-height: 3.5em; overflow: auto; }
 

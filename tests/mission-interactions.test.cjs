@@ -152,7 +152,7 @@ function formFixture() {
       stage.inert = !form.hidden; form.inert = form.hidden;
     },
   };
-  const context = load(['setMissionName', 'setBriefExpanded', 'drawNew', 'openNew', 'closeNew'], {
+  const context = load(['setMissionName', 'setBriefExpanded', 'drawNew', 'openNew', 'closeNew', 'successOk'], {
     ...f, stage, nm, cz, cur: () => project, active: 'brand', atlasScope: 'project',
     canAct: () => actionable,
     sc: {far: false}, select() {}, setView() {}, setLead() {}, drawBriefForm() {},

@@ -21,6 +21,7 @@ For the **historical pre-layout** Node and Chrome mobile pass, read [Mobile read
 | [11 — Open decisions](11-open-decisions.md) | Proposed defaults, owners, risks, and validation needed |
 | [12 — Source ledger](12-source-ledger.md) | Provenance and limits for each source class |
 | [15 — Scalable Atlas layout and crown](15-scalable-atlas-layout.md) | Uniform Projects, compact placement, bounded mission detail, density/search/sample controls, explicit scope, measured fit, and canonical flat crown |
+| [16 — Brief success profile (proposed)](16-brief-success-profile.md) | Proposed mapping of Brief success conditions, rubric and iteration limits onto Psyche/Coven references, its owner questions (D13–D15), and the labeled fixture model for #35 |
 
 ## Working templates
 
