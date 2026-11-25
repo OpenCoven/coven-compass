@@ -8,6 +8,7 @@
 //   python3 -m http.server 18433 --bind 127.0.0.1 --directory <repo>/dist   # any free port except 8765
 //   cp <repo>/scripts/browser-qa.mjs . && node browser-qa.mjs http://127.0.0.1:18433/ ./shots ./qa.json $(git -C <repo> rev-parse HEAD)
 //
+// Append --projection-only for the standalone fixture and unavailable-source views.
 // Append --brief-only to exercise Brief authoring, replay and fixtures. Add --webkit for Playwright WebKit.
 // Append --keyboard-only for mission discovery, inspector return, route reload and the compact-label control.
 // The desktop compact check imports eight mission.opened JSON Lines via Trace > Import.
@@ -31,6 +32,7 @@ const VIEWPORTS = [
 const SCENARIOS = [
   { query: '?source=fixture&scenario=fresh', state: 'fresh', label: 'Fixture · fresh', rows: 3, message: /not live Coven data/ },
   { query: '?source=fixture', state: 'fresh', label: 'Fixture · fresh', rows: 3, message: /not live Coven data/ },
+  { query: '?source=fixture&scenario=empty', state: 'fresh', label: 'Fixture · fresh', rows: 0, message: /No Projects in this complete observation/ },
   { query: '?source=fixture&scenario=stale', state: 'stale', label: 'Fixture · stale', rows: 1, message: /not current/ },
   { query: '?source=fixture&scenario=partial', state: 'reconciling', label: 'Fixture · reconciling', rows: 1, message: /incomplete/ },
   { query: '?source=fixture&scenario=disconnected', state: 'unavailable', label: 'Unavailable', rows: 0, message: /disconnected/ },
@@ -386,8 +388,68 @@ async function briefEditor(vp) {
   } finally { await context.close(); }
 }
 
-if (!briefOnly) await compactMissionLabel();
+async function projectionScenarios(vp) {
+  for (const s of SCENARIOS) {
+    const mode = s.query;
+    const { context, page, errors } = await open(vp, s.query);
+    try {
+      await page.waitForFunction(() => {
+        const n = document.querySelector('.pv-status');
+        return n && n.querySelector('.pv-badge') && n.querySelector('.pv-badge').textContent !== 'Loading';
+      }, null, { timeout: 8000 });
+      const r = await page.evaluate(() => ({
+        appHidden: document.getElementById('app').hidden,
+        appVisible: !!document.getElementById('app').offsetParent,
+        header: !!document.getElementById('atlasHeader'),
+        sceneNodes: document.querySelectorAll('#plan *').length,
+        state: document.querySelector('.pv-status').getAttribute('data-state'),
+        label: document.querySelector('.pv-status .pv-badge').textContent,
+        text: document.querySelector('.pv-status').textContent,
+        observedAt: document.querySelector('.pv-status time')?.dateTime,
+        tableHidden: document.querySelector('.pv-table').hasAttribute('hidden'),
+        rows: document.querySelectorAll('.pv-table tr').length,
+        kind: window.CovenProjection && window.CovenProjection.current() && window.CovenProjection.current().kind,
+        overflowX: document.documentElement.scrollWidth > window.innerWidth,
+        tableClipped: (() => { const w = document.querySelector('.pv-scroll') || document.querySelector('.pv-table'); return !!w && !w.hidden && !w.hasAttribute('hidden') && w.scrollWidth > w.clientWidth + 1; })(),
+      }));
+      check(mode, vp.name, 'simulation never boots', r.appHidden && !r.appVisible && !r.header,
+        `#app hidden ${r.appHidden}; atlasHeader mounted ${r.header}; plan SVG nodes ${r.sceneNodes}`);
+      check(mode, vp.name, 'state and label', r.state === s.state && r.label === s.label, `state ${r.state}; label "${r.label}"`);
+      check(mode, vp.name, 'message', s.message.test(r.text), r.text.slice(0, 200));
+      if (['fresh', 'stale', 'reconciling'].includes(s.state)) {
+        check(mode, vp.name, 'observation timestamp', Number.isFinite(Date.parse(r.observedAt)), r.observedAt);
+      }
+      check(mode, vp.name, 'table', s.rows ? (!r.tableHidden && r.rows === s.rows + 1) : (r.tableHidden && r.rows === 0),
+        `hidden ${r.tableHidden}; tr ${r.rows} (expected ${s.rows ? s.rows + 1 : 0})`);
+      check(mode, vp.name, 'no horizontal page scroll', !r.overflowX, `scrollWidth > innerWidth: ${r.overflowX}`);
+      check(mode, vp.name, 'table fits without clipping', !r.tableClipped, `table wider than its container: ${r.tableClipped}`);
+      if (s.brief) {
+        const bp = await page.evaluate(() => {
+          const panel = document.querySelector('.pv-brief .bp');
+          return panel && { badge: panel.querySelector('.bp-badge').textContent, next: panel.querySelector('.bp-next').className,
+            steps: panel.querySelectorAll('.bp-step').length, accepted: panel.querySelectorAll('.bp-step')[3].textContent,
+            cases: document.querySelectorAll('.pv-brief nav a').length, current: document.querySelector('.pv-brief nav a[aria-current="page"]')?.textContent };
+        });
+        check(mode, vp.name, 'synthetic Brief case: labeled, next action, acceptance not recorded',
+          bp && /Synthetic fixture/.test(bp.badge) && bp.next.includes('is-' + s.brief) && bp.steps === 4 && /Not recorded/.test(bp.accepted) && bp.cases >= 10 && !!bp.current,
+          bp ? `badge "${bp.badge}"; ${bp.next}; steps ${bp.steps}; links ${bp.cases}; current ${bp.current}` : 'no .bp panel');
+      }
+      check(mode, vp.name, 'no console errors', errors.length === 0, errors.join(' | ') || 'none');
+      await shot(page, `${vp.name}-${s.query.replace(/[?&=]/g, '_')}`);
+    } catch (error) {
+      check(mode, vp.name, 'projection view settled', false, error.message.split('\n')[0]);
+    }
+    await context.close();
+  }
+}
+
+const projectionOnly = process.argv.includes('--projection-only');
+if (!briefOnly && !projectionOnly) await compactMissionLabel();
 for (const vp of VIEWPORTS) {
+  if (projectionOnly) {
+    await projectionScenarios(vp);
+    continue;
+  }
   if (!briefOnly) await keyboardJourney(vp);
   if (process.argv.includes('--keyboard-only')) continue;
   await briefEditor(vp);
@@ -551,54 +613,7 @@ for (const vp of VIEWPORTS) {
     await context.close();
   }
 
-  for (const s of SCENARIOS) {
-    const mode = s.query;
-    const { context, page, errors } = await open(vp, s.query);
-    try {
-      await page.waitForFunction(() => {
-        const n = document.querySelector('.pv-status');
-        return n && n.querySelector('.pv-badge') && n.querySelector('.pv-badge').textContent !== 'Loading';
-      }, null, { timeout: 8000 });
-      const r = await page.evaluate(() => ({
-        appHidden: document.getElementById('app').hidden,
-        appVisible: !!document.getElementById('app').offsetParent,
-        header: !!document.getElementById('atlasHeader'),
-        sceneNodes: document.querySelectorAll('#plan *').length,
-        state: document.querySelector('.pv-status').getAttribute('data-state'),
-        label: document.querySelector('.pv-status .pv-badge').textContent,
-        text: document.querySelector('.pv-status').textContent,
-        tableHidden: document.querySelector('.pv-table').hasAttribute('hidden'),
-        rows: document.querySelectorAll('.pv-table tr').length,
-        kind: window.CovenProjection && window.CovenProjection.current() && window.CovenProjection.current().kind,
-        overflowX: document.documentElement.scrollWidth > window.innerWidth,
-        tableClipped: (() => { const w = document.querySelector('.pv-scroll') || document.querySelector('.pv-table'); return !!w && !w.hidden && !w.hasAttribute('hidden') && w.scrollWidth > w.clientWidth + 1; })(),
-      }));
-      check(mode, vp.name, 'simulation never boots', r.appHidden && !r.appVisible && !r.header,
-        `#app hidden ${r.appHidden}; atlasHeader mounted ${r.header}; plan SVG nodes ${r.sceneNodes}`);
-      check(mode, vp.name, 'state and label', r.state === s.state && r.label === s.label, `state ${r.state}; label "${r.label}"`);
-      check(mode, vp.name, 'message', s.message.test(r.text), r.text.slice(0, 200));
-      check(mode, vp.name, 'table', s.rows ? (!r.tableHidden && r.rows === s.rows + 1) : (r.tableHidden && r.rows === 0),
-        `hidden ${r.tableHidden}; tr ${r.rows} (expected ${s.rows ? s.rows + 1 : 0})`);
-      check(mode, vp.name, 'no horizontal page scroll', !r.overflowX, `scrollWidth > innerWidth: ${r.overflowX}`);
-      check(mode, vp.name, 'table fits without clipping', !r.tableClipped, `table wider than its container: ${r.tableClipped}`);
-      if (s.brief) {
-        const bp = await page.evaluate(() => {
-          const panel = document.querySelector('.pv-brief .bp');
-          return panel && { badge: panel.querySelector('.bp-badge').textContent, next: panel.querySelector('.bp-next').className,
-            steps: panel.querySelectorAll('.bp-step').length, accepted: panel.querySelectorAll('.bp-step')[3].textContent,
-            cases: document.querySelectorAll('.pv-brief nav a').length, current: document.querySelector('.pv-brief nav a[aria-current="page"]')?.textContent };
-        });
-        check(mode, vp.name, 'synthetic Brief case: labeled, next action, acceptance not recorded',
-          bp && /Synthetic fixture/.test(bp.badge) && bp.next.includes('is-' + s.brief) && bp.steps === 4 && /Not recorded/.test(bp.accepted) && bp.cases >= 10 && !!bp.current,
-          bp ? `badge "${bp.badge}"; ${bp.next}; steps ${bp.steps}; links ${bp.cases}; current ${bp.current}` : 'no .bp panel');
-      }
-      check(mode, vp.name, 'no console errors', errors.length === 0, errors.join(' | ') || 'none');
-      await shot(page, `${vp.name}-${s.query.replace(/[?&=]/g, '_')}`);
-    } catch (error) {
-      check(mode, vp.name, 'projection view settled', false, error.message.split('\n')[0]);
-    }
-    await context.close();
-  }
+  await projectionScenarios(vp);
 }
 await browser.close();
 const failed = report.checks.filter(c => !c.pass);

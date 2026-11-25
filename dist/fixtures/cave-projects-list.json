@@ -31,6 +31,21 @@
         }
       }
     },
+    "empty": {
+      "connection": "connected",
+      "observedAgoMs": 5000,
+      "pages": {
+        "": {
+          "apiVersion": "1.0",
+          "minimumClientVersion": "0.0.1",
+          "capabilities": ["projects.list"],
+          "operations": ["projects.list"],
+          "requestId": "fixture-req-empty",
+          "projects": [],
+          "nextCursor": null
+        }
+      }
+    },
     "stale": {
       "connection": "connected",
       "observedAgoMs": 900000,
