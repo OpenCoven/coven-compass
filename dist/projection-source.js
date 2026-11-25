@@ -180,7 +180,8 @@
       if (seen.has(cursor)) break;
     }
     var p = base('fixture', label);
-    var ageMs = now != null && observedAt != null ? Math.max(0, now - observedAt) : null;
+    var clockAhead = now != null && observedAt != null && observedAt > now;
+    var ageMs = now != null && observedAt != null && !clockAhead ? now - observedAt : null;
     p.projects = projects;
     p.complete = complete;
     p.freshness = {observedAt: observedAt != null ? new Date(observedAt).toISOString() : null, ageMs: ageMs,
@@ -188,6 +189,8 @@
     if (!complete) {
       p.availability = {state: 'reconciling', reason: 'incomplete', message: 'A page cursor could not be followed, so this list is incomplete. '
         + projects.length + ' Project' + (projects.length === 1 ? ' is' : 's are') + ' shown; the total is unknown.'};
+    } else if (clockAhead) {
+      p.availability = {state: 'stale', reason: 'clock_skew', message: 'The observation is ahead of the current clock. Its age is unknown.'};
     } else if (ageMs === null || p.freshness.staleAfterMs === null || ageMs > p.freshness.staleAfterMs) {
       p.availability = {state: 'stale', reason: ageMs === null ? 'unknown_age' : p.freshness.staleAfterMs === null ? 'unknown_window' : 'aged',
         message: (ageMs === null ? 'The observation time is unknown.' : p.freshness.staleAfterMs === null ? 'The freshness window is unknown.' : 'Last observed ' + formatAge(ageMs) + ' ago, outside the '
@@ -385,7 +388,7 @@
       element(doc, 'p', {'class': 'pv-source', text: 'Projection source: ' + (selection.requested || selection.mode) + '. The simulation is not running in this mode.'}),
       status, briefSlot, scroll,
       element(doc, 'nav', {'aria-label': 'Projection sources'}, ['simulation', 'fixture&scenario=fresh', 'fixture&scenario=stale',
-        'fixture&scenario=partial', 'fixture&scenario=disconnected', 'fixture&scenario=unsupported-version', 'fixture&scenario=brief-rubric-pass'].map(function (q) {
+        'fixture&scenario=empty', 'fixture&scenario=partial', 'fixture&scenario=disconnected', 'fixture&scenario=unsupported-version', 'fixture&scenario=brief-rubric-pass'].map(function (q) {
         return element(doc, 'a', {href: '?source=' + q, text: q.replace('fixture&scenario=', 'fixture: ')});
       })),
     ]);
@@ -419,6 +422,16 @@
       status.appendChild(element(doc, 'span', {'class': 'pv-badge', text: d.label}));
       status.appendChild(doc.createTextNode(d.message));
       status.appendChild(element(doc, 'div', {'class': 'pv-source', text: d.source}));
+      var observedAt = projection.freshness.observedAt;
+      if (observedAt) {
+        var observation = element(doc, 'div', {'class': 'pv-source'});
+        observation.appendChild(doc.createTextNode('Fixture observation · '));
+        observation.appendChild(element(doc, 'time', {datetime: observedAt, text: new Date(observedAt).toLocaleString()}));
+        status.appendChild(observation);
+      }
+      if (selection.mode === 'fixture' && !briefMode && d.complete && d.rows.length === 0) {
+        status.appendChild(element(doc, 'p', {text: 'No Projects in this complete observation.'}));
+      }
       briefSlot.textContent = '';
       if (projection.brief) renderBrief(doc, briefSlot, projection.brief, win && win.CovenBriefPolicyView);
       table.textContent = '';

@@ -303,7 +303,7 @@ test('a cursor cycle stops paging and reports the list as incomplete', () => {
 test('every fixture scenario maps to a distinct explicit state', async () => {
   const states = {};
   for (const name of Object.keys(fixture.scenarios)) states[name] = (await read(name)).availability.state;
-  assert.deepEqual(states, {fresh: 'fresh', stale: 'stale', partial: 'reconciling', disconnected: 'unavailable', 'unsupported-version': 'unavailable'});
+  assert.deepEqual(states, {fresh: 'fresh', empty: 'fresh', stale: 'stale', partial: 'reconciling', disconnected: 'unavailable', 'unsupported-version': 'unavailable'});
   assert.match(fixture.about, /^STATIC FIXTURE\. Not live data/);
 });
 
@@ -379,4 +379,24 @@ test('a malformed selected scenario renders unavailable instead of leaving the v
   assert.equal(status.getAttribute('data-state'), 'unavailable');
   assert.match(status.textContent, /not authoritative/);
   assert.equal(find(doc.body, n => n.tagName === 'TABLE').getAttribute('hidden'), '');
+});
+
+test('a future observation cannot establish a fresh Project list', () => {
+  const projection = projectList({}, {observedAt: NOW + 1000});
+  assert.equal(projection.availability.state, 'stale');
+  assert.equal(projection.freshness.ageMs, null);
+  assert.match(projection.availability.message, /clock/i);
+});
+
+test('the view distinguishes a confirmed empty observation from a missing continuation', async () => {
+  for (const [nextCursor, complete] of [[null, true], ['more', false]]) {
+    const {doc} = fakeDocument();
+    const load = () => ({...fixture, scenarios: {fresh: {observedAgoMs: 1000, pages: {'': page({projects: [], nextCursor})}}}});
+    await P.renderStandalone(doc, P.selectMode('?source=fixture'), {load, now: () => NOW});
+    const status = find(doc.body, n => n.attributes?.role === 'status');
+    const time = find(status, n => n.tagName === 'TIME');
+    assert.equal(time?.getAttribute('datetime'), new Date(NOW - 1000).toISOString());
+    assert.match(status.textContent, complete ? /no projects in this complete observation/i : /total is unknown/i);
+    if (!complete) assert.doesNotMatch(status.textContent, /no projects in this complete observation/i);
+  }
 });
