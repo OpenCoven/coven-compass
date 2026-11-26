@@ -3,8 +3,8 @@
   "evidence_level": "static + unit (Node with DOM facades). Not browser, device, daemon, packaged CLI, or remote Host.",
   "tests": {
     "files": 26,
-    "tests": 335,
-    "pass": 335,
+    "tests": 336,
+    "pass": 336,
     "fail": 0,
     "cancelled": 0,
     "skipped": 0,

@@ -24,7 +24,7 @@ Choose an issue from the [contributor entry point](START_HERE.md#next-contributo
 | Change | Edit | Focused check |
 | --- | --- | --- |
 | Project form and mission inspector | `dist/index.html` | `node --test tests/mission-interactions.test.cjs`, then exercise the form in a desktop and a narrow browser |
-| Routes and mission browser | `dist/mission-navigation.js`, `dist/atlas-ui.js`, and their bindings in `dist/index.html` | `node --test tests/navigation.test.cjs tests/navigation-notice.test.cjs tests/mission-interactions.test.cjs` |
+| Routes and mission browser | `src/mission-navigation.ts`, `dist/atlas-ui.js`, and their bindings in `dist/index.html` | `node --test tests/navigation.test.cjs tests/navigation-notice.test.cjs tests/mission-interactions.test.cjs` |
 | Coven Needs review queue and shared Psyche confirmation | `dist/review-queue.js`, `dist/review-queue-ui.js`, `requestConfirmation` in `dist/index.html` | `node --test tests/review-queue.test.cjs`. Run `scripts/review-queue-qa.mjs` and `scripts/inbox-event-qa.mjs` from the external Playwright install with the preview URL and engine (`chromium` or `webkit`). |
 | Map and camera | `src/atlas-layout.ts`, `src/atlas-viewport.ts` | `node --test tests/atlas-layout.test.cjs tests/atlas-viewport.test.cjs` |
 | Projects drawer and Trace | `dist/atlas-ui.js`, `dist/atlas.css`, Trace in `dist/index.html` | Run `scripts/project-drawer-qa.mjs` and `scripts/trace-panel-qa.mjs` beside external Playwright with the preview URL and engine (`chromium` or `webkit`). For row activation, run `scripts/project-selection-qa.mjs` with the URL, engine and `pointer` or `controls`. |
@@ -65,7 +65,7 @@ Keep `tests/fixtures/` (the pinned baseline) and the dated audits in `tests/evid
 | `src/atlas-layout.ts` | Pure geometry: paired project placement, corridors, gates, bounded mission packing |
 | `src/atlas-viewport.ts` | Measured safe-area fit |
 | `src/atlas-crown.ts` | Canonical flat Psyche crown and aperture. Build its classic script for the browser. |
-| `dist/mission-navigation.js` | Route codec (`#/project/<name>[/mission/<id>…]`), replay selection reconciliation |
+| `src/mission-navigation.ts` | Route codec (`#/project/<name>[/mission/<id>…]`), replay selection reconciliation. The compiler emits the classic script in `dist/`. |
 | `dist/projection-source.js`, `dist/fixtures/` | **The projection seam.** `?source=simulation` (the default) or `?source=fixture&scenario=…`. Every source implements `read() → Projection`. Add a live adapter here, never inside the simulation. |
 | `dist/brief-policy.js` | **Proposal model for #35.** A pure evaluation of a Brief's success policy (required conditions, rubric, cumulative limits) against evidence-bound evaluations. It returns the next permitted action and never "accepted". |
 | `dist/brief-policy-editor.js` | The success criteria editor in New mission and Edit brief. It edits `brief.success` only; Save stays with the page and is blocked while the criteria don't validate. |

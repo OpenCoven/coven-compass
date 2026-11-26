@@ -6703,6 +6703,7 @@ function atlasRestoreRoute(initial) {
     }
   } finally { if (locked) setLock(true); atlasRestoringRoute = false; atlasNavigationReady = true; }
   atlasWriteRoute(true);
+  if (initial && route?.scope === 'mission' && cur().sel === route.mission) atlasFocusSelection(false);
   // Only an unreadable link is shown on screen as well (#45); the other notices stay screen-reader only.
   if (window.CovenAtlas) { window.CovenAtlas.update(); if (notice) window.CovenAtlas.announce(notice, {visible: !route}); }
 }

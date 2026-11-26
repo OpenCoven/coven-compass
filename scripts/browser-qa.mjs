@@ -198,7 +198,17 @@ async function keyboardJourney(vp) {
     if (!permalink.includes('/project/psyche-build/mission/m-2')) throw new Error('Expected Source survey before reloading');
     await page.reload();
     await page.getByRole('heading', {name: 'Source survey', exact: true}).waitFor();
+    await observe('#missionDetailTitle', 'heading', 'Source survey');
     check(mode, vp.name, step, page.url() === permalink, permalink);
+    step = 'browser Back from the reloaded mission';
+    await page.goBack();
+    await page.waitForFunction(hash => location.hash !== hash, new URL(permalink).hash);
+    const previous = page.url();
+    step = 'browser Forward restores mission and keyboard focus';
+    await page.goForward();
+    await page.locator('#missionDetailTitle:focus').waitFor();
+    await observe('#missionDetailTitle', 'heading', 'Source survey');
+    check(mode, vp.name, step, page.url() === permalink, previous + ' → ' + page.url());
     check(mode, vp.name, 'no console errors', !errors.length, errors.join(' | '));
   } catch (error) {
     check(mode, vp.name, step, false, error.message);
