@@ -12,14 +12,14 @@
 :root{
   --background:#09090B;
   --card:#141417; --card-raised:#1B1B20; --popover:rgba(27,27,32,.92);
-  --disc-hi:#212127; --disc-lo:#16161A; --floor:rgba(255,255,255,.014); --wall-face:rgba(179,170,235,.04); --shade:rgba(0,0,0,.3);
+  --disc-hi:#212127; --disc-lo:#16161A; --floor:rgba(255,255,255,.014); --wall-face:rgba(185,137,255,.04); --shade:rgba(0,0,0,.3);
   --border:rgba(255,255,255,.075); --border-strong:rgba(255,255,255,.14);
   --foreground:#EDECF2; --muted-foreground:#A6A5B1; --subtle:#82818E;
-  --primary:#B3AAEB; --primary-hi:#C7BFF4; --primary-lo:#A59BE4; --primary-foreground:#15131F;
-  --primary-soft:rgba(179,170,235,.13); --glow:rgba(179,170,235,.28);
-  --fam-astra:#9CC2F2; --fam-cody:#E8C99A; --fam-echo:#EBAACB; --fam-charm:#A3DCC3; --well:#0B0B0E;
+  --primary:#B989FF; --primary-hi:#D6B5FF; --primary-lo:#AD7BF5; --primary-foreground:#15131F;
+  --primary-soft:rgba(185,137,255,.13); --glow:rgba(185,137,255,.28);
+  --fam-astra:#36C9FF; --fam-cody:#FFAB32; --fam-echo:#FF62BB; --fam-charm:#28E1C2; --well:#0B0B0E;
   --attention:#F6F4FF; --attention-soft:rgba(246,244,255,.3); --attention-halo:rgba(246,244,255,.14);
-  --ring:rgba(179,170,235,.6);
+  --ring:rgba(185,137,255,.6);
   --radius:6px;
   --sheen:none;
   --shadow-card:0 0 transparent;
@@ -807,7 +807,7 @@ body{letter-spacing:-.006em;font-feature-settings:"ss01","cv11";text-rendering:o
 .je-hl,.je-in{display:block;margin:0;padding:9px 10px;border:0;font-family:var(--f-mono);font-size:calc(11px * var(--fs,1) * var(--fsl,1));font-weight:400;line-height:1.65;letter-spacing:0;white-space:pre-wrap;overflow-wrap:anywhere;tab-size:2}
 .je-hl{position:relative;min-height:3em;color:var(--muted-foreground);pointer-events:none}
 .je-in{position:absolute;inset:0;width:100%;height:100%;resize:none;overflow:hidden;background:none;color:transparent;caret-color:var(--foreground);outline:0}
-.je-in::selection{background:rgba(179,170,235,.32)}
+.je-in::selection{background:rgba(185,137,255,.32)}
 .j-k{color:var(--primary)}.j-s{color:var(--foreground)}.j-n,.j-l{color:var(--foreground);font-weight:500}
 .jl.bad{background:var(--attention-halo);text-decoration:underline wavy var(--attention);text-decoration-thickness:1px;text-underline-offset:3px}
 .je-bar{display:flex;align-items:center;gap:6px}
@@ -1284,7 +1284,7 @@ body{letter-spacing:-.006em;font-feature-settings:"ss01","cv11";text-rendering:o
 .kl{fill:none;stroke:var(--primary);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
 .kl.dim{opacity:.35}
 .kg{fill:#1D1D20;stroke:var(--primary);stroke-opacity:.5;stroke-width:1}
-.kz-glow{width:18px;height:18px;border-radius:50%;background:radial-gradient(circle,rgba(179,170,235,.7),rgba(179,170,235,0) 70%)}
+.kz-glow{width:18px;height:18px;border-radius:50%;background:radial-gradient(circle,rgba(185,137,255,.7),rgba(185,137,255,0) 70%)}
 .kz-beacon{width:7px;height:7px;border-radius:50%;background:var(--attention);box-shadow:0 0 0 3px var(--attention-halo);animation:breathe 1.4s ease-in-out infinite}
 .kz-breathe{animation:breathe 1.8s ease-in-out infinite}
 .kz-fams{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:8px;padding-top:10px;border-top:1px solid var(--border)}
@@ -1368,9 +1368,9 @@ kbd{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 
 .an-go .chev{transform:rotate(-90deg)}
 .ask-note>span{white-space:normal}
 
-/* ================= graphite: neutral dark greys for every surface; lavender only where it means Psyche, the ward or an action ================= */
+/* ================= graphite: neutral dark greys for every surface; violet only where it means Psyche, the ward or an action ================= */
 :root{--background:#070708;--card:#101011;--card-raised:#161617;--popover:rgba(21,21,22,.94);--disc-hi:#1C1C1E;--disc-lo:#121213;--well:#09090A;--surface-hi:#161617;--surface-lo:#0E0E0F;
-  --wall-face:rgba(255,255,255,.028);--wall-top:rgba(255,255,255,.07);--foreground:#EDEDEF;--muted-foreground:#A5A5AB;--subtle:#808087;--primary-soft:rgba(179,170,235,.1);--glow:rgba(179,170,235,.2)}
+  --wall-face:rgba(255,255,255,.028);--wall-top:rgba(255,255,255,.07);--foreground:#EDEDEF;--muted-foreground:#A5A5AB;--subtle:#808087;--primary-soft:rgba(185,137,255,.1);--glow:rgba(185,137,255,.2)}
 .tg[aria-pressed="true"]{background:rgba(255,255,255,.08)}
 
 /* ================= familiar editor: rows that show their value and open to change it ================= */
@@ -1437,7 +1437,7 @@ button.fm-r:hover svg{color:var(--hue,var(--primary))}
 .psyche .cast{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;display:flex;flex-direction:column;animation:fade .16s ease-out}
 .p-tab{padding:0 10px}
 .cs-top{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;align-items:center;gap:10px;padding:14px 14px 12px}
-.cs-mark{display:grid;place-items:center;width:calc(34px * var(--fs,1));height:calc(34px * var(--fs,1));border-radius:var(--radius);color:var(--primary);background:var(--primary-soft);box-shadow:inset 0 0 0 1px rgba(179,170,235,.28)}
+.cs-mark{display:grid;place-items:center;width:calc(34px * var(--fs,1));height:calc(34px * var(--fs,1));border-radius:var(--radius);color:var(--primary);background:var(--primary-soft);box-shadow:inset 0 0 0 1px rgba(185,137,255,.28)}
 .cs-mark svg{width:18px;height:18px}
 .cs-top h2{margin:0;font-size:calc(16px * var(--fs,1) * var(--fsl,1));font-weight:500;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cs-top p{margin:1px 0 0;font-family:var(--f-mono);font-size:calc(11px * var(--fs,1) * var(--fsl,1));color:var(--subtle);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -1482,7 +1482,7 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
 .cs-f em{font-style:normal;font-family:var(--f-mono);font-size:calc(10.5px * var(--fs,1) * var(--fsl,1));color:var(--muted-foreground);white-space:nowrap}
 @media (prefers-reduced-motion:reduce){.psyche .cast{animation:none}}
 
-/* ================= Psyche wears the Coven mark: a small crown, lavender, never loud ================= */
+/* ================= Psyche wears the Coven mark: a small violet crown ================= */
 .core.crown{fill:var(--primary);filter:none}
 .huborb{fill:var(--primary);stroke:none;filter:none;transition:fill .15s}
 .hubhit{fill:transparent}
@@ -1983,8 +1983,8 @@ const symOf = k => (FAM[k] && FAM[k].sym) || k;
 // what can be set about a familiar: its roles (the first is its main one), its symbol and its color. A symbol and a
 // color each belong to one familiar at a time, so a mark on the map always means one of them.
 const SYMS = {astra: 'Star', cody: 'Brackets', echo: 'Signal', charm: 'Diamond', hex: 'Hexagon', tri: 'Triangle', gem: 'Gem', tower: 'Tower', obelisk: 'Obelisk', pillar: 'Pillar'};
-const HUES = {'#9CC2F2': 'Sky', '#8FA2F5': 'Cobalt', '#8FD8E0': 'Aqua', '#6FCFB8': 'Teal', '#A3DCC3': 'Mint', '#B9DA9B': 'Leaf', '#CBE07A': 'Lime', '#E3D58C': 'Citron',
-  '#F2BE6B': 'Amber', '#E8C99A': 'Sand', '#BFE3F5': 'Ice', '#8FCB9B': 'Fern', '#F4C2D7': 'Blush', '#EBAACB': 'Rose', '#E58AD6': 'Magenta', '#B4BCC9': 'Slate'};
+const HUES = {'#36C9FF': 'Cyan', '#8FA2F5': 'Cobalt', '#8FD8E0': 'Aqua', '#6FCFB8': 'Teal', '#28E1C2': 'Bright teal', '#B9DA9B': 'Leaf', '#CBE07A': 'Lime', '#E3D58C': 'Citron',
+  '#F2BE6B': 'Amber', '#FFAB32': 'Orange', '#BFE3F5': 'Ice', '#8FCB9B': 'Fern', '#F4C2D7': 'Blush', '#FF62BB': 'Pink', '#E58AD6': 'Magenta', '#B4BCC9': 'Slate'};
 function parseColor(x) {                             // #RGB, #RRGGBB, #RRGGBBAA, rgb(r, g, b), rgba(r, g, b, a)
   x = String(x || '').trim(); let m;
   if ((m = x.match(/^#?([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i))) { let h = m[1]; if (h.length <= 4) h = h.split('').map(ch => ch + ch).join(''); const n = parseInt(h.slice(0, 6), 16); return {r: n >> 16, g: (n >> 8) & 255, b: n & 255, a: h.length === 8 ? parseInt(h.slice(6), 16) / 255 : 1}; }
@@ -1994,16 +1994,16 @@ function parseColor(x) {                             // #RGB, #RRGGBB, #RRGGBBAA
 }
 const colorText = c => c.a < 1 ? `rgba(${c.r}, ${c.g}, ${c.b}, ${+c.a.toFixed(2)})` : '#' + [c.r, c.g, c.b].map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase();
 function colorIssue(c) {                             // a familiar's color has to read on the dark map and not pass for Psyche or for a request
-  if (!c) return 'Use HEX like #9CC2F2 or RGB like rgb(156, 194, 242), with an optional alpha.';
+  if (!c) return 'Use HEX like #36C9FF or RGB like rgb(54, 201, 255), with an optional alpha.';
   const on = [c.r, c.g, c.b].map(v => v * c.a + 14 * (1 - c.a)), lin = v => { v /= 255; return v <= .04045 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); };
   const lum = .2126 * lin(on[0]) + .7152 * lin(on[1]) + .0722 * lin(on[2]), far = q => Math.hypot(on[0] - q[0], on[1] - q[1], on[2] - q[2]);
   if (lum < .16) return c.a < 1 ? 'Too faint on the dark map. Raise the alpha or lighten it.' : 'Too dark to read on the map.';
-  if (far([179, 170, 235]) < 30) return 'That is Psyche’s lavender. Pick something further from it.';
+  if (far([185, 137, 255]) < 30) return 'That is Psyche’s violet. Pick something further from it.';
   if (far([246, 244, 255]) < 26) return 'Near-white means a request waiting on you.';
   if (far([242, 131, 107]) < 42) return 'Coral is kept for warnings. Pick something further from it.';
   return '';
 }
-const FAM_DEF = {astra: {roles: ['Researcher'], sym: 'astra', color: '#9CC2F2'}, cody: {roles: ['Hacker'], sym: 'cody', color: '#E8C99A'}, echo: {roles: ['Correspondent', 'Reviewer'], sym: 'echo', color: '#EBAACB'}, charm: {roles: ['Recorder'], sym: 'charm', color: '#A3DCC3'}};
+const FAM_DEF = {astra: {roles: ['Researcher'], sym: 'astra', color: '#36C9FF'}, cody: {roles: ['Hacker'], sym: 'cody', color: '#FFAB32'}, echo: {roles: ['Correspondent', 'Reviewer'], sym: 'echo', color: '#FF62BB'}, charm: {roles: ['Recorder'], sym: 'charm', color: '#28E1C2'}};
 function applyFams(saved) {
   Object.keys(FAM_DEF).forEach(k => { const d = FAM_DEF[k], v = (saved && saved[k]) || {}, f = FAM[k];
     const roles = (Array.isArray(v.roles) ? v.roles : d.roles).filter(r => ROLES[r]); f.roles = roles.length ? roles : d.roles.slice(); f.role = f.roles.join(', ');
@@ -5707,8 +5707,8 @@ function drawProject() {
 }
 $('castPane').addEventListener('click', ev => ev.stopPropagation());
 // ------------------------------------------------------------ the color wheel: hue around, saturation outward, then brightness and opacity
-const SCHEMES = {Coven: ['#9CC2F2', '#E8C99A', '#EBAACB', '#A3DCC3'], Aurora: ['#7FE0D0', '#8FA2F5', '#E58AD6', '#CBE07A'], Ember: ['#F2BE6B', '#E3D58C', '#E8C99A', '#EBAACB'],
-  Tide: ['#8FD8E0', '#6FCFB8', '#9CC2F2', '#B4BCC9'], Orchard: ['#B9DA9B', '#8FCB9B', '#E3D58C', '#F4C2D7'], Neon: ['#5EF2C2', '#FFB454', '#FF7AB6', '#6FC3FF']};
+const SCHEMES = {Coven: ['#36C9FF', '#FFAB32', '#FF62BB', '#28E1C2'], Aurora: ['#7FE0D0', '#8FA2F5', '#E58AD6', '#CBE07A'], Ember: ['#F2BE6B', '#E3D58C', '#FFAB32', '#FF62BB'],
+  Tide: ['#8FD8E0', '#6FCFB8', '#36C9FF', '#B4BCC9'], Orchard: ['#B9DA9B', '#8FCB9B', '#E3D58C', '#F4C2D7'], Neon: ['#A6F034', '#FFD338', '#FF62BB', '#28E1C2']};
 const cp = {k: null, h: 0, s: 0, v: 1, a: 1};
 const hsv2rgb = (h, s, v) => { const f = n => { const k = (n + h / 60) % 6; return Math.round(255 * (v - v * s * Math.max(0, Math.min(k, 4 - k, 1)))); }; return {r: f(5), g: f(3), b: f(1)}; };
 const rgb2hsv = c => { const r = c.r / 255, g = c.g / 255, b = c.b / 255, mx = Math.max(r, g, b), d = mx - Math.min(r, g, b); let h = 0;
