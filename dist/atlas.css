@@ -1577,3 +1577,25 @@ body.atlas-enhanced #atlasProjects { display: grid; gap: 2px; max-height: none; 
 .thread-scope { font-weight: 600; padding: 4px 0; overflow-wrap: anywhere; }
 #inspect button.task-thread { background: transparent; border: 0; padding: 2px 0; font: inherit; text-align: start; cursor: pointer; }
 #inspect button.task-thread:hover { text-decoration: underline; }
+.reply-choices { margin: 0 0 6px; padding: 0; border: 0; min-width: 0; }
+.reply-choices legend, .request-other small { font-size: .88em; color: var(--muted-foreground); }
+.reply-choices > div { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
+.reply-choices button[aria-pressed="true"] { border-color: var(--primary); background: var(--primary-soft); }
+.request-other { padding: 8px 12px; border-top: 1px solid var(--border); }
+.request-other summary { cursor: pointer; }
+.request-other label, .request-other small { display: block; margin-block: 6px; }
+.request-other textarea { display: block; box-sizing: border-box; width: 100%; margin-top: 4px; font: inherit; color: var(--foreground); background: var(--background); border: 1px solid var(--border-strong); border-radius: 5px; }
+
+/* Mission identity, activity, and navigation each have a dedicated row. */
+body.atlas-enhanced .mission-header .mission-path {
+  display: flex; flex-direction: column-reverse; align-items: flex-start; gap: 1px;
+}
+.mission-header .mission-path-separator { display: none; }
+body.atlas-enhanced .mission-header .mission-context { letter-spacing: .02em; }
+.mission-header .mission-activity { flex-wrap: wrap; gap: 4px 8px; }
+body.atlas-enhanced .mission-header .i-counts { flex-wrap: wrap; column-gap: 10px; }
+.mission-header .mission-stepper { margin-inline-start: auto; font-variant-numeric: tabular-nums; }
+body.atlas-enhanced .mission-header .i-view { padding: 0; gap: 0; background: transparent; border: 0; border-bottom: 1px solid var(--border); border-radius: 0; }
+body.atlas-enhanced .mission-header .i-view button { min-height: 34px; border: 0; border-radius: 0; border-bottom: 2px solid transparent; }
+body.atlas-enhanced .mission-header .i-view button[aria-selected="true"] { background: transparent; color: var(--foreground); border: 0; border-bottom: 2px solid var(--primary); box-shadow: none; }
+.mission-header .council-count { display: inline-block; padding: 0 .35em; border-radius: .4em; background: var(--card-raised); font-variant-numeric: tabular-nums; }

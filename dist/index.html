@@ -1691,6 +1691,7 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
       <section class="fams" id="fams" role="tabpanel" aria-labelledby="tabFams" hidden></section>
       <form class="comp" id="comp" autocomplete="off">
         <div class="comp-note" id="compNote" hidden></div>
+        <fieldset id="replyChoices" class="reply-choices" hidden><legend>Reply options</legend><div></div></fieldset>
         <span class="ctx" id="ctx" hidden></span>
         <div class="route" id="route" hidden></div>
         <div class="field">
@@ -4966,6 +4967,29 @@ function requestConfirmation(c, q, fromQueue = false) {
   else if (q.limit) side.appendChild(rf('Edit the brief', () => { setNeeds(false); openNew(q.mission); }));
   foot.append(side, no, yes);
   pop.append(lead, refs, foot);
+  if (ok) {
+    const other = html('details', 'request-other');
+    const summary = html('summary', '', 'Other response');
+    const label = html('label', '', 'Add details');
+    const input = html('textarea'); input.rows = 2; input.maxLength = 500;
+    const drafts = c.requestReplies || (c.requestReplies = new Map());
+    const draft = drafts.get(q.id);
+    other.open = !!draft;
+    input.value = draft || '';
+    label.appendChild(input);
+    const help = html('small', '', 'Adds your reply to the conversation. The request stays pending.');
+    const send = html('button', 'btn sm', 'Send reply'); send.type = 'button'; send.disabled = !input.value.trim();
+    input.addEventListener('input', () => { drafts.set(q.id, input.value); send.disabled = !input.value.trim(); });
+    send.addEventListener('click', () => {
+      const details = input.value.trim();
+      if (!details || !canAct(c) || projects[c.key] !== c || !openAsks(c.world).some(item => item.id === q.id)) return;
+      drafts.delete(q.id); input.value = ''; send.disabled = true;
+      emit(c, {type: 'you.said', mission: q.mission, familiar: q.fam, text: q.title + ' — ' + details});
+      other.open = false;
+      window.CovenAtlas.announce('Reply added. The request is still pending.');
+    });
+    other.append(summary, label, help, send); pop.appendChild(other);
+  }
   if (fromQueue) pop.addEventListener('click', ev => {
     // Reference links open their existing Project destinations in the right world.
     if (ev.target.closest('.rf')) {
@@ -5321,12 +5345,51 @@ function suggestions() {
   if (M) more.push('Pause this mission.', 'Resume this mission.', 'Close this mission.', 'Rename this mission to ', 'Raise the token limit to ');
   return [...new Set((fresh.length ? fresh : out).concat(more))];
 }
+function drawReplyChoices() {
+  const c = cur(), d = c.dlg, box = $('replyChoices'), input = $('say');
+  const choices = [];
+  if (canAct() && d) {
+    if (d.ask === 'lead') {
+      for (const f of Object.values(FAM)) choices.push([f.name, f.name + ' leads.']);
+    } else if (d.kind === 'confirm' || d.ask === 'confirm') {
+      choices.push([d.sug.replace(/^Yes, /i, '').replace(/\.$/, '').replace(/^./, ch => ch.toUpperCase()), d.sug], ['Cancel', 'Cancel']);
+    } else if (d.sug) choices.push(['Use suggestion', d.sug]);
+  }
+  const signature = JSON.stringify([c.key, d?.question, choices]);
+  if (box.dataset.prompt !== signature || box.replyDialog !== d) {
+    box.replyDialog = d;
+    if (box.dataset.staged && input.value === box.dataset.staged) { input.value = ''; syncSend(); }
+    delete box.dataset.staged;
+    box.dataset.prompt = signature;
+    box.hidden = !choices.length;
+    const list = box.querySelector('div'); list.replaceChildren();
+    if (choices.length) {
+      box.querySelector('legend').textContent = d.question;
+      for (const [label, value] of [...choices, ['Other…', '']]) {
+        const button = html('button', 'btn sm', label); button.type = 'button';
+        button.dataset.reply = value;
+        button.addEventListener('click', () => {
+          if (!canAct() || cur().dlg !== d) return;
+          if (value || input.value === box.dataset.staged) input.value = value;
+          box.dataset.staged = value;
+          input.focus(); syncSend(); drawSug(); drawRoute();
+        });
+        list.appendChild(button);
+      }
+    }
+  }
+  for (const button of box.querySelectorAll('button')) {
+    const selected = button.dataset.reply ? input.value === button.dataset.reply : box.dataset.staged === '' || !!input.value && !choices.some(pair => pair[1] === input.value);
+    button.setAttribute('aria-pressed', String(selected));
+  }
+}
 function drawSug() {
+  drawReplyChoices();
   const input = $('say'), v = input.value, lv = v.toLowerCase(), ok = !input.disabled;
-  sugNow = ok ? (suggestions().find(x => x.length > v.length && x.toLowerCase().startsWith(lv)) || '') : '';
+  sugNow = ok && $('replyChoices').dataset.staged !== '' ? (suggestions().find(x => x.length > v.length && x.toLowerCase().startsWith(lv)) || '') : '';
   $('sugTyped').textContent = v; $('sugRest').textContent = sugNow ? sugNow.slice(v.length) : '';
   $('sugKey').hidden = !sugNow; $('sugSr').textContent = sugNow ? `Suggested: ${sugNow} Press Tab to use it.` : '';
-  if (ok) input.placeholder = sugNow && !v ? '' : 'Tell Psyche what you need';
+  if (ok) input.placeholder = $('replyChoices').dataset.staged === '' ? 'Add your reply details' : sugNow && !v ? '' : 'Tell Psyche what you need';
 }
 const takeSug = () => { if (!sugNow) return; const input = $('say'); input.value = sugNow; input.focus(); input.setSelectionRange(input.value.length, input.value.length); syncSend(); drawSug(); drawRoute(); };
 $('say').addEventListener('input', () => { syncSend(); drawSug(); drawRoute(); });
@@ -5973,7 +6036,7 @@ const YES = /^(?:y|yes|yep|yeah|sure|ok|okay|do it|go ahead|confirm(?:ed)?|creat
 const NO = /^(?:n|no|nope|cancel|never ?mind|stop|don'?t|do not|forget it|not now|leave it)\b/i;
 const FAM_RE = '(?:' + Object.keys(FAM).map(k => FAM[k].name).join('|') + ')';
 const tell = (c, text, ms) => setTimeout(() => emit(c, {type: 'psyche.said', text}), ms || 520);
-const ask = (c, d, text, sug) => { d.sug = sug || ''; c.dlg = d; tell(c, text); if (cur() === c) drawSug(); };
+const ask = (c, d, text, sug) => { d.sug = sug || ''; d.question = text; c.dlg = d; tell(c, text); if (cur() === c) drawSug(); };
 const endDlg = c => { c.dlg = null; if (cur() === c) drawSug(); };
 const trimEnd = x => String(x).replace(/[.,;!?)]+$/, '');
 function readPlace(text) {                           // a repository address and a folder path, wherever they sit in the sentence
