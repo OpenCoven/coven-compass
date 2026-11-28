@@ -4236,7 +4236,7 @@ function syncInspect(force) {
     box.setAttribute('aria-labelledby', 'missionDetailTitle'); box.tabIndex = -1;
     const header = html('header', 'mission-header');
     const head = html('div', 'mission-identity');
-    const context = setMissionName(html('span', 'mission-context'), c.fam ? active + ' / ' + M.name : active);
+    const context = setMissionName(html('span', 'mission-context'), 'Coven / ' + active + (c.fam ? ' / ' + M.name : ''));
     const back = html('button', 'btn x', '←'); back.type = 'button'; back.dataset.focus = 'mission-back';
     back.title = c.fam ? 'Back to mission' : 'All missions';
     back.setAttribute('aria-label', back.title);
@@ -4308,6 +4308,7 @@ function syncInspect(force) {
     });
     insp.slot = html('div', 'i-agent'); insp.slot.hidden = true;
     const activity = html('div', 'mission-activity');
+    if (!c.fam) activity.appendChild(html('span', 'mission-header-state'));
     activity.appendChild(counts);
     if (missionOrder.length > 1) activity.appendChild(stepper);
     header.append(head, activity, seg);
@@ -4485,6 +4486,12 @@ function syncInspect(force) {
     const text = ids.length ? ['gate', 'work', 'idle'].filter(st => counts[st]).map(st => counts[st] + ' ' + STATE[st].toLowerCase()).join(' · ') : 'Unassigned';
     summary.classList.toggle('waiting', counts.gate > 0);
     if (summary.textContent !== text) summary.textContent = text;
+  }
+  const stateLabel = box.querySelector('.mission-header-state');
+  if (stateLabel) {
+    const state = sealOf(w, M).state;
+    stateLabel.dataset.state = state;
+    stateLabel.textContent = SEAL_STATE[state][0];
   }
   ['work', 'idle', 'gate'].forEach(st => { const v = all.filter(a => a.state === st).length; insp.nums[st].textContent = v; insp.nums[st].parentElement.classList.toggle('zero', v === 0); });
   all.forEach(a => {
@@ -6273,8 +6280,9 @@ function timelineUI() {
   { const sp = $('traceSpark'), cut = Math.ceil(p * sp.children.length); sp.classList.toggle('live', live && has); for (let i = 0; i < sp.children.length; i++) sp.children[i].classList.toggle('off', !has || (!live && i >= cut)); }
   const minutes = has ? Math.round((c.trace[c.trace.length - 1].t - c.trace[0].t) / 60000) : 0;
   $('traceInfo').textContent = has ? plural(c.trace.length, 'event') + ' · ' + (minutes ? minutes + ' min' : 'under 1 min') : '';
-  const chip = $('traceChip'); chip.textContent = !has ? 'Empty' : c.recorded ? 'Recording' : c.sample ? 'Sample' : 'Local'; chip.className = 'hd-s ' + (!has ? 'off' : c.recorded ? '' : 'on');
-  $('footClock').textContent = !replayable ? '' : live ? 'Live' : hms(cursor);
+  const sourceLabel = c.recorded ? 'Recording' : c.sample ? 'Sample' : 'Local';
+  const chip = $('traceChip'); chip.textContent = !has ? 'Empty' : sourceLabel; chip.className = 'hd-s ' + (!has ? 'off' : c.recorded ? '' : 'on');
+  $('footClock').textContent = !replayable ? '' : live ? sourceLabel : sourceLabel + ' · Replay · ' + hms(cursor);
   $('traceReset').hidden = !c.recorded;
   drawTrace();
   if ($('traceBox').open && !$('traceEvents').hidden) drawEvents();
