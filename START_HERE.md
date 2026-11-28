@@ -10,6 +10,10 @@ See the [README](README.md) to run the map locally and [AGENTS.md](AGENTS.md) fo
 
 For the remaining Brief policy, Castle association and device work, consult the [implementation plan’s issue and owner table](docs/handoff/05-implementation-plan.md#current-work-and-acceptance). It links the current evidence and the next step for each owner. The [contributor instructions](AGENTS.md#one-command) list the full pre-commit checks, and the [security policy](SECURITY.md#public-repository-protections) identifies the required merge check.
 
+## Workspace colors
+
+The default familiar colors live in `FAM_DEF` in `dist/index.html`. The map and key use the same familiar identity, including saved colors. Workspace surface and selection styles live in `dist/atlas.css`, and the Seal lab uses `dist/seal-lab.css`. Run `node --test tests/familiar-map.test.cjs` when changing these colors.
+
 ## Where to make a change
 
 The [editable source and focused check table](AGENTS.md#where-to-make-a-change) covers navigation, mobile, the simulation, projection sources and the map. Generated browser scripts are listed alongside their source modules.

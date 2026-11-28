@@ -4,7 +4,7 @@
   --csl-surface: var(--card, #141417);
   --csl-raised: var(--card-raised, #1c1c21);
   --csl-ink: var(--foreground, #edecf2);
-  --csl-accent: var(--primary, #b989ff);
+  --csl-accent: var(--primary, #b3aaeb);
   --csl-warning: var(--warn, #f2836b);
   --csl-outside: 18px;
   --csl-gutter: 22px;
