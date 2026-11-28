@@ -4,6 +4,8 @@
 
 At the November 23 closeout, Compass main `5201943` serves a local simulation with typed map geometry and replay, explicit simulation and fixture projection sources, and a Trace panel for inspecting and editing local recordings. Contributors can exercise Project selection, mission history and approvals from a local checkout. The site palette landed in [#114](https://github.com/OpenCoven/coven-compass/pull/114). See [#39](https://github.com/OpenCoven/coven-compass/issues/39) for the physical test boundary. The first production integration proposed below is an authenticated Project read. Its prerequisites are tracked in [#2](https://github.com/OpenCoven/coven-compass/issues/2) and [#36](https://github.com/OpenCoven/coven-compass/issues/36).
 
+Mission navigation in [PR #115](https://github.com/OpenCoven/coven-compass/pull/115) has Linux Chromium and WebKit keyboard evidence for desktop, portrait and landscape. The [contributor entry point](../../START_HERE.md#next-contributor-task) links the results and the remaining physical-device work.
+
 ### Delivered foundations
 
 | Milestone | Merged revision | Acceptance and subsequent changes |

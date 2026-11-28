@@ -1,0 +1,445 @@
+{
+  "generated_utc": "2026-11-28T05:25:51.120Z",
+  "commit": "7eb8fef8e7c8d122901360197da9d4413163fd08",
+  "browser": "chromium 156.0.8078.80",
+  "tool": "playwright 1.64.1",
+  "base": "http://localhost:8000/",
+  "evidence_level": "browser (headless chromium)",
+  "screenshot_dir": "kept outside the repository; see the pull request",
+  "checks": [
+    {
+      "mode": "compact map",
+      "viewport": "desktop-1920x1080",
+      "name": "focused compact label visible and centered outside ring",
+      "pass": true,
+      "detail": "{\"name\":\"Mission 1\",\"centerError\":0.0313720703125,\"fontPixels\":10.510098142917007,\"outside\":true}"
+    },
+    {
+      "mode": "compact map",
+      "viewport": "desktop-1920x1080",
+      "name": "same focused label hidden without keyboard-focus rule",
+      "pass": true,
+      "detail": "Mission 1"
+    },
+    {
+      "mode": "compact map",
+      "viewport": "desktop-1920x1080",
+      "name": "no console errors",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "Missions within five Tabs",
+      "pass": true,
+      "detail": "4 Tabs to #atlasMissions"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "reach Missions from overview",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMissions\",\"name\":\"Browse 7 missions\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(214, 181, 255) solid 2px\",\"route\":\"#/coven\",\"keys\":4}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "search from the Missions entry",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(185, 137, 255) solid 2px\",\"route\":\"#/coven\",\"keys\":5}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "find Board cards",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Board cards, coven-cave, Active, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":17}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "inspect Board cards",
+      "pass": true,
+      "detail": "{\"element\":\"missionDetailTitle\",\"name\":\"Board cards\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/coven-cave/mission/m-1?view=brief&detail=side\",\"keys\":18}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "return to matching row",
+      "pass": true,
+      "detail": "{\"element\":\"btn x\",\"name\":\"All missions\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/coven-cave/mission/m-1?view=brief&detail=side\",\"keys\":20}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "return to matching row",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Board cards, coven-cave, Active, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":21}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "recover from an empty search",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(185, 137, 255) solid 2px\",\"route\":\"#/coven\",\"keys\":49}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "recover from an empty search",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(185, 137, 255) solid 2px\",\"route\":\"#/coven\",\"keys\":53}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "find Source survey",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Source survey, psyche-build, Needs you, 16 agents, 1 pending request. Astra · Fetch a source outside workspace reach. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":67}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "inspect Source survey",
+      "pass": true,
+      "detail": "{\"element\":\"missionDetailTitle\",\"name\":\"Source survey\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/psyche-build/mission/m-2?view=brief&detail=side\",\"keys\":68}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "close details and return to the invoking row",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Source survey, psyche-build, Needs you, 16 agents, 1 pending request. Astra · Fetch a source outside workspace reach. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":71}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "dismiss Missions and return to its launcher",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMissions\",\"name\":\"Browse 7 missions\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(214, 181, 255) solid 2px\",\"route\":\"#/coven\",\"keys\":72}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "original overview restored",
+      "pass": true,
+      "detail": "http://localhost:8000/#/coven"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "reload mission permalink",
+      "pass": true,
+      "detail": "{\"element\":\"missionDetailTitle\",\"name\":\"Source survey\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/psyche-build/mission/m-2?view=brief&detail=side\",\"keys\":75}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "reload mission permalink",
+      "pass": true,
+      "detail": "http://localhost:8000/#/project/psyche-build/mission/m-2?view=brief&detail=side"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "browser Forward restores mission and keyboard focus",
+      "pass": true,
+      "detail": "{\"element\":\"missionDetailTitle\",\"name\":\"Source survey\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/psyche-build/mission/m-2?view=brief&detail=side\",\"keys\":75}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "browser Forward restores mission and keyboard focus",
+      "pass": true,
+      "detail": "http://localhost:8000/#/coven → http://localhost:8000/#/project/psyche-build/mission/m-2?view=brief&detail=side"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "desktop-1440x900",
+      "name": "no console errors",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "Missions within five Tabs",
+      "pass": true,
+      "detail": "2 Tabs to #atlasMobileMissions"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "reach Missions from overview",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMobileMissions\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":2}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "search from the Missions entry",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(185, 137, 255) solid 2px\",\"route\":\"#/coven\",\"keys\":3}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "find Board cards",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Board cards, coven-cave, Active, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":15}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "inspect Board cards",
+      "pass": true,
+      "detail": "{\"element\":\"missionDetailTitle\",\"name\":\"Board cards\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/coven-cave/mission/m-1?view=brief&detail=side\",\"keys\":16}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "return to matching row",
+      "pass": true,
+      "detail": "{\"element\":\"btn x\",\"name\":\"All missions\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/coven-cave/mission/m-1?view=brief&detail=side\",\"keys\":17}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "return to matching row",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Board cards, coven-cave, Active, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":18}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "recover from an empty search",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(185, 137, 255) solid 2px\",\"route\":\"#/coven\",\"keys\":46}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "recover from an empty search",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(185, 137, 255) solid 2px\",\"route\":\"#/coven\",\"keys\":50}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "find Source survey",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Source survey, psyche-build, Needs you, 16 agents, 1 pending request. Astra · Fetch a source outside workspace reach. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":64}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "inspect Source survey",
+      "pass": true,
+      "detail": "{\"element\":\"missionDetailTitle\",\"name\":\"Source survey\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/psyche-build/mission/m-2?view=brief&detail=side\",\"keys\":65}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "close details and return to the invoking row",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Source survey, psyche-build, Needs you, 16 agents, 1 pending request. Astra · Fetch a source outside workspace reach. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":70}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "dismiss Missions and return to its launcher",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMobileMissions\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":71}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "original overview restored",
+      "pass": true,
+      "detail": "http://localhost:8000/#/coven"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "reload mission permalink",
+      "pass": true,
+      "detail": "{\"element\":\"missionDetailTitle\",\"name\":\"Source survey\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/psyche-build/mission/m-2?view=brief&detail=side\",\"keys\":74}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "reload mission permalink",
+      "pass": true,
+      "detail": "http://localhost:8000/#/project/psyche-build/mission/m-2?view=brief&detail=side"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "browser Forward restores mission and keyboard focus",
+      "pass": true,
+      "detail": "{\"element\":\"missionDetailTitle\",\"name\":\"Source survey\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/psyche-build/mission/m-2?view=brief&detail=side\",\"keys\":74}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "browser Forward restores mission and keyboard focus",
+      "pass": true,
+      "detail": "http://localhost:8000/#/coven → http://localhost:8000/#/project/psyche-build/mission/m-2?view=brief&detail=side"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-390x844",
+      "name": "no console errors",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "Missions within five Tabs",
+      "pass": true,
+      "detail": "2 Tabs to #atlasMobileMissions"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "reach Missions from overview",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMobileMissions\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":2}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "search from the Missions entry",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(185, 137, 255) solid 2px\",\"route\":\"#/coven\",\"keys\":3}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "find Board cards",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Board cards, coven-cave, Active, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":15}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "inspect Board cards",
+      "pass": true,
+      "detail": "{\"element\":\"missionDetailTitle\",\"name\":\"Board cards\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/coven-cave/mission/m-1?view=brief&detail=side\",\"keys\":16}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "return to matching row",
+      "pass": true,
+      "detail": "{\"element\":\"btn x\",\"name\":\"All missions\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/coven-cave/mission/m-1?view=brief&detail=side\",\"keys\":17}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "return to matching row",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Board cards, coven-cave, Active, 16 agents. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":18}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "recover from an empty search",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(185, 137, 255) solid 2px\",\"route\":\"#/coven\",\"keys\":46}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "recover from an empty search",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMissionSearch\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(185, 137, 255) solid 2px\",\"route\":\"#/coven\",\"keys\":50}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "find Source survey",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Source survey, psyche-build, Needs you, 16 agents, 1 pending request. Astra · Fetch a source outside workspace reach. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":64}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "inspect Source survey",
+      "pass": true,
+      "detail": "{\"element\":\"missionDetailTitle\",\"name\":\"Source survey\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/psyche-build/mission/m-2?view=brief&detail=side\",\"keys\":65}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "close details and return to the invoking row",
+      "pass": true,
+      "detail": "{\"element\":\"atlas-mission-row\",\"name\":\"Source survey, psyche-build, Needs you, 16 agents, 1 pending request. Astra · Fetch a source outside workspace reach. Open mission details\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":70}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "dismiss Missions and return to its launcher",
+      "pass": true,
+      "detail": "{\"element\":\"atlasMobileMissions\",\"name\":\"Find a mission\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/coven\",\"keys\":71}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "original overview restored",
+      "pass": true,
+      "detail": "http://localhost:8000/#/coven"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "reload mission permalink",
+      "pass": true,
+      "detail": "{\"element\":\"missionDetailTitle\",\"name\":\"Source survey\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/psyche-build/mission/m-2?view=brief&detail=side\",\"keys\":74}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "reload mission permalink",
+      "pass": true,
+      "detail": "http://localhost:8000/#/project/psyche-build/mission/m-2?view=brief&detail=side"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "browser Forward restores mission and keyboard focus",
+      "pass": true,
+      "detail": "{\"element\":\"missionDetailTitle\",\"name\":\"Source survey\",\"focused\":true,\"visible\":true,\"outline\":\"rgb(199, 191, 244) solid 2px\",\"route\":\"#/project/psyche-build/mission/m-2?view=brief&detail=side\",\"keys\":74}"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "browser Forward restores mission and keyboard focus",
+      "pass": true,
+      "detail": "http://localhost:8000/#/coven → http://localhost:8000/#/project/psyche-build/mission/m-2?view=brief&detail=side"
+    },
+    {
+      "mode": "keyboard",
+      "viewport": "phone-landscape-844x390",
+      "name": "no console errors",
+      "pass": true,
+      "detail": ""
+    }
+  ],
+  "screenshots": [
+    "desktop-compact-keyboard-label.png",
+    "desktop-1440x900-keyboard-m-1-coven-cave.png",
+    "desktop-1440x900-keyboard-m-2-psyche-build.png",
+    "phone-390x844-keyboard-m-1-coven-cave.png",
+    "phone-390x844-keyboard-m-2-psyche-build.png",
+    "phone-landscape-844x390-keyboard-m-1-coven-cave.png",
+    "phone-landscape-844x390-keyboard-m-2-psyche-build.png"
+  ],
+  "summary": {
+    "checks": 60,
+    "passed": 60,
+    "failed": 0
+  }
+}
