@@ -1599,3 +1599,23 @@ body.atlas-enhanced .mission-header .i-view { padding: 0; gap: 0; background: tr
 body.atlas-enhanced .mission-header .i-view button { min-height: 34px; border: 0; border-radius: 0; border-bottom: 2px solid transparent; }
 body.atlas-enhanced .mission-header .i-view button[aria-selected="true"] { background: transparent; color: var(--foreground); border: 0; border-bottom: 2px solid var(--primary); box-shadow: none; }
 .mission-header .council-count { display: inline-block; padding: 0 .35em; border-radius: .4em; background: var(--card-raised); font-variant-numeric: tabular-nums; }
+
+/* Keep current location visible when focus moves to another result. */
+:is(#atlasProjects, #atlasMissionList) button[aria-current="true"] {
+  border-inline-start: 3px solid currentColor;
+}
+:is(#atlasProjects, #atlasMissionList) button[aria-current="true"] b {
+  text-decoration: underline;
+  text-underline-offset: .2em;
+}
+
+.mission-header-state {
+  padding-inline: .45em;
+  border: 1px solid var(--border-strong);
+  border-radius: .3em;
+  font-size: .85em;
+}
+.mission-header-state[data-state="needsYou"] {
+  border-color: currentColor;
+  color: var(--attention);
+}

@@ -24,9 +24,9 @@ body.atlas-enhanced #plan.far .ghostfort:focus-visible .wall.base {
   stroke-opacity: 1;
 }
 body.atlas-enhanced #plan .gname {
-  fill: #d8d4e1;
+  fill: var(--foreground, #f4f1fa);
   font-size: calc(14px * var(--u, 1) * var(--fs, 1));
-  font-weight: 500;
+  font-weight: 650;
 }
 body.atlas-enhanced #plan .gsub {
   fill: #928c9f;
@@ -330,7 +330,7 @@ body.atlas-enhanced #plan .agent.co .agent-task { fill: var(--hue2); }
 /* Focus follows the mark. HTML controls retain their normal focus outline. */
 body.atlas-enhanced #plan :is(.lead-node, .seat, .agent, .mission-tasks, .hub, .atlas-local-psyche, .ghostfort, .atlas-decision):focus-visible { outline: none; }
 body.atlas-enhanced #plan .se-selection { vector-effect: non-scaling-stroke; stroke-width: 2; stroke-dasharray: 5 20; stroke-dashoffset: 2.5; stroke-linecap: round; }
-body.atlas-enhanced #plan .lead-node:focus-visible .se-selection { stroke: var(--attention); stroke-width: 2; }
+body.atlas-enhanced #plan .lead-node:focus-visible .se-selection { stroke: var(--foreground, #fff); stroke-width: 3; stroke-dasharray: none; }
 body.atlas-enhanced #plan .agent:focus-visible { opacity: 1; }
 body.atlas-enhanced #plan .agent:focus { outline: none; box-shadow: none; }
 body.atlas-enhanced #plan .ghostfort:focus-visible .wall.base,
