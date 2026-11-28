@@ -126,9 +126,8 @@ function fixture(width = 390, withAdaptiveChrome = false) {
     camera = add('div', 'atlasCameraDock', stage); camera.classList.add('atlas-camera-dock');
     add('button', 'atlasFit', camera);
     planHead = add('div', 'adaptive-plan-head', app); planHead.classList.add('plan-head'); planHead.bounds = {height: 96};
-    const liveControl = add('div', 'live-control', planHead); liveControl.classList.add('live-ctl');
-    live = add('button', 'live', liveControl); live.setAttribute('aria-pressed', 'true');
-    add('i', '', live); add('span', 'live-label', live).textContent = 'Live'; add('span', 'summary', liveControl);
+    live = add('button', 'live', timeline); live.setAttribute('aria-pressed', 'true');
+    add('i', '', live); add('span', 'live-label', live).textContent = 'Live'; add('span', 'summary', planHead);
     familiars = add('div', 'atlasFamiliars', stage); add('button', 'familiar-filter', familiars);
     add('button', 'atlasOverview', stage);
   }

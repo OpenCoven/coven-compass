@@ -1592,7 +1592,7 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
             </div>
             <div class="ctl"><button type="button" id="keyBtn" aria-haspopup="dialog" aria-controls="keyModal" aria-label="Key and help" title="Key and help"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5.2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M7 6.4v3.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="7" cy="4.4" r=".9" fill="currentColor"/></svg></button></div>
             <div class="ctl"><button type="button" id="lock" aria-pressed="false" aria-label="Lock the view"></button></div>
-            <div class="ctl live-ctl"><button type="button" class="live-btn" id="live" aria-pressed="true"><i></i><span class="sr">Live</span></button><span class="summary sr" id="summary"></span></div>
+            <span class="summary sr" id="summary"></span>
             <div class="ctl"><button type="button" id="footBtn" aria-pressed="true" aria-label="Hide the timeline and missions"><svg viewBox="0 0 14 14" aria-hidden="true"><rect x="2" y="2.5" width="10" height="9" rx="1.3" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M2 8.4h10" stroke="currentColor" stroke-width="1.3"/></svg><span id="footClock" hidden></span></button></div>
           </div>
             </div>
@@ -1657,11 +1657,12 @@ button.cs-tile:hover{border-color:var(--border-strong);background:rgba(255,255,2
           <aside class="inspect" id="inspect" aria-label="Familiar details" hidden></aside>
         </div>
         <div id="missionCaptions" class="mission-captions" role="group" aria-label="Mission names on the map" hidden></div>
-        <div class="timeline" id="timeline">
+        <div class="timeline" id="timeline" role="group" aria-label="Replay controls">
           <button class="btn icon" type="button" id="play" aria-label="Replay from the start"></button>
-          <div class="scrub"><div class="marks" id="marks"></div><input id="scrub" type="range" min="0" max="1000" value="1000" aria-label="Replay position"></div>
+          <div class="scrub"><div class="marks" id="marks" aria-hidden="true"></div><input id="scrub" type="range" min="0" max="1000" value="1000" aria-label="Replay position"></div>
           <span class="clock" id="clock"></span>
           <button class="btn ghost" type="button" id="speed" aria-label="Replay speed">30×</button>
+          <button type="button" class="live-btn" id="live" aria-pressed="true"><i aria-hidden="true"></i><span>Live</span></button>
           <button class="btn icon ghost" type="button" id="footHide" aria-label="Hide the timeline and missions"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 5l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         </div>
       </div>
@@ -3706,7 +3707,7 @@ document.querySelectorAll('details.pill').forEach(d => d.firstElementChild.addEv
   if (d.id === 'proj') drawProjects(); if (d.id === 'mis') drawMissions();
   placePill(d);
 }));
-function liveTip() { const sum = $('summary').title, t = (live ? 'Live' : 'Replaying. Click to go live') + (sum ? ' · ' + sum : ''); $('live').title = t; $('live').setAttribute('aria-label', t); }
+function liveTip() { const sum = atlasScope === 'project' ? $('summary').title : '', t = (live ? 'Live simulation' : 'Return to live simulation') + (sum ? ' · ' + sum : ''); $('live').title = t; $('live').setAttribute('aria-label', t); }
 function drawSummary() {
   const c = cur(), w = c.world, box = $('summary'); box.textContent = '';
   if (w.agents.size) {
@@ -6251,23 +6252,59 @@ $('grip').addEventListener('keydown', ev => {
 });
 
 // ------------------------------------------------------------ timeline
-let marksSig = '';
+let marksSig = '', markSlots = 64;
+if (window.ResizeObserver) {
+  new ResizeObserver(([entry]) => {
+    markSlots = Math.max(1, Math.floor(entry.contentRect.width / 4));
+  }).observe($('marks'));
+}
 function timelineUI() {
   const c = cur(), t0 = tStart(c), t1 = tEnd(c), span = Math.max(1, t1 - t0), has = c.trace.length > 0, replayable = timelineHasEvents(c);
   const p = clamp((cursor - t0) / span, 0, 1), sl = $('scrub');
   if (document.activeElement !== sl || playing || live) sl.value = Math.round(p * 1000);
   sl.style.setProperty('--p', (p * 100).toFixed(2) + '%'); sl.disabled = !replayable;
-  sl.setAttribute('aria-valuetext', hms(cursor));
+  const scope = c.recorded ? 'Recording' : atlasScope === 'coven' ? 'Coven' : active;
+  sl.setAttribute('aria-label', scope + ' replay position');
+  sl.setAttribute('aria-valuetext', replayable ? hms(cursor) : 'No events');
   $('clock').textContent = replayable ? hms(cursor) : '';
-  const pb = $('play'); pb.disabled = !replayable; pb.innerHTML = playing ? ICON.pause : ICON.play;
+  const pb = $('play'); pb.disabled = !replayable;
+  // Keep the pointer target attached between press and release during playback.
+  const playbackIcon = playing ? 'pause' : 'play';
+  if (pb.dataset.icon !== playbackIcon) {
+    pb.innerHTML = ICON[playbackIcon]; pb.dataset.icon = playbackIcon;
+  }
   pb.setAttribute('aria-label', playing ? 'Pause' : (p >= .999 ? 'Replay from the start' : 'Play'));
-  $('speed').textContent = speed + '×'; $('speed').disabled = !replayable;
-  const lb = $('live'); lb.hidden = c.recorded; lb.setAttribute('aria-pressed', String(live)); lb.lastChild.textContent = live ? 'Live' : 'Go live'; liveTip();
-  const sig = active + c.trace.length + ':' + Math.round(span / 5000);
+  const rate = $('speed');
+  if (rate.dataset.rate !== String(speed)) {
+    rate.dataset.rate = String(speed);
+    rate.setAttribute('aria-label', 'Replay speed, ' + speed + ' times');
+    rate.textContent = speed + '×';
+  }
+  rate.disabled = !replayable;
+  const lb = $('live'), liveLabel = live ? 'Live' : 'Go live';
+  lb.hidden = c.recorded; lb.setAttribute('aria-pressed', String(live));
+  if (lb.lastChild.textContent !== liveLabel) lb.lastChild.textContent = liveLabel;
+  liveTip();
+  const sources = atlasScope === 'coven' && !c.recorded ? Object.values(projects).filter(project => !project.recorded) : [c];
+  // Bin ticks at the displayed scale. Simultaneous requests take precedence.
+  const marks = $('marks'), bins = markSlots;
+  const sig = [atlasScope, t0, Math.round(span / 5000), bins, ...sources.map(project => project.key + ':' + project.trace.length)].join('|');
   if (sig !== marksSig) {
-    marksSig = sig; const m = $('marks'); m.textContent = '';
-    c.trace.forEach(e => { const ask = e.type === 'gate.requested'; if (!ask && e.type !== 'familiar.report' && e.type !== 'you.said') return;
-      const i = html('i', ask ? 'mk-q' : null); i.style.left = (clamp((e.t - t0) / span, 0, 1) * 100).toFixed(2) + '%'; m.appendChild(i); });
+    marksSig = sig;
+    const ticks = new Map();
+    for (const project of sources) for (const event of project.trace) {
+      const request = event.type === 'gate.requested';
+      if (!request && event.type !== 'familiar.report' && event.type !== 'you.said') continue;
+      const slot = Math.round(clamp((event.t - t0) / span, 0, 1) * bins);
+      ticks.set(slot, request || ticks.get(slot));
+    }
+    const fragment = document.createDocumentFragment();
+    for (const [slot, request] of ticks) {
+      const tick = html('i', request ? 'mk-q' : null);
+      tick.style.left = (100 * slot / bins) + '%';
+      fragment.appendChild(tick);
+    }
+    marks.replaceChildren(fragment);
   }
   $('traceKind').textContent = !has ? 'empty' : c.recorded ? 'loaded' : live ? 'live' : 'replay'; plan.classList.toggle('live', live && has); plan.classList.toggle('map-running', has && (live || playing));
   { const sp = $('traceSpark'), cut = Math.ceil(p * sp.children.length); sp.classList.toggle('live', live && has); for (let i = 0; i < sp.children.length; i++) sp.children[i].classList.toggle('off', !has || (!live && i >= cut)); }

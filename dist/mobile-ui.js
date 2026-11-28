@@ -7,7 +7,7 @@
   var settings = null, mounted = false, syncing = false, initial = true;
   var mobile = false, nativeOpen = false, topId = null, pendingActivation = null, frame = 0;
   var viewportPrevious = null, observer = null;
-  var chrome = null, chromePortals = [], cameraExpanded = false, chromeObserver = null;
+  var chrome = null, timelineHome = null, cameraExpanded = false, chromeObserver = null;
   var composingTargets = new WeakSet();
   var FOCUSABLE = 'a[href],button,input,select,textarea,summary,[tabindex],[contenteditable]';
 
@@ -168,10 +168,9 @@
     });
     view.setAttribute('aria-controls', 'atlasCameraDock');
     chrome.appendChild(nav); document.body.insertBefore(chrome, document.body.firstChild);
-    ['timeline', 'live'].forEach(function (id) {
-      var el = document.getElementById(id);
-      if (el) chromePortals.push({el: el, anchor: null, destination: id === 'live' ? document.getElementById('timeline') : chrome});
-    });
+    var timeline = document.getElementById('timeline');
+    timelineHome = document.createComment('Desktop replay controls');
+    timeline.parentNode.insertBefore(timelineHome, timeline);
     updateCameraChoice();
     if (window.ResizeObserver) {
       // Scope changes show/hide the project header without a viewport resize.
@@ -198,16 +197,9 @@
     if (!chrome) return;
     chrome.hidden = !mobile;
     document.body.classList.toggle('atlas-adaptive-mobile', mobile);
-    chromePortals.forEach(function (item) {
-      if (mobile && item.el.parentNode !== item.destination) {
-        item.anchor = document.createComment('mobile workspace: ' + item.el.id);
-        item.el.parentNode.insertBefore(item.anchor, item.el);
-        item.destination.appendChild(item.el);
-      } else if (!mobile && item.anchor) {
-        if (item.anchor.parentNode) item.anchor.parentNode.insertBefore(item.el, item.anchor);
-        item.anchor.remove(); item.anchor = null;
-      }
-    });
+    var timeline = document.getElementById('timeline');
+    if (mobile && timeline.parentNode !== chrome) chrome.appendChild(timeline);
+    else if (!mobile && timeline.parentNode === chrome) timelineHome.parentNode.insertBefore(timeline, timelineHome);
     updateCameraChoice();
     if (!mobile) delete document.body.dataset.mobileLayout;
   }
