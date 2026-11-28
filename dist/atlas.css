@@ -1562,3 +1562,18 @@ body.atlas-enhanced #atlasProjects { display: grid; gap: 2px; max-height: none; 
 #traceClose { flex: none; width: 32px; height: 32px; border-radius: 6px; font: inherit; font-size: 1.3em; color: var(--muted-foreground); }
 #traceBody button + button::before { display: none; }
 @media (pointer: coarse) { #traceClose { width: 44px; height: 44px; } }
+
+#projBody .project-options { gap: 2px; padding: 5px; }
+#projBody .project-options .opt { min-height: 42px; gap: 8px; padding: 6px 9px; }
+#projBody .project-identity { flex: 1; min-width: 0; display: grid; gap: 2px; text-align: start; }
+#projBody .project-identity strong { overflow-wrap: anywhere; font-weight: 550; }
+#projBody .project-identity small { color: var(--muted-foreground); font-variant-numeric: tabular-nums; }
+#projBody .project-pending { color: var(--foreground); background: var(--primary-soft); border-radius: 4px; padding: 2px 5px; font-size: .88em; }
+#projBody .pj-meta dd { white-space: normal; overflow-wrap: anywhere; }
+#projBody .project-actions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 3px; padding: 6px; }
+#projBody .project-actions .opt { min-height: 32px; justify-content: center; background: var(--card-raised); }
+#projBody .project-actions .opt:last-child { grid-column: 1/-1; color: var(--primary); }
+#projBody .project-actions .opt-n { text-align: center; white-space: normal; }
+.thread-scope { font-weight: 600; padding: 4px 0; overflow-wrap: anywhere; }
+#inspect button.task-thread { background: transparent; border: 0; padding: 2px 0; font: inherit; text-align: start; cursor: pointer; }
+#inspect button.task-thread:hover { text-decoration: underline; }

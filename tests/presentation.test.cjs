@@ -167,7 +167,7 @@ function presentationFixture() {
     clearPick: () => { c.pick = null; }, drawNew() {},
     cam: { locked: true }, camT: {}, fitTarget() { return null; },
     syncCoven: () => { calls.syncCoven++; },
-    syncLeads() {}, syncInspect() {}, drawLeadCard() {}, drawComposer() {}, drawCrumb() {},
+    drawStream() {}, syncLeads() {}, syncInspect() {}, drawLeadCard() {}, drawComposer() {}, drawCrumb() {},
     kick: () => { calls.kick++; },
     document: {activeElement: null}, narrow: {matches: false}, atlasNavigationReady: false,
     atlasScope: 'project', atlasAutoFit: true, atlasFitScene() {}, atlasQueueFit() {},

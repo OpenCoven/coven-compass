@@ -2874,7 +2874,7 @@ function syncCoven() {
   window.CovenAtlasCrown.update(cv.marker, 'coordination across all Projects', working, agents, waiting, missions);
   const t = `${agents} agents`, tn = need ? `${need} ${need === 1 ? 'needs' : 'need'} you` : ''; if (cv.sub.textContent !== t) cv.sub.textContent = t; if (cv.need.textContent !== tn) cv.need.textContent = tn;
 }
-function covHl(k) { sc.hl = k; if (cur().fam) select(cur().sel, null, cur().detail); syncCoven(); applySel(); kick(); if (window.CovenAtlas) window.CovenAtlas.update(); }
+function covHl(k) { sc.hl = k; cur().chatTask = null; if (cur().fam) select(cur().sel, null, cur().detail); syncCoven(); applySel(); drawStream(); kick(); if (window.CovenAtlas) window.CovenAtlas.update(); }
 function applySel() {
   const c = cur(), w = c.world;
   plan.classList.toggle('atlas-selected', !!c.sel);
@@ -3633,11 +3633,15 @@ const optRow = (cls, cur2) => { const b = html('button', 'opt' + (cls ? ' ' + cl
 const optEnd = (b, meta, need, cur2) => { if (need) b.appendChild(html('span', 'opt-q', String(need))); if (meta) b.appendChild(html('span', 'opt-m', meta)); const ck = html('span', 'opt-c'); if (cur2) ck.innerHTML = ICON.check; b.appendChild(ck); };
 function drawProjects() {
   const box = $('projBody'), keys = Object.keys(projects); box.textContent = '';
-  box.appendChild(hd('Projects', `${keys.length} projects in the Coven`, null, 'fort'));
+  box.appendChild(hd('Projects', plural(keys.length, 'project'), null, 'fort'));
   const list = html('div', 'opts');
   keys.forEach(k => {
     const w = projects[k].world, n = w.agents.size, need = openAsks(w).length, b = optRow(n ? '' : 'off', k === active);
-    b.append(html('i', 'opt-d'), html('span', 'opt-n', k)); optEnd(b, n ? `${n} agents` : 'Dormant', need, k === active);
+    const identity = html('span', 'project-identity');
+    identity.append(html('strong', '', k), html('small', '', w.missions.size || n ? plural(w.missions.size, 'mission') + ' · ' + plural(n, 'agent') : 'Dormant'));
+    b.append(identity);
+    if (need) b.appendChild(html('span', 'project-pending', need + ' pending'));
+    optEnd(b, '', 0, k === active);
     b.setAttribute('aria-label', `${k}, ${n ? `${plural(w.missions.size, 'mission')}, ${n} agents` : 'dormant'}${need ? `, ${need} waiting on you` : ''}`);
     b.addEventListener('click', () => { $('proj').open = false; atlasOpenProject(k); });
     const km = metaOf(projects[k]); if (km) b.title = `${km.repo}\n${km.root}`;
@@ -3645,13 +3649,14 @@ function drawProjects() {
   });
   const me = metaOf(cur()), info = html('dl', 'pj-meta');                      // the open project: the repository it works on, the folder it is rooted in
   [['repo', 'Repository', me && me.repo ? repoShort(me.repo) || me.repo : 'Not set'], ['folder', 'Location', me && me.root ? me.root : 'Not set']].forEach(([icon, k, v]) => {
-    const dt = html('dt'), dd = html('dd', null, v); dt.innerHTML = ICON[icon]; dt.append(k); if (v === 'Not set') dd.className = 'off'; info.append(dt, dd); });
-  const foot = html('div', 'opts'), all = optRow('quiet'); all.append(html('span', 'opt-n', 'See the whole Coven'));
+    const dt = html('dt'), dd = html('dd', null, v); dd.title = v; dt.innerHTML = ICON[icon]; dt.append(k); if (v === 'Not set') dd.className = 'off'; info.append(dt, dd); });
+  const foot = html('div', 'opts'), all = optRow('quiet'); all.append(html('span', 'opt-n', 'Coven overview'));
   all.addEventListener('click', () => { $('proj').open = false; $('vAll').click(); }); all.disabled = cam.locked; foot.appendChild(all);
   const edit = optRow('quiet'); edit.append(html('span', 'opt-n', 'Project details'));
   edit.addEventListener('click', () => { $('proj').open = false; setTab('project', true); }); foot.appendChild(edit);
-  const add = optRow('quiet'); add.append(html('span', 'opt-n', '+ New project'));
+  const add = optRow('quiet'); add.append(html('span', 'opt-n', 'New project'));
   add.addEventListener('click', () => openProjectForm()); foot.appendChild(add);
+  list.classList.add('project-options'); foot.classList.add('project-actions');
   box.append(list, info, foot);
 }
 function drawMissions() {
@@ -3857,6 +3862,7 @@ function select(m, k, mode, options) {
   if (m && atlasScope === 'coven') { atlasScope = 'project'; atlasFitScene(false); }
   if (m) atlasAutoFit = true;
   if (k && (!mission || !mission.seats.includes(k))) k = null;
+  c.chatTask = null;
   c.focusGroup = options.group && k ? seatId(m, k) : null;
   if (m && m !== was) c.selectionOrigin = origin?.closest?.('#plan [data-map-item]') || null;
   clearPick(); if (m && c.composing) { c.composing = false; drawNew(); }
@@ -3867,6 +3873,7 @@ function select(m, k, mode, options) {
     else if (!c.sel && c.camBack) { const back = c.camBack; Object.assign(camT, {zoom: back.zoom, px: back.px, py: back.py}); atlasAutoFit = back.autoFit !== false; c.camBack = null; }
   }
   applySel(); syncLeads(); syncInspect(true); drawLeadCard(true); drawComposer(); drawCrumb(); atlasQueueFit(); kick(); if (window.CovenAtlas) window.CovenAtlas.update();
+  drawStream();
   if (options.history !== false) atlasWriteRoute();
   if (options.focus !== false && atlasNavigationReady && (was !== c.sel || priorMode !== c.detail || priorFam !== c.fam || (origin && !origin.isConnected))) {
     atlasFocusSelection(priorMode === 'side' && c.detail === 'card', was);
@@ -4421,7 +4428,9 @@ function syncInspect(force) {
       const lent = all.filter(a => !order.has(a.seat)); if (lent.length) group('var(--subtle)', html('span', 'tname', 'Shared, in another squad'), lent);
     } else if (panelView === 'tasks') {                      // each task with the subagents on it
       tasks.forEach(t => {
-        const title = html('span', 'tname'), TM = w.missions.get(t.mission); title.innerHTML = '<span class="avs">' + t.leads.map(avatar).join('') + '</span>'; title.append(t.name);
+        const title = html('button', 'tname task-thread'), TM = w.missions.get(t.mission);
+        title.type = 'button'; title.setAttribute('aria-label', 'Show conversation for ' + t.name);
+        title.addEventListener('click', () => { clearPick(false); c.chatTask = t.id; openPsyche(); setTab('chat', false); drawStream(); }); title.innerHTML = '<span class="avs">' + t.leads.map(avatar).join('') + '</span>'; title.append(t.name);
         if (c.fam && TM) title.appendChild(setMissionName(html('em'), TM.name));
         group(fam(t.fam).hue, title, all.filter(a => a.task === t.id), t.leads);
       });
@@ -4533,12 +4542,12 @@ function pick(id, via) {
   const c = cur();
   if (!c.world.agents.has(id)) return;
   if (c.pick && c.pick.id === id && c.pick.via === via) return clearPick(true);
-  c.pick = {id, via}; showPick(via === 'panel');
+  c.pick = {id, via}; showPick(via === 'panel'); drawStream();
 }
 function clearPick(restoreFocus) {
   const c = cur(), selected = c.pick, focused = document.activeElement;
   const hadFocus = focused && (($('pop').contains(focused)) || (insp.slot && insp.slot.contains(focused)));
-  c.pick = null; showPick();
+  c.pick = null; showPick(); if (selected) drawStream();
   if (!selected || !(restoreFocus === true || (restoreFocus !== false && hadFocus))) return;
   const row = selected.via === 'panel' && insp.dots.get(selected.id), mapAgent = sc.agents.get(selected.id);
   const target = row ? row.btn : mapAgent ? mapAgent.el : $('missionDetailTitle');
@@ -5207,11 +5216,25 @@ function replyActs(c, it, p) {
   return acts;
 }
 function drawStream() {
-  const c = cur(), w = c.world, items = w.items, box = $('stream');
-  const sig = active + '|' + c.recorded + '|' + items.length + '|' + (items.length ? items[items.length - 1].t : 0) + '|' + items.reduce((n, it) => n + (it.tries || 0), 0) + '|' + canAct() + '|' + [...w.rounds.values()].map(r => r.id + (r.done ? '.' : '')).join() + '|' + [...(c.roundShown || [])].join();
+  const c = cur(), w = c.world, box = $('stream');
+  const agent = c.pick && w.agents.get(c.pick.id);
+  const task = w.tasks.get(agent?.task || c.chatTask);
+  const mission = task?.mission || agent?.mission || c.sel;
+  const familiar = task ? null : agent?.fam || c.fam || sc?.hl;
+  const scope = [mission && w.missions.get(mission)?.name, familiar && fam(familiar).name, task?.name].filter(Boolean).join(' · ');
+  const matches = (m, f, a) => (!mission || m === mission) && (!familiar || f === familiar) && (!task || (a && w.agents.get(a)?.task === task.id));
+  const matchingRounds = new Set();
+  if (scope) {
+    for (const r of w.rounds.values()) if (r.targets.some(t => matches(t.mission, t.familiar, t.agent))) matchingRounds.add(r.id);
+    for (const it of w.items) if (it.round != null && matches(it.mission, it.from || it.fam, it.agent)) matchingRounds.add(it.round);
+  }
+  const items = scope ? w.items.filter(it => matchingRounds.has(it.round) || matches(it.mission, it.from || it.fam, it.agent)) : w.items;
+  const sig = JSON.stringify([active, mission, familiar, task?.id, scope]) + '|' + c.recorded + '|' + items.length + '|' + (items.length ? items[items.length - 1].t : 0) + '|' + items.reduce((n, it) => n + (it.tries || 0), 0) + '|' + canAct() + '|' + [...w.rounds.values()].map(r => r.id + (r.done ? '.' : '')).join() + '|' + [...(c.roundShown || [])].join();
   if (sig === streamSig) return;
   streamSig = sig; box.textContent = '';
-  box.appendChild(html('div', 'note', !c.trace.length ? 'Nothing said here yet' : c.recorded ? 'Recorded trace' : (c.sample ? 'Sample trace' : 'Started here') + ' · reports are relayed word for word'));
+  if (scope) box.appendChild(html('div', 'thread-scope', scope));
+  if (scope && !items.length) box.appendChild(html('div', 'note', task ? 'No conversation linked to this task’s agents yet.' : 'No conversation in this selection yet.'));
+  else box.appendChild(html('div', 'note', scope ? 'Related messages and complete rounds' : !c.trace.length ? 'Nothing said here yet' : c.recorded ? 'Recorded trace' : (c.sample ? 'Sample trace' : 'Started here') + ' · reports are relayed word for word'));
   let lastReply = null;
   const one = it => {
     let e;
