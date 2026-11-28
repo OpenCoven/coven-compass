@@ -39,6 +39,8 @@ The [Project-only pilot exercise](https://github.com/OpenCoven/coven-compass/iss
 
 ## D01–D04 decisions and remaining work
 
+The daemon Project entity, read route and Cave-reference migration are tracked in [Coven #1833](https://github.com/OpenCoven/coven/issues/1833). The existing Cave issuer continues to identify pilot Projects while that work is open.
+
 Sage's read-only discovery for issue #2 is summarized in the [public discovery record](../discovery/2026-11-20-public/README.md). **Every recommendation in it is proposed.** None of these four decisions is accepted, apart from parts of D01: Val decided the naming and the Castle definition on 2026-11-19, and the Project ID issuer on 2026-11-22.
 
 | ID | Status | Discovery headline | Proposal to review |

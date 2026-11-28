@@ -218,3 +218,16 @@ test('later valid navigation removes the notice and does not bring it back', () 
   assert.ok(calls.dismiss > before, 'in-app navigation that changes the route dismisses it too');
   assert.equal(calls.announce.filter(a => a.visible).length, 1, 'the notice was shown once, for the invalid link only');
 });
+
+test('a mission permalink focuses its restored selection after route initialization', () => {
+  const hash = '#/project/psyche-build/mission/m-2?view=brief&detail=side';
+  const {context} = routeHarness(hash);
+  const project = context.cur();
+  project.world.missions.set('m-2', {seats: []});
+  context.cur = () => project;
+  context.select = (mission, familiar, detail) => Object.assign(project, {sel: mission, fam: familiar, detail});
+  const focused = [];
+  context.atlasFocusSelection = () => focused.push([project.sel, project.detail, context.atlasNavigationReady]);
+  context.atlasRestoreRoute(true);
+  assert.deepEqual(focused, [['m-2', 'side', true]]);
+});
