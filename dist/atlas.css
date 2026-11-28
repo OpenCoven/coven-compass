@@ -46,8 +46,6 @@ body.atlas-enhanced .stage {
                     linear-gradient(to bottom, rgb(255 255 255 / 1.7%) 1px, transparent 1px);
   background-size: 36px 36px;
 }
-body.atlas-enhanced[data-atlas-scope="coven"] .plan-head,
-body.atlas-enhanced[data-atlas-scope="coven"] .timeline,
 body.atlas-enhanced[data-atlas-scope="coven"] .leads,
 body.atlas-enhanced #atlasFocus,
 body.atlas-enhanced #atlasSceneNote { display: none; }
@@ -417,7 +415,6 @@ body.atlas-enhanced :focus-visible { outline: 2px solid #c7bff4; outline-offset:
   body.atlas-enhanced:has(#atlasCameraDock) .view > .ctl[aria-label="Camera"],
   body.atlas-enhanced:has(#atlasCameraDock) .view > .ctl[aria-label="Zoom"] { display: none; }
   body.atlas-enhanced .stage { flex: none; aspect-ratio: auto; width: 100%; height: clamp(360px, calc(var(--app-height, 100dvh) - 264px), 760px); min-height: 360px; }
-  body.atlas-enhanced[data-atlas-scope="coven"] .stage { height: calc(var(--app-height, 100dvh) - max(8px, env(safe-area-inset-top, 0px)) - max(8px, env(safe-area-inset-bottom, 0px)) - 2px); min-height: 280px; }
   body.atlas-enhanced .stage.composing { height: clamp(360px, calc(var(--app-height, 100dvh) - 264px), 760px); }
   body.atlas-enhanced #atlasBrowseClose,
   body.atlas-enhanced .atlas-mission-browser .atlas-drawer-heading :is(#atlasMissionCreate,#atlasMissionClose) { min-height: 44px; min-width: 44px; }
@@ -542,7 +539,6 @@ body.atlas-enhanced :focus-visible { outline: 2px solid #c7bff4; outline-offset:
   body.atlas-enhanced .view { gap: 4px; }
   body.atlas-enhanced .stage,
   body.atlas-enhanced .stage.composing { height: clamp(250px, calc(var(--app-height, 100dvh) - 148px), 440px); min-height: 250px; }
-  body.atlas-enhanced[data-atlas-scope="coven"] .stage { height: calc(var(--app-height, 100dvh) - max(5px, env(safe-area-inset-top, 0px)) - max(5px, env(safe-area-inset-bottom, 0px)) - 2px); min-height: 240px; }
   body.atlas-enhanced .lead-card { position: relative; min-height: 60px; padding: 7px 10px; }
   body.atlas-enhanced .lead-card .council { position: absolute; right: 10px; bottom: 9px; gap: 3px; }
   body.atlas-enhanced .lead-card .council .avatar { width: 14px; height: 14px; }
@@ -1599,3 +1595,52 @@ body.atlas-enhanced .mission-header .i-view { padding: 0; gap: 0; background: tr
 body.atlas-enhanced .mission-header .i-view button { min-height: 34px; border: 0; border-radius: 0; border-bottom: 2px solid transparent; }
 body.atlas-enhanced .mission-header .i-view button[aria-selected="true"] { background: transparent; color: var(--foreground); border: 0; border-bottom: 2px solid var(--primary); box-shadow: none; }
 .mission-header .council-count { display: inline-block; padding: 0 .35em; border-radius: .4em; background: var(--card-raised); font-variant-numeric: tabular-nums; }
+
+/* The overview is a single viewport. The measured mobile dock reserves its own
+   row while the map takes the remaining space, including after rotation. */
+body.atlas-enhanced[data-atlas-scope="coven"] .plan {
+  border: 0;
+  border-radius: 0;
+}
+body.atlas-enhanced[data-atlas-scope="coven"] #timeline { display: flex; }
+body.atlas-enhanced[data-atlas-scope="coven"] #footHide { display: none; }
+body.atlas-enhanced .timeline {
+  flex-shrink: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: var(--card);
+}
+.timeline .live-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 32px;
+  min-width: 62px;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  font-size: calc(12px * var(--fs, 1));
+}
+.timeline .live-btn[aria-pressed="false"] { color: var(--primary-hi); }
+.timeline .live-btn span { white-space: nowrap; }
+.timeline .marks .mk-q { height: 7px; top: -11px; }
+body.atlas-enhanced.atlas-adaptive-mobile[data-atlas-scope="coven"] .app {
+  height: var(--app-height, 100dvh);
+  min-height: 0;
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) var(--mobile-chrome-height, 108px) env(safe-area-inset-left, 0px);
+}
+body.atlas-enhanced.atlas-adaptive-mobile[data-atlas-scope="coven"] :is(.main, .left, .plan, .stage) {
+  flex: 1 1 0;
+  min-height: 0;
+}
+body.atlas-enhanced.atlas-adaptive-mobile[data-atlas-scope="coven"] #atlasMobileChrome {
+  left: var(--viewport-left, 0px);
+  bottom: var(--keyboard-inset, 0px);
+  width: var(--viewport-width, 100vw);
+  padding: 0 env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+  transform: none;
+  border-width: 1px 0 0;
+  border-radius: 0;
+  background: var(--card);
+}
