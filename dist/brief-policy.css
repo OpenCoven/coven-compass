@@ -61,13 +61,15 @@
 /* The inspector has a narrow reading column even on wide screens. */
 #inspect .bp { border-style: solid; background: var(--card); gap: 12px; }
 #inspect .bp-badge { font: inherit; font-size: .85em; text-transform: none; letter-spacing: normal; }
-#inspect .bp-next { border: 0; border-inline-start: 3px solid var(--primary); border-radius: 4px; background: var(--card-raised); }
+#inspect .bp-next { border: 0; border-inline-start: 2px solid color-mix(in srgb, var(--primary) 65%, var(--muted-foreground)); border-radius: 4px; background: color-mix(in srgb, var(--card-raised) 85%, var(--card)); }
 #inspect .bp-next.is-stop-escalate { border-inline-start-color: var(--warn); }
 #inspect .bp-ladder { display: block; }
 #inspect .bp-step { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 3px 10px; align-items: baseline; border: 0; border-radius: 0; padding: 7px 0; }
 #inspect .bp-step + .bp-step { border-top: 1px solid var(--border); }
 #inspect .bp-step dt { text-transform: none; font-size: 12px; letter-spacing: normal; }
-#inspect .bp-step dd { text-align: end; margin: 0; }
+#inspect .bp-step dd { text-align: end; margin: 0; overflow-wrap: anywhere; }
+#inspect .bp-next .bp-action { font-size: 1.08em; }
+#inspect .bp-rules[open] > .bp-fine { margin-block-end: 6px; }
 #inspect .bp-step dd.bp-fine { grid-column: 1 / -1; text-align: start; }
 #inspect .bp-rules { border-top: 1px solid var(--border); }
 #inspect .bp-rules > summary { cursor: pointer; color: var(--foreground); padding: 10px 2px; font-weight: 600; }

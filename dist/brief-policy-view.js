@@ -41,8 +41,8 @@ function render(doc, input) {
   // Next permitted action: what the policy allows next. It is not a command, and Compass can't send it.
   const next = el('div', 'bp-next is-' + r.next.action);
   next.setAttribute('role', 'note');
-  next.append(el('span', 'bp-k', 'Next permitted action'), el('b', 'bp-action', r.next.label), el('p', 'bp-why', r.next.text),
-    el('p', 'bp-fine', 'Display only. Compass has no way to send this to Coven.'));
+  next.append(el('span', 'bp-k', synthetic ? 'Next permitted action' : 'Next step'), el('b', 'bp-action', r.next.label), el('p', 'bp-why', !synthetic && r.next.action === 'wait-for-evidence' ? 'Required conditions still need current evidence.' : r.next.text));
+  if (synthetic) next.appendChild(el('p', 'bp-fine', 'Display only. Compass has no way to send this to Coven.'));
   box.appendChild(next);
 
   // Four states, kept apart.
@@ -65,6 +65,7 @@ function render(doc, input) {
     const toggle = el('summary', '', 'Policy details');
     toggle.dataset.focus = 'brief-policy-details';
     detail.appendChild(toggle);
+    detail.appendChild(el('p', 'bp-fine', 'This simulation displays the policy. Only Coven can record acceptance.'));
     if (o.summary) detail.appendChild(el('p', 'bp-summary', o.summary));
     explanations.forEach(([label, note]) => detail.appendChild(el('p', 'bp-fine', label + ' · ' + note)));
     box.appendChild(detail);

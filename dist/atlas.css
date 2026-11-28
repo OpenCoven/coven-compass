@@ -26,11 +26,11 @@ body.atlas-enhanced .app {
   height: 100vh;
   height: var(--app-height, 100dvh);
   min-height: min(600px, var(--app-height, 100dvh));
-  max-width: 1900px;
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
   gap: 0;
-  padding: 12px 16px;
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
 }
 body.atlas-enhanced .main { flex: 1; min-height: 0; gap: 14px; }
 body.atlas-enhanced .left { gap: 10px; }
