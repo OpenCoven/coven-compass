@@ -36,18 +36,22 @@ function render(doc, input) {
   head.append(el('h3', 'bp-title', 'Success policy'), el('span', 'bp-badge', synthetic ? 'Synthetic fixture · proposal (#35)' : 'Simulation · proposal (#35)'));
   box.appendChild(head);
   if (!r) { box.appendChild(el('p', 'bp-note', 'No success policy could be derived.')); return box; }
-  if (o.summary) box.appendChild(el('p', 'bp-summary', o.summary));
+  if (synthetic && o.summary) box.appendChild(el('p', 'bp-summary', o.summary));
 
   // Next permitted action: what the policy allows next. It is not a command, and Compass can't send it.
   const next = el('div', 'bp-next is-' + r.next.action);
   next.setAttribute('role', 'note');
-  next.append(el('span', 'bp-k', 'Next permitted action'), el('b', 'bp-action', r.next.label), el('p', 'bp-why', r.next.text),
-    el('p', 'bp-fine', 'Display only. Compass has no way to send this to Coven.'));
+  next.append(el('span', 'bp-k', synthetic ? 'Next permitted action' : 'Next step'), el('b', 'bp-action', r.next.label), el('p', 'bp-why', !synthetic && r.next.action === 'wait-for-evidence' ? 'Required conditions still need current evidence.' : r.next.text));
+  if (synthetic) next.appendChild(el('p', 'bp-fine', 'Display only. Compass has no way to send this to Coven.'));
   box.appendChild(next);
 
   // Four states, kept apart.
   const ladder = el('dl', 'bp-ladder');
-  const step = (k, v, note, state) => { const d = el('div', 'bp-step' + (state ? ' is-' + state : '')); d.append(el('dt', null, k), el('dd', null, v)); if (note) d.appendChild(el('dd', 'bp-fine', note)); ladder.appendChild(d); };
+  const explanations = [];
+  const step = (k, v, note, state) => { const d = el('div', 'bp-step' + (state ? ' is-' + state : '')); d.append(el('dt', null, k), el('dd', null, v)); if (note) {
+    if (synthetic) d.appendChild(el('dd', 'bp-fine', note));
+    else explanations.push([k, note]);
+  } ladder.appendChild(d); };
   step('Proposal', r.policyRevision ? 'Policy ' + r.policyRevision : 'No valid policy',
     synthetic ? 'A synthetic revision, not owner-approved.' : 'Derived from this Brief in the browser. Not a Psyche policy revision.');
   step('Execution', EXECUTION_TEXT[r.execution.state] || r.execution.state,
@@ -56,16 +60,30 @@ function render(doc, input) {
   step('Accepted completion', 'Not recorded', r.acceptance.text.replace(/^Not recorded\.\s*/, ''), 'not-recorded');
   box.appendChild(ladder);
 
-  const section = (title, aside) => { const s = el('div', 'bp-sec'), h = el('div', 'bp-sec-h'); h.append(el('h4', null, title)); if (aside) h.appendChild(el('em', null, aside)); s.appendChild(h); box.appendChild(s); return s; };
+  const detail = synthetic ? box : el('details', 'bp-rules');
+  if (!synthetic) {
+    const toggle = el('summary', '', 'Policy details');
+    toggle.dataset.focus = 'brief-policy-details';
+    detail.appendChild(toggle);
+    detail.appendChild(el('p', 'bp-fine', 'This simulation displays the policy. Only Coven can record acceptance.'));
+    if (o.summary) detail.appendChild(el('p', 'bp-summary', o.summary));
+    explanations.forEach(([label, note]) => detail.appendChild(el('p', 'bp-fine', label + ' · ' + note)));
+    box.appendChild(detail);
+  }
+
+  const section = (title, aside) => { const s = el('div', 'bp-sec'), h = el('div', 'bp-sec-h'); h.append(el('h4', null, title)); if (aside) h.appendChild(el('em', null, aside)); s.appendChild(h); detail.appendChild(s); return s; };
 
   // 1. Required conditions
   const met = r.conditions.filter(c => c.state === 'pass').length;
   const req = section('Required conditions', r.conditions.length ? met + ' of ' + r.conditions.length + ' pass' : '');
   if (!r.conditions.length) req.appendChild(el('p', 'bp-note', 'None required.'));
+  const commonRule = !synthetic && r.conditions.length && r.conditions.every(c => c.remediable === r.conditions[0].remediable && !c.by.length);
+  const failureRule = c => c.remediable ? 'A failure may be revised.' : 'A failure stops the mission.';
   r.conditions.forEach(c => {
     const d = row(req, c.label, STATE_TEXT[c.state], c.state);
-    d.appendChild(el('span', 'bp-fine', (c.remediable ? 'A failure may be revised.' : 'A failure stops the mission.') + (c.by.length ? ' From ' + c.by.join(', ') + '.' : '')));
+    if (!commonRule) d.appendChild(el('span', 'bp-fine', failureRule(c) + (c.by.length ? ' From ' + c.by.join(', ') + '.' : '')));
   });
+  if (commonRule) req.appendChild(el('p', 'bp-fine', failureRule(r.conditions[0])));
   if (!synthetic && r.conditions.length) req.appendChild(el('p', 'bp-note', 'The Brief\'s counters are simulated progress, not sealed evidence, so each condition stays unknown.'));
 
   // 2. Quality rubric (optional)
@@ -86,7 +104,7 @@ function render(doc, input) {
 
   // 3. Iteration limits
   const L = r.limits;
-  const lim = section('Iteration limits', L && L.exhausted.length ? 'used up: ' + L.exhausted.join(', ') : '');
+  const lim = section(synthetic ? 'Iteration limits' : 'Limits across attempts', L && L.exhausted.length ? 'used up: ' + L.exhausted.join(', ') : '');
   if (L) {
     row(lim, 'Attempts', L.attempts.max === null ? L.attempts.used + ' · no limit set' : L.attempts.used + ' of ' + L.attempts.max,
       L.attempts.max !== null && L.attempts.used >= L.attempts.max ? 'fail' : '');
@@ -119,7 +137,7 @@ function render(doc, input) {
       d.appendChild(el('span', 'bp-fine', facts.join(' · ')));
       ev.appendChild(d);
     });
-    box.appendChild(ev);
+    detail.appendChild(ev);
   }
   if (o.note) box.appendChild(el('p', 'bp-fine', o.note));
   return box;
