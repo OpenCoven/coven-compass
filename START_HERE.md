@@ -14,6 +14,18 @@ For the remaining Brief policy, Castle association and device work, consult the 
 
 The [editable source and focused check table](AGENTS.md#where-to-make-a-change) covers navigation, mobile, the simulation, projection sources and the map. Generated browser scripts are listed alongside their source modules.
 
+## Verify a clean checkout
+
+Use Node 24 and Python 3.10+. From an isolated checkout of the revision under review, install the local secret hooks and pinned compiler, then run the check that leaves the checkout clean.
+
+```sh
+python3 scripts/install-secret-hooks.py
+npm --prefix src ci
+node scripts/verify-all.mjs --check
+```
+
+Serve `dist/` with `python3 -m http.server 18433 --bind 127.0.0.1 --directory dist`. If that port is busy, choose a free port and use it in both the server and runner commands. From the checkout, run `node scripts/verify-served.mjs http://127.0.0.1:18433/ <commit>` before capturing browser evidence. Install the browser tools outside the repository using the [browser runner setup](scripts/browser-qa.mjs). Record the served revision, browser engine, runner mode, exit code and report location.
+
 ## Migrating a module to TypeScript
 
 The simulation model, atlas layout, crown rendering, annotation placement and viewport geometry are authored in `src/simulation-model.ts`, `src/atlas-layout.ts`, `src/atlas-crown.ts`, `src/atlas-presentation.ts` and `src/atlas-viewport.ts`. The browser and Node tests consume their generated classic scripts in `dist/`. From the repository root, install the pinned development compiler once and run the following after editing a typed module.

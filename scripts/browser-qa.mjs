@@ -1,10 +1,10 @@
-// Browser QA for Coven Compass (evidence level: browser; headless Chromium, not Safari or a device).
+// Browser QA for Coven Compass using headless Chromium or Playwright WebKit.
 //
 // Not part of verify-all, and the repository has no npm dependencies. Install Playwright OUTSIDE
 // the repository, serve dist/, and run this file from that install:
 //
-//   mkdir -p /tmp/compass-qa && cd /tmp/compass-qa && npm init -y && npm i playwright@1.48.2
-//   npx playwright install chromium
+//   mkdir -p /tmp/compass-qa && cd /tmp/compass-qa && npm init -y && npm i --save-exact playwright@1.64.1
+//   npx playwright install chromium webkit
 //   python3 -m http.server 18433 --bind 127.0.0.1 --directory <repo>/dist   # any free port except 8765
 //   cp <repo>/scripts/browser-qa.mjs . && node browser-qa.mjs http://127.0.0.1:18433/ ./shots ./qa.json $(git -C <repo> rev-parse HEAD)
 //
@@ -78,8 +78,42 @@ const missionNameClashes = () => {
   return { total: labels.length, shown: names.length, centers: names.filter(n => n.centered && n.outside).length, smallestFont: Math.min(...names.map(n => n.pixels)), crown, pairs, squads: squads.length, squadPairs };
 };
 
+// A compact caption can take over the label and task action for the same mission.
+function missionAccessAtFit(minimumText) {
+  const visible = element => {
+    if (!element || element.closest('[hidden], [inert]')) return false;
+    const bounds = element.getBoundingClientRect();
+    const style = getComputedStyle(element);
+    return bounds.width > 0 && bounds.height > 0 && style.visibility === 'visible' && Number(style.opacity) > 0.05;
+  };
+  const captions = [...document.querySelectorAll('#missionCaptions button[data-key]')].filter(visible);
+  const fit = {missingNames: [], missingTasks: [], captionNames: [], captionTasks: []};
+  for (const group of document.querySelectorAll('#plan .atlas-project-detail .atlas-mission-group')) {
+    const id = group.dataset.m;
+    const label = group.querySelector('.lead-node').getAttribute('aria-label');
+    const caption = captions.find(row => row.dataset.key === JSON.stringify(['psyche-build', id]));
+    const captionText = caption?.querySelector('span');
+    const name = captionText?.textContent.trim();
+    const readableCaption = visible(captionText) && name && label?.startsWith(name + ',') &&
+      parseFloat(getComputedStyle(captionText).fontSize) >= minimumText;
+    const inlineName = group.querySelector('.lead-name');
+    if (!visible(inlineName)) {
+      if (readableCaption) fit.captionNames.push(id);
+      else fit.missingNames.push(id);
+    }
+    const inlineTask = group.querySelector('.mission-tasks .task-tray-hit');
+    if (!visible(inlineTask)) {
+      if (readableCaption && caption.dataset.tasks === 'true' && !caption.disabled) fit.captionTasks.push(id);
+      else fit.missingTasks.push(id);
+    }
+  }
+  return fit;
+}
+
 const briefOnly = process.argv.includes('--brief-only');
 const engine = process.argv.includes('--webkit') ? webkit : chromium;
+// Include buttons and links in WebKit's sequential keyboard navigation.
+const tabKey = engine === webkit ? 'Alt+Tab' : 'Tab';
 const browser = await engine.launch();
 const report = { generated_utc: new Date().toISOString(), commit, browser: `${engine.name()} ${browser.version()}`,
   tool: 'playwright ' + createRequire(import.meta.url)('playwright/package.json').version, base, evidence_level: 'browser (headless ' + engine.name() + ')',
@@ -111,7 +145,7 @@ async function keyboardJourney(vp) {
   const mode = 'keyboard';
   let step = 'overview';
   let keys = 0;
-  const press = key => { keys++; return page.keyboard.press(key); };
+  const press = key => { keys++; return page.keyboard.press(key.replace(/Tab$/, tabKey)); };
   const type = text => { keys += text.length; return page.keyboard.type(text); };
   async function tabTo(selector, key = 'Tab') {
     for (let i = 0; i < 100; i++) {
@@ -234,7 +268,7 @@ async function compactMissionLabel() {
     await page.mouse.move(0, 0);
     const target = page.locator(compact + ':focus-visible');
     const mapItem = page.locator('#plan [data-map-item]:focus');
-    for (let i = 0; i < 100 && !await mapItem.count(); i++) await page.keyboard.press('Tab');
+    for (let i = 0; i < 100 && !await mapItem.count(); i++) await page.keyboard.press(tabKey);
     if (!await mapItem.count()) throw new Error('Tab did not enter the map');
     const itemCount = await page.locator('#plan [data-map-item]').count();
     for (let i = 0; i < itemCount && !await target.count(); i++) await page.keyboard.press('ArrowRight');
@@ -492,9 +526,27 @@ for (const vp of VIEWPORTS) {
       await page.waitForTimeout(2500);
       const named = await page.evaluate(missionNameClashes);
       const minimumText = vp.height < 400 ? 8.5 : 10;
-      check(mode, vp.name, 'every sample mission name is readable outside its ring at Project fit',
-        named.total > 0 && named.centers === named.total && named.smallestFont >= minimumText,
-        `${named.centers} of ${named.total} centered names, smallest text ${named.smallestFont.toFixed(1)}px`);
+      const access = await page.evaluate(missionAccessAtFit, minimumText);
+      check(mode, vp.name, 'every sample mission has a readable name at Project fit',
+        named.total > 0 && named.centers === named.shown &&
+          (!named.shown || named.smallestFont >= minimumText) && !access.missingNames.length,
+        `${named.centers} centered, ${access.captionNames.length} in captions, missing ${access.missingNames.join(', ')}`);
+      check(mode, vp.name, 'every sample mission has a task action at Project fit',
+        named.total > 0 && !access.missingTasks.length,
+        `${access.captionTasks.length} in captions, missing ${access.missingTasks.join(', ')}`);
+      if (!query && vp.mobile && access.captionNames.some(id => access.captionTasks.includes(id))) {
+        const target = access.captionNames.find(id => access.captionTasks.includes(id));
+        const caption = page.locator('#missionCaptions button[data-key]').filter({visible: true});
+        await caption.evaluateAll((rows, id) => {
+          rows.find(row => row.dataset.key === JSON.stringify(['psyche-build', id])).style.visibility = 'hidden';
+        }, target);
+        const hidden = await page.evaluate(missionAccessAtFit, minimumText);
+        check(mode, vp.name, 'hiding a compact caption makes both its name and task action fail',
+          hidden.missingNames.includes(target) && hidden.missingTasks.includes(target), target);
+        await page.locator('#missionCaptions button[data-key]').evaluateAll((rows, id) => {
+          rows.find(row => row.dataset.key === JSON.stringify(['psyche-build', id])).style.removeProperty('visibility');
+        }, target);
+      }
       check(mode, vp.name, 'mission names clear the crown and each other', !named.crown.length && !named.pairs.length,
         `${named.shown} names shown; over the crown: ${named.crown.join(', ') || 'none'}; overlapping: ${named.pairs.join('; ') || 'none'}`);
       check(mode, vp.name, 'familiar labels clear each other and the mission names', !named.squadPairs.length,
