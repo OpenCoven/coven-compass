@@ -512,11 +512,15 @@
     tools.addEventListener('toggle', function () {
       if (!tools.open) tools.querySelectorAll('.pill[open]').forEach(function (pill) { pill.open = false; });
     });
+    var traceTouch = false;
     document.addEventListener('pointerdown', function (ev) {
+      traceTouch = ev.pointerType === 'touch' && $('traceBody').contains(ev.target);
       if (tools.open && !tools.contains(ev.target)) tools.open = false;
     }, true);
+    document.addEventListener('keydown', function () { traceTouch = false; }, true);
     document.addEventListener('focusin', function (ev) {
-      if (tools.open && !tools.contains(ev.target)) tools.open = false;
+      // WebKit can focus the map between an inside Trace tap and its click.
+      if (tools.open && !traceTouch && !tools.contains(ev.target)) tools.open = false;
     });
     var footer = node('div', 'atlas-map-footer');
     footer.append(familiars, cameraDock);

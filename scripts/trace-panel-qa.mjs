@@ -31,6 +31,12 @@ for (const [width, height] of [[1440, 900], [768, 1024], [390, 844], [844, 390],
     };
     try {
       await page.goto(new URL('#/project/psyche-build', base).href);
+      if (width === 390 || width === 844) {
+        await loc('#atlasBrowse').click();
+        await loc('#atlasProjectSearch').fill('config refactor');
+        await loc('#atlasProjects .atlas-project[data-project="psyche-build"]').click();
+        await loc('#atlasSidebar').waitFor({state: 'hidden'});
+      }
       await open(); await fits();
       assert.equal(await loc('#traceChip').innerText(), 'Sample');
       const counts = await loc('.trace-kind strong').allTextContents();
@@ -78,6 +84,17 @@ for (const [width, height] of [[1440, 900], [768, 1024], [390, 844], [844, 390],
       assert.match(await loc('#traceEv').innerText(), /Mission opened/);
       await activate(loc('#traceClose')); await panel.waitFor({state: 'hidden'});
       assert.ok(await trigger.evaluate(el => document.activeElement === el));
+      await open();
+      const outside = await page.evaluate(() => {
+        const panel = document.getElementById('traceBody').getBoundingClientRect();
+        return [4, innerWidth - 4].flatMap(x => [4, innerHeight - 4].map(y => ({x, y}))).find(({x,y}) =>
+          (x < panel.left || x > panel.right || y < panel.top || y > panel.bottom) &&
+          !document.getElementById('workspaceTools').contains(document.elementFromPoint(x, y)));
+      });
+      assert.ok(outside);
+      if (width < 1000) await page.touchscreen.tap(outside.x, outside.y);
+      else await page.mouse.click(outside.x, outside.y);
+      await panel.waitFor({state: 'hidden'});
       assert.deepEqual(failures, []);
     } finally { await page.close(); }
   });
