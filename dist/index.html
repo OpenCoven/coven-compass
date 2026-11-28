@@ -4218,6 +4218,7 @@ function syncInspect(force) {
   const sig = JSON.stringify([request?.id, request?.title, request?.fam, pending.length]) + editable + '|' + JSON.stringify(missionOrder.map(m => [m.project, m.id, m.name])) + '|' + (panelView === 'brief' ? briefSig(briefState(w, M), M) + Math.floor((w.t - M.t0) / 60000) : '') + active + M.id + '/' + (c.fam || '') + '|' + panelView + '|' + seatIds.join(',') + '|' + tasks.map(t => t.id).join(',') + '|' + all.map(a => a.id + ':' + (a.task || '')).join(',');
   if (force || sig !== insp.sig) {
     const identity = [active, M.id, c.fam, panelView].join('|'), sameView = box.dataset.selection === identity;
+    const policyOpen = sameView && box.querySelector('.bp-rules')?.open;
     const previousScroll = sameView ? box.scrollTop : 0;
     const previousFocus = sameView && box.contains(document.activeElement) ? document.activeElement.dataset.focus || document.activeElement.id : null;
     box.dataset.selection = identity;
@@ -4411,6 +4412,7 @@ function syncInspect(force) {
           const BP = window.CovenBriefPolicy, pol = BP.fromBrief(M.brief, {deliver: artText, floor: floorText});
           const res = BP.evaluate(pol, {candidate: null, attempts: [], evaluations: [], authorization: null, cancelled: false}, null);
           sec.appendChild(window.CovenBriefPolicyView.render(document, {policy: pol, result: res, summary: BP.summarize(pol), origin: 'simulation'}));
+          if (policyOpen) sec.querySelector('.bp-rules').open = true;
         }
       }
       if (editable) addAction('edit-brief', st ? 'Edit brief' : 'Set brief', ICON.doc, 'Deliverables and limits', () => {
